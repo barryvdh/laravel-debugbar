@@ -71,14 +71,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 }
 
                 if($db = $app['db']){
-                    $pdo = new TraceablePDO( $db->getPdo() );
-                    $debugbar->addCollector(new PDOCollector( $pdo ));
+                    try{
+                        $pdo = new TraceablePDO( $db->getPdo() );
+                        $debugbar->addCollector(new PDOCollector( $pdo ));
+                    }catch(\PDOException $e){
+                        //Not connection set..
+                    }
                 }
 
-                if($mailer = $app['mailer']){
-                    $debugbar['messages']->aggregate(new SwiftLogCollector($mailer->getSwiftMailer()));
-                    $debugbar->addCollector(new SwiftMailCollector($mailer->getSwiftMailer()));
-                }
+
 
                 return $debugbar;
             });
