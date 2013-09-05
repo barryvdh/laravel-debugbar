@@ -1,5 +1,14 @@
 <?php namespace Barryvdh\Debugbar;
 
+use DebugBar\StandardDebugBar;
+use DebugBar\Bridge\MonologCollector;
+use DebugBar\DataCollector\PDO\PDOCollector;
+use DebugBar\DataCollector\PDO\TraceablePDO;
+use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
+use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
+use DebugBar\Bridge\Twig\TwigCollector;
+use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
+use DebugBar\DataCollector\TimeDataCollector;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -31,8 +40,31 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $this->package($this->package);
 
-        $this->app['debugbar'] = $this->app->share(function () {
-                return new \DebugBar\StandardDebugBar;
+        $this->app['debugbar'] = $this->app->share(function ($app) {
+
+                $debugbar = new StandardDebugBar;
+
+
+                if($log = $app['log']){
+                    $debugbar->addCollector(new MonologCollector( $log->getMonolog() ));
+                }
+
+                if($db = $app['db']){
+                    $pdo = new TraceablePDO( $db->getPdo() );
+                    $debugbar->addCollector(new PDOCollector( $pdo ));
+                }
+
+                if($mailer = $app['mailer']){
+                    $debugbar['messages']->aggregate(new SwiftLogCollector($mailer->getSwiftMailer()));
+                    $debugbar->addCollector(new SwiftMailCollector($mailer->getSwiftMailer()));
+                }
+
+                if($twig = $app['twig']){
+                    $env = new TraceableTwigEnvironment($twig);
+                    $debugbar->addCollector(new TwigCollector($env));
+                }
+
+                return $debugbar;
             });
 
         $this->app['debugbar.renderer'] = $this->app->share(function ($app) {
