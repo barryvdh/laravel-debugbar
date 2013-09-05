@@ -4,12 +4,18 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\View\View;
 class ViewCollector extends DataCollector  implements Renderable
 {
 
     protected $views = array();
 
-    public function addView($view){
+    /**
+     * Add a View instance to the Collector
+     *
+     * @param \Illuminate\View\View $view
+     */
+    public function addView(View $view){
         $name = $view->getName();
         $data = array();
         foreach($view->getData() as $key => $value)
@@ -23,6 +29,10 @@ class ViewCollector extends DataCollector  implements Renderable
         }
         $this->views[$name] = $this->formatVar($data);
     }
+
+    /**
+     * {@inheritDoc}
+     */
     public function collect()
     {
         $views = $this->views;
@@ -32,11 +42,17 @@ class ViewCollector extends DataCollector  implements Renderable
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'views';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getWidgets()
     {
         return array(
