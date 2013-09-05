@@ -45,7 +45,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $debugbar = new StandardDebugBar;
 
-                if($events = $app['events']){
+                $events = $app['events'];
+
+                if($this->app['config']->get('laravel-debugbar::config.log_events', false)){
                     $debugbar->addCollector(new MessagesCollector('events'));
                     $events->listen('*', function() use($debugbar){
                             $args = func_get_args();

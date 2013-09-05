@@ -13,6 +13,7 @@ return array(
   */
   'enabled' => \Config::get('app.debug'),
   'include_vendors' => true,
+  'log_events' => false,
 
 
 );
