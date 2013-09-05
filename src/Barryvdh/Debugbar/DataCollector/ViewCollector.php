@@ -20,7 +20,7 @@ class ViewCollector extends DataCollector  implements Renderable
         $data = array();
         foreach($view->getData() as $key => $value)
         {
-            if(method_exists($value, 'toArray'))
+            if(is_object($value) and method_exists($value, 'toArray'))
             {
                 $data[$key] = $value->toArray();
             }else{
