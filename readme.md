@@ -26,3 +26,13 @@ You can also set in your config if you want to include the vendor files also (Fo
     $ php artisan config:publish barryvdh/laravel-debugbar
 
 You can also set to show all events (disabled by default)
+
+If you want to use the facade to log messages, add this to your facades in app.php:
+
+     'Debugbar' => 'Barryvdh\Debugbar\Facade',
+
+You can now add messages using the Facade, using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
+
+    Debugbar::info($object);
+    Debugbar::alert("Error!");
+    Debugbar::warning('Watch out..');
