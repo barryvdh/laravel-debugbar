@@ -4,7 +4,8 @@ Right now this is just a ServiceProvider to add https://github.com/maximebf/php-
 
 Includes 2 Collectors:
  - RouteCollector: Show information about the current Route
- - ViewsCollector: Show the currently loaded views an it's data.
+ - ViewCollector: Show the currently loaded views an it's data.
+ - LaravelCollector: Show the Laravel version and Environment.
 
 ## Installation
 
