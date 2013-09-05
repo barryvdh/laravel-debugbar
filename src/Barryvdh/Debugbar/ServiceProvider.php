@@ -9,6 +9,7 @@ use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
 use DebugBar\Bridge\Twig\TwigCollector;
 use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
 use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataCollector\MessagesCollector;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -27,7 +28,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	 */
 	public function boot()
 	{
-
+        $debugbar = $this->app['debugbar'];
+        $this->addListener();
 	}
 
 	/**
@@ -44,6 +46,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $debugbar = new StandardDebugBar;
 
+                if($events = $app['events']){
+                    $debugbar->addCollector(new MessagesCollector('events'));
+                    $events->listen('*', function() use($debugbar){
+                            $args = func_get_args();
+                            $event = end($args);
+                            $debugbar['events']->info("Received event: ". $event);
+                        });
+                }
 
                 if($log = $app['log']){
                     $debugbar->addCollector(new MonologCollector( $log->getMonolog() ));
@@ -67,6 +77,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $debugbar;
             });
 
+
+
         $this->app['debugbar.renderer'] = $this->app->share(function ($app) {
                 
                 /** @var \DebugBar\StandardDebugBar $debugbar */
@@ -78,7 +90,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $renderer;
             });
 
-        $this->addListener();
+
 	}
 
 	/**
