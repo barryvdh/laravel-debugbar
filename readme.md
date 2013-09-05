@@ -1,8 +1,10 @@
 ## Laravel Debugbar
 
-Right now this is just a ServiceProvider to add https://github.com/maximebf/php-debugbar via a ServiceProvider, and add the content to the request.
+This is a simple package to integrate PHP Debug Bar (https://github.com/maximebf/php-debugbar) with Laravel.
+It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
+It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
 
-Includes 3 custom collectors:
+This includes 3 custom collectors:
  - RouteCollector: Show information about the current Route
  - ViewCollector: Show the currently loaded views an it's data.
  - LaravelCollector: Show the Laravel version and Environment.
