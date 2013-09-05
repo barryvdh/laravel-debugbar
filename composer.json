@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.3.0",
         "illuminate/support": "4.0.x",
-        "maximebf/debugbar": ">=1.0.0"
+        "maximebf/debugbar": "dev-master"
     },
     "autoload": {
         "psr-0": {
