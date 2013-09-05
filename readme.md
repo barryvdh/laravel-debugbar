@@ -2,10 +2,13 @@
 
 Right now this is just a ServiceProvider to add https://github.com/maximebf/php-debugbar via a ServiceProvider, and add the content to the request.
 
-Includes 2 Collectors:
+Includes 3 custom collectors:
  - RouteCollector: Show information about the current Route
  - ViewCollector: Show the currently loaded views an it's data.
  - LaravelCollector: Show the Laravel version and Environment.
+
+And implements the Monolog Collector for Laravel's Logger.
+I also provides a Facade interface for logging Messages, Exceptions and Time
 
 ## Installation
 
