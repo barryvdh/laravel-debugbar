@@ -37,3 +37,11 @@ You can now add messages using the Facade, using the PSR-3 levels (debug, info, 
     Debugbar::info($object);
     Debugbar::alert("Error!");
     Debugbar::warning('Watch out..');
+
+And start/stop timing:
+
+    \Debugbar::startMeasure('render','Time for rendering');
+    \Debugbar::stopMeasure('render');
+    \Debugbar::measure('My long operation', function() {
+        //Do something..
+    });
