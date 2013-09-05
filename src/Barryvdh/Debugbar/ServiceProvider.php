@@ -58,7 +58,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $debugbar->addCollector(new ViewCollector());
                 $events->listen('composing:*', function($view) use($debugbar){
-                        $debugbar['viewcollector']->addView($view);
+                        $debugbar['views']->addView($view);
                     });
 
                 if($log = $app['log']){

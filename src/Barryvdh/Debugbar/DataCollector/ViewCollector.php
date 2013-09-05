@@ -25,21 +25,29 @@ class ViewCollector extends DataCollector  implements Renderable
     }
     public function collect()
     {
-        return $this->views;
+        $views = $this->views;
+        return array(
+            'count' => count($views),
+            'views' => $views
+        );
     }
 
     public function getName()
     {
-        return 'viewcollector';
+        return 'views';
     }
 
     public function getWidgets()
     {
         return array(
-            "Views" => array(
+            "views" => array(
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "viewcollector",
+                "map" => "views.views",
                 "default" => "{}"
+            ),
+            "views:badge" => array(
+                "map" => "views.count",
+                "default" => "null"
             )
         );
     }
