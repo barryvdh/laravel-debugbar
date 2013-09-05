@@ -1,0 +1,138 @@
+div.phpdebugbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #ccc;
+  font-family: arial;
+  background: #fff;
+  z-index: 10000;
+  font-size: 14px;
+}
+
+/* -------------------------------------- */
+
+div.phpdebugbar-header {
+  background: #efefef url(php-icon.png) no-repeat 5px 4px;
+  padding-left: 29px;
+  min-height: 26px;
+  line-height: 16px;
+}
+div.phpdebugbar-header:before, div.phpdebugbar-header:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+div.phpdebugbar-header:after {
+  clear: both;
+}
+
+/* -------------------------------------- */
+
+a.phpdebugbar-tab,
+span.phpdebugbar-indicator,
+a.phpdebugbar-indicator,
+a.phpdebugbar-open-btn,
+a.phpdebugbar-minimize-btn {
+  float: left;
+  padding: 5px 8px;
+  font-size: 14px;
+  color: #555;
+  text-decoration: none;
+}
+span.phpdebugbar-indicator,
+a.phpdebugbar-indicator,
+a.phpdebugbar-open-btn,
+a.phpdebugbar-minimize-btn {
+  float: right;
+  border-right: 1px solid #ddd;
+}
+
+a.phpdebugbar-tab.active {
+  background: #ccc;
+  color: #444;
+  background-image: linear-gradient(bottom, rgb(173,173,173) 41%, rgb(209,209,209) 71%);
+  background-image: -o-linear-gradient(bottom, rgb(173,173,173) 41%, rgb(209,209,209) 71%);
+  background-image: -moz-linear-gradient(bottom, rgb(173,173,173) 41%, rgb(209,209,209) 71%);
+  background-image: -webkit-linear-gradient(bottom, rgb(173,173,173) 41%, rgb(209,209,209) 71%);
+  background-image: -ms-linear-gradient(bottom, rgb(173,173,173) 41%, rgb(209,209,209) 71%);
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.41, rgb(173,173,173)), color-stop(0.71, rgb(209,209,209)));
+}
+  a.phpdebugbar-tab span.badge {
+    display: none;
+    margin-left: 5px;
+    font-size: 11px;
+    padding: 1px 6px;
+    background: #ccc;
+    border-radius: 4px;
+    color: #555;
+    font-weight: normal;
+    text-shadow: none;
+  }
+  a.phpdebugbar-tab span.badge.important {
+    background: #ed6868;
+    color: white;
+  }
+
+a.phpdebugbar-minimize-btn {
+  display: none;
+}
+
+.phpdebugbar-indicator {
+  position: relative;
+}
+  .phpdebugbar-indicator span.text {
+    margin-left: 5px;
+  }
+  .phpdebugbar-indicator span.tooltip {
+    display: none;
+    position: absolute;
+    top: -30px;
+    background: #efefef;
+    opacity: .7;
+    border: 1px solid #ccc;
+    color: #555;
+    font-size: 11px;
+    padding: 2px 3px;
+    z-index: 1000;
+  }
+  .phpdebugbar-indicator:hover span.tooltip:not(.disabled) {
+    display: block;
+  }
+
+select.phpdebugbar-datasets-switcher {
+  float: right;
+  display: none;
+  margin: 2px 0 0 7px;
+}
+
+/* -------------------------------------- */
+
+div.phpdebugbar-body {
+  border-top: 1px solid #ccc;
+  display: none;
+  position: relative;
+  height: 300px;
+}
+  div.phpdebugbar-resize-handle {
+    display: none;
+    height: 4px;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #ccc;
+    cursor: move;
+    position: absolute;
+    top: -33px;
+  }
+
+/* -------------------------------------- */
+
+div.phpdebugbar-panel {
+  display: none;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+}
+div.phpdebugbar-panel.active {
+  display: block;
+}
