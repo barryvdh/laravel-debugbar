@@ -10,6 +10,7 @@ use DebugBar\Bridge\Twig\TwigCollector;
 use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataCollector\MessagesCollector;
+use Barryvdh\Debugbar\DataCollector\ViewCollector;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -55,6 +56,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         });
                 }
 
+                $debugbar->addCollector(new ViewCollector());
+                $events->listen('composing:*', function($view) use($debugbar){
+                        $debugbar['viewcollector']->addView($view);
+                    });
+
                 if($log = $app['log']){
                     $debugbar->addCollector(new MonologCollector( $log->getMonolog() ));
                 }
@@ -67,11 +73,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 if($mailer = $app['mailer']){
                     $debugbar['messages']->aggregate(new SwiftLogCollector($mailer->getSwiftMailer()));
                     $debugbar->addCollector(new SwiftMailCollector($mailer->getSwiftMailer()));
-                }
-
-                if($twig = $app['twig']){
-                    $env = new TraceableTwigEnvironment($twig);
-                    $debugbar->addCollector(new TwigCollector($env));
                 }
 
                 return $debugbar;
