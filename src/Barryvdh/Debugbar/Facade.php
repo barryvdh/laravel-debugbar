@@ -1,5 +1,21 @@
 <?php namespace Barryvdh\Debugbar;
 
+use Exception;
+
+/**
+ * Facade for Debugbar
+ *
+ * @method static void emergency($message)
+ * @method static void alert($message)
+ * @method static void critical($message)
+ * @method static void error($message)
+ * @method static void warning($message)
+ * @method static void notice($message)
+ * @method static void info($message)
+ * @method static void debug($message)
+ * @method static void log($message)
+ *
+ */
 class Facade extends \Illuminate\Support\Facades\Facade {
 
     /**
@@ -58,6 +74,32 @@ class Facade extends \Illuminate\Support\Facades\Facade {
         $time->measure($label, $closure);
     }
 
+    /**
+     * Adds an exception to be profiled in the debug bar
+     *
+     * @param Exception $e
+     */
+    public static function addException(Exception $e)
+    {
+        /** @var \DebugBar\DataCollector\ExceptionsCollector $time */
+        $exceptions = static::make('exceptions');
+        $exceptions->addException($e);
+    }
+
+    /**
+     * Adds a message
+     *
+     * A message can be anything from an object to a string
+     *
+     * @param mixed $message
+     * @param string $label
+     */
+    public function addMessage($message, $label = 'info')
+    {
+        /** @var \DebugBar\DataCollector\MessagesCollector $message */
+        $message = static::make('messages');
+        $message->addMessage($message, $label);
+    }
     /**
      * Override static calls for adding messages
      *
