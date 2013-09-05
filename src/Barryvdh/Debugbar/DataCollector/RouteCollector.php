@@ -121,6 +121,12 @@ class RouteCollector extends DataCollector  implements Renderable
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "route",
                 "default" => "{}"
+            ),
+            "currentroute" => array(
+                "icon" => "share-alt",
+                "tooltip" => "Route",
+                "map" => "route.uri",
+                "default" => ""
             )
         );
     }
