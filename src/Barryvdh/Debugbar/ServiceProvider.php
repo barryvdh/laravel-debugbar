@@ -6,11 +6,9 @@ use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
-use DebugBar\Bridge\Twig\TwigCollector;
-use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
-use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
+use Barryvdh\Debugbar\DataCollector\RouteCollector;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -60,6 +58,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $events->listen('composing:*', function($view) use($debugbar){
                         $debugbar['views']->addView($view);
                     });
+
+                $debugbar->addCollector(new RouteCollector());
 
                 if($log = $app['log']){
                     $debugbar->addCollector(new MonologCollector( $log->getMonolog() ));
