@@ -10,7 +10,7 @@ use DebugBar\DataCollector\MessagesCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
-
+use Monolog\Logger;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     protected $package = 'barryvdh/laravel-debugbar';
@@ -67,7 +67,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $debugbar->addCollector(new RouteCollector());
 
                 if($log = $app['log']){
-                    $debugbar->addCollector(new MonologCollector( $log->getMonolog() ));
+                    $debugbar->addCollector(new MonologCollector( $log->getMonolog(), Logger::DEBUG, true, 'Log' ));
                 }
 
                 if($db = $app['db']){
