@@ -9,6 +9,7 @@ use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
+use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -46,6 +47,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $debugbar = new StandardDebugBar;
 
                 $events = $app['events'];
+
+                $debugbar->addCollector(new LaravelCollector());
 
                 if($this->app['config']->get('laravel-debugbar::config.log_events', false)){
                     $debugbar->addCollector(new MessagesCollector('events'));
