@@ -1,6 +1,9 @@
 {
     "name": "barryvdh/laravel-debugbar",
-    "description": "",
+    "description": "PHP Debugbar integration for Laravel",
+    "keywords": ["laravel", "debugbar", "profiler", "debug", "webprofiler"],
+    "license": "MIT",
+
     "authors": [
         {
             "name": "Barry vd. Heuvel",
