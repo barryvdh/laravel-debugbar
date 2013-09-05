@@ -23,6 +23,7 @@ You need to publish the assets from this package.
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config files.
 You can also set in your config if you want to include the vendor files also (FontAwesome and jQuery). If you have them, set it to false.
+You can also only display the js of css vendors, but setting it to 'js' or 'css'
 
     $ php artisan config:publish barryvdh/laravel-debugbar
 
