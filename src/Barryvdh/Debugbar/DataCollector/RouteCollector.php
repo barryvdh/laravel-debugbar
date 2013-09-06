@@ -10,8 +10,9 @@ use Illuminate\Routing\Router;
 class RouteCollector extends DataCollector  implements Renderable
 {
 
-    public function __construct(){
-        $this->router = new Router;
+    protected $router;
+    public function __construct(Router $router ){
+        $this->router = $router;
     }
     /**
      * {@inheritDoc}

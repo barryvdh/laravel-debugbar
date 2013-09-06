@@ -63,7 +63,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         $debugbar['views']->addView($view);
                     });
 
-                $debugbar->addCollector(new RouteCollector());
+                $debugbar->addCollector($app->make('Barryvdh\Debugbar\DataCollector\RouteCollector'));
 
                 if($log = $app['log']){
                     $debugbar->addCollector(new MonologCollector( $log->getMonolog(), Logger::DEBUG, true, 'Log' ));
