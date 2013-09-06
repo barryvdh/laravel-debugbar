@@ -7,7 +7,7 @@ use DebugBar\DataCollector\Renderable;
 use Symfony\Component\Routing\Route;
 use Illuminate\Routing\Router;
 
-class RouteCollector extends DataCollector  implements Renderable
+class SymfonyRouteCollector extends DataCollector  implements Renderable
 {
 
     protected $router;
