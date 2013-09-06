@@ -1,15 +1,21 @@
 <?php namespace Barryvdh\Debugbar;
 
-use DebugBar\StandardDebugBar;
+use DebugBar\DebugBar;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
 use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataCollector\RequestDataCollector;
+use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\ExceptionsCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
+use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
 use Monolog\Logger;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -45,8 +51,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $this->app['debugbar'] = $this->app->share(function ($app) {
 
-                $debugbar = new StandardDebugBar;
+                $debugbar = new DebugBar;
 
+                $debugbar->addCollector(new PhpInfoCollector());
+                $debugbar->addCollector(new MessagesCollector());
+                $debugbar->addCollector(new TimeDataCollector());
+                $debugbar->addCollector(new MemoryCollector());
+                $debugbar->addCollector(new ExceptionsCollector());
                 $events = $app['events'];
 
                 $debugbar->addCollector(new LaravelCollector());
@@ -129,6 +140,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     return;
                 }
 
+                $debugbar = $app['debugbar'];
+                $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
+
                 $this->injectDebugbar($response);
 
             });
@@ -153,6 +167,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $content = $response->getContent();
         $pos = $posrFunction($content, '</body>');
 
+
+
         $renderer = $this->app['debugbar.renderer'];
         $debugbar = $renderer->renderHead() . $renderer->render();
 
@@ -161,7 +177,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         }else{
             $content = $content . $debugbar;
         }
-        
+
         $response->setContent($content);
     }
 }
