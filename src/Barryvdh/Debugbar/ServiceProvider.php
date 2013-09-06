@@ -13,7 +13,6 @@ use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Monolog\Logger;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
-    protected $package = 'barryvdh/laravel-debugbar';
 	/**
 	 * Indicates if loading of the provider is deferred.
 	 *
@@ -40,7 +39,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	public function register()
 	{
 
-        $this->package($this->package);
+        $this->package('barryvdh/laravel-debugbar');
 
         $this->app['debugbar'] = $this->app->share(function ($app) {
 
@@ -50,7 +49,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $debugbar->addCollector(new LaravelCollector());
 
-                if($this->app['config']->get('laravel-debugbar::config.log_events', false)){
+                if($app['config']->get('laravel-debugbar::config.log_events', false)){
                     $debugbar->addCollector(new MessagesCollector('events'));
                     $events->listen('*', function() use($debugbar){
                             $args = func_get_args();
@@ -78,9 +77,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         //Not connection set..
                     }
                 }
-
-
-
                 return $debugbar;
             });
 
@@ -91,8 +87,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 /** @var \DebugBar\StandardDebugBar $debugbar */
                 $debugbar = $app['debugbar'];
                 $renderer = $debugbar->getJavascriptRenderer();
-                $renderer->setBaseUrl(asset('packages/'.$this->package));
-                $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
+                $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
+                $renderer->setIncludeVendors($app['config']->get('laravel-debugbar::config.include_vendors', true));
 
                 return $renderer;
             });
