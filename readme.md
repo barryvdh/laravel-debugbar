@@ -14,6 +14,7 @@ I also provides a Facade interface for logging Messages, Exceptions and Time
 
 ## Installation
 
+Note: Currently only for Laravel 4.0
 Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-debugbar:dev-master` directly):
 
     "barryvdh/laravel-debugbar": "dev-master"
