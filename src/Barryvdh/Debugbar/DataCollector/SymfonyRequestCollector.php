@@ -34,6 +34,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             $data[$key] = $this->formatVar($var);
         }
         unset($data['content']);
+        $data['locale'] = \Config::get('app.locale', '-');
 
         return $data;
     }
