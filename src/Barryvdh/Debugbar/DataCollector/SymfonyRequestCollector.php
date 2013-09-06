@@ -33,6 +33,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         foreach($data as $key => $var){
             $data[$key] = $this->formatVar($var);
         }
+        unset($data['content']);
 
         return $data;
     }
