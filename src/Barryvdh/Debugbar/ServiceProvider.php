@@ -1,20 +1,13 @@
 <?php namespace Barryvdh\Debugbar;
 
-use DebugBar\DebugBar;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\PDO\TraceablePDO;
-use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
-use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
+
 use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataCollector\PhpInfoCollector;
-use DebugBar\DataCollector\TimeDataCollector;
-use DebugBar\DataCollector\RequestDataCollector;
-use DebugBar\DataCollector\MemoryCollector;
-use DebugBar\DataCollector\ExceptionsCollector;
+
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
-use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
 use Monolog\Logger;
 use Illuminate\Http\Request;
@@ -51,16 +44,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $this->app['debugbar'] = $this->app->share(function ($app) {
 
-                $debugbar = new DebugBar;
+                $debugbar = new LaravelDebugBar();
 
-                $debugbar->addCollector(new PhpInfoCollector());
-                $debugbar->addCollector(new MessagesCollector());
-                $debugbar->addCollector(new TimeDataCollector());
-                $debugbar->addCollector(new MemoryCollector());
-                $debugbar->addCollector(new ExceptionsCollector());
                 $events = $app['events'];
-
-                $debugbar->addCollector(new LaravelCollector());
 
                 if($app['config']->get('laravel-debugbar::config.log_events', false)){
                     $debugbar->addCollector(new MessagesCollector('events'));
@@ -94,6 +80,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         //Not connection set..
                     }
                 }
+
                 return $debugbar;
             });
 
