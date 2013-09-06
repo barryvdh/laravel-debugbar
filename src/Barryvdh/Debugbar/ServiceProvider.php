@@ -11,33 +11,35 @@ use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Monolog\Logger;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-	/**
-	 * Bootstrap the application events.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
         $debugbar = $this->app['debugbar'];
         $this->addListener();
-	}
+    }
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
 
         $this->package('barryvdh/laravel-debugbar');
 
@@ -87,7 +89,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 
         $this->app['debugbar.renderer'] = $this->app->share(function ($app) {
-                
+
                 /** @var \DebugBar\StandardDebugBar $debugbar */
                 $debugbar = $app['debugbar'];
                 $renderer = $debugbar->getJavascriptRenderer();
@@ -98,50 +100,68 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
 
 
-	}
+    }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array('debugbar', 'debugbar.renderer');
-	}
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('debugbar', 'debugbar.renderer');
+    }
+
 
     protected function addListener(){
 
-        // Check console isn't running and profiler is enabled
-        $enabled = (!$this->app->runningInConsole() and !$this->app['request']->ajax()) ? $this->app['config']->get('laravel-debugbar::config.enabled') : false;
+        $app = $this->app;
+        $this->app['router']->after(function (Request $request, Response $response) use($app)
+            {
+                if(
+                    $app['config']->get('laravel-debugbar::config.enabled') === false
+                    || $app->runningInConsole()
+                    || $request->isXmlHttpRequest()
+                    || $response->isRedirection()
+                    || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+                    || 'html' !== $request->getRequestFormat()
+                ){
+                    return;
+                }
 
-        if ($enabled)
-        {
-            $app = $this->app;
-            $this->app['router']->after(function ($request, $response) use($app)
-                {
-                    // Do not display profiler on non-HTML responses.
-                    if (\Str::startsWith($response->headers->get('Content-Type'), 'text/html'))
-                    {
-                        $content = $response->getContent();
+                $this->injectDebugbar($response);
 
-                        $renderer = $app['debugbar.renderer'];
-                        $output = $renderer->renderHead() . $renderer->render();
+            });
+    }
 
-                        $body_position = strripos($content, '</body>');
-
-                        if ($body_position !== FALSE)
-                        {
-                            $content = substr($content, 0, $body_position) . $output . substr($content, $body_position);
-                        }
-                        else
-                        {
-                            $content .= $output;
-                        }
-
-                        $response->setContent($content);
-                    }
-                });
+    /**
+     * Injects the web debug toolbar into the given Response.
+     *
+     * @param Response $response A Response instance
+     * Source: https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
+     */
+    protected function injectDebugbar(Response $response)
+    {
+        if (function_exists('mb_stripos')) {
+            $posrFunction   = 'mb_strripos';
+            $substrFunction = 'mb_substr';
+        } else {
+            $posrFunction   = 'strripos';
+            $substrFunction = 'substr';
         }
+
+        $content = $response->getContent();
+        $pos = $posrFunction($content, '</body>');
+
+        $renderer = $this->app['debugbar.renderer'];
+        $debugbar = $renderer->renderHead() . $renderer->render();
+
+        if (false !== $pos) {
+            $content = $substrFunction($content, 0, $pos).$debugbar.$substrFunction($content, $pos);
+        }else{
+            $content = $content . $debugbar;
+        }
+        
+        $response->setContent($content);
     }
 }
