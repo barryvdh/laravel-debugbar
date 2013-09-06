@@ -69,7 +69,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 }
 
                 if($log = $app['log']){
-                    $debugbar->addCollector(new MonologCollector( $log->getMonolog(), Logger::DEBUG, true, 'Log' ));
+                    $app['log']->listen(function($level, $message, $context) use($debugbar)
+                        {
+                            $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
+                            $debugbar['messages']->addMessage($log, $level);
+                        });
                 }
 
                 if($db = $app['db']){
