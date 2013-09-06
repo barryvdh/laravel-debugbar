@@ -7,7 +7,7 @@ It bootstraps some Collectors to work with Laravel and implements a couple custo
 This includes 3 custom collectors:
  - RouteCollector: Show information about the current Route
  - ViewCollector: Show the currently loaded views an it's data.
- - LaravelCollector: Show the Laravel version and Environment.
+ - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
  - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
 
 And implements the Monolog Collector for Laravel's Logger.
@@ -33,7 +33,7 @@ You can also only display the js of css vendors, but setting it to 'js' or 'css'
 
     $ php artisan config:publish barryvdh/laravel-debugbar
 
-You can also set to show all events (disabled by default)
+You can also disable/enable the loggers you want. You can also use the IoC container to add extra loggers. (`$app['debugbar']->addCollect(new MyDataCollector)`)
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
