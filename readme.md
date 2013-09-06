@@ -8,6 +8,7 @@ This includes 3 custom collectors:
  - RouteCollector: Show information about the current Route
  - ViewCollector: Show the currently loaded views an it's data.
  - LaravelCollector: Show the Laravel version and Environment.
+ - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
 
 And implements the Monolog Collector for Laravel's Logger.
 I also provides a Facade interface for logging Messages, Exceptions and Time
