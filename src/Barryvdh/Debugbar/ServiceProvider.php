@@ -10,10 +10,11 @@ use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use DebugBar\Bridge\MonologCollector;
+use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
+use DebugBar\Bridge\Twig\TwigCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -120,6 +121,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     }catch(\PDOException $e){
                         //Not connection set..
                     }
+                }
+
+                if($self->collects('twig') and isset($app['twig'])){
+                    $time = isset($debugbar['time']) ? $debugbar['time'] : null;
+                    $app['twig'] = new TraceableTwigEnvironment($app['twig'], $time);
+                    $debugbar->addCollector(new TwigCollector($app['twig']));
                 }
 
                 return $debugbar;
