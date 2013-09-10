@@ -104,10 +104,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 if($self->collects('log', true)){
                     if($self->collects('messages', true)){
-                        $app['log']->listen(function($level, $message, $context) use($debugbar)
+                        $logger = new MessagesCollector('log');
+                        $debugbar['messages']->aggregate($logger);
+                        $app['log']->listen(function($level, $message, $context) use($logger)
                             {
                                 $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
-                                $debugbar['messages']->addMessage($log, $level);
+                                $logger->addMessage($log, $level);
                             });
                     }else{
                         $debugbar->addCollector(new MonologCollector( $app['log']->getMonolog() ));
