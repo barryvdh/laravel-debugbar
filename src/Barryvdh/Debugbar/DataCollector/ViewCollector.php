@@ -37,7 +37,6 @@ class ViewCollector extends DataCollector  implements Renderable
     {
         $views = $this->views;
         return array(
-            'count' => count($views),
             'views' => $views
         );
     }
@@ -60,10 +59,6 @@ class ViewCollector extends DataCollector  implements Renderable
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "views.views",
                 "default" => "{}"
-            ),
-            "views:badge" => array(
-                "map" => "views.count",
-                "default" => "null"
             )
         );
     }
