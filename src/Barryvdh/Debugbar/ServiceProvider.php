@@ -116,7 +116,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     }
                 }
 
-                if($self->collects('db')){
+                if($self->collects('db', true)){
                     try{
                         $pdo = new TraceablePDO( $app['db']->getPdo() );
                         $debugbar->addCollector(new PDOCollector( $pdo ));
