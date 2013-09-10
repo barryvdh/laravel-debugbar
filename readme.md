@@ -48,9 +48,9 @@ You can now add messages using the Facade, using the PSR-3 levels (debug, info, 
 
 And start/stop timing:
 
-    \Debugbar::startMeasure('render','Time for rendering');
-    \Debugbar::stopMeasure('render');
-    \Debugbar::measure('My long operation', function() {
+    Debugbar::startMeasure('render','Time for rendering');
+    Debugbar::stopMeasure('render');
+    Debugbar::measure('My long operation', function() {
         //Do something..
     });
 
@@ -59,5 +59,12 @@ Or log exceptions:
     try {
         throw new Exception('foobar');
     } catch (Exception $e) {
-        \Debugbar::addException($e);
+        Debugbar::addException($e);
     }
+
+If you want you can add your own DataCollectors, through the Container or the Facade:
+
+    Debugbar::addCollector(new DebugBar\DataCollector\MessagesCollector('my_messages'));
+    //Or via the App container:
+    $debugbar = App::make('debugbar');
+    $debugbar->addCollector(new DebugBar\DataCollector\MessagesCollector('my_messages'));
