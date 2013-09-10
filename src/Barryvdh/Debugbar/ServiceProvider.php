@@ -128,7 +128,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 if($self->collects('twig') and isset($app['twig'])){
                     $time = isset($debugbar['time']) ? $debugbar['time'] : null;
                     $app['twig'] = new TraceableTwigEnvironment($app['twig'], $time);
-                    $debugbar->addCollector(new TwigCollector($app['twig']));
+                    //If we already collect Views, skip the collector (but do add timing)
+                    if(!$self->collects('views', true)){
+                        $debugbar->addCollector(new TwigCollector($app['twig']));
+                    }
                 }
 
                 return $debugbar;
