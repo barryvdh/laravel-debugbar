@@ -94,7 +94,7 @@ class Facade extends \Illuminate\Support\Facades\Facade {
      * @param mixed $message
      * @param string $label
      */
-    public function addMessage($message, $label = 'info')
+    public static function addMessage($message, $label = 'info')
     {
         /** @var \DebugBar\DataCollector\MessagesCollector $message */
         $message = static::make('messages');
