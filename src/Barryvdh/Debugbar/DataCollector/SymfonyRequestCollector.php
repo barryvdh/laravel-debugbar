@@ -31,9 +31,15 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         $this->collector->collect($this->request, $this->response);
         $data = unserialize($this->collector->serialize());
         foreach($data as $key => $var){
-            $data[$key] = $this->formatVar($var);
+            if(empty($data[$key])){
+                $data[$key] = '-';
+            }else{
+                $data[$key] = $this->formatVar($var);
+            }
+
         }
         unset($data['content']);
+        unset($data['controller']);
         $data['locale'] = \Config::get('app.locale', '-');
 
         return $data;
