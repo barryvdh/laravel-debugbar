@@ -153,7 +153,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
             dt.text(key);
 
             var v = value;
-            if (v.length > 100) {
+            if (v && v.length > 100) {
                 v = v.substr(0, 100) + "...";
             }
             dd.text(v).click(function() {
