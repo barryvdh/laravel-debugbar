@@ -34,7 +34,7 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     public static function make($name){
 
         $instance = static::resolveFacadeInstance(static::getFacadeAccessor());
-        return $instance[$name];
+        return isset($instance[$name]) ? $instance[$name] : null;
     }
 
     /**
@@ -46,7 +46,10 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     public static function startMeasure($name, $label=null){
         /** @var \DebugBar\DataCollector\TimeDataCollector $time */
         $time = static::make('time');
-        $time->startMeasure($name, $label);
+        if($time){
+            $time->startMeasure($name, $label);
+        }
+
     }
 
     /**
@@ -58,7 +61,9 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     {
         /** @var \DebugBar\DataCollector\TimeDataCollector $time */
         $time = static::make('time');
-        $time->stopMeasure($name);
+        if($time){
+            $time->stopMeasure($name);
+        }
     }
 
     /**
@@ -71,7 +76,9 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     {
         /** @var \DebugBar\DataCollector\TimeDataCollector $time */
         $time = static::make('time');
-        $time->measure($label, $closure);
+        if($time){
+            $time->measure($label, $closure);
+        }
     }
 
     /**
@@ -83,7 +90,9 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     {
         /** @var \DebugBar\DataCollector\ExceptionsCollector $time */
         $exceptions = static::make('exceptions');
-        $exceptions->addException($e);
+        if($exceptions){
+            $exceptions->addException($e);
+        }
     }
 
     /**
@@ -98,7 +107,9 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     {
         /** @var \DebugBar\DataCollector\MessagesCollector $message */
         $message = static::make('messages');
-        $message->addMessage($message, $label);
+        if($message){
+            $message->addMessage($message, $label);
+        }
     }
     /**
      * Override static calls for adding messages
@@ -113,7 +124,9 @@ class Facade extends \Illuminate\Support\Facades\Facade {
         if(in_array($method, $messageLevels)){
             /** @var \DebugBar\DataCollector\MessagesCollector $message */
             $message = static::make('messages');
-            $message->addMessage($args[0], $method);
+            if($message){
+                $message->addMessage($args[0], $method);
+            }
         }else{
             parent::__callStatic($method, $args);
         }
