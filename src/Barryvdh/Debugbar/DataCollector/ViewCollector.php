@@ -16,6 +16,7 @@ class ViewCollector extends DataCollector  implements Renderable
      * @param \Illuminate\View\View $view
      */
     public function addView(View $view){
+
         $name = $view->getName();
         $data = array();
         foreach($view->getData() as $key => $value)
@@ -27,7 +28,25 @@ class ViewCollector extends DataCollector  implements Renderable
                 $data[$key] = $value;
             }
         }
-        $this->views[$name] = $this->formatVar($data);
+        $data = $this->flattenVar($data);
+        $this->views[$name] = print_r($data, true);
+    }
+
+    /**
+     * Flatten a var recursively
+     *
+     * @param $var
+     * @return mixed
+     */
+    public function flattenVar($var){
+        if (is_array($var)) {
+            foreach ($var as &$v) {
+                $v = $this->flattenVar($v);
+            }
+        } else if (is_object($var)) {
+            $var = "Object(" . get_class($var) . ")";
+        }
+        return $var;
     }
 
     /**
