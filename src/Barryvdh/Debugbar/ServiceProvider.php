@@ -84,7 +84,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         $debugbar->addCollector(new RequestDataCollector());
                     }
 
-                    if($self->collects('events', false)){
+                    if($self->collects('events', false)  and isset($app['events'])){
                         $debugbar->addCollector(new MessagesCollector('events'));
                         $app['events']->listen('*', function() use($debugbar){
                                 $args = func_get_args();
@@ -93,7 +93,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                             });
                     }
 
-                    if($self->collects('views', true)){
+                    if($self->collects('views', true)  and isset($app['events'])){
                         $debugbar->addCollector(new ViewCollector());
                         $app['events']->listen('composing:*', function($view) use($debugbar){
                                 $debugbar['views']->addView($view);
@@ -108,7 +108,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         }
                     }
 
-                    if($self->collects('log', true)){
+                    if( $self->collects('log', true) and isset($app['log']) ){
                         if($self->collects('messages', true)){
                             $logger = new MessagesCollector('log');
                             $debugbar['messages']->aggregate($logger);
@@ -122,7 +122,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         }
                     }
 
-                    if($self->collects('db', true)){
+                    if($self->collects('db', true) and isset($app['db'])){
                         try{
                             $pdo = new TraceablePDO( $app['db']->getPdo() );
                             $debugbar->addCollector(new PDOCollector( $pdo ));
