@@ -27,7 +27,7 @@ class ViewCollector extends DataCollector  implements Renderable
                 $data[$key] = $value;
             }
         }
-        $this->views[$name] = $this->formatVar($data);
+        $this->views[] = $name . ' => ' .$this->formatVar($data);
     }
 
     /**
@@ -36,9 +36,14 @@ class ViewCollector extends DataCollector  implements Renderable
     public function collect()
     {
         $views = $this->views;
-        return array(
-            'views' => $views
-        );
+        $messages = array();
+        foreach($views as $data){
+            $messages[] = array(
+                'message' => $data,
+                'is_string' => true,
+            );
+        }
+        return array('messages' => $messages);
     }
 
     /**
@@ -56,8 +61,8 @@ class ViewCollector extends DataCollector  implements Renderable
     {
         return array(
             "views" => array(
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "views.views",
+                "widget" => "PhpDebugBar.Widgets.MessagesWidget",
+                "map" => "views.messages",
                 "default" => "{}"
             )
         );
