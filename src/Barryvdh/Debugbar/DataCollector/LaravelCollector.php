@@ -37,7 +37,7 @@ class LaravelCollector extends DataCollector  implements Renderable
         return array(
             "version" => array(
                 "icon" => "github",
-                "tooltip" => "Vresion",
+                "tooltip" => "Version",
                 "map" => "laravel.version",
                 "default" => ""
             ),
