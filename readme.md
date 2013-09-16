@@ -5,7 +5,7 @@ It includes a ServiceProvider to register the debugbar and attach it to the outp
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
 
 This includes 3 custom collectors:
- - RouteCollector: Show information about the current Route
+ - RouteCollector: Show information about the current Route. (Note: requires atleast 4.0.6, so disable this if you are on a lower version!)
  - ViewCollector: Show the currently loaded views an it's data.
  - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
  - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
