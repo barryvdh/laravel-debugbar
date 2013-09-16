@@ -157,6 +157,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $renderer;
             });
 
+        $this->app['command.debugbar.publish'] = $this->app->share(function($app)
+            {
+
+                return new Console\PublishCommand($app['asset.publisher']);
+
+            });
+        $this->commands('command.debugbar.publish');
+
 
     }
 
@@ -167,7 +175,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function provides()
     {
-        return array('debugbar', 'debugbar.renderer');
+        return array('debugbar', 'debugbar.renderer', 'command.debugbar.publish');
     }
 
 

@@ -25,13 +25,13 @@ After updating composer, add the ServiceProvider to the providers array in app/c
 
 You need to publish the assets from this package.
 
-    $ php artisan asset:publish barryvdh/laravel-debugbar
+    $ php artisan debugbar:publish
 
 Note: The public assets can change overtime (because of upstream changes), it is recommended to re-publish them after update. You can also add the republish command in composer.json.
 
     "post-update-cmd": [
         "php artisan ide-helper:generate",
-        "php artisan asset:publish barryvdh/laravel-debugbar"
+        "php artisan debugbar:publish"
     ],
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config files.
