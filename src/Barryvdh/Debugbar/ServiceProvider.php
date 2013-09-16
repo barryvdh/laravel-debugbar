@@ -183,7 +183,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app = $this->app;
         $self = $this;
-
         $this->app['router']->after(function ($request, $response) use($app, $self)
             {
                 if( $app->runningInConsole() or $response->isRedirection()){
@@ -197,15 +196,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 }
 
 
-                if( $request->isXmlHttpRequest()
-                    || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
-                    || 'html' !== $request->getRequestFormat()
-                ){
+                if( $request->isXmlHttpRequest() ){
                     $debugbar->addDataToHeaders($response);
-                }else{
+                }elseif(
+                    !$response->headers->has('Content-Type')
+                    or strpos($response->headers->get('Content-Type'), 'html') !== false
+                    or $request->getRequestFormat() == 'html'
+                ){
                     $self->injectDebugbar($response);
                 }
-
 
             });
     }
