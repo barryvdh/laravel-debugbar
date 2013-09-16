@@ -58,7 +58,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
 
-                $debugbar = new DebugBar;
+                $debugbar = new LaravelDebugBar;
 
                 if($app['config']->get('laravel-debugbar::config.enabled')){
 
@@ -183,23 +183,29 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app = $this->app;
         $self = $this;
+
         $this->app['router']->after(function ($request, $response) use($app, $self)
             {
-                if( $app->runningInConsole()
-                    || $request->isXmlHttpRequest()
-                    || $response->isRedirection()
-                    || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
-                    || 'html' !== $request->getRequestFormat()
-                ){
+                if( $app->runningInConsole() or $response->isRedirection()){
                     return;
                 }
 
+                $debugbar = $app['debugbar'];
+
                 if($app['config']->get('laravel-debugbar::config.collectors.symfony_request', true)){
-                    $debugbar = $app['debugbar'];
                     $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
                 }
 
-                $self->injectDebugbar($response);
+
+                if( $request->isXmlHttpRequest()
+                    || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+                    || 'html' !== $request->getRequestFormat()
+                ){
+                    $debugbar->addDataToHeaders($response);
+                }else{
+                    $self->injectDebugbar($response);
+                }
+
 
             });
     }

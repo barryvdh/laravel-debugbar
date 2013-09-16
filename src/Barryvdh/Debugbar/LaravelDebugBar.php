@@ -16,16 +16,30 @@ use Barryvdh\Debugbar\DataCollector\LaravelCollector;
  */
 class LaravelDebugbar extends DebugBar
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct()
+
+    public function addDataToHeaders($response, $headerName = 'phpdebugbar', $maxHeaderLength = 4096)
     {
-        $this->addCollector(new PhpInfoCollector());
-        $this->addCollector(new MessagesCollector());
-        $this->addCollector(new TimeDataCollector());
-        $this->addCollector(new MemoryCollector());
-        $this->addCollector(new ExceptionsCollector());
-        $this->addCollector(new LaravelCollector());
+
+        $headers = array();
+        $data = rawurlencode(json_encode(array(
+                    'id' => $this->getCurrentRequestId(),
+                    'data' => $this->getData()
+                )));
+        $chunks = array();
+
+        while (strlen($data) > $maxHeaderLength) {
+            $chunks[] = substr($data, 0, $maxHeaderLength);
+            $data = substr($data, $maxHeaderLength);
+        }
+        $chunks[] = $data;
+
+        for ($i = 0, $c = count($chunks); $i < $c; $i++) {
+            $name = $headerName . ($i > 0 ? "-$i" : '');
+            $headers[$name] = $chunks[$i];
+
+        }
+
+        $response->headers->add($headers);
     }
+
 }
