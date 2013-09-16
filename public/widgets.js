@@ -313,11 +313,11 @@ if (typeof(PhpDebugBar) == 'undefined') {
                 if (data.measures) {
                     for (var i = 0; i < data.measures.length; i++) {
                         var li = $('<li class="measure" />');
-                        li.append($('<span class="label" />').text(data.measures[i].label + " (" + data.measures[i].duration_str + ")"));
                         li.append($('<span class="value" />').css({
                             left: Math.round(data.measures[i].relative_start * 100 / data.duration) + "%",
                             width: Math.round(data.measures[i].duration * 100 / data.duration) + "%"
                         }));
+                        li.append($('<span class="label" />').text(data.measures[i].label + " (" + data.measures[i].duration_str + ")"));
                         this.$el.append(li);
                     }
                 }
