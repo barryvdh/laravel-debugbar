@@ -176,7 +176,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     protected function addListener(){
 
         $app = $this->app;
-        $this->app['router']->after(function (Request $request, Response $response) use($app)
+        $this->app['router']->close(function (Request $request, Response $response) use($app)
             {
                 if( $app->runningInConsole() or $response->isRedirection()){
                     return;
