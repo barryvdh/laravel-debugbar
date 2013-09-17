@@ -1,10 +1,13 @@
 ## Laravel Debugbar
 
-This is a simple package to integrate PHP Debug Bar (https://github.com/maximebf/php-debugbar) with Laravel.
+This is a package to integrate PHP Debug Bar (https://github.com/maximebf/php-debugbar) with Laravel.
 It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
+It is configured to display Redirects and Ajax Requests. (Shown in a dropdown)
 
-This includes 3 custom collectors:
+![Screenshot](http://i.imgur.com/CUSnVTe.png)
+
+This includes 4 custom collectors:
  - RouteCollector: Show information about the current Route. (Note: requires atleast 4.0.6, so disable this if you are on a lower version!)
  - ViewCollector: Show the currently loaded views an it's data.
  - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
@@ -49,7 +52,7 @@ If you want to use the facade to log messages, add this to your facades in app.p
 You can now add messages using the Facade, using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
 
     Debugbar::info($object);
-    Debugbar::alert("Error!");
+    Debugbar::error("Error!");
     Debugbar::warning('Watch out..');
     Debugbar::addMessage('Another message', 'mylabel');
 
