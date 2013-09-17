@@ -3,12 +3,7 @@
 
 namespace Barryvdh\Debugbar;
 use DebugBar\DebugBar;
-use DebugBar\DataCollector\PhpInfoCollector;
-use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataCollector\TimeDataCollector;
-use DebugBar\DataCollector\MemoryCollector;
-use DebugBar\DataCollector\ExceptionsCollector;
-use Barryvdh\Debugbar\DataCollector\LaravelCollector;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Debug bar subclass which adds all without Request and with LaravelCollector.
@@ -17,9 +12,15 @@ use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 class LaravelDebugbar extends DebugBar
 {
 
+    /**
+     * Add the data to headers, for Ajax requests
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param string $headerName
+     * @param int $maxHeaderLength
+     */
     public function addDataToHeaders($response, $headerName = 'phpdebugbar', $maxHeaderLength = 4096)
     {
-
         $headers = array();
         $data = rawurlencode(json_encode(array(
                     'id' => $this->getCurrentRequestId(),
@@ -40,6 +41,37 @@ class LaravelDebugbar extends DebugBar
         }
 
         $response->headers->add($headers);
+    }
+
+    /**
+     * Injects the web debug toolbar into the given Response.
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
+     * Source: https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
+     */
+    public function injectDebugbar($response)
+    {
+        if (function_exists('mb_stripos')) {
+            $posrFunction   = 'mb_strripos';
+            $substrFunction = 'mb_substr';
+        } else {
+            $posrFunction   = 'strripos';
+            $substrFunction = 'substr';
+        }
+
+        $content = $response->getContent();
+        $pos = $posrFunction($content, '</body>');
+
+        $renderer = $this->getJavascriptRenderer();
+        $debugbar = $renderer->renderHead() . $renderer->render();
+
+        if (false !== $pos) {
+            $content = $substrFunction($content, 0, $pos).$debugbar.$substrFunction($content, $pos);
+        }else{
+            $content = $content . $debugbar;
+        }
+
+        $response->setContent($content);
     }
 
 }

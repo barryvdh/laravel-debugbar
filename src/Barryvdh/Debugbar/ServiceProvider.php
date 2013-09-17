@@ -1,6 +1,5 @@
 <?php namespace Barryvdh\Debugbar;
 
-use DebugBar\DebugBar;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\TimeDataCollector;
@@ -15,7 +14,9 @@ use DebugBar\Bridge\Twig\TwigCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     /**
@@ -141,21 +142,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     }
                 }
 
-                return $debugbar;
-            });
-
-
-
-        $this->app['debugbar.renderer'] = $this->app->share(function ($app) {
-
-                /** @var \DebugBar\StandardDebugBar $debugbar */
-                $debugbar = $app['debugbar'];
                 $renderer = $debugbar->getJavascriptRenderer();
                 $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
                 $renderer->setIncludeVendors($app['config']->get('laravel-debugbar::config.include_vendors', true));
 
-                return $renderer;
+                return $debugbar;
             });
+
+
 
         $this->app['command.debugbar.publish'] = $this->app->share(function($app)
             {
@@ -175,70 +169,38 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function provides()
     {
-        return array('debugbar', 'debugbar.renderer', 'command.debugbar.publish');
+        return array('debugbar', 'command.debugbar.publish');
     }
 
 
     protected function addListener(){
 
         $app = $this->app;
-        $self = $this;
-        $this->app['router']->after(function ($request, $response) use($app, $self)
+        $this->app['router']->after(function (Request $request, Response $response) use($app)
             {
                 if( $app->runningInConsole() or $response->isRedirection()){
                     return;
                 }
 
+                /** @var LaravelDebugbar $debugbar */
                 $debugbar = $app['debugbar'];
-
                 if($app['config']->get('laravel-debugbar::config.collectors.symfony_request', true)){
                     $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
                 }
 
-
                 if( $request->isXmlHttpRequest() ){
                     $debugbar->addDataToHeaders($response);
                 }elseif(
-                    !$response->headers->has('Content-Type')
-                    or strpos($response->headers->get('Content-Type'), 'html') !== false
-                    or $request->getRequestFormat() == 'html'
+                    ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+                    || 'html' !== $request->getRequestFormat()
                 ){
-                    $self->injectDebugbar($response);
+                   return;
+                }else{
+                    $debugbar->injectDebugbar($response);
                 }
 
             });
     }
 
-    /**
-     * Injects the web debug toolbar into the given Response.
-     *
-     * @param Response $response A Response instance
-     * Source: https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
-     */
-    public function injectDebugbar(Response $response)
-    {
-        if (function_exists('mb_stripos')) {
-            $posrFunction   = 'mb_strripos';
-            $substrFunction = 'mb_substr';
-        } else {
-            $posrFunction   = 'strripos';
-            $substrFunction = 'substr';
-        }
 
-        $content = $response->getContent();
-        $pos = $posrFunction($content, '</body>');
-
-
-
-        $renderer = $this->app['debugbar.renderer'];
-        $debugbar = $renderer->renderHead() . $renderer->render();
-
-        if (false !== $pos) {
-            $content = $substrFunction($content, 0, $pos).$debugbar.$substrFunction($content, $pos);
-        }else{
-            $content = $content . $debugbar;
-        }
-
-        $response->setContent($content);
-    }
 }
