@@ -106,9 +106,9 @@ class Facade extends \Illuminate\Support\Facades\Facade {
     public static function addMessage($message, $label = 'info')
     {
         /** @var \DebugBar\DataCollector\MessagesCollector $message */
-        $message = static::make('messages');
-        if($message){
-            $message->addMessage($message, $label);
+        $collector = static::make('messages');
+        if($collector){
+            $collector->addMessage($message, $label);
         }
     }
     /**
