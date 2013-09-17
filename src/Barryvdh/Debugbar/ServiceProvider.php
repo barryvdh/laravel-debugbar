@@ -61,6 +61,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $debugbar = new LaravelDebugBar;
 
+                if(isset($app['session'])){
+                    $debugbar->setSessionStore($app['session']);
+                }
+
                 if($app['config']->get('laravel-debugbar::config.enabled')){
 
                     if($self->collects('phpinfo', true)){
@@ -175,10 +179,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     protected function addListener(){
 
+
         $app = $this->app;
-        $this->app['router']->close(function (Request $request, Response $response) use($app)
+        $this->app['router']->after(function (Request $request, Response $response) use($app)
             {
-                if( $app->runningInConsole() or $response->isRedirection()){
+
+                if( $app->runningInConsole() ){
                     return;
                 }
 
@@ -188,7 +194,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
                 }
 
-                if( $request->isXmlHttpRequest() ){
+                if($response->isRedirection()){
+                    $debugbar->stackData();
+                }elseif( $request->isXmlHttpRequest() ){
                     $debugbar->addDataToHeaders($response);
                 }elseif(
                     ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
