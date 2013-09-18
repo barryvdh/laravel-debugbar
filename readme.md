@@ -7,14 +7,27 @@ It is configured to display Redirects and Ajax Requests. (Shown in a dropdown)
 
 ![Screenshot](http://i.imgur.com/CUSnVTe.png)
 
-This includes 4 custom collectors:
+This includes some custom collectors:
  - RouteCollector: Show information about the current Route. (Note: requires atleast 4.0.6, so disable this if you are on a lower version!)
  - ViewCollector: Show the currently loaded views an it's data.
+ - EventsCollector: Show all events
  - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
  - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
 
-And implements the Monolog Collector for Laravel's Logger.
-I also provides a Facade interface for logging Messages, Exceptions and Time
+Bootstraps the following collectors for Laravel:
+ - LogCollector: Show all Log messages
+ - PdoCollector: Show Database Queries + Bindings
+ - TwigCollector: For extra Twig info with barryvdh/laravel-twigbridge
+ - SwiftMailCollector and SwiftLogCollector for Mail
+
+And the default collectors:
+ - PhpInfoCollector
+ - MessagesCollector
+ - TimeDataCollector
+ - MemoryCollector
+ - ExceptionsCollector
+
+It also provides a Facade interface for easy logging Messages, Exceptions and Time
 
 ## Installation
 
