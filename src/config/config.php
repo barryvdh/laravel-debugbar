@@ -49,6 +49,8 @@ return array(
        'twig' => false,             // Twig, requires barryvdh/laravel-twigbridge
        'default_request'=> false,   // Regular or special Symfony request logger
        'symfony_request'=> true,    // Only one can be enabled..
+       'mail' => true,              // Catch mail messages
+       'mail_log' => false,         // Display full mail log
 
    )
 

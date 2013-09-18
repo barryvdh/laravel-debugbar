@@ -8,6 +8,8 @@ use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\PDO\TraceablePDO;
+use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
+use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
 use DebugBar\Bridge\Twig\TwigCollector;
@@ -56,7 +58,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->package('barryvdh/laravel-debugbar');
 
         $self = $this;
-
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
 
                 $debugbar = new LaravelDebugBar;
@@ -89,7 +90,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         $debugbar->addCollector(new RequestDataCollector());
                     }
 
-                    if($self->collects('events', false)  and isset($app['events'])){
+                    if($self->collects('events', false)){
                         $debugbar->addCollector(new MessagesCollector('events'));
                         $app['events']->listen('*', function() use($debugbar){
                                 $args = func_get_args();
@@ -98,7 +99,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                             });
                     }
 
-                    if($self->collects('views', true)  and isset($app['events'])){
+                    if($self->collects('views', true)){
                         $debugbar->addCollector(new ViewCollector());
                         $app['events']->listen('composing:*', function($view) use($debugbar){
                                 $debugbar['views']->addView($view);
@@ -113,7 +114,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         }
                     }
 
-                    if( $self->collects('log', true) and isset($app['log']) ){
+                    if( $self->collects('log', true) ){
                         if($self->collects('messages', true)){
                             $logger = new MessagesCollector('log');
                             $debugbar['messages']->aggregate($logger);
@@ -127,7 +128,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         }
                     }
 
-                    if($self->collects('db', true) and isset($app['db'])){
+                    if($self->collects('db', true)){
                         try{
                             $pdo = new TraceablePDO( $app['db']->getPdo() );
                             $debugbar->addCollector(new PDOCollector( $pdo ));
@@ -144,11 +145,21 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                             $debugbar->addCollector(new TwigCollector($app['twig']));
                         }
                     }
-                }
 
-                $renderer = $debugbar->getJavascriptRenderer();
-                $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
-                $renderer->setIncludeVendors($app['config']->get('laravel-debugbar::config.include_vendors', true));
+
+                    if($self->collects('mail', true)){
+                        $mailer = $app['mailer']->getSwiftMailer();
+                        $debugbar->addCollector(new SwiftMailCollector($mailer));
+                        if($self->collects('mail_log') and isset($debugbar['messages'])){
+                            $debugbar['messages']->aggregate(new SwiftLogCollector($mailer));
+                        }
+                    }
+
+                    $renderer = $debugbar->getJavascriptRenderer();
+                    $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
+                    $renderer->setIncludeVendors($app['config']->get('laravel-debugbar::config.include_vendors', true));
+
+                }
 
                 return $debugbar;
             });
