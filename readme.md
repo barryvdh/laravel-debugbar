@@ -5,7 +5,7 @@ It includes a ServiceProvider to register the debugbar and attach it to the outp
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
 It is configured to display Redirects and Ajax Requests. (Shown in a dropdown)
 
-![Screenshot](http://i.imgur.com/CUSnVTe.png)
+![Screenshot](http://i.imgur.com/GVc6C9g.png)
 
 This includes some custom collectors:
  - RouteCollector: Show information about the current Route. (Note: requires atleast 4.0.6, so disable this if you are on a lower version!)
