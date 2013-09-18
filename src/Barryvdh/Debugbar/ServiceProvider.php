@@ -36,10 +36,111 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     public function boot()
     {
         if($this->app['config']->get('laravel-debugbar::config.enabled')){
+
+            /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
+
+            if(isset($this->app['session'])){
+                $debugbar->setSessionStore($this->app['session']);
+            }
+
+            if($this->app['config']->get('laravel-debugbar::config.enabled')){
+
+                if($this->collects('phpinfo', true)){
+                    $debugbar->addCollector(new PhpInfoCollector());
+                }
+                if($this->collects('messages', true)){
+                    $debugbar->addCollector(new MessagesCollector());
+                }
+                if($this->collects('time', true)){
+                    $debugbar->addCollector(new TimeDataCollector());
+                }
+                if($this->collects('memory', true)){
+                    $debugbar->addCollector(new MemoryCollector());
+                }
+                if($this->collects('exceptions', true)){
+                    $debugbar->addCollector(new ExceptionsCollector());
+                }
+                if($this->collects('laravel', false)){
+                    $debugbar->addCollector(new LaravelCollector());
+                }
+                if($this->collects('default_request', false)){
+                    $debugbar->addCollector(new RequestDataCollector());
+                }
+
+                if($this->collects('events', false) and isset($this->app['events'])){
+                    $debugbar->addCollector(new MessagesCollector('events'));
+                    $this->app['events']->listen('*', function() use($debugbar){
+                            $args = func_get_args();
+                            $event = end($args);
+                            $debugbar['events']->info("Received event: ". $event);
+                        });
+                }
+
+                if($this->collects('views', true) and isset($this->app['events'])){
+                    $debugbar->addCollector(new ViewCollector());
+                    $this->app['events']->listen('composing:*', function($view) use($debugbar){
+                            $debugbar['views']->addView($view);
+                        });
+                }
+
+                if($this->collects('route')){
+                    if(class_exists('Illuminate\Routing\RouteCollection')){
+                        $debugbar->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
+                    }else{
+                        $debugbar->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
+                    }
+                }
+
+                if( $this->collects('log', true) ){
+                    if($debugbar->hasCollector('messages') ){
+                        $logger = new MessagesCollector('log');
+                        $debugbar['messages']->aggregate($logger);
+                        $this->app['log']->listen(function($level, $message, $context) use($logger)
+                            {
+                                $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
+                                $logger->addMessage($log, $level);
+                            });
+                    }else{
+                        $debugbar->addCollector(new MonologCollector( $this->app['log']->getMonolog() ));
+                    }
+                }
+
+                if($this->collects('db', true) and isset($this->app['db'])){
+                    try{
+                        $pdo = new TraceablePDO( $this->app['db']->getPdo() );
+                        $debugbar->addCollector(new PDOCollector( $pdo ));
+                    }catch(\PDOException $e){
+                        //Not connection set..
+                    }
+                }
+
+                if($this->collects('twig') and isset($this->app['twig'])){
+                    $time = isset($debugbar['time']) ? $debugbar['time'] : null;
+                    $this->app['twig'] = new TraceableTwigEnvironment($this->app['twig'], $time);
+                    //If we already collect Views, skip the collector (but do add timing)
+                    if(!$debugbar->hasCollector('views')){
+                        $debugbar->addCollector(new TwigCollector($this->app['twig']));
+                    }
+                }
+
+
+                if($this->collects('mail', true)){
+                    $mailer = $this->app['mailer']->getSwiftMailer();
+                    $debugbar->addCollector(new SwiftMailCollector($mailer));
+                    if($this->collects('mail_log') and $debugbar->hasCollector('messages')){
+                        $debugbar['messages']->aggregate(new SwiftLogCollector($mailer));
+                    }
+                }
+
+                $renderer = $debugbar->getJavascriptRenderer();
+                $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
+                $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
+
+            }
+
             $this->addListener();
         }
-
 
     }
 
@@ -59,121 +160,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $self = $this;
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
-
                 $debugbar = new LaravelDebugBar;
-
-                if(isset($app['session'])){
-                    $debugbar->setSessionStore($app['session']);
-                }
-
-                if($app['config']->get('laravel-debugbar::config.enabled')){
-
-                    if($self->collects('phpinfo', true)){
-                        $debugbar->addCollector(new PhpInfoCollector());
-                    }
-                    if($self->collects('messages', true)){
-                        $debugbar->addCollector(new MessagesCollector());
-                    }
-                    if($self->collects('time', true)){
-                        $debugbar->addCollector(new TimeDataCollector());
-                    }
-                    if($self->collects('memory', true)){
-                        $debugbar->addCollector(new MemoryCollector());
-                    }
-                    if($self->collects('exceptions', true)){
-                        $debugbar->addCollector(new ExceptionsCollector());
-                    }
-                    if($self->collects('laravel', false)){
-                        $debugbar->addCollector(new LaravelCollector());
-                    }
-                    if($self->collects('default_request', false)){
-                        $debugbar->addCollector(new RequestDataCollector());
-                    }
-
-                    if($self->collects('events', false)){
-                        $debugbar->addCollector(new MessagesCollector('events'));
-                        $app['events']->listen('*', function() use($debugbar){
-                                $args = func_get_args();
-                                $event = end($args);
-                                $debugbar['events']->info("Received event: ". $event);
-                            });
-                    }
-
-                    if($self->collects('views', true)){
-                        $debugbar->addCollector(new ViewCollector());
-                        $app['events']->listen('composing:*', function($view) use($debugbar){
-                                $debugbar['views']->addView($view);
-                            });
-                    }
-
-                    if($self->collects('route')){
-                        if(class_exists('Illuminate\Routing\RouteCollection')){
-                            $debugbar->addCollector($app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
-                        }else{
-                            $debugbar->addCollector($app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
-                        }
-                    }
-
-                    if( $self->collects('log', true) ){
-                        if($self->collects('messages', true)){
-                            $logger = new MessagesCollector('log');
-                            $debugbar['messages']->aggregate($logger);
-                            $app['log']->listen(function($level, $message, $context) use($logger)
-                                {
-                                    $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
-                                    $logger->addMessage($log, $level);
-                                });
-                        }else{
-                            $debugbar->addCollector(new MonologCollector( $app['log']->getMonolog() ));
-                        }
-                    }
-
-                    if($self->collects('db', true)){
-                        try{
-                            $pdo = new TraceablePDO( $app['db']->getPdo() );
-                            $debugbar->addCollector(new PDOCollector( $pdo ));
-                        }catch(\PDOException $e){
-                            //Not connection set..
-                        }
-                    }
-
-                    if($self->collects('twig') and isset($app['twig'])){
-                        $time = isset($debugbar['time']) ? $debugbar['time'] : null;
-                        $app['twig'] = new TraceableTwigEnvironment($app['twig'], $time);
-                        //If we already collect Views, skip the collector (but do add timing)
-                        if(!$self->collects('views', true)){
-                            $debugbar->addCollector(new TwigCollector($app['twig']));
-                        }
-                    }
-
-
-                    if($self->collects('mail', true)){
-                        $mailer = $app['mailer']->getSwiftMailer();
-                        $debugbar->addCollector(new SwiftMailCollector($mailer));
-                        if($self->collects('mail_log') and isset($debugbar['messages'])){
-                            $debugbar['messages']->aggregate(new SwiftLogCollector($mailer));
-                        }
-                    }
-
-                    $renderer = $debugbar->getJavascriptRenderer();
-                    $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
-                    $renderer->setIncludeVendors($app['config']->get('laravel-debugbar::config.include_vendors', true));
-
-                }
-
                 return $debugbar;
             });
 
-
-
         $this->app['command.debugbar.publish'] = $this->app->share(function($app)
             {
-
                 return new Console\PublishCommand($app['asset.publisher']);
-
             });
         $this->commands('command.debugbar.publish');
-
 
     }
 
@@ -190,11 +185,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     protected function addListener(){
 
-
         $app = $this->app;
         $this->app['router']->after(function (Request $request, Response $response) use($app)
             {
-
                 if( $app->runningInConsole() ){
                     return;
                 }

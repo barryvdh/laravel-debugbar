@@ -50,7 +50,7 @@ return array(
        'default_request'=> false,   // Regular or special Symfony request logger
        'symfony_request'=> true,    // Only one can be enabled..
        'mail' => true,              // Catch mail messages
-       'mail_log' => false,         // Display full mail log
+       'mail_log' => false,         // Display full mail log in messages
 
    )
 
