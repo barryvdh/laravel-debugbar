@@ -51,8 +51,8 @@ Note: The public assets can change overtime (because of upstream changes), it is
     ],
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config files.
-You can also set in your config if you want to include the vendor files also (FontAwesome and jQuery). If you have them, set it to false.
-You can also only display the js of css vendors, but setting it to 'js' or 'css'
+You can also set in your config if you want to include the vendor files also (FontAwesome and jQuery). If you already use them in your site, set it to false.
+You can also only display the js of css vendors, but setting it to 'js' or 'css'. __So if your websites uses jQuery, set include_vendors to 'css'.__ This will prevent javascript errors.
 
     $ php artisan config:publish barryvdh/laravel-debugbar
 
