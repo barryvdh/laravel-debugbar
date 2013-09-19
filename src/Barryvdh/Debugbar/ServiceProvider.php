@@ -40,9 +40,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
 
-            if(isset($this->app['session'])){
-                $debugbar->setSessionStore($this->app['session']);
-            }
+
 
             if($this->app['config']->get('laravel-debugbar::config.enabled')){
 
@@ -161,6 +159,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $self = $this;
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
                 $debugbar = new LaravelDebugBar;
+
+                $httpDriver = new SymfonyHttpDriver($app['session']);
+                $debugbar->setHttpDriver($httpDriver);
+
                 return $debugbar;
             });
 
@@ -188,12 +190,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $app = $this->app;
         $this->app['router']->after(function (Request $request, Response $response) use($app)
             {
+
                 if( $app->runningInConsole() ){
                     return;
                 }
 
                 /** @var LaravelDebugbar $debugbar */
                 $debugbar = $app['debugbar'];
+                $debugbar->getHttpDriver()->setResponse($response);
                 if($app['config']->get('laravel-debugbar::config.collectors.symfony_request', true)){
                     $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
                 }
@@ -201,7 +205,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 if($response->isRedirection()){
                     $debugbar->stackData();
                 }elseif( $request->isXmlHttpRequest() ){
-                    $debugbar->addDataToHeaders($response);
+                    $debugbar->sendDataInHeaders();
                 }elseif(
                     ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
                     || 'html' !== $request->getRequestFormat()
