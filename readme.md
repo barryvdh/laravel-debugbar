@@ -52,11 +52,11 @@ Note: The public assets can change overtime (because of upstream changes), it is
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config files.
 You can also set in your config if you want to include the vendor files also (FontAwesome and jQuery). If you already use them in your site, set it to false.
-You can also only display the js of css vendors, but setting it to 'js' or 'css'. __So if your websites uses jQuery, set include_vendors to 'css'.__ This will prevent javascript errors.
+You can also only display the js of css vendors, by setting it to 'js' or 'css'.
 
     $ php artisan config:publish barryvdh/laravel-debugbar
 
-You can also disable/enable the loggers you want. You can also use the IoC container to add extra loggers. (`$app['debugbar']->addCollect(new MyDataCollector)`)
+You can also disable/enable the loggers you want. You can also use the IoC container to add extra loggers. (`$app['debugbar']->addCollector(new MyDataCollector)`)
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
