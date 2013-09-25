@@ -19,13 +19,6 @@ class SymfonyHttpDriver implements HttpDriverInterface
         $this->response = $response;
     }
 
-    public function setSession(Session $session){
-        $this->session = $session;
-    }
-
-    public function setResponse(Response $response){
-        $this->response = $response;
-    }
     /**
      * {@inheritDoc}
      */
@@ -34,7 +27,6 @@ class SymfonyHttpDriver implements HttpDriverInterface
         if(!is_null($this->response)){
             $this->response->headers->add($headers);
         }
-
     }
 
     /**

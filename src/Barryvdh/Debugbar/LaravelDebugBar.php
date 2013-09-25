@@ -13,13 +13,6 @@ use DebugBar\DebugBarException;
 class LaravelDebugbar extends DebugBar
 {
 
-
-    /** @var  Store $session */
-    protected $session = null;
-    public function setSessionStore(Store $session){
-        $this->session = $session;
-    }
-
     /**
      * Injects the web debug toolbar into the given Response.
      *
