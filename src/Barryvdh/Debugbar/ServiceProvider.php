@@ -160,7 +160,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
                 $debugbar = new LaravelDebugBar;
 
-                $httpDriver = new SymfonyHttpDriver($app['session']);
+                $httpDriver = new SymfonyHttpDriver($app['session.store']);
                 $debugbar->setHttpDriver($httpDriver);
 
                 return $debugbar;
@@ -197,7 +197,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 /** @var LaravelDebugbar $debugbar */
                 $debugbar = $app['debugbar'];
-                $httpDriver = new SymfonyHttpDriver($app['session'], $response);
+                $httpDriver = new SymfonyHttpDriver($app['session.store'], $response);
                 $debugbar->setHttpDriver($httpDriver);
 
                 if($app['config']->get('laravel-debugbar::config.collectors.symfony_request', true)){
