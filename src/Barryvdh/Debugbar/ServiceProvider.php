@@ -193,7 +193,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->app['router']->after(function (Request $request, Response $response) use($app)
             {
 
-                if( $app->runningInConsole() ){
+                if( $app->runningInConsole() or (!$app['config']->get('laravel-debugbar::config.enabled')) ){
                     return;
                 }
 
