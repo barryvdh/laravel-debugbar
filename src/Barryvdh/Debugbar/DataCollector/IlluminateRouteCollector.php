@@ -64,8 +64,11 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
      * @param  \Illuminate\Routing\Route  $route
      * @return array
      */
-    protected function getRouteInformation(Route $route)
+    protected function getRouteInformation($route)
     {
+        if(!is_a($route, 'Illuminate\Routing\Route')){
+            return array();
+        }
         $uri = head($route->methods()).' '.$route->uri();
 
         return array(

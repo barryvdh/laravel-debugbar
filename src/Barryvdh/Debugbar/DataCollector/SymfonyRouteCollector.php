@@ -31,8 +31,11 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
      * @param  \Symfony\Component\Routing\Route  $route
      * @return array
      */
-    protected function getRouteInformation($name, Route $route)
+    protected function getRouteInformation($name, $route)
     {
+        if(!is_a($route, 'Symfony\Component\Routing\Route')){
+            return array();
+        }
         $uri = head($route->getMethods()).' '.$route->getPath();
 
         $action = $route->getAction() ?: 'Closure';
