@@ -51,7 +51,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     $debugbar->addCollector(new MessagesCollector());
                 }
                 if($this->collects('time', true)){
+
                     $debugbar->addCollector(new TimeDataCollector());
+
+                    $this->app->booted(function() use($debugbar)
+                        {
+                            $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
+                        });
+
+                    $this->app->before(function() use($debugbar)
+                        {
+                            $debugbar->startMeasure('application', 'Application');
+                        });
+
                 }
                 if($this->collects('memory', true)){
                     $debugbar->addCollector(new MemoryCollector());

@@ -23,7 +23,7 @@ Bootstraps the following collectors for Laravel:
 And the default collectors:
  - PhpInfoCollector
  - MessagesCollector
- - TimeDataCollector
+ - TimeDataCollector (With Booting and Application timing)
  - MemoryCollector
  - ExceptionsCollector
 
