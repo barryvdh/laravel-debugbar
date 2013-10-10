@@ -56,7 +56,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                     $this->app->booted(function() use($debugbar)
                         {
-                            $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
+                            if(defined('LARAVEL_START')){
+                                $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
+                            }
                         });
 
                     $this->app->before(function() use($debugbar)
