@@ -224,7 +224,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 if($response->isRedirection()){
                     $debugbar->stackData();
-                }elseif( $request->isXmlHttpRequest() ){
+                }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
                     $debugbar->sendDataInHeaders();
                 }elseif(
                     ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))

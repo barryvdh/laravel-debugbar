@@ -25,6 +25,17 @@ return array(
    */
   'include_vendors' => true,
 
+  /*
+   |--------------------------------------------------------------------------
+   | Capture Ajax Requests
+   |--------------------------------------------------------------------------
+   |
+   | The Debugbar can capture Ajax requests and display them. If you don't want this (ie. because of errors),
+   | you can use this option to disable sending the data through the headers.
+   |
+   */
+  'capture_ajax' => true,
+
 
  /*
   |--------------------------------------------------------------------------
