@@ -73,6 +73,7 @@ And start/stop timing:
 
     Debugbar::startMeasure('render','Time for rendering');
     Debugbar::stopMeasure('render');
+    Debugbar::addMeasure('now', LARAVEL_START, microtime(true));
     Debugbar::measure('My long operation', function() {
         //Do something..
     });

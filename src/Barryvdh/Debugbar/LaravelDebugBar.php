@@ -50,6 +50,22 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
+     * Adds a measure
+     *
+     * @param string $label
+     * @param float $start
+     * @param float $end
+     */
+    public function addMeasure($label, $start, $end)
+    {
+        if($this->hasCollector('time')){
+            /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
+            $collector = $this->getCollector('time');
+            $collector->addMeasure($label, $start, $end);
+        }
+    }
+
+    /**
      * Utility function to measure the execution of a Closure
      *
      * @param string $label
