@@ -27,7 +27,11 @@ class ViewCollector extends DataCollector  implements Renderable
                 $data[$key] = $value;
             }
         }
-        $this->views[] = $name . ' => ' .$this->formatVar($data);
+
+        //First flatten, then htmlentities every string, for HTML data.
+        $data = $this->flattenVar($data);
+        array_walk_recursive($data, function(&$v) { $v = htmlentities($v); });
+        $this->views[] = $name . ' => ' .print_r($data, true);
     }
 
     /**
