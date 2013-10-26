@@ -39,7 +39,7 @@ return array(
 
  /*
   |--------------------------------------------------------------------------
-  | Event logging
+  | DataCollectors
   |--------------------------------------------------------------------------
   |
   | Enable/disable DataCollectors
@@ -63,7 +63,21 @@ return array(
        'mail' => true,              // Catch mail messages
        'mail_log' => false,         // Display full mail log in messages
 
-   )
+   ),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Event logging
+     |--------------------------------------------------------------------------
+     |
+     | Enable/disable DataCollectors
+     |
+     */
+    'options' => array(
+        'pdo' => array(
+            'with_params'   => true,    // Render SQL with the parameters substituted
+        )
+    )
 
 
 );

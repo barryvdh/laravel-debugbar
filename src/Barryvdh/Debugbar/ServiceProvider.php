@@ -121,7 +121,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 if($this->collects('db', true) and isset($this->app['db'])){
                     try{
                         $pdo = new TraceablePDO( $this->app['db']->getPdo() );
-                        $debugbar->addCollector(new PDOCollector( $pdo ));
+                        $pdoCollector = new PDOCollector( $pdo );
+                        $pdoCollector->setRenderSqlWithParams($this->app['config']->get('laravel-debugbar::config.options.pdo.with_params', true));
+                        $debugbar->addCollector($pdoCollector);
                     }catch(\PDOException $e){
                         //Not connection set..
                     }
