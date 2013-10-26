@@ -154,7 +154,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 if($this->collects('mail', true)){
                     $mailer = $this->app['mailer']->getSwiftMailer();
                     $debugbar->addCollector(new SwiftMailCollector($mailer));
-                    if($this->collects('mail_log') and $debugbar->hasCollector('messages')){
+                    if($this->app['config']->get('laravel-debugbar::config.options.mail.full_log') and $debugbar->hasCollector('messages')){
                         $debugbar['messages']->aggregate(new SwiftLogCollector($mailer));
                     }
                 }
