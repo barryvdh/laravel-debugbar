@@ -31,24 +31,6 @@ class ViewCollector extends DataCollector  implements Renderable
         $this->views[] = $name . ' => ' . $this->formatVar($data);
     }
 
-    /**
-     * Flatten a var recursively
-     *
-     * @param $var
-     * @return mixed
-     */
-    public function flattenVar($var){
-        if (is_array($var)) {
-            foreach ($var as &$v) {
-                $v = $this->flattenVar($v);
-            }
-        } else if (is_object($var)) {
-            $var = "Object(" . get_class($var) . ")";
-        }else{
-            $var = htmlentities($var, ENT_QUOTES, 'UTF-8', false);
-        }
-        return $var;
-    }
 
     /**
      * {@inheritDoc}
