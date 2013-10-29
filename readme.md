@@ -8,7 +8,7 @@ It is configured to display Redirects and Ajax Requests. (Shown in a dropdown)
 ![Screenshot](http://i.imgur.com/GVc6C9g.png)
 
 This includes some custom collectors:
- - RouteCollector: Show information about the current Route. (Note: requires atleast 4.0.6, so disable this if you are on a lower version!)
+ - RouteCollector: Show information about the current Route.
  - ViewCollector: Show the currently loaded views an it's data.
  - EventsCollector: Show all events
  - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
