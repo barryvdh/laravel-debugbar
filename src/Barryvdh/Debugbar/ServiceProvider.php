@@ -188,8 +188,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
                 $debugbar = new LaravelDebugBar;
 
-                //TODO; better check or revert after new stable version
-                $sessionStore = isset($app['session.store']) ? $app['session.store'] : $app['session'];
+                $sessionStore = $app['session.store'];
                 $httpDriver = new SymfonyHttpDriver($sessionStore);
                 $debugbar->setHttpDriver($httpDriver);
 
@@ -227,8 +226,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 /** @var LaravelDebugbar $debugbar */
                 $debugbar = $app['debugbar'];
-                //TODO; better check or revert after new stable version
-                $sessionStore = isset($app['session.store']) ? $app['session.store'] : $app['session'];
+
+                $sessionStore = $app['session.store'];
                 $httpDriver = new SymfonyHttpDriver($sessionStore, $response);
                 $debugbar->setHttpDriver($httpDriver);
 
