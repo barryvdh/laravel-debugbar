@@ -93,7 +93,7 @@ If you want you can add your own DataCollectors, through the Container or the Fa
     $debugbar = App::make('debugbar');
     $debugbar->addCollector(new DebugBar\DataCollector\MessagesCollector('my_messages'));
 
-By default, the Debugbar is injected just before </body>. If you want to inject the Debugbar yourself,
+By default, the Debugbar is injected just before `</body>`. If you want to inject the Debugbar yourself,
 set the config option 'inject' to false and use the renderer yourself and follow http://phpdebugbar.com/docs/rendering.html
 
     $renderer = Debugbar::getJavascriptRenderer();
