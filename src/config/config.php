@@ -66,10 +66,10 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
-     | Event logging
+     | Extra options
      |--------------------------------------------------------------------------
      |
-     | Enable/disable DataCollectors
+     | Configure some DataCollectors
      |
      */
     'options' => array(
@@ -82,7 +82,19 @@ return array(
         'mail' => array(
             'full_log' => false
         )
-    )
+    ),
+
+ /*
+  |--------------------------------------------------------------------------
+  | Inject Debugbar in Response
+  |--------------------------------------------------------------------------
+  |
+  | Usually, the debugbar is added just before <body>, by listening to the
+  | Response after the App is done. If you disable this, you have to add them
+  | in your template yourself. See http://phpdebugbar.com/docs/rendering.html
+  |
+  */
+  'inject' => true,
 
 
 );

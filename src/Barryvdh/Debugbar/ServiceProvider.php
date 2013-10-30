@@ -244,7 +244,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     || 'html' !== $request->getRequestFormat()
                 ){
                    return;
-                }else{
+                }elseif($app['config']->get('laravel-debugbar::config.inject', true)){
                     $debugbar->injectDebugbar($response);
                 }
 
