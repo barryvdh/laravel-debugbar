@@ -75,6 +75,7 @@ return array(
     'options' => array(
         'pdo' => array(
             'with_params'   => true,    // Render SQL with the parameters substituted
+            'quotation_char' => "'",    // The character to surround params
             'extra_connections' => array(   //Add extra connections to the PDO Collector
                 // 'mysql',
             )

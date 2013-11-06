@@ -122,7 +122,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     try{
                         $pdo = new TraceablePDO( $this->app['db']->getPdo() );
                         $pdoCollector = new PDOCollector( $pdo );
-                        $pdoCollector->setRenderSqlWithParams($this->app['config']->get('laravel-debugbar::config.options.pdo.with_params', true));
+                        if($this->app['config']->get('laravel-debugbar::config.options.pdo.with_params')){
+                            $pdoCollector->setRenderSqlWithParams(true, $this->app['config']->get('laravel-debugbar::config.options.pdo.quotation_char'));
+                        }
+
                         foreach($this->app['config']->get('laravel-debugbar::config.options.pdo.extra_connections', array()) as $name){
                             try{
                                 $pdo = new TraceablePDO($this->app['db']->connection($name)->getPdo());
