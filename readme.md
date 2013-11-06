@@ -46,7 +46,6 @@ You need to publish the assets from this package.
 Note: The public assets can change overtime (because of upstream changes), it is recommended to re-publish them after update. You can also add the republish command in composer.json.
 
     "post-update-cmd": [
-        "php artisan ide-helper:generate",
         "php artisan debugbar:publish"
     ],
 
