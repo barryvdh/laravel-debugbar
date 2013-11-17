@@ -2,7 +2,26 @@
 
 use Exception;
 use DebugBar\DebugBar;
+
+use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\ExceptionsCollector;
+use DebugBar\DataCollector\RequestDataCollector;
+use DebugBar\DataCollector\PDO\PDOCollector;
+use DebugBar\DataCollector\PDO\TraceablePDO;
+use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
+use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
+use DebugBar\Bridge\MonologCollector;
+use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
+use DebugBar\Bridge\Twig\TwigCollector;
+use Barryvdh\Debugbar\DataCollector\LaravelCollector;
+use Barryvdh\Debugbar\DataCollector\ViewCollector;
+use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
+
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Debug bar subclass which adds all without Request and with LaravelCollector.
@@ -20,6 +39,191 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class LaravelDebugbar extends DebugBar
 {
+    /**
+     * The Laravel application instance.
+     *
+     * @var \Illuminate\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    public function __construct($app=null){
+        if(!$app){
+            $app = app();   //Fallback when $app is not given
+        }
+        $this->app = $app;
+    }
+
+    public function boot(){
+        $debugbar = $this;
+        $app = $this->app;
+        if($this->shouldCollect('phpinfo', true)){
+            $this->addCollector(new PhpInfoCollector());
+        }
+        if($this->shouldCollect('messages', true)){
+            $this->addCollector(new MessagesCollector());
+        }
+        if($this->shouldCollect('time', true)){
+
+            $this->addCollector(new TimeDataCollector());
+
+            $this->app->booted(function() use($debugbar)
+            {
+                if(defined('LARAVEL_START')){
+                    $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
+                }
+            });
+
+            $this->app->before(function() use($debugbar)
+            {
+                $debugbar->startMeasure('application', 'Application');
+            });
+
+        }
+        if($this->shouldCollect('memory', true)){
+            $this->addCollector(new MemoryCollector());
+        }
+        if($this->shouldCollect('exceptions', true)){
+            $this->addCollector(new ExceptionsCollector());
+        }
+        if($this->shouldCollect('laravel', false)){
+            $this->addCollector(new LaravelCollector());
+        }
+        if($this->shouldCollect('default_request', false)){
+            $this->addCollector(new RequestDataCollector());
+        }
+
+        if($this->shouldCollect('events', false) and isset($this->app['events'])){
+            $this->addCollector(new MessagesCollector('events'));
+            $this->app['events']->listen('*', function() use($debugbar){
+                $args = func_get_args();
+                $event = end($args);
+                $debugbar['events']->info("Received event: ". $event);
+            });
+        }
+
+        if($this->shouldCollect('views', true) and isset($this->app['events'])){
+            $this->addCollector(new ViewCollector());
+            $this->app['events']->listen('composing:*', function($view) use($debugbar){
+                $debugbar['views']->addView($view);
+            });
+        }
+
+        if($this->shouldCollect('route')){
+            if(class_exists('Illuminate\Routing\RouteCollection')){
+                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
+            }else{
+                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
+            }
+        }
+
+        if( $this->shouldCollect('log', true) ){
+            if($this->hasCollector('messages') ){
+                $logger = new MessagesCollector('log');
+                $this['messages']->aggregate($logger);
+                $this->app['log']->listen(function($level, $message, $context) use($logger)
+                {
+                    $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
+                    $logger->addMessage($log, $level);
+                });
+            }else{
+                $this->addCollector(new MonologCollector( $this->app['log']->getMonolog() ));
+            }
+        }
+
+        if($this->shouldCollect('db', true) and isset($this->app['db'])){
+            try{
+                $pdo = new TraceablePDO( $this->app['db']->getPdo() );
+                $pdoCollector = new PDOCollector( $pdo );
+                if($this->app['config']->get('laravel-debugbar::config.options.pdo.with_params')){
+                    $pdoCollector->setRenderSqlWithParams(true, $this->app['config']->get('laravel-debugbar::config.options.pdo.quotation_char'));
+                }
+
+                foreach($this->app['config']->get('laravel-debugbar::config.options.pdo.extra_connections', array()) as $name){
+                    try{
+                        $pdo = new TraceablePDO($this->app['db']->connection($name)->getPdo());
+                        $pdoCollector->addConnection($pdo, $name);
+                    }catch(\Exception $e){
+                        if($this->hasCollector('exceptions')){
+                            $this['exceptions']->addException($e);
+                        }elseif($this->hasCollector('messages')){
+                            $this['messages']->error($e->getMessage());
+                        }
+                    }
+                }
+                $this->addCollector($pdoCollector);
+            }catch(\PDOException $e){
+                //Not connection set..
+            }
+        }
+
+        if($this->shouldCollect('twig') and isset($this->app['twig'])){
+            $time = isset($this['time']) ? $this['time'] : null;
+            $this->app['twig'] = new TraceableTwigEnvironment($this->app['twig'], $time);
+            //If we already collect Views, skip the collector (but do add timing)
+            if(!$this->hasCollector('views')){
+                $this->addCollector(new TwigCollector($this->app['twig']));
+            }
+        }
+
+
+        if($this->shouldCollect('mail', true)){
+            $mailer = $this->app['mailer']->getSwiftMailer();
+            $this->addCollector(new SwiftMailCollector($mailer));
+            if($this->app['config']->get('laravel-debugbar::config.options.mail.full_log') and $this->hasCollector('messages')){
+                $this['messages']->aggregate(new SwiftLogCollector($mailer));
+            }
+        }
+
+        $renderer = $this->getJavascriptRenderer();
+        $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
+        $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
+
+        $this->addListener();
+
+    }
+
+    public function shouldCollect($name, $default=false){
+        return $this->app['config']->get('laravel-debugbar::config.collectors.'.$name, $default);
+    }
+
+    protected function addListener(){
+
+        $app = $this->app;
+        $debugbar = $this;
+        $this->app->after(function (Request $request, Response $response) use($app, $debugbar)
+        {
+
+            if( $app->runningInConsole() or (!$app['config']->get('laravel-debugbar::config.enabled')) ){
+                return;
+            }
+
+            $sessionManager = $app['session'];
+            $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
+            $debugbar->setHttpDriver($httpDriver);
+
+            if($debugbar->shouldCollect('symfony_request', true) and !$debugbar->hasCollector('request')){
+                $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
+            }
+
+            if($response->isRedirection()){
+                $debugbar->stackData();
+            }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
+                $debugbar->sendDataInHeaders();
+            }elseif(
+                ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+                || 'html' !== $request->getRequestFormat()
+            ){
+                return;
+            }elseif($app['config']->get('laravel-debugbar::config.inject', true)){
+                $debugbar->injectDebugbar($response);
+            }
+
+        });
+    }
+
 
     /**
      * Starts a measure
