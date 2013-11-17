@@ -234,7 +234,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
                 $debugbar->setHttpDriver($httpDriver);
 
-                if($app['config']->get('laravel-debugbar::config.collectors.symfony_request', true)){
+                if($app['config']->get('laravel-debugbar::config.collectors.symfony_request', true) and !$debugbar->hasCollector('request')){
                     $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
                 }
 
