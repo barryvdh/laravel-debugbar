@@ -99,3 +99,11 @@ set the config option 'inject' to false and use the renderer yourself and follow
 
 Note: Not using the auto-inject, will disable the Request information, because that is added After the response.
 You can add the default_request datacollector in the config as alternative.
+
+## Enabling/Disabling on run time
+You can enable or disable the debugbar during run time.
+
+    \Debugbar::enable();
+    \Debugbar::disable();
+
+NB. Once enabled, the collectors are added (and could produce extra overhead), so if you want to use the debugbar in production, disable in the config and only enable when needed.

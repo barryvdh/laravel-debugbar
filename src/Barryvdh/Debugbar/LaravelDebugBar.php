@@ -47,6 +47,13 @@ class LaravelDebugbar extends DebugBar
     protected $app;
 
     /**
+     * True when booted.
+     *
+     * @var bool
+     */
+    protected $booted = false;
+
+    /**
      * @param \Illuminate\Foundation\Application $app
      */
     public function __construct($app=null){
@@ -56,6 +63,27 @@ class LaravelDebugbar extends DebugBar
         $this->app = $app;
     }
 
+    /**
+     * Enable the Debugbar and boot, if not already booted.
+     */
+    public function enable(){
+        $this->app['config']->set('laravel-debugbar::config.enabled', true);
+        if(!$this->booted){
+            $this->boot();
+        }
+    }
+
+    /**
+     * Disable the Debugbar
+     */
+    public function disable(){
+        $this->app['config']->set('laravel-debugbar::config.enabled', false);
+    }
+
+
+    /**
+     * Boot the debugbar (add collectors, renderer and listener)
+     */
     public function boot(){
         $debugbar = $this;
         $app = $this->app;
@@ -182,6 +210,8 @@ class LaravelDebugbar extends DebugBar
         $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
 
         $this->addListener();
+
+        $this->booted = true;
 
     }
 
