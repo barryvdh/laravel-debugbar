@@ -220,7 +220,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     protected function addListener(){
 
         $app = $this->app;
-        $this->app['router']->after(function (Request $request, Response $response) use($app)
+        $this->app->close(function (Request $request, Response $response) use($app)
             {
 
                 if( $app->runningInConsole() or (!$app['config']->get('laravel-debugbar::config.enabled')) ){
