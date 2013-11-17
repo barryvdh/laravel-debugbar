@@ -34,7 +34,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     function isSessionStarted()
     {
-        return !is_null($this->session);
+        return $this->session->isStarted();
     }
 
     /**
