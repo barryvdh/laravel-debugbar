@@ -19,6 +19,9 @@ use DebugBar\Bridge\Twig\TwigCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
+use Barryvdh\Debugbar\DataCollector\FilesCollector;
+use Barryvdh\Debugbar\DataCollector\LogsCollector;
+use Barryvdh\Debugbar\DataCollector\ConfigCollector;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -203,6 +206,17 @@ class LaravelDebugbar extends DebugBar
             if($this->app['config']->get('laravel-debugbar::config.options.mail.full_log') and $this->hasCollector('messages')){
                 $this['messages']->aggregate(new SwiftLogCollector($mailer));
             }
+        }
+
+        if($this->shouldCollect('config', false)){
+            $this->addCollector(new ConfigCollector());
+        }
+
+        if($this->shouldCollect('logs', false)){
+            $this->addCollector(new LogsCollector());
+        }
+        if($this->shouldCollect('files', false)){
+            $this->addCollector(new FilesCollector());
         }
 
         $renderer = $this->getJavascriptRenderer();
