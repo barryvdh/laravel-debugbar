@@ -13,6 +13,9 @@ This includes some custom collectors:
  - EventsCollector: Show all events
  - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
  - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
+ - LogsCollector: Show the latest log entries from the storage logs. (disabled by default)
+ - FilesCollector: Show the files that are included/required by PHP. (disabled by default)
+ - ConfigCollector: Display the values from the config files. (disabled by default)
 
 Bootstraps the following collectors for Laravel:
  - LogCollector: Show all Log messages
