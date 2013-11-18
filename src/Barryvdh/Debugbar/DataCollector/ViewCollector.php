@@ -46,9 +46,9 @@ class ViewCollector extends DataCollector  implements Renderable
             );
         }
         return array(
-                     'messages' => $messages,
-                     'count'=>count($views)
-                     );
+             'messages' => $messages,
+             'count'=>count($views)
+         );
     }
 
     /**
@@ -70,11 +70,11 @@ class ViewCollector extends DataCollector  implements Renderable
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
                 "map" => "$name.messages",
                 "default" => "{}"
-            )/*,
+            ),
             "$name:badge" => array(
                 "map" => "$name.count",
                 "default" => "null"
-            )*/
+            )
         );
     }
 }
