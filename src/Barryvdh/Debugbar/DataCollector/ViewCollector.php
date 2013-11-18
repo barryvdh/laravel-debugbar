@@ -37,12 +37,6 @@ class ViewCollector extends DataCollector  implements Renderable
     public function collect()
     {
         $views = $this->views;
-        $count=count($views);
-        
-        $sessions=\Session::all();
-        foreach($sessions as $key=>$session){
-            $views[] = 'SESSION['.$key.'] => '.$this->formatVar($session);
-        }
         
         $messages = array();
         foreach($views as $data){
@@ -53,7 +47,7 @@ class ViewCollector extends DataCollector  implements Renderable
         }
         return array(
                      'messages' => $messages,
-                     'count'=>$count
+                     'count'=>count($views)
                      );
     }
 
