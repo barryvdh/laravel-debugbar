@@ -27,7 +27,6 @@ class ViewCollector extends DataCollector  implements Renderable
                 $data[$key] = $value;
             }
         }
-
         $this->views[] = $name . ' => ' . $this->formatVar($data);
     }
 
@@ -38,6 +37,13 @@ class ViewCollector extends DataCollector  implements Renderable
     public function collect()
     {
         $views = $this->views;
+        $count=count($views);
+        
+        $sessions=\Session::all();
+        foreach($sessions as $key=>$session){
+            $views[] = 'SESSION['.$key.'] => '.$this->formatVar($session);
+        }
+        
         $messages = array();
         foreach($views as $data){
             $messages[] = array(
@@ -45,7 +51,10 @@ class ViewCollector extends DataCollector  implements Renderable
                 'is_string' => true,
             );
         }
-        return array('messages' => $messages);
+        return array(
+                     'messages' => $messages,
+                     'count'=>$count
+                     );
     }
 
     /**
@@ -61,12 +70,17 @@ class ViewCollector extends DataCollector  implements Renderable
      */
     public function getWidgets()
     {
+        $name=$this->getName();
         return array(
-            "views" => array(
+            "$name" => array(
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
-                "map" => "views.messages",
+                "map" => "$name.messages",
                 "default" => "{}"
-            )
+            )/*,
+            "$name:badge" => array(
+                "map" => "$name.count",
+                "default" => "null"
+            )*/
         );
     }
 }
