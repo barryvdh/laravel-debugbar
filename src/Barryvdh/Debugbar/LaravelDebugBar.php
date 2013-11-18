@@ -230,11 +230,17 @@ class LaravelDebugbar extends DebugBar
                 return;
             }
 
+            /** @var \Illuminate\Session\SessionManager $sessionManager */
             $sessionManager = $app['session'];
             $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
             $debugbar->setHttpDriver($httpDriver);
 
             if($debugbar->shouldCollect('symfony_request', true) and !$debugbar->hasCollector('request')){
+                $sessionDriver = $sessionManager->driver();
+                if($sessionDriver && is_a($sessionDriver, 'Symfony\Component\HttpFoundation\Session\SessionInterface')){
+                    $request->setSession($sessionDriver);
+                }
+
                 $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
             }
 
