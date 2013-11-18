@@ -22,7 +22,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
             
-            \Event::listen('Debugbar.*', function($param, $event) {
+            \Event::listen('debugbar.*', function($param, $event) {
                 \App::offsetGet('debugbar')->addMessage($param, substr($event,9));
             });
         }
