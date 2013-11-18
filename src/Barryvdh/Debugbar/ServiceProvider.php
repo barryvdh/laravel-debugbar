@@ -21,6 +21,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
+            
+            \Event::listen('debugbar.*', function($param, $event) {
+                \App::offsetGet('debugbar')->addMessage($param, substr($event,9));
+            });
         }
     }
 
