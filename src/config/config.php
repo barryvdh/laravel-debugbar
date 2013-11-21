@@ -85,6 +85,9 @@ return array(
         ),
         'mail' => array(
             'full_log' => false
+        ),
+        'route' =>array(
+            'label' => true   // show complete route on bar
         )
     ),
 
