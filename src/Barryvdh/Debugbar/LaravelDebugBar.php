@@ -136,7 +136,8 @@ class LaravelDebugbar extends DebugBar
         }
 
         if($this->shouldCollect('views', true) and isset($this->app['events'])){
-            $this->addCollector(new ViewCollector());
+            $collectData = $this->app['config']->get('laravel-debugbar::config.options.views.data', true);
+            $this->addCollector(new ViewCollector($collectData));
             $this->app['events']->listen('composing:*', function($view) use($debugbar){
                 $debugbar['views']->addView($view);
             });

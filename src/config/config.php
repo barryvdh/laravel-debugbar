@@ -85,6 +85,9 @@ return array(
         ),
         'mail' => array(
             'full_log' => false
+        ),
+        'views' => array(
+            'data' => true,
         )
     ),
 
