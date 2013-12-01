@@ -19,7 +19,7 @@ class ConfigCollector extends DataCollector  implements Renderable
         $messages = array();
         foreach($views as $key=>$data){
             $messages[] = array(
-                'message' => $key.' => '.$data,
+                'message' => $key.' => '.var_export($data, true),
                 'is_string' => true,
             );
         }
