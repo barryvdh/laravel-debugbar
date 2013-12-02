@@ -120,18 +120,21 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
      */
     public function getWidgets()
     {
-        return array(
+        $widgets= array(
             "route" => array(
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "route",
                 "default" => "{}"
-            ),
-            "currentroute" => array(
-                "icon" => "share-alt",
-                "tooltip" => "Route",
-                "map" => "route.uri",
-                "default" => ""
             )
         );
+        if (\config::get('laravel-debugbar::config.options.route.label', true)){
+            $widgets['currentroute']=array(
+                "icon"      => "share-alt",
+                "tooltip"   => "Route",
+                "map"       => "route.uri",
+                "default"   => ""
+            );
+        }
+        return $widgets;
     }
 }
