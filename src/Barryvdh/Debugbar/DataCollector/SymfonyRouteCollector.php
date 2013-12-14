@@ -19,8 +19,9 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
      */
     public function collect()
     {
-        $name = \Route::currentRouteName();
-        $route = \Route::getCurrentRoute();
+        $route = \Route::current();
+        $name = $route->getName();
+        
         return $this->getRouteInformation($name, $route);
     }
 
