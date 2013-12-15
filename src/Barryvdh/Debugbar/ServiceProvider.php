@@ -52,6 +52,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
         $this->commands('command.debugbar.publish');
 
+        $this->app->middleware('Barryvdh\Debugbar\Middleware', array($this->app['debugbar']));
     }
 
     /**
