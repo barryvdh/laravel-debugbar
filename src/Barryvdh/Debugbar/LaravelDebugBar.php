@@ -149,15 +149,11 @@ class LaravelDebugbar extends DebugBar
         }
 
         if($this->shouldCollect('route')){
-<<<<<<< HEAD
             if(version_compare($app::VERSION, '4.1', '>=')){
                 $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
             }else{
                 $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
             }
-=======
-            $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
->>>>>>> 658a1562f075b9431f013319f3c28432d8c1837c
         }
 
         if( $this->shouldCollect('log', true) ){
@@ -237,7 +233,6 @@ class LaravelDebugbar extends DebugBar
 
     }
 
-<<<<<<< HEAD
     public function modifyResponse($request, $response){
         $app = $this->app;
         if( $app->runningInConsole() or (!$app['config']->get('laravel-debugbar::config.enabled')) ){
@@ -268,8 +263,6 @@ class LaravelDebugbar extends DebugBar
         return $response;
     }
 
-=======
->>>>>>> 658a1562f075b9431f013319f3c28432d8c1837c
     public function shouldCollect($name, $default=false){
         return $this->app['config']->get('laravel-debugbar::config.collectors.'.$name, $default);
     }
