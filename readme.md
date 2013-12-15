@@ -1,4 +1,4 @@
-## Laravel Debugbar
+## Laravel 4 Debugbar
 
 This is a package to integrate PHP Debug Bar (https://github.com/maximebf/php-debugbar) with Laravel.
 It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
@@ -36,7 +36,7 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 
 Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-debugbar:dev-master` directly):
 
-    "barryvdh/laravel-debugbar": "dev-master"
+    "barryvdh/laravel-debugbar": "1.*"
 
 After updating composer, add the ServiceProvider to the providers array in app/config/app.php
 

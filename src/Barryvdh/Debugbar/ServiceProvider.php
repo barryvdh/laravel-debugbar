@@ -52,6 +52,22 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
         $this->commands('command.debugbar.publish');
 
+<<<<<<< HEAD
+        $debugbar = $this->app['debugbar'];
+        $app = $this->app;
+
+        if(version_compare($app::VERSION, '4.1', '>=')){
+            $this->app->middleware('Barryvdh\Debugbar\Middleware', array($debugbar));
+        }else{
+            $this->app->after(function ($request, $response) use($debugbar)
+            {
+                $debugbar->modifyResponse($request, $response);
+            });
+        }
+
+=======
+        $this->app->middleware('Barryvdh\Debugbar\Middleware', array($this->app['debugbar']));
+>>>>>>> 658a1562f075b9431f013319f3c28432d8c1837c
     }
 
     /**
