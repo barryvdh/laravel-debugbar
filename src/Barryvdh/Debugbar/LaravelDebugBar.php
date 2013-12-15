@@ -149,11 +149,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         if($this->shouldCollect('route')){
-            if(class_exists('Illuminate\Routing\RouteCollection')){
-                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
-            }else{
-                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
-            }
+            $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
         }
 
         if( $this->shouldCollect('log', true) ){
