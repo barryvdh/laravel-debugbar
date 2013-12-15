@@ -39,36 +39,7 @@ class Middleware implements HttpKernelInterface {
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
 
-        $app = $this->app;
-        $debugbar = $this->debugbar;
-
         $response = $this->app->handle($request, $type, $catch);
-
-        if( $app->runningInConsole() or (!$app['config']->get('laravel-debugbar::config.enabled')) ){
-            return $response;
-        }
-
-        /** @var \Illuminate\Session\SessionManager $sessionManager */
-        $sessionManager = $app['session'];
-        $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
-        $debugbar->setHttpDriver($httpDriver);
-
-        if($debugbar->shouldCollect('symfony_request', true) and !$debugbar->hasCollector('request')){
-            $debugbar->addCollector(new SymfonyRequestCollector($request, $response, $app['session'], $app->make('Symfony\Component\HttpKernel\DataCollector\RequestDataCollector')));
-        }
-
-        if($response->isRedirection()){
-            $debugbar->stackData();
-        }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
-            $debugbar->sendDataInHeaders();
-        }elseif(
-            ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
-            || 'html' !== $request->getRequestFormat()
-        ){
-            //Do nothing
-        }elseif($app['config']->get('laravel-debugbar::config.inject', true)){
-            $debugbar->injectDebugbar($response);
-        }
-        return $response;
+        return $this->debugbar->modifyResponse($request, $response);
     }
 }
