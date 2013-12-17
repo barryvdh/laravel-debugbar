@@ -111,6 +111,11 @@ class LaravelDebugbar extends DebugBar
             {
                 $debugbar->startMeasure('application', 'Application');
             });
+            $this->app->after(function() use($debugbar)
+            {
+                $debugbar->stopMeasure('application');
+                $debugbar->startMeasure('after', 'After application');
+            });
 
         }
         if($this->shouldCollect('memory', true)){
@@ -292,7 +297,12 @@ class LaravelDebugbar extends DebugBar
         if($this->hasCollector('time')){
             /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
             $collector = $this->getCollector('time');
-            $collector->stopMeasure($name);
+            try{
+                $collector->stopMeasure($name);
+            }catch(\Exception $e){
+                $this->addException($e);
+            }
+
         }
     }
 
