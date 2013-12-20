@@ -52,7 +52,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
         );
         if (\config::get('laravel-debugbar::config.options.route.label', true)){
             $widgets['currentroute']=array(
-                "icon"      => "share-alt",
+                "icon"      => "share",
                 "tooltip"   => "Route",
                 "map"       => "route.uri",
                 "default"   => ""
