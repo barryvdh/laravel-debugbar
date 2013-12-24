@@ -52,17 +52,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
         $this->commands('command.debugbar.publish');
 
-        $debugbar = $this->app['debugbar'];
-        $app = $this->app;
-
-        if(version_compare($app::VERSION, '4.1', '>=')){
-            $this->app->middleware('Barryvdh\Debugbar\Middleware', array($debugbar));
-        }else{
-            $this->app->after(function ($request, $response) use($debugbar)
-            {
-                $debugbar->modifyResponse($request, $response);
-            });
-        }
 
     }
 

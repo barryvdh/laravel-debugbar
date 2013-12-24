@@ -234,6 +234,15 @@ class LaravelDebugbar extends DebugBar
         $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
         $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
 
+        if(version_compare($app::VERSION, '4.1', '>=')){
+            $app->middleware('Barryvdh\Debugbar\Middleware', array($debugbar));
+        }else{
+            $app->after(function ($request, $response) use($debugbar)
+            {
+                $debugbar->modifyResponse($request, $response);
+            });
+        }
+
         $this->booted = true;
 
     }
