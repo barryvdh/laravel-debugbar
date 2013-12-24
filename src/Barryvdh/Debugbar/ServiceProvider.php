@@ -52,12 +52,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return new Console\PublishCommand($app['asset.publisher']);
             });
 
-        $debugbar =  $this->app['debugbar'];
         if(version_compare($app::VERSION, '4.1', '>=')){
-            $app->middleware('Barryvdh\Debugbar\Middleware', array($debugbar));
+            $app->middleware('Barryvdh\Debugbar\Middleware', array($app));
         }else{
-            $app->after(function ($request, $response) use($debugbar)
+            $app->after(function ($request, $response) use($app)
             {
+                $debugbar = $app['debugbar'];
                 $debugbar->modifyResponse($request, $response);
             });
         }
