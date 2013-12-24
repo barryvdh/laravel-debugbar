@@ -36,6 +36,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     public function register()
     {
         $self = $this;
+        $app = $this->app;
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
                 $debugbar = new LaravelDebugBar($app);
 
@@ -51,7 +52,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return new Console\PublishCommand($app['asset.publisher']);
             });
 
-
+        $debugbar =  $this->app['debugbar'];
+        if(version_compare($app::VERSION, '4.1', '>=')){
+            $app->middleware('Barryvdh\Debugbar\Middleware', array($debugbar));
+        }else{
+            $app->after(function ($request, $response) use($debugbar)
+            {
+                $debugbar->modifyResponse($request, $response);
+            });
+        }
 
     }
 
