@@ -17,6 +17,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function boot()
     {
+        $this->package('barryvdh/laravel-debugbar');
         if($this->app['config']->get('laravel-debugbar::config.enabled')){
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
@@ -32,9 +33,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function register()
     {
-
-        $this->package('barryvdh/laravel-debugbar');
-
         $self = $this;
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
                 $debugbar = new LaravelDebugBar($app);
@@ -50,8 +48,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             {
                 return new Console\PublishCommand($app['asset.publisher']);
             });
-        $this->commands('command.debugbar.publish');
 
+        $this->commands('command.debugbar.publish');
 
     }
 
@@ -64,9 +62,5 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     {
         return array('debugbar', 'command.debugbar.publish');
     }
-
-
-
-
 
 }
