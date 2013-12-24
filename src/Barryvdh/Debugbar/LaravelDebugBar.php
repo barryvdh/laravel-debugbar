@@ -88,6 +88,10 @@ class LaravelDebugbar extends DebugBar
      * Boot the debugbar (add collectors, renderer and listener)
      */
     public function boot(){
+        if($this->booted){
+            return;
+        }
+
         $debugbar = $this;
         $app = $this->app;
         if($this->shouldCollect('phpinfo', true)){
