@@ -38,7 +38,7 @@ Require this package in your composer.json and run composer update (or run `comp
 
     "barryvdh/laravel-debugbar": "1.*"
 
-After updating composer, add the ServiceProvider to the bottom of the providers array in app/config/app.php
+After updating composer, add the ServiceProvider to the providers array in app/config/app.php
 
     'Barryvdh\Debugbar\ServiceProvider',
 
