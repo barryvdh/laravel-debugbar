@@ -23,6 +23,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
         }
+
+        $this->commands('command.debugbar.publish');
     }
 
 
@@ -49,7 +51,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return new Console\PublishCommand($app['asset.publisher']);
             });
 
-        $this->commands('command.debugbar.publish');
+
 
     }
 
