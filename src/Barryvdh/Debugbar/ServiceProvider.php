@@ -1,7 +1,7 @@
 <?php namespace Barryvdh\Debugbar;
 
 
-class ServiceProvider extends \Illuminate\Support\ServiceProvider {
+class ServiceProvider extends \Illuminate\Foundation\Providers\PublisherServiceProvider {
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -35,6 +35,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function register()
     {
+        parent::register();
+
         $self = $this;
         $app = $this->app;
         $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
