@@ -310,7 +310,7 @@ class LaravelDebugbar extends DebugBar
             try{
                 $collector->stopMeasure($name);
             }catch(\Exception $e){
-                $this->addException($e);
+              //  $this->addException($e);
             }
 
         }
