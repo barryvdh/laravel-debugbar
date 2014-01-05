@@ -105,16 +105,22 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new TimeDataCollector());
 
             $this->app->booted(function() use($debugbar)
-            {
-                if(defined('LARAVEL_START')){
-                    $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
-                }
-            });
+                {
+                    if(defined('LARAVEL_START')){
+                        $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
+                    }
+                });
 
-            $this->app->before(function() use($debugbar)
-            {
+            //Check if App::before is already called..
+            if(version_compare($app::VERSION, '4.1', '>=') && $this->app->isBooted()){
                 $debugbar->startMeasure('application', 'Application');
-            });
+            }else{
+                $this->app->before(function() use($debugbar)
+                    {
+                        $debugbar->startMeasure('application', 'Application');
+                    });
+            }
+
             $this->app->after(function() use($debugbar)
             {
                 $debugbar->stopMeasure('application');
