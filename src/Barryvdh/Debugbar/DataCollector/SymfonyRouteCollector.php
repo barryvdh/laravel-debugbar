@@ -122,6 +122,7 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
     {
         $widgets= array(
             "route" => array(
+                "icon"  => "share",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "route",
                 "default" => "{}"

@@ -84,6 +84,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
     {
         return array(
             "request" => array(
+                "icon" => "tags",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "request",
                 "default" => "{}"
