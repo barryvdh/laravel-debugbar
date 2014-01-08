@@ -25,14 +25,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     function setHeaders(array $headers)
     {
         if(!is_null($this->response)){
-            $size = 0;
-            foreach($headers as $header){
-                $size += strlen($header);
-            }
-            //Make sure the header size doesn't become more then 256kB
-            if($size <= 250000){
-                $this->response->headers->add($headers);
-            }
+            $this->response->headers->add($headers);
         }
     }
 
