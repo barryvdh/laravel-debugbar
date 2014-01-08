@@ -2,19 +2,19 @@
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
+use Psr\Log\LogLevel;
+use ReflectionClass;
 
 class LogsCollector extends MessagesCollector
 {
-    //https://github.com/ddtraceweb/monolog-parser/blob/master/src/Dubture/Monolog/Parser/LineLogParser.php
-    protected $pattern = '/\[(?P<date>.*)\] (?P<logger>\w+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-    protected $lines = 24;
+
+    protected $lines = 124;
 
     public function __construct($name = 'logs')
     {
         parent::__construct($name);
         $this->getStorageLogs();
     }
-
 
     /**
      * get logs apache in app/storage/logs
@@ -33,48 +33,59 @@ class LogsCollector extends MessagesCollector
             $path = app_path() . '/storage/logs/log-' . php_sapi_name() . '-' . date('Y-m-d') . '.txt';
         }
 
-        $logs = array();
         if (file_exists($path)) {
-            foreach ($this->tailFile($path, $this->lines) as $log) {
-                $data = $this->parseLine($log);
-                if ($data) {
-                    $context = $data['context'];
-                    $log = '['.$data['date']->format('Y-m-d H:i:s').'] '. $data['logger'].".".$data['level'].": " . $data['message'] . (!empty($context) ? ' '.print_r($context, true) : '');
-                    $this->addMessage($log, $data['level']);
-                }
+            //Load the latest lines, guessing about 15x the number of log entries (for stack traces etc)
+            $file = implode("", $this->tailFile($path, $this->lines));
+
+            foreach ($this->getLogs($file) as $log) {
+                $this->addMessage($log['header'] . $log['stack'], $log['level']);
             }
         }
 
     }
 
-
     /**
-     * (c) Robert Gruendler <r.gruendler@gmail.com>
-     * https://github.com/pulse00/monolog-parser/blob/master/src/Dubture/Monolog/Parser/LineLogParser.php
-     * @param $log
+     * Search a string for log entries
+     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
+     *
+     * @param $file
      * @return array
      */
-    protected function parseLine($log)
+    public function getLogs($file){
+        $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
+
+        $log_levels = $this->getLevels();
+
+        // There has GOT to be a better way of doing this...
+        preg_match_all($pattern, $file, $headings);
+        $log_data = preg_split($pattern, $file);
+
+        foreach ($headings as $h) {
+            for ($i=0, $j = count($h); $i < $j; $i++) {
+                foreach ($log_levels as $ll) {
+                    if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
+                        $log[] = array('level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]);
+                    }
+                }
+            }
+        }
+
+        $log = array_reverse($log);
+
+        return $log;
+    }
+
+    /**
+     * Get the log levels from psr/log.
+     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
+     *
+     * @access public
+     * @return array
+     */
+    public function getLevels()
     {
-        if (!is_string($log) || strlen($log) === 0) {
-            return array();
-        }
-
-        preg_match($this->pattern, $log, $data);
-
-        if (!isset($data['date'])) {
-            return false;
-        }
-
-        return array(
-            'date' => \DateTime::createFromFormat('Y-m-d H:i:s', $data['date']),
-            'logger' => $data['logger'],
-            'level' => $data['level'],
-            'message' => $data['message'],
-            'context' => json_decode($data['context'], true),
-            'extra' => json_decode($data['extra'], true),
-        );
-
+        $class = new ReflectionClass(new LogLevel);
+        return $class->getConstants();
     }
 
     /**
