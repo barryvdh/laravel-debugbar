@@ -93,7 +93,10 @@ return array(
         ),
         'route' => array(
             'label' => true  // show complete route on bar
-        )
+        ),
+        'logs' => array(
+            'file' => null
+        ),
     ),
 
     /*

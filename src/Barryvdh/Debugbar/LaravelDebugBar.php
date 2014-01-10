@@ -234,7 +234,8 @@ class LaravelDebugbar extends DebugBar
         }
 
         if($this->shouldCollect('logs', false)){
-            $this->addCollector(new LogsCollector());
+            $file = $this->app['config']->get('laravel-debugbar::config.options.logs.file');
+            $this->addCollector(new LogsCollector($file));
         }
         if($this->shouldCollect('files', false)){
             $this->addCollector(new FilesCollector());
