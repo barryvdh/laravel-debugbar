@@ -94,7 +94,7 @@ return array(
             'label' => true   // show complete route on bar
         ),
         'logs' => array(
-          'file' => false // Custom path to the logs file to tail
+          'file' => null // Custom path to the logs file to tail
         ),
     ),
 

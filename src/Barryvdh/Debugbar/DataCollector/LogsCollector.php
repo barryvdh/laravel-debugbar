@@ -9,7 +9,7 @@ class LogsCollector extends MessagesCollector
     protected $pattern = '/\[(?P<date>.*)\] (?P<logger>\w+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
     protected $lines = 24;
 
-    public function __construct($file, $name = 'logs')
+    public function __construct($file = null, $name = 'logs')
     {
         parent::__construct($name);
 
