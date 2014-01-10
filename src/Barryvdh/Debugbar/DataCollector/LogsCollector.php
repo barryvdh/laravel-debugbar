@@ -9,42 +9,54 @@ class LogsCollector extends MessagesCollector
     protected $pattern = '/\[(?P<date>.*)\] (?P<logger>\w+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
     protected $lines = 24;
 
-    public function __construct($name = 'logs')
+    public function __construct($file, $name = 'logs')
     {
         parent::__construct($name);
-        $this->getStorageLogs();
+
+        $file = $file ?: $this->getLogsFile();
+        $this->getStorageLogs($file);
     }
 
-
     /**
-     * get logs apache in app/storage/logs
-     * only 24 last of current day
+     * Get the path to the logs file
      *
-     * @return array
+     * @return string
      */
-    public function getStorageLogs()
+    public function getLogsFile()
     {
-
         //Default log location (single file)
         $path = storage_path() . '/logs/laravel.log';
 
         //Rotating logs (Laravel 4.0)
         if (!file_exists($path)) {
-            $path = app_path() . '/storage/logs/log-' . php_sapi_name() . '-' . date('Y-m-d') . '.txt';
+            $path = storage_path() . '/logs/log-' . php_sapi_name() . '-' . date('Y-m-d') . '.txt';
         }
 
-        $logs = array();
-        if (file_exists($path)) {
-            foreach ($this->tailFile($path, $this->lines) as $log) {
-                $data = $this->parseLine($log);
-                if ($data) {
-                    $context = $data['context'];
-                    $log = '['.$data['date']->format('Y-m-d H:i:s').'] '. $data['logger'].".".$data['level'].": " . $data['message'] . (!empty($context) ? ' '.print_r($context, true) : '');
-                    $this->addMessage($log, $data['level']);
-                }
+        return $path;
+    }
+
+    /**
+     * get logs apache in app/storage/logs
+     * only 24 last of current day
+     *
+     * @param $file string
+     *
+     * @return array
+     */
+    public function getStorageLogs($file)
+    {
+        if (!file_exists($file)) {
+            return;
+        }
+
+        foreach ($this->tailFile($path, $this->lines) as $log) {
+            $data = $this->parseLine($log);
+            if ($data) {
+                $context = $data['context'];
+                $log = '['.$data['date']->format('Y-m-d H:i:s').'] '. $data['logger'].".".$data['level'].": " . $data['message'] . (!empty($context) ? ' '.print_r($context, true) : '');
+                $this->addMessage($log, $data['level']);
             }
         }
-
     }
 
 
