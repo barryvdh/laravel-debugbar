@@ -10,38 +10,52 @@ class LogsCollector extends MessagesCollector
 
     protected $lines = 124;
 
-    public function __construct($name = 'logs')
+    public function __construct($path = null, $name = 'logs')
     {
         parent::__construct($name);
-        $this->getStorageLogs();
+
+        $path = $path ?: $this->getLogsFile();
+        $this->getStorageLogs($path);
+    }
+
+    /**
+     * Get the path to the logs file
+     *
+     * @return string
+     */
+    public function getLogsFile()
+    {
+        //Default log location (single file)
+        $path = storage_path() . '/logs/laravel.log';
+
+        //Rotating logs (Laravel 4.0)
+        if (!file_exists($path)) {
+            $path = storage_path() . '/logs/log-' . php_sapi_name() . '-' . date('Y-m-d') . '.txt';
+        }
+
+        return $path;
     }
 
     /**
      * get logs apache in app/storage/logs
      * only 24 last of current day
      *
+     * @param string $path
+     *
      * @return array
      */
-    public function getStorageLogs()
+    public function getStorageLogs($path)
     {
-
-        //Default log location (single file)
-        $path = storage_path() . '/logs/laravel.log';
-
-        //Rotating logs (Laravel 4.0)
         if (!file_exists($path)) {
-            $path = app_path() . '/storage/logs/log-' . php_sapi_name() . '-' . date('Y-m-d') . '.txt';
+            return;
         }
 
-        if (file_exists($path)) {
-            //Load the latest lines, guessing about 15x the number of log entries (for stack traces etc)
-            $file = implode("", $this->tailFile($path, $this->lines));
+        //Load the latest lines, guessing about 15x the number of log entries (for stack traces etc)
+        $file = implode("", $this->tailFile($path, $this->lines));
 
-            foreach ($this->getLogs($file) as $log) {
-                $this->addMessage($log['header'] . $log['stack'], $log['level']);
-            }
+        foreach ($this->getLogs($file) as $log) {
+            $this->addMessage($log['header'] . $log['stack'], $log['level']);
         }
-
     }
 
     /**
