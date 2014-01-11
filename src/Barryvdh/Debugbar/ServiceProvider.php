@@ -1,5 +1,6 @@
 <?php namespace Barryvdh\Debugbar;
 
+use DebugBar\Storage\FileStorage;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -44,7 +45,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $httpDriver = new SymfonyHttpDriver($sessionManager);
                 $debugbar->setHttpDriver($httpDriver);
 
+                $debugbar->setStorage($app['debugbar.storage']);
+
                 return $debugbar;
+            });
+
+        $this->app['debugbar.storage'] = $this->app->share(function ($app){
+
+                $storagePath = storage_path().'/cache/debugbar';
+                if (!file_exists($storagePath)) {
+                    mkdir($storagePath, 0777, true);
+                }
+                return new FileStorage($storagePath);
             });
 
         $this->app['command.debugbar.publish'] = $this->app->share(function($app)
@@ -64,6 +76,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
         }
 
+        $this->app['router']->get('_debugbar/open', function() use($app){
+
+                $debugbar = $app['debugbar'];
+                $debugbar->setStorage($app['debugbar.storage']);
+                $openHandler = new \DebugBar\OpenHandler($debugbar);
+
+                $data = $openHandler->handle(null, false, false);
+                return \Response::make($data, 200, array(
+                        'Content-Type'=> 'application/json'
+                    ));
+            });
+
     }
 
     /**
@@ -73,7 +97,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function provides()
     {
-        return array('debugbar', 'command.debugbar.publish');
+        return array('debugbar', 'debugbar.storage', 'command.debugbar.publish');
     }
 
 }

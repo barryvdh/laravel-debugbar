@@ -267,7 +267,7 @@ class LaravelDebugbar extends DebugBar
         if($response->isRedirection()){
             $this->stackData();
         }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
-            $this->sendDataInHeaders();
+            $this->sendDataInHeaders(true);
         }elseif(
             ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
@@ -399,6 +399,8 @@ class LaravelDebugbar extends DebugBar
         $pos = $posrFunction($content, '</body>');
 
         $renderer = $this->getJavascriptRenderer();
+        $renderer->setOpenHandlerUrl('_debugbar/open');
+
         $debugbar = $renderer->renderHead() . $renderer->render();
 
         if (false !== $pos) {
