@@ -31,6 +31,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         }
 
         $this->commands('command.debugbar.publish');
+        $this->commands('command.debugbar.clear');
     }
 
 
@@ -58,6 +59,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 //Make sure the asset publisher is registered.
                 $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
                 return new Console\PublishCommand($app['asset.publisher']);
+            });
+
+        $this->app['command.debugbar.clear'] = $this->app->share(function($app)
+            {
+                return new Console\ClearCommand($app['debugbar']);
             });
 
         if(version_compare($app::VERSION, '4.1', '>=')){
@@ -88,7 +94,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         /** @var \Illuminate\Filesystem\Filesystem $files */
         $files = $this->app['files'];
 
-        $storagePath = storage_path().'/cache/debugbar';
         if (!$files->isDirectory($path)) {
             if($files->makeDirectory($path, 0777, true)){
                 $files->put($path.'/.gitignore', "*\n!.gitignore");
@@ -96,10 +101,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 throw new \Exception("Cannot create directory '$path'..");
             }
         }
-        if(!$files->isWritable($path)){
-            throw new \Exception("Directory '$path' is not writable..");
-        }
-        return new FileStorage($storagePath);
+
+        return new FileStorage($path);
     }
 
     /**
@@ -109,7 +112,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function provides()
     {
-        return array('debugbar',  'command.debugbar.publish');
+        return array('debugbar', 'command.debugbar.publish', 'command.debugbar.clear');
     }
 
 }
