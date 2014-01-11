@@ -21,13 +21,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->package('barryvdh/laravel-debugbar');
 
         if($this->app['config']->get('laravel-debugbar::config.enabled')){
+
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
             if($this->app['config']->get('laravel-debugbar::config.storage.enabled')){
                 $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
                 $debugbar->setStorage($this->getStorage($path));
             }
-            $debugbar->boot();
+
+            if(!$this->app->runningInConsole()){
+                $debugbar->boot();
+            }
+
         }
 
         $this->commands('command.debugbar.publish');
