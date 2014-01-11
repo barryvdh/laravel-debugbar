@@ -29,8 +29,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $debugbar->setStorage($this->getStorage($path));
             }
 
-            if(!$this->app->runningInConsole()){
+            if(!$this->app->runningInConsole() && $this->app['request']->segment(1) !== '_debugbar'){
                 $debugbar->boot();
+            }else{
+                $debugbar->disable();
             }
 
         }
