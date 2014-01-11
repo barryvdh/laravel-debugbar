@@ -1,6 +1,6 @@
 <?php namespace Barryvdh\Debugbar;
 
-use DebugBar\Storage\FileStorage;
+use Barryvdh\Debugbar\Storage\CacheStorage;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -51,12 +51,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
 
         $this->app['debugbar.storage'] = $this->app->share(function ($app){
-
-                $storagePath = storage_path().'/cache/debugbar';
-                if (!file_exists($storagePath)) {
-                    mkdir($storagePath, 0777, true);
-                }
-                return new FileStorage($storagePath);
+                return new CacheStorage($app['cache']);
             });
 
         $this->app['command.debugbar.publish'] = $this->app->share(function($app)
