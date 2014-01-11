@@ -1,6 +1,6 @@
 <?php namespace Barryvdh\Debugbar;
 
-use Barryvdh\Debugbar\Storage\CacheStorage;
+use DebugBar\Storage\FileStorage;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -19,9 +19,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     public function boot()
     {
         $this->package('barryvdh/laravel-debugbar');
+
         if($this->app['config']->get('laravel-debugbar::config.enabled')){
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
+            if($this->app['config']->get('laravel-debugbar::config.storage.enabled')){
+                $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
+                $debugbar->setStorage($this->getStorage($path));
+            }
             $debugbar->boot();
         }
 
@@ -36,22 +41,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function register()
     {
-        $self = $this;
+
         $app = $this->app;
-        $this->app['debugbar'] = $this->app->share(function ($app) use($self) {
+        $this->app['debugbar'] = $this->app->share(function ($app){
                 $debugbar = new LaravelDebugBar($app);
 
                 $sessionManager = $app['session'];
                 $httpDriver = new SymfonyHttpDriver($sessionManager);
                 $debugbar->setHttpDriver($httpDriver);
 
-                $debugbar->setStorage($app['debugbar.storage']);
-
                 return $debugbar;
-            });
-
-        $this->app['debugbar.storage'] = $this->app->share(function ($app){
-                return new CacheStorage($app['cache']);
             });
 
         $this->app['command.debugbar.publish'] = $this->app->share(function($app)
@@ -74,7 +73,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->app['router']->get('_debugbar/open', function() use($app){
 
                 $debugbar = $app['debugbar'];
-                $debugbar->setStorage($app['debugbar.storage']);
+
                 $openHandler = new \DebugBar\OpenHandler($debugbar);
 
                 $data = $openHandler->handle(null, false, false);
@@ -85,6 +84,24 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     }
 
+    public function getStorage($path){
+        /** @var \Illuminate\Filesystem\Filesystem $files */
+        $files = $this->app['files'];
+
+        $storagePath = storage_path().'/cache/debugbar';
+        if (!$files->isDirectory($path)) {
+            if($files->makeDirectory($path, 0777, true)){
+                $files->put($path.'/.gitignore', "*\n!.gitignore");
+            }else{
+                throw new \Exception("Cannot create directory '$path'..");
+            }
+        }
+        if(!$files->isWritable($path)){
+            throw new \Exception("Directory '$path' is not writable..");
+        }
+        return new FileStorage($storagePath);
+    }
+
     /**
      * Get the services provided by the provider.
      *
@@ -92,7 +109,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function provides()
     {
-        return array('debugbar', 'debugbar.storage', 'command.debugbar.publish');
+        return array('debugbar',  'command.debugbar.publish');
     }
 
 }

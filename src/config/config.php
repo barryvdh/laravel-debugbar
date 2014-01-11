@@ -15,6 +15,21 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
+     | Storage settings
+     |--------------------------------------------------------------------------
+     |
+     | DebugBar stores data for session/ajax requests in a directory.
+     | You can disable this, so the debugbar stores data in headers/session,
+     | but this can cause problems with large data collectors.
+     |
+     */
+    'storage' => array(
+        'enabled' => true,
+        'path' => storage_path() . '/debugbar',
+    ),
+
+    /*
+     |--------------------------------------------------------------------------
      | Vendors
      |--------------------------------------------------------------------------
      |
