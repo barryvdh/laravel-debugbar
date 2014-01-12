@@ -67,6 +67,14 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
+     * Check if the Debugbar is enabled
+     * @return boolean
+     */
+    public function isEnabled(){
+        return $this->app['config']->get('laravel-debugbar::config.enabled');
+    }
+
+    /**
      * Enable the Debugbar and boot, if not already booted.
      */
     public function enable(){
@@ -251,7 +259,7 @@ class LaravelDebugbar extends DebugBar
 
     public function modifyResponse($request, $response){
         $app = $this->app;
-        if( $app->runningInConsole() or (!$app['config']->get('laravel-debugbar::config.enabled')) ){
+        if( $app->runningInConsole() or !$this->isEnabled() || $request->segment(1) == '_debugbar'){
             return $response;
         }
 

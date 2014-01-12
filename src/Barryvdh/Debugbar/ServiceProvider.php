@@ -31,7 +31,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $debugbar->setStorage($storage);
             }
 
-            if(!$this->app->runningInConsole() && $this->app['request']->segment(1) !== '_debugbar'){
+            if(!$this->app->runningInConsole()){
                 $debugbar->boot();
             }else{
                 $debugbar->disable();
@@ -88,6 +88,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->app['router']->get('_debugbar/open', function() use($app){
 
                 $debugbar = $app['debugbar'];
+
+                if(!$debugbar->isEnabled()){
+                    $this->app->abort('500', 'Debugbar is not enabled');
+                }
 
                 $openHandler = new \DebugBar\OpenHandler($debugbar);
 
