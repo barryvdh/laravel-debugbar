@@ -7,9 +7,11 @@ It is configured to display Redirects and Ajax Requests. (Shown in a dropdown)
 
 ![Screenshot](http://i.imgur.com/GVc6C9g.png)
 
-This includes some custom collectors:
+Note: Use the DebugBar only in development. It can slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
+
+This package includes some custom collectors:
  - RouteCollector: Show information about the current Route.
- - ViewCollector: Show the currently loaded views an it's data.
+ - ViewCollector: Show the currently loaded views. (Optionally: display the shared data)
  - EventsCollector: Show all events
  - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
  - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
