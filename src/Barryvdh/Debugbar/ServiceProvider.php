@@ -1,5 +1,6 @@
 <?php namespace Barryvdh\Debugbar;
 
+use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use DebugBar\Storage\FileStorage;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
@@ -26,7 +27,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             $debugbar = $this->app['debugbar'];
             if($this->app['config']->get('laravel-debugbar::config.storage.enabled')){
                 $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
-                $debugbar->setStorage($this->getStorage($path));
+                $storage = new FilesystemStorage($this->app['files'], $path);
+                $debugbar->setStorage($storage);
             }
 
             if(!$this->app->runningInConsole() && $this->app['request']->segment(1) !== '_debugbar'){
@@ -95,21 +97,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     ));
             });
 
-    }
-
-    public function getStorage($path){
-        /** @var \Illuminate\Filesystem\Filesystem $files */
-        $files = $this->app['files'];
-
-        if (!$files->isDirectory($path)) {
-            if($files->makeDirectory($path, 0777, true)){
-                $files->put($path.'/.gitignore', "*\n!.gitignore");
-            }else{
-                throw new \Exception("Cannot create directory '$path'..");
-            }
-        }
-
-        return new FileStorage($path);
     }
 
     /**
