@@ -22,6 +22,7 @@ use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\ConfigCollector;
+use Barryvdh\Debugbar\Storage\FilesystemStorage;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,6 +103,13 @@ class LaravelDebugbar extends DebugBar
 
         $debugbar = $this;
         $app = $this->app;
+
+        if($this->app['config']->get('laravel-debugbar::config.storage.enabled')){
+            $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
+            $storage = new FilesystemStorage($this->app['files'], $path);
+            $debugbar->setStorage($storage);
+        }
+
         if($this->shouldCollect('phpinfo', true)){
             $this->addCollector(new PhpInfoCollector());
         }

@@ -1,7 +1,5 @@
 <?php namespace Barryvdh\Debugbar;
 
-use Barryvdh\Debugbar\Storage\FilesystemStorage;
-use DebugBar\Storage\FileStorage;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -25,17 +23,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
-            if($this->app['config']->get('laravel-debugbar::config.storage.enabled')){
-                $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
-                $storage = new FilesystemStorage($this->app['files'], $path);
-                $debugbar->setStorage($storage);
-            }
-
-            if(!$this->app->runningInConsole()){
-                $debugbar->boot();
-            }else{
-                $debugbar->disable();
-            }
+            $debugbar->boot();
 
         }
 
