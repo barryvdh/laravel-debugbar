@@ -15,6 +15,12 @@ use Illuminate\Http\Request;
  */
 class IlluminateRouteCollector extends DataCollector  implements Renderable
 {
+    /**
+     * The router instance.
+     *
+     * @var \Illuminate\Routing\Router
+     */
+    protected $router;
 
     public function __construct(Router $router ){
         $this->router = $router;
@@ -61,6 +67,12 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
         }
         return $widgets;
     }
+
+    /*
+     * The following is copied/modified from the RoutesCommand from Laravel, by Taylor Otwell
+     * https://github.com/laravel/framework/blob/4.1/src/Illuminate/Foundation/Console/RoutesCommand.php
+     * 
+     */
 
     /**
      * Get the route information for a given route.
@@ -130,7 +142,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
             // we have already gathered up then return them back out to these consumers.
             $inner = $this->getMethodPatterns($route->uri(), $method);
 
-            $patterns = array_merge($patterns, $inner);
+            $patterns = array_merge($patterns, array_keys($inner));
         }
 
         return $patterns;
