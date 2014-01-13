@@ -74,6 +74,7 @@ class LogsCollector extends MessagesCollector
         preg_match_all($pattern, $file, $headings);
         $log_data = preg_split($pattern, $file);
 
+        $log = array();
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $ll) {
