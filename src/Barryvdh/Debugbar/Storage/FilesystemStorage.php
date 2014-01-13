@@ -52,16 +52,30 @@ class FilesystemStorage implements StorageInterface
      */
     public function find(array $filters = array(), $max = 20, $offset = 0)
     {
+        // Sort by modified time, newest first
+        $sort = function (\SplFileInfo $a, \SplFileInfo $b)
+        {
+            return strcmp($b->getMTime(), $a->getMTime());
+        };
+
+        // Loop through .json files, filter the metadata and stop when max is found.
+        $i = 0;
         $results = array();
-        foreach(Finder::create()->files()->name('*.json')->in($this->dirname)->sortByModifiedTime() as $file){
-                $data = json_decode($file->getContents(), true);
-                $meta = $data['__meta'];
-                unset($data);
-                if (array_keys(array_intersect($meta, $filters)) == array_keys($filters)) {
-                    $results[] = $meta;
-                }
+        foreach(Finder::create()->files()->name('*.json')->in($this->dirname)->sort($sort) as $file){
+            if($i++ < $offset && empty($filters)){
+                $results[] = null;
+                continue;
+            }
+            $data = json_decode($file->getContents(), true);
+            $meta = $data['__meta'];
+            unset($data);
+            if (array_keys(array_intersect($meta, $filters)) == array_keys($filters)) {
+                $results[] = $meta;
+            }
+            if(count($results) >= ($max + $offset)){
+                break;
+            }
         }
-        $results = array_reverse($results);
         return array_slice($results, $offset, $max);
     }
 
