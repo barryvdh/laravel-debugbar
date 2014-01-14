@@ -265,9 +265,13 @@ class LaravelDebugbar extends DebugBar
 
     }
 
+    protected function isDebugbarRequest(){
+        return $this->app['request']->segment(1) == '_debugbar';
+    }
+
     public function modifyResponse($request, $response){
         $app = $this->app;
-        if( $app->runningInConsole() or !$this->isEnabled() || $request->segment(1) == '_debugbar'){
+        if( $app->runningInConsole() or !$this->isEnabled() || $this->isDebugbarRequest()){
             return $response;
         }
 
