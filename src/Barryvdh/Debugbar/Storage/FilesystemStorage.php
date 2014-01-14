@@ -69,7 +69,7 @@ class FilesystemStorage implements StorageInterface
             $data = json_decode($file->getContents(), true);
             $meta = $data['__meta'];
             unset($data);
-            if (array_keys(array_intersect($meta, $filters)) == array_keys($filters)) {
+            if ($this->filter($meta, $filters)) {
                 $results[] = $meta;
             }
             if(count($results) >= ($max + $offset)){
@@ -77,6 +77,15 @@ class FilesystemStorage implements StorageInterface
             }
         }
         return array_slice($results, $offset, $max);
+    }
+
+    protected function filter($meta, $filters){
+        foreach($filters as $key => $value){
+            if(fnmatch ($value, $meta[$key]) === false){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
