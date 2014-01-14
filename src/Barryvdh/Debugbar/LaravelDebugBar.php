@@ -415,8 +415,11 @@ class LaravelDebugbar extends DebugBar
         $pos = $posrFunction($content, '</body>');
 
         $renderer = $this->getJavascriptRenderer();
-        $openHandlerUrl = $this->app['url']->route('debugbar.openhandler');
-        $renderer->setOpenHandlerUrl($openHandlerUrl);
+        if($this->getStorage()){
+            $openHandlerUrl = $this->app['url']->route('debugbar.openhandler');
+            $renderer->setOpenHandlerUrl($openHandlerUrl);
+        }
+
 
         $debugbar = $renderer->renderHead() . $renderer->render();
 
