@@ -71,7 +71,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
     /*
      * The following is copied/modified from the RoutesCommand from Laravel, by Taylor Otwell
      * https://github.com/laravel/framework/blob/4.1/src/Illuminate/Foundation/Console/RoutesCommand.php
-     * 
+     *
      */
 
     /**

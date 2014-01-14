@@ -51,7 +51,7 @@ class ViewCollector extends DataCollector  implements Renderable
     public function collect()
     {
         $views = $this->views;
-        
+
         $messages = array();
         foreach($views as $data){
             $messages[] = array(

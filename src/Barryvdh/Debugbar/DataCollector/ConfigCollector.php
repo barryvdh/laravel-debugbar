@@ -15,7 +15,7 @@ class ConfigCollector extends DataCollector  implements Renderable
     {
         $views = array_dot(\Config::getItems());
         $count=count($views);
-      
+
         $messages = array();
         foreach($views as $key=>$data){
             $messages[] = array(
