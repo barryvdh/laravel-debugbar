@@ -73,7 +73,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
         }
 
-        $this->app['router']->get('_debugbar/open', function() use($app){
+        $this->app['router']->get('_debugbar/open', array('as' => 'debugbar.openhandler', function() use($app){
 
                 $debugbar = $app['debugbar'];
 
@@ -87,7 +87,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return \Response::make($data, 200, array(
                         'Content-Type'=> 'application/json'
                     ));
-            });
+            }));
 
     }
 
