@@ -81,7 +81,7 @@ class FilesystemStorage implements StorageInterface
 
     protected function filter($meta, $filters){
         foreach($filters as $key => $value){
-            if(fnmatch ($value, $meta[$key]) === false){
+            if(!isset($meta[$key]) || fnmatch ($value, $meta[$key]) === false){
                 return false;
             }
         }
