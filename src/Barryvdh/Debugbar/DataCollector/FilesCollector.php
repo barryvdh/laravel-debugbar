@@ -16,7 +16,7 @@ class FilesCollector extends DataCollector  implements Renderable
     {
         $files=get_included_files();
         $count=count($files);
-      
+
         $messages = array();
         foreach($files as &$file){
             $messages[] = array(
