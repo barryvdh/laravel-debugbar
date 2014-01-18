@@ -4,9 +4,16 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
 
 before_script:
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+  - composer self-update
+  - composer install --no-interaction --prefer-source --dev
 
-script: phpunit
+script:
+  - phpunit
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
