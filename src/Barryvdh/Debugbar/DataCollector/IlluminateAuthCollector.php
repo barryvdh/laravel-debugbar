@@ -17,14 +17,13 @@ class IlluminateAuthCollector extends DataCollector implements Renderable
      */
     protected $auth;
 
-    public function __construct()
+    /**
+     * @param \Illuminate\Auth\AuthManager $auth
+     */
+    public function __construct(AuthManager $auth)
     {
-        $app = app();
-
-        // Get the driver behind the AuthManager (i.e. the Guard)
-        /** @var \Illuminate\Auth\AuthManager $authManager */
-        $authManager = $app['auth'];
-        $this->auth = $authManager->driver();
+        // Get the driver behind the AuthManager (i.e. the Guard instance)
+        $this->auth = $auth->driver();
     }
 
     /**

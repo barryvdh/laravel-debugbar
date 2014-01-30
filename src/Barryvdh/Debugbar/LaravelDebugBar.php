@@ -259,7 +259,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         if ($this->shouldCollect('auth', false)) {
-            $this->addCollector(new IlluminateAuthCollector());
+            $this->addCollector(new IlluminateAuthCollector($this->app['auth']));
         }
 
         $renderer = $this->getJavascriptRenderer();
