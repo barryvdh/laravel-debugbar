@@ -1,0 +1,91 @@
+<?php
+
+namespace Barryvdh\Debugbar\DataCollector;
+
+use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\Renderable;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Auth\UserInterface;
+
+/**
+ * Collector for Laravel's Auth provider
+ */
+class IlluminateAuthCollector extends DataCollector implements Renderable
+{
+    /**
+     * @var \Illuminate\Auth\Guard
+     */
+    protected $auth;
+
+    public function __construct()
+    {
+        $app = app();
+
+        // Get the driver behind the AuthManager (i.e. the Guard)
+        /** @var \Illuminate\Auth\AuthManager $authManager */
+        $authManager = $app['auth'];
+        $this->auth = $authManager->driver();
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function collect()
+    {
+        return $this->getUserInformation($this->auth->user());
+    }
+
+    /**
+     * Get displayed user information
+     * @return array
+     */
+    protected function getUserInformation(UserInterface $user = null)
+    {
+        // Defaults
+        if (is_null($user)) {
+            return array(
+                'user' => 'Guest',
+                'is_guest' => true,
+            );
+        }
+
+        // The default auth identifer is the ID number, which isn't all that
+        // useful. If the identifier is numeric, we'll try __toString() or email
+        $identifier = $user->getAuthIdentifier();
+        if (is_numeric($identifier)) {
+            if (method_exists('__toString', $user)) {
+                $identifier = (string) $user;
+            } else if ($user->email) {
+                $identifier = $user->email;
+            }
+        }
+
+        return array(
+            'user' => $identifier,
+            'is_guest' => false,
+        );
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function getName()
+    {
+        return 'auth';
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function getWidgets()
+    {
+        return array(
+            'user' => array(
+                'icon' => 'user',
+                'tooltip' => 'Auth status',
+                'map' => 'auth.user',
+                'default' => '',
+            ),
+        );
+    }
+}
