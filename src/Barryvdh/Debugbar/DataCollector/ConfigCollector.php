@@ -5,6 +5,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Config;
 class ConfigCollector extends DataCollector  implements Renderable
 {
 
@@ -13,7 +14,7 @@ class ConfigCollector extends DataCollector  implements Renderable
      */
     public function collect()
     {
-        $views = array_dot(\Config::getItems());
+        $views = array_dot(Config::getItems());
         $count=count($views);
 
         $messages = array();
