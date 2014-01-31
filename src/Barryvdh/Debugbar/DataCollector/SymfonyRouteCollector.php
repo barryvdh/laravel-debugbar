@@ -6,6 +6,7 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Symfony\Component\Routing\Route;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Config;
 
 class SymfonyRouteCollector extends DataCollector  implements Renderable
 {
@@ -128,7 +129,7 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
                 "default" => "{}"
             )
         );
-        if (\config::get('laravel-debugbar::config.options.route.label', true)){
+        if (Config::get('laravel-debugbar::config.options.route.label', true)){
             $widgets['currentroute']=array(
                 "icon"      => "share",
                 "tooltip"   => "Route",
