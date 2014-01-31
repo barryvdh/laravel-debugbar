@@ -7,6 +7,7 @@ use DebugBar\DataCollector\Renderable;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Based on Illuminate\Foundation\Console\RoutesCommand for Taylor Otwell
@@ -57,7 +58,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
                 "default" => "{}"
             )
         );
-        if (\config::get('laravel-debugbar::config.options.route.label', true)){
+        if (Config::get('laravel-debugbar::config.options.route.label', true)){
             $widgets['currentroute']=array(
                 "icon"      => "share",
                 "tooltip"   => "Route",
