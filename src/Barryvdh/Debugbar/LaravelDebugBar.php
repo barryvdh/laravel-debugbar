@@ -22,6 +22,7 @@ use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\ConfigCollector;
+use Barryvdh\Debugbar\DataCollector\IlluminateAuthCollector;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -255,6 +256,10 @@ class LaravelDebugbar extends DebugBar
         }
         if($this->shouldCollect('files', false)){
             $this->addCollector(new FilesCollector());
+        }
+
+        if ($this->shouldCollect('auth', false)) {
+            $this->addCollector(new IlluminateAuthCollector($this->app['auth']));
         }
 
         $renderer = $this->getJavascriptRenderer();

@@ -83,6 +83,7 @@ return array(
         'logs'            => false, // Add the latest log messages
         'files'           => false, // Show the included files
         'config'          => false, // Display config settings
+        'auth'            => false, // Display Laravel authentication status
     ),
 
     /*
