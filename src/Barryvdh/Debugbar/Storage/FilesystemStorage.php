@@ -87,6 +87,13 @@ class FilesystemStorage implements StorageInterface
         return array_slice($results, $offset, $max);
     }
 
+    /**
+     * Filter the metadata for matches.
+     * 
+     * @param $meta
+     * @param $filters
+     * @return bool
+     */
     protected function filter($meta, $filters){
         foreach($filters as $key => $value){
             if(!isset($meta[$key]) || fnmatch ($value, $meta[$key]) === false){
@@ -116,6 +123,12 @@ class FilesystemStorage implements StorageInterface
         }
     }
 
+    /**
+     * Create the filename for the data, based on the id.
+     *
+     * @param $id
+     * @return string
+     */
     public function makeFilename($id)
     {
         return $this->dirname . basename($id). ".json";
