@@ -13,6 +13,8 @@ class FilesystemStorage implements StorageInterface
 {
     protected $dirname;
     protected $files;
+    protected $gc_lifetime = 24;     // Hours to keep collected data;
+    protected $gc_probability = 5;   // Probability of GC being run on a save request. (5/100)
 
     /**
      * @param \Illuminate\Filesystem\Filesystem $files The filesystem
@@ -37,6 +39,12 @@ class FilesystemStorage implements StorageInterface
             }
         }
         $this->files->put($this->makeFilename($id), json_encode($data));
+
+        // Randomly check if we should collect old files
+        if(rand(1, 100) <= $this->gc_probability){
+            $this->garbageCollect();
+        }
+
     }
 
     /**
@@ -94,6 +102,16 @@ class FilesystemStorage implements StorageInterface
     public function clear()
     {
         foreach(Finder::create()->files()->name('*.json')->in($this->dirname) as $file){
+            $this->files->delete($file->getRealPath());
+        }
+    }
+
+    /**
+     * Delete files older then a certain age (gc_lifetime)
+     */
+    protected function garbageCollect()
+    {
+        foreach(Finder::create()->files()->name('*.json')->date('< '.$this->gc_lifetime.' hour ago')->in($this->dirname) as $file){
             $this->files->delete($file->getRealPath());
         }
     }
