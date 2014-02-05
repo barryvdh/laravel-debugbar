@@ -1,9 +1,10 @@
 ## Laravel 4 Debugbar
 
-This is a package to integrate PHP Debug Bar (https://github.com/maximebf/php-debugbar) with Laravel.
+This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel.
 It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
-It is configured to display Redirects and Ajax Requests. (Shown in a dropdown)
+It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
+Read [the documentation](http://phpdebugbar.com/docs/) for more configuration options.
 
 ![Screenshot](http://i.imgur.com/GVc6C9g.png)
 
