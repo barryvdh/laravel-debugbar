@@ -194,6 +194,9 @@ class LaravelDebugbar extends DebugBar
                 $this['messages']->aggregate($logger);
                 $this->app['log']->listen(function($level, $message, $context) use($logger)
                 {
+                    if(is_array($message) or is_object($message)){
+                        $message = json_encode($message);
+                    }
                     $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
                     $logger->addMessage($log, $level);
                 });
