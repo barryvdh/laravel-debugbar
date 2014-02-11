@@ -21,7 +21,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app = $this->app;
 
-        if(version_compare($app::VERSION, '4.1', '<')){
+        if( ! $this->shouldUseMiddleware()){
             $app->after(function ($request, $response) use($app)
             {
                 $debugbar = $app['debugbar'];
@@ -62,8 +62,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function register()
     {
-
-        $app = $this->app;
         $this->app['debugbar'] = $this->app->share(function ($app){
                 $debugbar = new LaravelDebugBar($app);
 
@@ -89,8 +87,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $this->commands('command.debugbar.publish');
         $this->commands('command.debugbar.clear');
 
-        if(version_compare($app::VERSION, '4.1', '>=')){
-            $app->middleware('Barryvdh\Debugbar\Middleware', array($app));
+        if($this->shouldUseMiddleware()){
+            $this->app->middleware('Barryvdh\Debugbar\Middleware', array($this->app));
         }
     }
 
@@ -102,6 +100,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     public function provides()
     {
         return array('debugbar', 'command.debugbar.publish', 'command.debugbar.clear');
+    }
+
+    protected function shouldUseMiddleware(){
+        $app = $this->app;
+        return version_compare($app::VERSION, '4.1', '>=');
     }
 
 }
