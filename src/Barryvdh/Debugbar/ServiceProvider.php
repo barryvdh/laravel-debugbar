@@ -19,6 +19,32 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     {
         $this->package('barryvdh/laravel-debugbar');
 
+        $app = $this->app;
+
+        if(version_compare($app::VERSION, '4.1', '<')){
+            $app->after(function ($request, $response) use($app)
+            {
+                $debugbar = $app['debugbar'];
+                $debugbar->modifyResponse($request, $response);
+            });
+        }
+
+        $this->app['router']->get('_debugbar/open', array('as' => 'debugbar.openhandler', function() use($app){
+
+            $debugbar = $app['debugbar'];
+
+            if(!$debugbar->isEnabled()){
+                $app->abort('500', 'Debugbar is not enabled');
+            }
+
+            $openHandler = new \DebugBar\OpenHandler($debugbar);
+
+            $data = $openHandler->handle(null, false, false);
+            return \Response::make($data, 200, array(
+                'Content-Type'=> 'application/json'
+            ));
+        }));
+
         if($this->app['config']->get('laravel-debugbar::config.enabled')){
 
             /** @var LaravelDebugbar $debugbar */
@@ -26,9 +52,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             $debugbar->boot();
 
         }
-
-        $this->commands('command.debugbar.publish');
-        $this->commands('command.debugbar.clear');
     }
 
 
@@ -63,32 +86,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return new Console\ClearCommand($app['debugbar']);
             });
 
+        $this->commands('command.debugbar.publish');
+        $this->commands('command.debugbar.clear');
+
         if(version_compare($app::VERSION, '4.1', '>=')){
             $app->middleware('Barryvdh\Debugbar\Middleware', array($app));
-        }else{
-            $app->after(function ($request, $response) use($app)
-            {
-                $debugbar = $app['debugbar'];
-                $debugbar->modifyResponse($request, $response);
-            });
         }
-
-        $this->app['router']->get('_debugbar/open', array('as' => 'debugbar.openhandler', function() use($app){
-
-                $debugbar = $app['debugbar'];
-
-                if(!$debugbar->isEnabled()){
-                    $this->app->abort('500', 'Debugbar is not enabled');
-                }
-
-                $openHandler = new \DebugBar\OpenHandler($debugbar);
-
-                $data = $openHandler->handle(null, false, false);
-                return \Response::make($data, 200, array(
-                        'Content-Type'=> 'application/json'
-                    ));
-            }));
-
     }
 
     /**
