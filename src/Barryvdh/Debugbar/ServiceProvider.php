@@ -17,9 +17,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function boot()
     {
-        $this->package('barryvdh/laravel-debugbar');
-
         $app = $this->app;
+        $app['config']->package('barryvdh/laravel-debugbar', $this->guessPackagePath() . '/config');
 
         if( ! $this->shouldUseMiddleware()){
             $app->after(function ($request, $response) use($app)
