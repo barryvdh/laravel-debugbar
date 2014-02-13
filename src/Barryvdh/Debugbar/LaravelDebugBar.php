@@ -443,6 +443,38 @@ class LaravelDebugbar extends DebugBar
 
         $response->setContent($content);
     }
+    
+    /**
+     * Collect data in a CLI request
+     *
+     * @return array
+     */
+    public function collectConsole(){
+        if(!$this->isEnabled() || !$this->app['config']->get('laravel-debugbar::config.capture_console')){
+            return;
+        }
+
+        $this->data = array(
+            '__meta' => array(
+                'id' => $this->getCurrentRequestId(),
+                'datetime' => date('Y-m-d H:i:s'),
+                'utime' => microtime(true),
+                'method' => 'CLI',
+                'uri' => isset($_SERVER['argv']) ? implode(' ',$_SERVER['argv']) : null,
+                'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null
+            )
+        );
+
+        foreach ($this->collectors as $name => $collector) {
+            $this->data[$name] = $collector->collect();
+        }
+
+        if ($this->storage !== null) {
+            $this->storage->save($this->getCurrentRequestId(), $this->data);
+        }
+
+        return $this->data;
+    }
 
     /**
      * Magic calls for adding messages

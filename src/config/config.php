@@ -54,6 +54,17 @@ return array(
      */
 
     'capture_ajax' => true,
+    
+    /*
+     |--------------------------------------------------------------------------
+     | Capture Console Commands
+     |--------------------------------------------------------------------------
+     |
+     | The Debugbar can listen to Artisan commands. You can view them with the browse button in the Debugbar.
+     |
+     */
+
+    'capture_console' => false,
 
     /*
      |--------------------------------------------------------------------------

@@ -20,9 +20,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $app = $this->app;
         $app['config']->package('barryvdh/laravel-debugbar', $this->guessPackagePath() . '/config');
 
-        if( ! $this->shouldUseMiddleware()){
+        if($app->runningInConsole()){
+            $app->shutdown(function($app){
+                /** @var LaravelDebugbar $debugbar */
+                $debugbar = $app['debugbar'];
+                $debugbar->collectConsole();
+            });
+        }elseif( ! $this->shouldUseMiddleware()){
             $app->after(function ($request, $response) use($app)
             {
+                /** @var LaravelDebugbar $debugbar */
                 $debugbar = $app['debugbar'];
                 $debugbar->modifyResponse($request, $response);
             });
@@ -44,8 +51,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             ));
         }));
 
-        if($this->app['config']->get('laravel-debugbar::config.enabled')){
-
+        if($this->app['config']->get('laravel-debugbar::config.enabled'))
+        {
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
@@ -103,7 +110,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     protected function shouldUseMiddleware(){
         $app = $this->app;
-        return version_compare($app::VERSION, '4.1', '>=');
+        return !$app->runningInConsole() && version_compare($app::VERSION, '4.1', '>=');
     }
 
 }
