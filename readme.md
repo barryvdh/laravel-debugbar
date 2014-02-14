@@ -45,6 +45,10 @@ After updating composer, add the ServiceProvider to the providers array in app/c
 
     'Barryvdh\Debugbar\ServiceProvider',
 
+Alias the Debugbar facade by adding it to the aliases array in the app/config/app.php file.
+
+    'Debugbar' => 'Barryvdh\Debugbar\Facade',
+
 You need to publish the assets from this package.
 
     $ php artisan debugbar:publish
