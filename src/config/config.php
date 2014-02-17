@@ -107,12 +107,9 @@ return array(
      */
 
     'options' => array(
-        'pdo' => array(
+        'db' => array(
             'with_params'       => true,   // Render SQL with the parameters substituted
-            'quotation_char'    => "'",    // The character to surround params
-            'extra_connections' => array(  // Add extra connections to the PDO Collector
-                // 'mysql',
-            )
+            'timeline'          => true,   // Add the queries to the timeline
         ),
         'mail' => array(
             'full_log' => false
