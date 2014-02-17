@@ -9,11 +9,12 @@ return array(
      | Debugbar Settings
      |--------------------------------------------------------------------------
      |
-     | Debugbar is enabled by default, when debug is set to true in app.php.
+     | Debugbar is enabled by default, when debug is set to true in app.php
+     | in CLI mode Debugbar is always disabled
      |
      */
 
-    'enabled' => Config::get('app.debug'),
+    'enabled' => Config::get('app.debug') && !App::runningInConsole(),
 
     /*
      |--------------------------------------------------------------------------
