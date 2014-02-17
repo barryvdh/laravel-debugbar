@@ -450,7 +450,7 @@ class LaravelDebugbar extends DebugBar
      * @return array
      */
     public function collectConsole(){
-        if(!$this->isEnabled() || !$this->app['config']->get('laravel-debugbar::config.capture_console')){
+        if(!$this->isEnabled()){
             return;
         }
 

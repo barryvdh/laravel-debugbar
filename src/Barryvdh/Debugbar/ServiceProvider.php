@@ -21,11 +21,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         $app['config']->package('barryvdh/laravel-debugbar', $this->guessPackagePath() . '/config');
 
         if($app->runningInConsole()){
-            $app->shutdown(function($app){
-                /** @var LaravelDebugbar $debugbar */
-                $debugbar = $app['debugbar'];
-                $debugbar->collectConsole();
-            });
+            if($this->app['config']->get('laravel-debugbar::config.capture_console')){
+                $app->shutdown(function($app){
+                        /** @var LaravelDebugbar $debugbar */
+                        $debugbar = $app['debugbar'];
+                        $debugbar->collectConsole();
+                    });
+            }else{
+                $this->app['config']->set('laravel-debugbar::config.enabled', false);
+            }
         }elseif( ! $this->shouldUseMiddleware()){
             $app->after(function ($request, $response) use($app)
             {
