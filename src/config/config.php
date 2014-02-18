@@ -87,7 +87,6 @@ return array(
         'route'           => true,  // Current route information
         'laravel'         => false, // Laravel version and environment
         'events'          => false, // All events fired
-        'twig'            => false, // Twig, requires barryvdh/laravel-twigbridge
         'default_request' => false, // Regular or special Symfony request logger
         'symfony_request' => true,  // Only one can be enabled..
         'mail'            => true,  // Catch mail messages

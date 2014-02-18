@@ -233,16 +233,6 @@ class LaravelDebugbar extends DebugBar
                 });
         }
 
-        if($this->shouldCollect('twig') and isset($this->app['twig'])){
-            $time = isset($this['time']) ? $this['time'] : null;
-            $this->app['twig'] = new TraceableTwigEnvironment($this->app['twig'], $time);
-            //If we already collect Views, skip the collector (but do add timing)
-            if(!$this->hasCollector('views')){
-                $this->addCollector(new TwigCollector($this->app['twig']));
-            }
-        }
-
-
         if($this->shouldCollect('mail', true)){
             $mailer = $this->app['mailer']->getSwiftMailer();
             $this->addCollector(new SwiftMailCollector($mailer));
