@@ -191,7 +191,7 @@ class LaravelDebugbar extends DebugBar
             if($this->hasCollector('messages') ){
                 $logger = new MessagesCollector('log');
                 $this['messages']->aggregate($logger);
-                $this->app['log']->listen(function($level, $message, $context) use($debugbar, $logger)
+                $this->app['log']->listen(function($level, $message, $context) use($logger)
                     {
                         if(is_array($message) or is_object($message)){
                             $message = json_encode($message);
@@ -219,7 +219,7 @@ class LaravelDebugbar extends DebugBar
 
             $this->addCollector($queryCollector);
 
-            $db->listen(function($query, $bindings, $time, $connectionName) use ($debugbar, $queryCollector)
+            $db->listen(function($query, $bindings, $time, $connectionName) use ($queryCollector)
                 {
                     $queryCollector->addQuery($query, $bindings, $time, $connectionName);
                 });
