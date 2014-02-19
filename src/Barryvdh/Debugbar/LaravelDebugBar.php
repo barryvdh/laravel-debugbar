@@ -225,12 +225,12 @@ class LaravelDebugbar extends DebugBar
 
             $this->addCollector($queryCollector);
 
-            $db->listen(function($query, $bindings, $time, $connectionName) use ($debugbar, $queryCollector)
+            if($debugbar->isEnabled()){
+                $db->listen(function($query, $bindings, $time, $connectionName) use ($queryCollector)
                 {
-                    if($debugbar->isEnabled()){
                         $queryCollector->addQuery($query, $bindings, $time, $connectionName);
-                    }
                 });
+            }
         }
 
         if($this->shouldCollect('mail', true)){
