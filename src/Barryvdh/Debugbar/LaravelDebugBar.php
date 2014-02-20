@@ -211,7 +211,7 @@ class LaravelDebugbar extends DebugBar
             }else{
                 $timeCollector = null;
             }
-            $queryCollector = new QueryCollector($db, $timeCollector);
+            $queryCollector = new QueryCollector($timeCollector);
 
             if($this->app['config']->get('laravel-debugbar::config.options.db.with_params')){
                 $queryCollector->setRenderSqlWithParams(true);
@@ -219,9 +219,12 @@ class LaravelDebugbar extends DebugBar
 
             $this->addCollector($queryCollector);
 
-            $db->listen(function($query, $bindings, $time, $connectionName) use ($queryCollector)
+            $db->listen(function($query, $bindings, $time, $connectionName) use ($db, $queryCollector)
                 {
-                    $queryCollector->addQuery($query, $bindings, $time, $connectionName);
+                    $connection = $db->connection($connectionName);
+                    if( !method_exists($connection, 'logging') || $connection->logging() ){
+                        $queryCollector->addQuery($query, $bindings, $time, $connection);
+                    }
                 });
         }
 

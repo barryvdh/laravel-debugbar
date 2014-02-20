@@ -14,17 +14,14 @@ use Illuminate\Database\DatabaseManager;
 class QueryCollector extends DataCollector implements Renderable
 {
     protected $timeCollector;
-    protected $db;
     protected $queries = array();
     protected $renderSqlWithParams = false;
 
     /**
-     * @param DatabaseManager $db
      * @param TimeDataCollector $timeCollector
      */
-    public function __construct(DatabaseManager $db, TimeDataCollector $timeCollector = null)
+    public function __construct(TimeDataCollector $timeCollector = null)
     {
-        $this->db = $db;
         $this->timeCollector = $timeCollector;
     }
 
@@ -38,14 +35,13 @@ class QueryCollector extends DataCollector implements Renderable
         $this->renderSqlWithParams = $enabled;
     }
 
-    public function addQuery($query, $bindings, $time, $connectionName)
+    public function addQuery($query, $bindings, $time, $connection)
     {
         $time = $time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
 
         if(!empty($bindings) && $this->renderSqlWithParams){
-            $connection = $this->db->connection($connectionName);
             $pdo = $connection->getPdo();
             $bindings = $connection->prepareBindings($bindings);
             foreach($bindings as $binding){
