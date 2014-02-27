@@ -37,7 +37,7 @@ return array(
      |
      | Vendor files are included by default, but can be set to false.
      | This can also be set to 'js' or 'css', to only include javascript or css vendor files.
-     | Vendor files are for css: font-awesome (including fonts) en for js: jquery 1.8.3
+     | Vendor files are for css: font-awesome (including fonts) and for js: jquery 1.8.3
      |
      */
 
