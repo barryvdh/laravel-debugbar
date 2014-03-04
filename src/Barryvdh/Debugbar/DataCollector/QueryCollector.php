@@ -40,6 +40,7 @@ class QueryCollector extends DataCollector implements Renderable
         $time = $time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
+        $bindings = $this->checkBindings($bindings);
 
         if(!empty($bindings) && $this->renderSqlWithParams){
             $pdo = $connection->getPdo();
@@ -60,7 +61,21 @@ class QueryCollector extends DataCollector implements Renderable
         }
     }
 
-
+    /**
+     * Check bindings for illegal (non UTF-8) strings, like Binary data.
+     *
+     * @param $bindings
+     * @return mixed
+     */
+    protected function checkBindings($bindings)
+    {
+        foreach ($bindings as &$binding) {
+            if(!mb_check_encoding($binding, 'UTF-8')) {
+                $binding = '[BINARY DATA]';
+            }
+        }
+        return $bindings;
+    }
 
     /**
      * {@inheritDoc}
