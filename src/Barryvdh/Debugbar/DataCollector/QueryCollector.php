@@ -92,7 +92,7 @@ class QueryCollector extends DataCollector implements Renderable
                 'sql' => $query['query'],
                 'params' => (object) $query['bindings'],
                 'duration' => $query['time'],
-                'duration_str' => $this->formatDuration($query['time']),
+                'duration_str' => $this->getDataFormatter()->formatDuration($query['time']),
             );
         }
 
@@ -100,7 +100,7 @@ class QueryCollector extends DataCollector implements Renderable
             'nb_statements' => count($statements),
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
-            'accumulated_duration_str' => $this->formatDuration($totalTime),
+            'accumulated_duration_str' => $this->getDataFormatter()->formatDuration($totalTime),
             'statements' => $statements
         );
         return $data;

@@ -33,14 +33,18 @@ class ViewCollector extends DataCollector  implements Renderable
             $data = array();
             foreach($view->getData() as $key => $value)
             {
-                if(is_object($value) and method_exists($value, 'toArray'))
+                if(is_object($value))
                 {
-                    $data[$key] = $value->toArray();
+                    if(method_exists($value, 'toArray')){
+                        $data[$key] = $value->toArray();
+                    }else{
+                        $data[$key] = "Object (". get_class($value).")";
+                    }
                 }else{
-                    $data[$key] = $value;
+                    $data[$key] = $this->getDataFormatter()->formatVar($value);
                 }
             }
-            $this->views[] = $name . ' => ' . $this->formatVar($data);
+            $this->views[] = $name . ' => ' . print_r($data, true) ;
         }
     }
 
@@ -56,7 +60,7 @@ class ViewCollector extends DataCollector  implements Renderable
         foreach($views as $data){
             $messages[] = array(
                 'message' => $data,
-                'is_string' => true,
+                'is_string' => false,
             );
         }
         return array(
