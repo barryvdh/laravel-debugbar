@@ -125,7 +125,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
 
         foreach($data as $key => $var){
             if(!is_string($data[$key])){
-                $data[$key] = $this->getDataFormatter()->formatVar($var);
+                $data[$key] = $this->formatVar($var);
             }
         }
 

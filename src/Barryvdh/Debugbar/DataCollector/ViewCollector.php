@@ -41,7 +41,7 @@ class ViewCollector extends DataCollector  implements Renderable
                         $data[$key] = "Object (". get_class($value).")";
                     }
                 }else{
-                    $data[$key] = $this->getDataFormatter()->formatVar($value);
+                    $data[$key] = $this->formatVar($value);
                 }
             }
             $this->views[] = $name . ' => ' . print_r($data, true) ;
