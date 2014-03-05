@@ -40,11 +40,11 @@ class QueryCollector extends DataCollector implements Renderable
         $time = $time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
+        
+        $pdo = $connection->getPdo();
+        $bindings = $connection->prepareBindings($bindings);
         $bindings = $this->checkBindings($bindings);
-
         if(!empty($bindings) && $this->renderSqlWithParams){
-            $pdo = $connection->getPdo();
-            $bindings = $connection->prepareBindings($bindings);
             foreach($bindings as $binding){
                 $query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
             }
@@ -70,7 +70,7 @@ class QueryCollector extends DataCollector implements Renderable
     protected function checkBindings($bindings)
     {
         foreach ($bindings as &$binding) {
-            if(!mb_check_encoding($binding, 'UTF-8')) {
+            if(is_string($binding) && !mb_check_encoding($binding, 'UTF-8')) {
                 $binding = '[BINARY DATA]';
             }
         }
