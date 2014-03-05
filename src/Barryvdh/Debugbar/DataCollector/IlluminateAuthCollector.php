@@ -49,12 +49,12 @@ class IlluminateAuthCollector extends DataCollector implements Renderable
         }
 
         // The default auth identifer is the ID number, which isn't all that
-        // useful. If the identifier is numeric, we'll try __toString() or email
+        // useful. Try username and email.
         $identifier = $user->getAuthIdentifier();
         if (is_numeric($identifier)) {
-            if (method_exists('__toString', $user)) {
-                $identifier = (string) $user;
-            } else if ($user->email) {
+            if ($user->username) {
+                $identifier = $user->username;
+            }else if ($user->email) {
                 $identifier = $user->email;
             }
         }
