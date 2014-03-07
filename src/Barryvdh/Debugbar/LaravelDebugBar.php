@@ -148,7 +148,11 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new MemoryCollector());
         }
         if($this->shouldCollect('exceptions', true)){
-            $this->addCollector(new ExceptionsCollector());
+            $exceptionCollector = new ExceptionsCollector();
+            $this->addCollector($exceptionCollector);
+            $this->app->error(function(Exception $exception) use($exceptionCollector){
+                $exceptionCollector->addException($exception);
+            });
         }
         if($this->shouldCollect('laravel', false)){
             $this->addCollector(new LaravelCollector());
