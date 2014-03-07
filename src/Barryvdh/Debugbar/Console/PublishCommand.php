@@ -2,8 +2,7 @@
 namespace Barryvdh\Debugbar\Console;
 use Illuminate\Foundation\AssetPublisher;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+
 /**
  * Publish the Debugbar assets to the public directory
  *
@@ -70,28 +69,6 @@ class PublishCommand extends Command {
         $reflector = new \ReflectionClass('DebugBar\DebugBar');
         return dirname($reflector->getFileName()) . DIRECTORY_SEPARATOR . 'Resources';
     }
-
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return array();
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return array();
-    }
-
 
 
 }
