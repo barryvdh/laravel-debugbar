@@ -12,8 +12,6 @@ use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
 use DebugBar\Bridge\MonologCollector;
-use DebugBar\Bridge\Twig\TraceableTwigEnvironment;
-use DebugBar\Bridge\Twig\TwigCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
@@ -257,7 +255,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         $renderer = $this->getJavascriptRenderer();
-        $renderer->setBaseUrl(asset('packages/barryvdh/laravel-debugbar'));
+        $renderer->setBaseUrl($this->app['url']->asset('packages/barryvdh/laravel-debugbar'));
         $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
 
         $this->booted = true;
