@@ -6,6 +6,8 @@ use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
  *
@@ -29,14 +31,15 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\HttpFoundation\Request $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Illuminate\Auth\AuthManager $auth
      */
-    public function __construct($request, $response, $session)
+    public function __construct($request, $response, $session, AuthManager $auth = null)
     {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
+        $this->auth = $auth;
     }
-
 
     /**
      * {@inheritDoc}
@@ -65,6 +68,16 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
      */
     public function collect()
     {
+        $user = null;
+        if($this->auth){
+            $user = $this->auth->user();
+            if(is_null($user)){
+                $user = 'Guest';
+            }elseif($user instanceof ArrayableInterface){
+                $user = $user->toArray();
+            }
+        }
+
         $request = $this->request;
         $response = $this->response;
 
@@ -85,6 +98,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         $statusCode = $response->getStatusCode();
 
         $data = array(
+            'auth'               => $user ?: '?',
             'format'             => $request->getRequestFormat(),
             'content_type'       => $response->headers->get('Content-Type') ? $response->headers->get('Content-Type') : 'text/html',
             'status_text'        => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
