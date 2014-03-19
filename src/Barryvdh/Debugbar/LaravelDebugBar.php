@@ -280,7 +280,7 @@ class LaravelDebugbar extends DebugBar
         $this->setHttpDriver($httpDriver);
 
         if($this->shouldCollect('symfony_request', true) and !$this->hasCollector('request')){
-            $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager));
+            $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager, $app['auth']));
         }
 
         if($response->isRedirection()){
