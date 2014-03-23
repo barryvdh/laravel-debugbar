@@ -2,16 +2,13 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Database\DatabaseManager;
-
+use DebugBar\DataCollector\PDO\PDOCollector;
 
 /**
  * Collects data about SQL statements executed with PDO
  */
-class QueryCollector extends DataCollector implements Renderable
+class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
     protected $queries = array();
@@ -29,8 +26,9 @@ class QueryCollector extends DataCollector implements Renderable
      * Renders the SQL of traced statements with params embeded
      *
      * @param boolean $enabled
+     * @param string $quotationChar NOT USED
      */
-    public function setRenderSqlWithParams($enabled = true)
+    public function setRenderSqlWithParams($enabled = true, $quotationChar = "'")
     {
         $this->renderSqlWithParams = $enabled;
     }
