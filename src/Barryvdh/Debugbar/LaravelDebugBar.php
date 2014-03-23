@@ -2,7 +2,7 @@
 
 use Exception;
 use DebugBar\DebugBar;
-
+use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\TimeDataCollector;
@@ -17,7 +17,6 @@ use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
-use Barryvdh\Debugbar\DataCollector\ConfigCollector;
 use Barryvdh\Debugbar\DataCollector\IlluminateAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
@@ -239,7 +238,9 @@ class LaravelDebugbar extends DebugBar
         }
 
         if($this->shouldCollect('config', false)){
-            $this->addCollector(new ConfigCollector());
+            $configCollector = new ConfigCollector;
+            $configCollector->setData(array_dot($this->app['config']->getItems()));
+            $this->addCollector($configCollector);
         }
 
         if($this->shouldCollect('logs', false)){
