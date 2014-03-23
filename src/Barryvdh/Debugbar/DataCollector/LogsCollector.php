@@ -54,7 +54,12 @@ class LogsCollector extends MessagesCollector
         $file = implode("", $this->tailFile($path, $this->lines));
 
         foreach ($this->getLogs($file) as $log) {
-            $this->addMessage($log['header'] . $log['stack'], $log['level']);
+            $this->messages[] = array(
+                'message' => $log['header'] . $log['stack'],
+                'is_string' => false,
+                'label' => $log['level'],
+                'time' => microtime(true)
+            );
         }
     }
 
