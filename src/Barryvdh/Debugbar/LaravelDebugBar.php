@@ -198,7 +198,7 @@ class LaravelDebugbar extends DebugBar
                             $message = json_encode($message);
                         }
                         $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
-                        $logger->addMessage($log, $level);
+                        $logger->addMessage($log, $level, false);
                     });
             }else{
                 $this->addCollector(new MonologCollector( $this->app['log']->getMonolog() ));
