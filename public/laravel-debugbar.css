@@ -12,11 +12,12 @@ a.phpdebugbar-restore-btn {
     width: 16px;
 }
 div.phpdebugbar-resize-handle{
-    margin-top: -5px;
+    margin-top: -4px;
     background: none;
+    border-bottom: 1px solid #ccc;
 }
 
-div.phpdebugbar-closed, div.phpdebugbar-header{
+div.phpdebugbar-closed, div.phpdebugbar-minimized{
     border-top: 1px solid #ccc;
 }
 
