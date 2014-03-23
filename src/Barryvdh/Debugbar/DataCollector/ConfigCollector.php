@@ -18,16 +18,16 @@ class ConfigCollector extends DataCollector  implements Renderable
         $count=count($views);
 
         $messages = array();
-        foreach($views as $key=>$data){
+        foreach($views as $key=>$value){
             $messages[] = array(
-                'message' => $key.' => '.var_export($data, true),
+                'message' => $key.' => '.$this->formatVar($value),
                 'is_string' => true,
             );
         }
         return array(
-                     'messages' => $messages,
-                     'count'=>$count
-                     );
+             'messages' => $messages,
+             'count'=>$count
+             );
     }
 
     /**
@@ -50,11 +50,7 @@ class ConfigCollector extends DataCollector  implements Renderable
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
                 "map" => "$name.messages",
                 "default" => "{}"
-            )/*,
-            "$name:badge" => array(
-                "map" => "$name.count",
-                "default" => "null"
-            )*/
+            )
         );
     }
 }
