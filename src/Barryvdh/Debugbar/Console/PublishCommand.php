@@ -52,8 +52,8 @@ class PublishCommand extends Command {
     public function fire()
     {
 
-        $package = 'barryvdh/laravel-debugbar';
-        if ( ! is_null($path = $this->getPath()))
+        $package = 'maximebf/php-debugbar';
+        if ( ! is_null($path = $this->getDebugBarPath()))
         {
             $this->assets->publish($package, $path);
             $this->info('Assets published for package: '.$package);
@@ -62,12 +62,18 @@ class PublishCommand extends Command {
         {
             $this->error('Could not find path for: '.$package);
         }
+        $this->assets->publish('barryvdh/laravel-debugbar', $this->getPackagePublicPath());
+        $this->info('Assets published for package: barryvdh/laravel-debugbar');
 
     }
 
-    protected function getPath(){
+    protected function getDebugBarPath(){
         $reflector = new \ReflectionClass('DebugBar\DebugBar');
         return dirname($reflector->getFileName()) . DIRECTORY_SEPARATOR . 'Resources';
+    }
+
+    protected function getPackagePublicPath(){
+        return __DIR__.'/../../../../public';
     }
 
 

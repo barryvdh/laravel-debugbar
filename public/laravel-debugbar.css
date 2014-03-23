@@ -1,0 +1,25 @@
+div.phpdebugbar {
+    font-size: 13px;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
+
+div.phpdebugbar-header {
+    background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
+}
+a.phpdebugbar-restore-btn {
+    background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
+    width: 16px;
+}
+div.phpdebugbar-resize-handle{
+    margin-top: -5px;
+    background: none;
+}
+
+div.phpdebugbar-header{
+    border-top: 1px solid #ccc;
+}
+
+div.phpdebugbar-header > div > * {
+    padding: 5px 6px;
+    font-size: 13px;
+}

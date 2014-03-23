@@ -255,7 +255,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         $renderer = $this->getJavascriptRenderer();
-        $renderer->setBaseUrl($this->app['url']->asset('packages/barryvdh/laravel-debugbar'));
+        $renderer->setBaseUrl($this->app['url']->asset('packages/maximebf/php-debugbar'));
         $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
 
         $this->booted = true;
@@ -404,30 +404,26 @@ class LaravelDebugbar extends DebugBar
      */
     public function injectDebugbar(Response $response)
     {
-        if (function_exists('mb_stripos')) {
-            $posrFunction   = 'mb_strripos';
-            $substrFunction = 'mb_substr';
-        } else {
-            $posrFunction   = 'strripos';
-            $substrFunction = 'substr';
-        }
-
         $content = $response->getContent();
-        $pos = $posrFunction($content, '</body>');
-
+        
         $renderer = $this->getJavascriptRenderer();
         if($this->getStorage()){
             $openHandlerUrl = $this->app['url']->route('debugbar.openhandler');
             $renderer->setOpenHandlerUrl($openHandlerUrl);
         }
 
+        if(method_exists($renderer, 'addAssets')){
+            $dir = 'packages/barryvdh/laravel-debugbar';
+            $renderer->addAssets(array('laravel-debugbar.css'), array(), $this->app['path.public'].'/'.$dir, $this->app['url']->asset($dir));
+        }
 
-        $debugbar = $renderer->renderHead() . $renderer->render();
+        $renderedContent = $renderer->renderHead() . $renderer->render();
 
+        $pos = mb_strripos($content, '</body>');
         if (false !== $pos) {
-            $content = $substrFunction($content, 0, $pos).$debugbar.$substrFunction($content, $pos);
+            $content = mb_substr($content, 0, $pos) . $renderedContent . mb_substr($content, $pos);
         }else{
-            $content = $content . $debugbar;
+            $content = $content . $renderedContent;
         }
 
         $response->setContent($content);
