@@ -25,3 +25,7 @@ div.phpdebugbar-header > div > * {
     padding: 5px 6px;
     font-size: 13px;
 }
+
+div.phpdebugbar select{
+    padding: 1px 0;
+}
