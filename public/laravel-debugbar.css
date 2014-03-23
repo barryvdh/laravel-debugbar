@@ -30,3 +30,12 @@ div.phpdebugbar-header > div > * {
 div.phpdebugbar select{
     padding: 1px 0;
 }
+
+dl.phpdebugbar-widgets-kvlist dt{
+    white-space: nowrap;
+    width: 200px;
+}
+
+dl.phpdebugbar-widgets-kvlist dd {
+    margin-left: 210px;
+}
