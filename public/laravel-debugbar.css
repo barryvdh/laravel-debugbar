@@ -1,6 +1,7 @@
 div.phpdebugbar {
     font-size: 13px;
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+    border-top: 0;
 }
 
 div.phpdebugbar-header {
@@ -15,7 +16,7 @@ div.phpdebugbar-resize-handle{
     background: none;
 }
 
-div.phpdebugbar-header{
+div.phpdebugbar-closed, div.phpdebugbar-header{
     border-top: 1px solid #ccc;
 }
 
