@@ -1,7 +1,6 @@
 div.phpdebugbar {
     font-size: 13px;
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-    border-top: 0;
 }
 
 div.phpdebugbar-header {
@@ -12,27 +11,20 @@ a.phpdebugbar-restore-btn {
     background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
     width: 16px;
 }
-div.phpdebugbar-resize-handle{
-    margin-top: -4px;
-    background: none;
-    border-bottom: 1px solid #ccc;
-}
-
-div.phpdebugbar-closed, div.phpdebugbar-minimized{
-    border-top: 1px solid #ccc;
-}
 
 div.phpdebugbar-header > div > * {
-    padding: 5px 6px;
     font-size: 13px;
 }
 
-div.phpdebugbar select{
+div.phpdebugbar-header .phpdebugbar-tab {
+    padding: 5px 6px;
+}
+
+div.phpdebugbar .phpdebugbar-header select{
     padding: 1px 0;
 }
 
 dl.phpdebugbar-widgets-kvlist dt{
-    white-space: nowrap;
     width: 200px;
 }
 
