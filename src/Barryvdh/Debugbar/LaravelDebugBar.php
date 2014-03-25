@@ -237,12 +237,6 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if($this->shouldCollect('config', false)){
-            $configCollector = new ConfigCollector;
-            $configCollector->setData(array_dot($this->app['config']->getItems()));
-            $this->addCollector($configCollector);
-        }
-
         if($this->shouldCollect('logs', false)){
             $file = $this->app['config']->get('laravel-debugbar::config.options.logs.file');
             $this->addCollector(new LogsCollector($file));
@@ -271,6 +265,12 @@ class LaravelDebugbar extends DebugBar
         $app = $this->app;
         if( $app->runningInConsole() or !$this->isEnabled() || $this->isDebugbarRequest()){
             return $response;
+        }
+        
+        if($this->shouldCollect('config', false)){
+            $configCollector = new ConfigCollector;
+            $configCollector->setData($app['config']->getItems());
+            $this->addCollector($configCollector);
         }
 
         /** @var \Illuminate\Session\SessionManager $sessionManager */
