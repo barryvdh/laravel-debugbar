@@ -2,10 +2,9 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\Renderable;
+use DebugBar\DataCollector\ConfigCollector;
 use Illuminate\View\View;
-class ViewCollector extends DataCollector  implements Renderable
+class ViewCollector extends ConfigCollector
 {
 
     protected $views = array();
@@ -18,6 +17,8 @@ class ViewCollector extends DataCollector  implements Renderable
      */
     public function __construct($collectData = true){
         $this->collect_data = $collectData;
+        $this->name = 'views';
+        $this->data = array();
     }
 
     /**
@@ -28,7 +29,7 @@ class ViewCollector extends DataCollector  implements Renderable
     public function addView(View $view){
         $name = $view->getName();
         if(!$this->collect_data){
-            $this->views[] = $name;
+            $this->data[$name] = $name;
         }else{
             $data = array();
             foreach($view->getData() as $key => $value)
@@ -41,59 +42,11 @@ class ViewCollector extends DataCollector  implements Renderable
                         $data[$key] = "Object (". get_class($value).")";
                     }
                 }else{
-                    $data[$key] = $this->formatVar($value);
+                    $data[$key] = $value;
                 }
             }
-            $this->views[] = $name . ' => ' . print_r($data, true) ;
+            $this->data[$name] = $data ;
         }
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public function collect()
-    {
-        $views = $this->views;
-
-        $messages = array();
-        foreach($views as $data){
-            $messages[] = array(
-                'message' => $data,
-                'is_string' => false,
-            );
-        }
-        return array(
-             'messages' => $messages,
-             'count'=>count($views)
-         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'views';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getWidgets()
-    {
-        $name=$this->getName();
-        return array(
-            "$name" => array(
-                "icon" => "columns",
-                "widget" => "PhpDebugBar.Widgets.MessagesWidget",
-                "map" => "$name.messages",
-                "default" => "{}"
-            ),
-            "$name:badge" => array(
-                "map" => "$name.count",
-                "default" => "null"
-            )
-        );
-    }
 }
