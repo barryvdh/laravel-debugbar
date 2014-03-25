@@ -70,11 +70,15 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
     {
         $user = null;
         if($this->auth){
-            $user = $this->auth->user();
-            if(is_null($user)){
-                $user = 'Guest';
-            }elseif($user instanceof ArrayableInterface){
-                $user = $user->toArray();
+            try{
+                $user = $this->auth->user();
+                if(is_null($user)){
+                    $user = 'Guest';
+                }elseif($user instanceof ArrayableInterface){
+                    $user = $user->toArray();
+                }
+            }catch(\Exception $e){
+                $user = 'Not available';
             }
         }
 

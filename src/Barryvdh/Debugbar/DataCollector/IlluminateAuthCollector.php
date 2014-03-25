@@ -31,11 +31,17 @@ class IlluminateAuthCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        return $this->getUserInformation($this->auth->user());
+        try{
+            $user = $this->auth->user();
+        }catch(\Exception $e){
+            $user = null;
+        }
+        return $this->getUserInformation($user);
     }
 
     /**
      * Get displayed user information
+     * @param \Illuminate\Auth\UserInterface $user
      * @return array
      */
     protected function getUserInformation(UserInterface $user = null)
