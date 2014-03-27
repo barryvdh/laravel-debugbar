@@ -176,7 +176,9 @@ class LaravelDebugbar extends DebugBar
                     }
                     $debugbar['events']->info("Received event: ". $event);
                 });
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add EventCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if($this->shouldCollect('views', true) and isset($this->app['events'])){
@@ -186,7 +188,9 @@ class LaravelDebugbar extends DebugBar
                 $this->app['events']->listen('composing:*', function($view) use($debugbar){
                     $debugbar['views']->addView($view);
                 });
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add ViewCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if($this->shouldCollect('route')){
@@ -196,7 +200,9 @@ class LaravelDebugbar extends DebugBar
                 }else{
                     $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
                 }
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add RouteCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if( $this->shouldCollect('log', true) ){
@@ -215,7 +221,9 @@ class LaravelDebugbar extends DebugBar
                 }else{
                     $this->addCollector(new MonologCollector( $this->app['log']->getMonolog() ));
                 }
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add LogsCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if($this->shouldCollect('db', true) and isset($this->app['db'])){
@@ -241,7 +249,9 @@ class LaravelDebugbar extends DebugBar
                         $queryCollector->addQuery($query, $bindings, $time, $connection);
                     }
                 });
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add listen to Queries for Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if($this->shouldCollect('mail', true)){
@@ -251,14 +261,18 @@ class LaravelDebugbar extends DebugBar
                 if($this->app['config']->get('laravel-debugbar::config.options.mail.full_log') and $this->hasCollector('messages')){
                     $this['messages']->aggregate(new SwiftLogCollector($mailer));
                 }
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add MailCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if($this->shouldCollect('logs', false)){
             try{
                 $file = $this->app['config']->get('laravel-debugbar::config.options.logs.file');
                 $this->addCollector(new LogsCollector($file));
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add LogsCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
         if($this->shouldCollect('files', false)){
             $this->addCollector(new FilesCollector());
@@ -267,7 +281,9 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('auth', false)) {
             try{
                 $this->addCollector(new IlluminateAuthCollector($app['auth']));
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add AuthCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         $renderer = $this->getJavascriptRenderer();
@@ -293,7 +309,9 @@ class LaravelDebugbar extends DebugBar
                 $configCollector = new ConfigCollector;
                 $configCollector->setData($app['config']->getItems());
                 $this->addCollector($configCollector);
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add ConfigCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         /** @var \Illuminate\Session\SessionManager $sessionManager */
@@ -309,7 +327,9 @@ class LaravelDebugbar extends DebugBar
             }
             try{
                 $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager, $auth));
-            }catch(\Exception $e){}
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add SymfonyRequestCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
         }
 
         if($response->isRedirection()){
