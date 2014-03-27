@@ -6,24 +6,34 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\UserInterface;
+use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
  * Collector for Laravel's Auth provider
  */
-class IlluminateAuthCollector extends DataCollector implements Renderable
+class AuthCollector extends DataCollector implements Renderable
 {
-    /**
-     * @var \Illuminate\Auth\Guard
-     */
+
+    /** @var \Illuminate\Auth\AuthManager  */
     protected $auth;
+    /** @var bool  */
+    protected $showName = false;
 
     /**
      * @param \Illuminate\Auth\AuthManager $auth
      */
     public function __construct(AuthManager $auth)
     {
-        // Get the driver behind the AuthManager (i.e. the Guard instance)
-        $this->auth = $auth->driver();
+        $this->auth = $auth;
+    }
+
+    /**
+     * Set to show the users name/email
+     * @param bool $showName
+     */
+    public function setShowName($showName)
+    {
+        $this->showName = (bool) $showName;
     }
 
     /**
@@ -49,8 +59,8 @@ class IlluminateAuthCollector extends DataCollector implements Renderable
         // Defaults
         if (is_null($user)) {
             return array(
-                'user' => 'Guest',
-                'is_guest' => true,
+                'name' => 'Guest',
+                'user' => array('guest' => true),
             );
         }
 
@@ -66,8 +76,8 @@ class IlluminateAuthCollector extends DataCollector implements Renderable
         }
 
         return array(
-            'user' => $identifier,
-            'is_guest' => false,
+            'name' => $identifier,
+            'user' => $user instanceof ArrayableInterface ? $user->toArray() : $user,
         );
     }
 
@@ -84,13 +94,22 @@ class IlluminateAuthCollector extends DataCollector implements Renderable
      */
     public function getWidgets()
     {
-        return array(
-            'user' => array(
+        $widgets = array(
+            'auth' => array(
+                'icon' => 'lock',
+                'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
+                'map' => 'auth.user',
+                'default' => '{}'
+            )
+        );
+        if($this->showName){
+            $widgets['auth.name'] = array(
                 'icon' => 'user',
                 'tooltip' => 'Auth status',
-                'map' => 'auth.user',
+                'map' => 'auth.name',
                 'default' => '',
-            ),
-        );
+            );
+        }
+        return $widgets;
     }
 }

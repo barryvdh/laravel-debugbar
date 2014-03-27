@@ -17,7 +17,7 @@ use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
-use Barryvdh\Debugbar\DataCollector\IlluminateAuthCollector;
+use Barryvdh\Debugbar\DataCollector\AuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 
@@ -280,7 +280,9 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('auth', false)) {
             try{
-                $this->addCollector(new IlluminateAuthCollector($app['auth']));
+                $authCollector = new AuthCollector($app['auth']);
+                $authCollector->setShowName($this->app['config']->get('laravel-debugbar::config.options.auth.show_name'));
+                $this->addCollector($authCollector);
             }catch(\Exception $e){
                 $this->addException(new Exception('Cannot add AuthCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
             }
@@ -321,12 +323,7 @@ class LaravelDebugbar extends DebugBar
 
         if($this->shouldCollect('symfony_request', true) and !$this->hasCollector('request')){
             try{
-                $auth = $app['auth'];
-            }catch(\Exception $e){
-                $auth = null;
-            }
-            try{
-                $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager, $auth));
+                $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager));
             }catch(\Exception $e){
                 $this->addException(new Exception('Cannot add SymfonyRequestCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
             }
