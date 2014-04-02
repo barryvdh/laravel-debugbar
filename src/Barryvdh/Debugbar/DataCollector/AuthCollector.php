@@ -68,11 +68,13 @@ class AuthCollector extends DataCollector implements Renderable
         // useful. Try username and email.
         $identifier = $user->getAuthIdentifier();
         if (is_numeric($identifier)) {
-            if ($user->username) {
-                $identifier = $user->username;
-            }else if ($user->email) {
-                $identifier = $user->email;
-            }
+            try{
+                if ($user->username) {
+                    $identifier = $user->username;
+                }else if ($user->email) {
+                    $identifier = $user->email;
+                }
+            }catch(\Exception $e){}
         }
 
         return array(
