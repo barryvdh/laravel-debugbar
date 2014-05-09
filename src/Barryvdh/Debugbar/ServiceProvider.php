@@ -41,6 +41,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $this->app['router']->get('_debugbar/open', array('as' => 'debugbar.openhandler', function() use($app){
 
+            // Reflash session data
+            $app['session']->reflash();
+            
             $debugbar = $app['debugbar'];
 
             if(!$debugbar->isEnabled()){
