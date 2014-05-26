@@ -97,8 +97,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return new Console\ClearCommand($app['debugbar']);
             });
 
-        $this->commands('command.debugbar.publish');
-        $this->commands('command.debugbar.clear');
+        $this->commands(array('command.debugbar.publish', 'command.debugbar.clear'));
 
         if($this->shouldUseMiddleware()){
             $this->app->middleware('Barryvdh\Debugbar\Middleware', array($this->app));
