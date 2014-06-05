@@ -212,11 +212,17 @@ class LaravelDebugbar extends DebugBar
                     $this['messages']->aggregate($logger);
                     $this->app['log']->listen(function($level, $message, $context) use($logger)
                     {
-                        if(is_array($message) or is_object($message)){
-                            $message = json_encode($message);
+                        try{
+                            $logMessage = (string) $message;
+                            if(mb_check_encoding($logMessage, 'UTF-8')){
+                                $logMessage .= (!empty($context) ? ' '.json_encode($context) : '');
+                            }else{
+                                $logMessage = "[INVALID UTF-8 DATA]";
+                            }
+                        }catch(\Exception $e){
+                            $logMessage = "[Exception: ".$e->getMessage() ."]";
                         }
-                        $log = '['.date('H:i:s').'] '. "LOG.$level: " . $message . (!empty($context) ? ' '.json_encode($context) : '');
-                        $logger->addMessage($log, $level, false);
+                        $logger->addMessage('['.date('H:i:s').'] '. "LOG.$level: ". $logMessage, $level, false);
                     });
                 }else{
                     $this->addCollector(new MonologCollector( $this->app['log']->getMonolog() ));
