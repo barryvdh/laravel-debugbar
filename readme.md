@@ -37,7 +37,7 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 
 ## Installation
 
-Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-debugbar:dev-master` directly):
+Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-debugbar:1.x` directly):
 
     "barryvdh/laravel-debugbar": "1.*"
 
