@@ -493,6 +493,9 @@ class LaravelDebugbar extends DebugBar
         }
 
         $response->setContent($content);
+        
+        // Stop further rendering (on subrequests etc)
+        $this->disable();
     }
 
     /**
