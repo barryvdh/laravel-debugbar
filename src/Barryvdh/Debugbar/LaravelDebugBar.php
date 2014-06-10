@@ -341,7 +341,7 @@ class LaravelDebugbar extends DebugBar
             $this->sendDataInHeaders(true);
         }elseif(
             ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
-            || 'html' !== $request->getRequestFormat()
+            || 'html' !== $request->format()
         ){
             //Do nothing
         }elseif($app['config']->get('laravel-debugbar::config.inject', true)){
