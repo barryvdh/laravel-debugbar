@@ -302,10 +302,22 @@ class LaravelDebugbar extends DebugBar
 
     }
 
+    /**
+     * Check if this is a request to the Debugbar OpenHandler
+     * 
+     * @return bool
+     */
     protected function isDebugbarRequest(){
         return $this->app['request']->segment(1) == '_debugbar';
     }
-
+    
+    /**
+     * Modify the response and inject the debugbar (or data in headers)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function modifyResponse($request, $response){
         $app = $this->app;
         if( $app->runningInConsole() or !$this->isEnabled() || $this->isDebugbarRequest()){
