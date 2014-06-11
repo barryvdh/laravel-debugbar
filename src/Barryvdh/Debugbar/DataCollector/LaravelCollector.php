@@ -4,17 +4,30 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Foundation\Application;
 
 
 class LaravelCollector extends DataCollector  implements Renderable
 {
+
+    /** @var \Illuminate\Foundation\Application $app */
+    protected $app;
+
+    /**
+     * @param Application $app
+     */
+    public function __construct(Application $app = null){
+        $this->app = $app;
+    }
 
     /**
      * {@inheritDoc}
      */
     public function collect()
     {
-        $app = app();
+        // Fallback if not injected
+        $app = $this->app ?: app();
+        
         return array(
             "version" => $app::VERSION,
             "environment" => $app->environment()
