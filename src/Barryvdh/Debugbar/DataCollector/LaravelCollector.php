@@ -30,7 +30,8 @@ class LaravelCollector extends DataCollector  implements Renderable
         
         return array(
             "version" => $app::VERSION,
-            "environment" => $app->environment()
+            "environment" => $app->environment(),
+            "locale" => $app->getLocale(),
         );
     }
 
@@ -59,7 +60,13 @@ class LaravelCollector extends DataCollector  implements Renderable
                 "tooltip" => "Environment",
                 "map" => "laravel.environment",
                 "default" => ""
-            )
+            ),
+            "locale" => array(
+                "icon" => "flag",
+                "tooltip" => "Current locale",
+                "map" => "laravel.locale",
+                "default" => "",
+            ),
         );
     }
 }
