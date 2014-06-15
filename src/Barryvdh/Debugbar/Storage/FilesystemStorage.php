@@ -38,8 +38,13 @@ class FilesystemStorage implements StorageInterface
                 throw new \Exception("Cannot create directory '$this->dirname'..");
             }
         }
-        $this->files->put($this->makeFilename($id), json_encode($data));
-
+        
+        try{
+            $this->files->put($this->makeFilename($id), json_encode($data));
+        }catch(\Exception $e){
+            //TODO; error handling
+        }
+        
         // Randomly check if we should collect old files
         if(rand(1, 100) <= $this->gc_probability){
             $this->garbageCollect();

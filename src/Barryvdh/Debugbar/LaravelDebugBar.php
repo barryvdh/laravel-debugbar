@@ -348,16 +348,28 @@ class LaravelDebugbar extends DebugBar
         }
 
         if($response->isRedirection()){
-            $this->stackData();
+            try {
+                $this->stackData();
+            }catch(\Exception $e){
+                // TODO; show error?
+            }
         }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
-            $this->sendDataInHeaders(true);
+            try {
+                $this->sendDataInHeaders(true);
+            }catch(\Exception $e){
+                // TODO; show error?
+            }
         }elseif(
             ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->format()
         ){
             //Do nothing
         }elseif($app['config']->get('laravel-debugbar::config.inject', true)){
-            $this->injectDebugbar($response);
+            try {
+                $this->injectDebugbar($response);
+            }catch(\Exception $e){
+                // TODO; show error?
+            }
         }
         return $response;
     }
