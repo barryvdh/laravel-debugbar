@@ -497,9 +497,9 @@ class LaravelDebugbar extends DebugBar
 
         $renderedContent = $renderer->renderHead() . $renderer->render();
 
-        $pos = mb_strripos($content, '</body>');
+        $pos = strripos($content, '</body>');
         if (false !== $pos) {
-            $content = mb_substr($content, 0, $pos) . $renderedContent . mb_substr($content, $pos);
+            $content = substr($content, 0, $pos) . $renderedContent . substr($content, $pos);
         }else{
             $content = $content . $renderedContent;
         }
