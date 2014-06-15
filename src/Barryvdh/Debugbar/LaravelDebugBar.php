@@ -576,7 +576,7 @@ class LaravelDebugbar extends DebugBar
 
         // Remove all invalid (non UTF-8) characters
         array_walk_recursive($this->data, function(&$item){
-              //  $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
+                $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
             });
 
 
