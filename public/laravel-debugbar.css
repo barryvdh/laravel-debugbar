@@ -5,10 +5,12 @@ div.phpdebugbar {
 
 div.phpdebugbar-header {
     background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
+    background-size: 20px;
     line-height: 17px;
 }
 a.phpdebugbar-restore-btn {
     background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
+    background-size: 20px;
     width: 16px;
 }
 
