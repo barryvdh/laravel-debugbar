@@ -351,13 +351,13 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->stackData();
             }catch(\Exception $e){
-                // TODO; show error?
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
             try {
                 $this->sendDataInHeaders(true);
             }catch(\Exception $e){
-                // TODO; show error?
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         }elseif(
             ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
@@ -368,7 +368,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->injectDebugbar($response);
             }catch(\Exception $e){
-                // TODO; show error?
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         }
         
