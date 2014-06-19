@@ -4,12 +4,12 @@ div.phpdebugbar {
 }
 
 div.phpdebugbar-header {
-    background: white url(laravel-icon.png) no-repeat 4px 3px;
+    background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
     background-size: 20px;
     line-height: 17px;
 }
 a.phpdebugbar-restore-btn {
-    background: white url(laravel-icon.png) no-repeat 5px 3px;
+    background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
     background-size: 20px;
     width: 16px;
     border-right-color: #ccc;
@@ -39,7 +39,6 @@ ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
     height: 20px;
     top: 0;
     background-color: #f4645f;
-    border-radius: 0;
 }
 
 ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label {
