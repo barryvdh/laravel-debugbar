@@ -281,7 +281,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
         if($this->shouldCollect('files', false)){
-            $this->addCollector(new FilesCollector());
+            $this->addCollector(new FilesCollector($app));
         }
 
         if ($this->shouldCollect('auth', false)) {
