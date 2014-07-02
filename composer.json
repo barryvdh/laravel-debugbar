@@ -15,7 +15,7 @@
         "illuminate/support": "~4.0",
         "illuminate/filesystem": "~4.0",
         "symfony/finder": "~2.3",
-        "maximebf/debugbar": "1.9.x"
+        "maximebf/debugbar": "~1.9"
     },
     "autoload": {
         "psr-0": {
