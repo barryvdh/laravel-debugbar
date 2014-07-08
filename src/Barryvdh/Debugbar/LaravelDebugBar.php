@@ -353,7 +353,7 @@ class LaravelDebugbar extends DebugBar
             }catch(\Exception $e){
                 $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
-        }elseif( $request->isXmlHttpRequest() and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
+        }elseif( ($request->isXmlHttpRequest() || $request->wantsJson()) and $app['config']->get('laravel-debugbar::config.capture_ajax', true)){
             try {
                 $this->sendDataInHeaders(true);
             }catch(\Exception $e){
