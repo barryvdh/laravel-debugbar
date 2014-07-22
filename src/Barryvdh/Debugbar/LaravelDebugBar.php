@@ -444,6 +444,8 @@ class LaravelDebugbar extends DebugBar
             /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
             $collector = $this->getCollector('time');
             $collector->measure($label, $closure);
+        }else{
+            $closure();
         }
     }
 
