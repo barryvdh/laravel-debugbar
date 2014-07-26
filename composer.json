@@ -16,6 +16,9 @@
         "symfony/finder": "~2.3",
         "maximebf/debugbar": "~1.9"
     },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
     "autoload": {
         "psr-0": {
             "Barryvdh\\Debugbar": "src/"
