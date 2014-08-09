@@ -113,3 +113,25 @@ You can enable or disable the debugbar during run time.
     \Debugbar::disable();
 
 NB. Once enabled, the collectors are added (and could produce extra overhead), so if you want to use the debugbar in production, disable in the config and only enable when needed.
+
+
+## Twig Integration
+
+Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/TwigBridge](https://github.com/rcrowe/TwigBridge) 0.6.x
+
+Add the following extensions to you config/extensions.php
+
+    'Barryvdh\Debugbar\Twig\Extension\Debug',
+    'Barryvdh\Debugbar\Twig\Extension\Stopwatch',
+
+The Debug extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables to the Messages,
+instead of showing it directly in the template. It dumps the arguments, or when empty; all context variables.
+
+    {{ dump() }}
+    {{ dump(user, categories) }}
+
+The Stopwatch extension adds a [stopwatch tag](http://symfony.com/blog/new-in-symfony-2-4-a-stopwatch-tag-for-twig)  similar to the one in Symfony/Silex Twigbridge.
+
+    {% stopwatch "foo" %}
+        ... some things that gets timed
+    {% endstopwatch %}
