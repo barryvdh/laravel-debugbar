@@ -119,7 +119,7 @@ NB. Once enabled, the collectors are added (and could produce extra overhead), s
 
 Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/TwigBridge](https://github.com/rcrowe/TwigBridge) 0.6.x
 
-Add the following extensions to you config/extensions.php
+Add the following extensions to you TwigBridge config/extensions.php (or register the extensions manually)
 
     'Barryvdh\Debugbar\Twig\Extension\Debug',
     'Barryvdh\Debugbar\Twig\Extension\Stopwatch',
