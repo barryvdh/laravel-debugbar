@@ -244,6 +244,10 @@ class LaravelDebugbar extends DebugBar
             if($this->app['config']->get('laravel-debugbar::config.options.db.with_params')){
                 $queryCollector->setRenderSqlWithParams(true);
             }
+            
+            if($this->app['config']->get('laravel-debugbar::config.options.db.backtrace')){
+                $queryCollector->setFindSource(true);
+            }
 
             $this->addCollector($queryCollector);
 
