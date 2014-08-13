@@ -92,7 +92,7 @@ class QueryCollector extends PDOCollector
     {
         $traces = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($traces as $trace) {
-            if (isset($trace['class']) && isset($trace['file'])  && strpos($trace['file'], '/vendor/') === false) {
+            if (isset($trace['class']) && isset($trace['file'])  && strpos($trace['file'], DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR) === false) {
 
                 if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
                     list($file, $line) = $this->getTwigInfo($trace);
