@@ -1,6 +1,6 @@
 <?php
 namespace Barryvdh\Debugbar\Console;
-use Illuminate\Foundation\AssetPublisher;
+use Illuminate\Foundation\Publishing\AssetPublisher;
 use Illuminate\Console\Command;
 
 /**
