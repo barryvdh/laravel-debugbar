@@ -1,6 +1,6 @@
 <?php
 namespace Barryvdh\Debugbar\Console;
-use Illuminate\Foundation\AssetPublisher;
+
 use Illuminate\Console\Command;
 
 /**
@@ -29,19 +29,19 @@ class PublishCommand extends Command {
      *
      * @var \Illuminate\Foundation\AssetPublisher
      */
-    protected $assets;
+    protected $assetPublisher;
 
 
     /**
      * Create a new Publish command
      *
-     * @param \Illuminate\Foundation\AssetPublisher $assets
+     * @param \Illuminate\Foundation\AssetPublisher $assetPublisher
      */
-    public function __construct(AssetPublisher $assets)
+    public function __construct($assetPublisher)
     {
         parent::__construct();
 
-        $this->assets = $assets;
+        $this->assetPublisher = $assetPublisher;
     }
 
     /**
@@ -55,14 +55,14 @@ class PublishCommand extends Command {
         $package = 'maximebf/php-debugbar';
         if ( ! is_null($path = $this->getDebugBarPath()))
         {
-            $this->assets->publish($package, $path);
+            $this->assetPublisher->publish($package, $path);
             $this->info('Assets published for package: '.$package);
         }
         else
         {
             $this->error('Could not find path for: '.$package);
         }
-        $this->assets->publish('barryvdh/laravel-debugbar', $this->getPackagePublicPath());
+        $this->assetPublisher->publish('barryvdh/laravel-debugbar', $this->getPackagePublicPath());
         $this->info('Assets published for package: barryvdh/laravel-debugbar');
 
     }
