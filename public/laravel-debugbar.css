@@ -68,7 +68,10 @@ div.phpdebugbar-openhandler .phpdebugbar-openhandler-header {
     background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
     background-size: 20px;
 }
-
+div.phpdebugbar-openhandler a {
+    color: #555;
+}
+    
 div.phpdebugbar-openhandler table{
     table-layout: fixed;
 }
