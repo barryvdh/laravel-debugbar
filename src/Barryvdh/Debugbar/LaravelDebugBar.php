@@ -502,7 +502,9 @@ class LaravelDebugbar extends DebugBar
 
         if(method_exists($renderer, 'addAssets')){
             $dir = 'packages/barryvdh/laravel-debugbar';
-            $renderer->addAssets(array('laravel-debugbar.css'), array(), $this->app['path.public'].'/'.$dir, $this->app['url']->asset($dir));
+            $css = array('laravel-debugbar.css');
+            $js = $this->getStorage() ? array('openhandler.js') : array();
+            $renderer->addAssets($css,$js, $this->app['path.public'].'/'.$dir, $this->app['url']->asset($dir));
         }
 
         $renderedContent = $renderer->renderHead() . $renderer->render();

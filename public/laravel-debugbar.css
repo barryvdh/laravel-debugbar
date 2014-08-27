@@ -3,16 +3,11 @@ div.phpdebugbar {
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
 }
 
-div.phpdebugbar-header {
+div.phpdebugbar-header, div.phpdebugbar-openhandler-header {
     background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
     background-size: 20px;
     line-height: 17px;
 }
-
-div.phpdebugbar-body {
-    min-height: 40px;
-}
-
 a.phpdebugbar-restore-btn {
     background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
     background-size: 20px;
@@ -67,4 +62,24 @@ a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
 a.phpdebugbar-tab span.phpdebugbar-badge {
     background: #f4645f;
     color: #fff;
+}
+
+div.phpdebugbar-openhandler .phpdebugbar-openhandler-header {
+    background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
+    background-size: 20px;
+}
+
+div.phpdebugbar-openhandler table{
+    table-layout: fixed;
+}
+
+div.phpdebugbar-openhandler table td, div.phpdebugbar-openhandler table th{
+    text-align: left;
+}
+
+div.phpdebugbar-openhandler table td a{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
