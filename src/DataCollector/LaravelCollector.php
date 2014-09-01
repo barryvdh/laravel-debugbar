@@ -27,7 +27,7 @@ class LaravelCollector extends DataCollector  implements Renderable
     {
         // Fallback if not injected
         $app = $this->app ?: app();
-        
+
         return array(
             "version" => $app::VERSION,
             "environment" => $app->environment(),

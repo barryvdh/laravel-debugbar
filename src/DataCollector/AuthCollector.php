@@ -71,7 +71,7 @@ class AuthCollector extends DataCollector implements Renderable
             try{
                 if ($user->username) {
                     $identifier = $user->username;
-                }else if ($user->email) {
+                }elseif ($user->email) {
                     $identifier = $user->email;
                 }
             }catch(\Exception $e){}

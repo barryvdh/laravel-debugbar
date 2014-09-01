@@ -50,7 +50,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
      */
     public function getWidgets()
     {
-        $widgets= array(
+        $widgets = array(
             "route" => array(
                 "icon"  => "share",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
@@ -59,7 +59,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
             )
         );
         if (Config::get('laravel-debugbar::config.options.route.label', true)){
-            $widgets['currentroute']=array(
+            $widgets['currentroute'] = array(
                 "icon"      => "share",
                 "tooltip"   => "Route",
                 "map"       => "route.uri",

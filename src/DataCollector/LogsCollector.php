@@ -76,7 +76,7 @@ class LogsCollector extends MessagesCollector
 
         $log = array();
         foreach ($headings as $h) {
-            for ($i=0, $j = count($h); $i < $j; $i++) {
+            for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $ll) {
                     if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
                         $log[] = array('level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]);

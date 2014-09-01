@@ -96,7 +96,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             'response_headers'   => $responseHeaders,
             'path_info'          => $request->getPathInfo(),
         );
-        
+
         if($this->session){
             $sessionAttributes = array();
             foreach($this->session->all() as $key => $value){
