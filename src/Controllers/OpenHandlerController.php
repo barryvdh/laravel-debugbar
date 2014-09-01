@@ -1,9 +1,9 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Routing\Controller;
-use Illuminate\Http\Response;
 use DebugBar\OpenHandler;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
 
 class OpenHandlerController extends Controller {
 

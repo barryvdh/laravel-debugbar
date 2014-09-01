@@ -2,12 +2,10 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use DebugBar\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
  *

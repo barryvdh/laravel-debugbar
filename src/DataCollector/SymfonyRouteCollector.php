@@ -4,9 +4,9 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Symfony\Component\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
+use Symfony\Component\Routing\Route;
 
 class SymfonyRouteCollector extends DataCollector  implements Renderable
 {

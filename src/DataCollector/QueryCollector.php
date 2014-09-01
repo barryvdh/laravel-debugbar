@@ -2,8 +2,8 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
+use DebugBar\DataCollector\TimeDataCollector;
 
 /**
  * Collects data about SQL statements executed with PDO
