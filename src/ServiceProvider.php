@@ -18,7 +18,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     public function boot()
     {
         $app = $this->app;
-        $app['config']->package('barryvdh/laravel-debugbar', $this->guessPackagePath() . '/config');
+        $app['config']->package('barryvdh/laravel-debugbar', __DIR__ . '/config');
 
         if($app->runningInConsole()){
             if($this->app['config']->get('laravel-debugbar::config.capture_console')){

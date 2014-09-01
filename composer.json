@@ -17,8 +17,8 @@
         "maximebf/debugbar": "~1.9"
     },
     "autoload": {
-        "psr-0": {
-            "Barryvdh\\Debugbar": "src/"
+        "psr-4": {
+            "Barryvdh\\Debugbar\\": "src/"
         }
     },
     "extra": {
