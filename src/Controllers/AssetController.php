@@ -6,6 +6,9 @@ use Illuminate\Routing\Controller;
 
 class AssetController extends Controller {
 
+    /** @var int The TTL (1 year) */
+    protected $ttl = 31536000;
+
     /**
      * The application instance.
      *
@@ -34,9 +37,12 @@ class AssetController extends Controller {
         $renderer->dumpJsAssets();
         $content = ob_get_contents();
 
-        return new Response($content, 200, array(
+        $response = new Response($content, 200, array(
                 'Content-Type' => 'text/javascript',
             ));
+        $response->setTtl($this->ttl);
+
+        return $response;
     }
 
     public function css()
@@ -47,9 +53,12 @@ class AssetController extends Controller {
         $renderer->dumpCssAssets();
         $content = ob_get_contents();
 
-        return new Response($content, 200, array(
+        $response = new Response($content, 200, array(
                 'Content-Type' => 'text/css',
             ));
+        $response->setTtl($this->ttl);
+
+        return $response;
     }
 
 }

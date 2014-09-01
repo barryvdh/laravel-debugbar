@@ -48,17 +48,38 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             return parent::renderHead();
         }
 
+        $jsModified = $this->getModifiedTime('js');
+        $cssModified = $this->getModifiedTime('css');
+
         $html = '';
-
-        $html .= sprintf('<link rel="stylesheet" type="text/css" href="%s">' . "\n", $this->url->route('debugbar.assets.css'));
-
-        $html .= sprintf('<script type="text/javascript" src="%s"></script>' . "\n", $this->url->route('debugbar.assets.js'));
+        $html .= sprintf('<link rel="stylesheet" type="text/css" href="%s?%s">' . "\n", $this->url->route('debugbar.assets.css'), $cssModified);
+        $html .= sprintf('<script type="text/javascript" src="%s?%s"></script>' . "\n", $this->url->route('debugbar.assets.js'), $jsModified);
 
         if ($this->isJqueryNoConflictEnabled()) {
             $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
         }
 
         return $html;
+    }
+    
+    /**
+     * Get the last modified time of any assets.
+     * 
+     * @param string $type 'js' or 'css'
+     * @return int
+     */
+    protected function getModifiedTime($type)
+    {
+        $files = $this->getAssets($type);
+
+        $latest = 0;
+        foreach($files as $file){
+            $mtime = filemtime($file);
+            if($mtime > $latest){
+                $latest = $mtime;
+            }
+        }
+        return $latest;
     }
 
 }
