@@ -9,14 +9,13 @@ class ClearCommand extends Command {
     protected $description = 'Clear the Debugbar Storage';
     protected $debugbar;
 
-
-    public function __construct(DebugBar $debugbar){
+    public function __construct(DebugBar $debugbar) {
         $this->debugbar = $debugbar;
 
         parent::__construct();
     }
 
-    public function fire(){
+    public function fire() {
 
         if($storage = $this->debugbar->getStorage()){
             $storage->clear();

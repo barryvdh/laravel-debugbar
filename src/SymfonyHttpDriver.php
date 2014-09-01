@@ -14,7 +14,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /** @var \Symfony\Component\HttpFoundation\Response  */
     protected $response;
 
-    public function __construct($session, $response = null){
+    public function __construct($session, $response = null) {
         $this->session = $session;
         $this->response = $response;
     }

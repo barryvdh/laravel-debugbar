@@ -23,7 +23,7 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
      */
     protected $router;
 
-    public function __construct(Router $router ){
+    public function __construct(Router $router) {
         $this->router = $router;
     }
     /**
@@ -171,6 +171,5 @@ class IlluminateRouteCollector extends DataCollector  implements Renderable
     {
         return implode(', ', array_keys($route->afterFilters()));
     }
-
 
 }

@@ -65,7 +65,7 @@ class LogsCollector extends MessagesCollector
      * @param $file
      * @return array
      */
-    public function getLogs($file){
+    public function getLogs($file) {
         $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
 
         $log_levels = $this->getLevels();
@@ -99,7 +99,7 @@ class LogsCollector extends MessagesCollector
      */
     public function getLevels()
     {
-        $class = new ReflectionClass(new LogLevel);
+        $class = new ReflectionClass(new LogLevel());
         return $class->getConstants();
     }
 
