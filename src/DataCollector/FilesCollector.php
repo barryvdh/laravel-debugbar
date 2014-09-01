@@ -63,7 +63,7 @@ class FilesCollector extends DataCollector  implements Renderable
      *
      * @return array
      */
-    protected function getCompiledFiles(){
+    protected function getCompiledFiles() {
         if($this->app && class_exists('Illuminate\Foundation\Console\OptimizeCommand')){
             $reflector = new \ReflectionClass('Illuminate\Foundation\Console\OptimizeCommand');
             $path = dirname($reflector->getFileName()) . '/Optimize/config.php';
@@ -82,7 +82,7 @@ class FilesCollector extends DataCollector  implements Renderable
      *
      * @return array
      */
-    protected function getIncludedFiles(){
+    protected function getIncludedFiles() {
         return get_included_files();
     }
 
@@ -92,7 +92,7 @@ class FilesCollector extends DataCollector  implements Renderable
      * @param $path
      * @return string
      */
-    protected function stripBasePath($path){
+    protected function stripBasePath($path) {
         return ltrim(str_replace($this->basePath, '', $path), '/');
     }
 

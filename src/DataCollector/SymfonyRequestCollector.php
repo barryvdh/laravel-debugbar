@@ -24,7 +24,6 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
     /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
     protected $session;
 
-
     /**
      * Create a new SymfonyRequestCollector
      *
@@ -79,8 +78,6 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             $responseHeaders['Set-Cookie'] = $cookies;
         }
 
-
-
         $statusCode = $response->getStatusCode();
 
         $data = array(
@@ -122,7 +119,6 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         return $data;
 
     }
-
 
     private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
     {

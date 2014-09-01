@@ -15,7 +15,7 @@ class ViewCollector extends ConfigCollector
      *
      * @param bool $collectData  Collects view data when tru
      */
-    public function __construct($collectData = true){
+    public function __construct($collectData = true) {
         $this->collect_data = $collectData;
         $this->name = 'views';
         $this->data = array();
@@ -26,7 +26,7 @@ class ViewCollector extends ConfigCollector
      *
      * @param \Illuminate\View\View $view
      */
-    public function addView(View $view){
+    public function addView(View $view) {
         $name = $view->getName();
         if(!$this->collect_data){
             $this->data[$name] = $name;

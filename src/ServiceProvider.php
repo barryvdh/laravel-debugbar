@@ -1,6 +1,5 @@
 <?php namespace Barryvdh\Debugbar;
 
-
 class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     /**
@@ -22,7 +21,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         if($app->runningInConsole()){
             if($this->app['config']->get('laravel-debugbar::config.capture_console')){
-                $app->shutdown(function($app){
+                $app->shutdown(function ($app) {
                         /** @var LaravelDebugbar $debugbar */
                         $debugbar = $app['debugbar'];
                         $debugbar->collectConsole();
@@ -31,7 +30,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $this->app['config']->set('laravel-debugbar::config.enabled', false);
             }
         }elseif( ! $this->shouldUseMiddleware()){
-            $app->after(function ($request, $response) use($app)
+            $app->after(function ($request, $response) use ($app)
             {
                 /** @var LaravelDebugbar $debugbar */
                 $debugbar = $app['debugbar'];
@@ -63,7 +62,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         }
     }
 
-
     /**
      * Register the service provider.
      *
@@ -71,7 +69,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function register()
     {
-        $this->app['debugbar'] = $this->app->share(function ($app){
+        $this->app['debugbar'] = $this->app->share(function ($app) {
                 $debugbar = new LaravelDebugBar($app);
 
                 $sessionManager = $app['session'];
@@ -81,14 +79,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $debugbar;
             });
 
-        $this->app['command.debugbar.publish'] = $this->app->share(function($app)
+        $this->app['command.debugbar.publish'] = $this->app->share(function ($app)
             {
                 //Make sure the asset publisher is registered.
                 $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
                 return new Console\PublishCommand($app['asset.publisher']);
             });
 
-        $this->app['command.debugbar.clear'] = $this->app->share(function($app)
+        $this->app['command.debugbar.clear'] = $this->app->share(function ($app)
             {
                 return new Console\ClearCommand($app['debugbar']);
             });
@@ -110,7 +108,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         return array('debugbar', 'command.debugbar.publish', 'command.debugbar.clear');
     }
 
-    protected function shouldUseMiddleware(){
+    protected function shouldUseMiddleware() {
         $app = $this->app;
         return !$app->runningInConsole() && version_compare($app::VERSION, '4.1', '>=');
     }

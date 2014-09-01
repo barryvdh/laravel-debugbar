@@ -61,5 +61,4 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         return $html;
     }
 
-
 }

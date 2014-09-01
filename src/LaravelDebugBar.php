@@ -58,7 +58,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * @param \Illuminate\Foundation\Application $app
      */
-    public function __construct($app = null){
+    public function __construct($app = null) {
         if(!$app){
             $app = app();   //Fallback when $app is not given
         }
@@ -69,14 +69,14 @@ class LaravelDebugbar extends DebugBar
      * Check if the Debugbar is enabled
      * @return boolean
      */
-    public function isEnabled(){
+    public function isEnabled() {
         return $this->app['config']->get('laravel-debugbar::config.enabled');
     }
 
     /**
      * Enable the Debugbar and boot, if not already booted.
      */
-    public function enable(){
+    public function enable() {
         $this->app['config']->set('laravel-debugbar::config.enabled', true);
         if(!$this->booted){
             $this->boot();
@@ -86,15 +86,14 @@ class LaravelDebugbar extends DebugBar
     /**
      * Disable the Debugbar
      */
-    public function disable(){
+    public function disable() {
         $this->app['config']->set('laravel-debugbar::config.enabled', false);
     }
-
 
     /**
      * Boot the debugbar (add collectors, renderer and listener)
      */
-    public function boot(){
+    public function boot() {
         if($this->booted){
             return;
         }
@@ -118,7 +117,7 @@ class LaravelDebugbar extends DebugBar
 
             $this->addCollector(new TimeDataCollector());
 
-            $this->app->booted(function() use($debugbar)
+            $this->app->booted(function () use ($debugbar)
             {
                 if(defined('LARAVEL_START')){
                     $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
@@ -129,13 +128,13 @@ class LaravelDebugbar extends DebugBar
             if(version_compare($app::VERSION, '4.1', '>=') && $this->app->isBooted()){
                 $debugbar->startMeasure('application', 'Application');
             }else{
-                $this->app->before(function() use($debugbar)
+                $this->app->before(function () use ($debugbar)
                 {
                     $debugbar->startMeasure('application', 'Application');
                 });
             }
 
-            $this->app->after(function() use($debugbar)
+            $this->app->after(function () use ($debugbar)
             {
                 $debugbar->stopMeasure('application');
                 $debugbar->startMeasure('after', 'After application');
@@ -152,7 +151,7 @@ class LaravelDebugbar extends DebugBar
                     $exceptionCollector->setChainExceptions($this->app['config']->get('laravel-debugbar::config.options.exceptions.chain', true));
                 }
                 $this->addCollector($exceptionCollector);
-                $this->app->error(function(Exception $exception) use($exceptionCollector){
+                $this->app->error(function (Exception $exception) use ($exceptionCollector) {
                     $exceptionCollector->addException($exception);
                 });
             }catch(\Exception $e){}
@@ -168,7 +167,7 @@ class LaravelDebugbar extends DebugBar
             try{
                 $this->addCollector(new MessagesCollector('events'));
                 $dispatcher = $this->app['events'];
-                $dispatcher->listen('*', function() use($debugbar, $dispatcher){
+                $dispatcher->listen('*', function () use ($debugbar, $dispatcher) {
                     if(method_exists($dispatcher, 'firing')){
                         $event = $dispatcher->firing();
                     }else{
@@ -186,7 +185,7 @@ class LaravelDebugbar extends DebugBar
             try{
                 $collectData = $this->app['config']->get('laravel-debugbar::config.options.views.data', true);
                 $this->addCollector(new ViewCollector($collectData));
-                $this->app['events']->listen('composing:*', function($view) use($debugbar){
+                $this->app['events']->listen('composing:*', function ($view) use ($debugbar) {
                     $debugbar['views']->addView($view);
                 });
             }catch(\Exception $e){
@@ -211,7 +210,7 @@ class LaravelDebugbar extends DebugBar
                 if($this->hasCollector('messages') ){
                     $logger = new MessagesCollector('log');
                     $this['messages']->aggregate($logger);
-                    $this->app['log']->listen(function($level, $message, $context) use($logger)
+                    $this->app['log']->listen(function ($level, $message, $context) use ($logger)
                     {
                         try{
                             $logMessage = (string) $message;
@@ -253,7 +252,7 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector($queryCollector);
 
             try{
-                $db->listen(function($query, $bindings, $time, $connectionName) use ($db, $queryCollector)
+                $db->listen(function ($query, $bindings, $time, $connectionName) use ($db, $queryCollector)
                 {
                     $connection = $db->connection($connectionName);
                     if( !method_exists($connection, 'logging') || $connection->logging() ){
@@ -312,7 +311,7 @@ class LaravelDebugbar extends DebugBar
      *
      * @return bool
      */
-    protected function isDebugbarRequest(){
+    protected function isDebugbarRequest() {
         return $this->app['request']->segment(1) == '_debugbar';
     }
 
@@ -323,7 +322,7 @@ class LaravelDebugbar extends DebugBar
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function modifyResponse($request, $response){
+    public function modifyResponse($request, $response) {
         $app = $this->app;
         if( $app->runningInConsole() or !$this->isEnabled() || $this->isDebugbarRequest()){
             return $response;
@@ -331,7 +330,7 @@ class LaravelDebugbar extends DebugBar
 
         if($this->shouldCollect('config', false)){
             try{
-                $configCollector = new ConfigCollector;
+                $configCollector = new ConfigCollector();
                 $configCollector->setData($app['config']->getItems());
                 $this->addCollector($configCollector);
             }catch(\Exception $e){
@@ -391,10 +390,9 @@ class LaravelDebugbar extends DebugBar
         return $response;
     }
 
-    public function shouldCollect($name, $default = false){
+    public function shouldCollect($name, $default = false) {
         return $this->app['config']->get('laravel-debugbar::config.collectors.'.$name, $default);
     }
-
 
     /**
      * Starts a measure
@@ -402,7 +400,7 @@ class LaravelDebugbar extends DebugBar
      * @param string $name Internal name, used to stop the measure
      * @param string $label Public name
      */
-    public function startMeasure($name, $label = null){
+    public function startMeasure($name, $label = null) {
         if($this->hasCollector('time')){
             /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
             $collector = $this->getCollector('time');
@@ -550,7 +548,7 @@ class LaravelDebugbar extends DebugBar
      *
      * @return array
      */
-    public function collectConsole(){
+    public function collectConsole() {
         if(!$this->isEnabled()){
             return;
         }
@@ -571,7 +569,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         // Remove all invalid (non UTF-8) characters
-        array_walk_recursive($this->data, function(&$item){
+        array_walk_recursive($this->data, function (&$item) {
                 if(is_string($item) && !mb_check_encoding($item, 'UTF-8')){
                     $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
                 }
@@ -610,12 +608,11 @@ class LaravelDebugbar extends DebugBar
         }
 
         // Remove all invalid (non UTF-8) characters
-        array_walk_recursive($this->data, function(&$item){
+        array_walk_recursive($this->data, function (&$item) {
                 if(is_string($item) && !mb_check_encoding($item, 'UTF-8')){
                     $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
                 }
             });
-
 
         if ($this->storage !== null) {
             $this->storage->save($this->getCurrentRequestId(), $this->data);

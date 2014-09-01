@@ -39,7 +39,7 @@ class QueryCollector extends PDOCollector
      *
      * @param bool $value
      */
-    public function setFindSource($value = true){
+    public function setFindSource($value = true) {
         $this->findSource = (bool) $value;
     }
 
@@ -116,7 +116,7 @@ class QueryCollector extends PDOCollector
      * @param string $path
      * @return string
      */
-    protected function normalizeFilename($path){
+    protected function normalizeFilename($path) {
         if(file_exists($path)){
             $path = realpath($path);
         }
@@ -189,7 +189,6 @@ class QueryCollector extends PDOCollector
         );
         return $data;
     }
-
 
     /**
      * {@inheritDoc}

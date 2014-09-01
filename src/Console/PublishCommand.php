@@ -31,7 +31,6 @@ class PublishCommand extends Command {
      */
     protected $assetPublisher;
 
-
     /**
      * Create a new Publish command
      *
@@ -67,14 +66,13 @@ class PublishCommand extends Command {
 
     }
 
-    protected function getDebugBarPath(){
+    protected function getDebugBarPath() {
         $reflector = new \ReflectionClass('DebugBar\DebugBar');
         return dirname($reflector->getFileName()) . DIRECTORY_SEPARATOR . 'Resources';
     }
 
-    protected function getPackagePublicPath(){
+    protected function getPackagePublicPath() {
         return __DIR__.'/../Resources';
     }
-
 
 }
