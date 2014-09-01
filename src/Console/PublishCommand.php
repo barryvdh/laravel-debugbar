@@ -73,7 +73,7 @@ class PublishCommand extends Command {
     }
 
     protected function getPackagePublicPath(){
-        return __DIR__.'/../../../../public';
+        return __DIR__.'/../Resources';
     }
 
 
