@@ -58,7 +58,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * @param \Illuminate\Foundation\Application $app
      */
-    public function __construct($app=null){
+    public function __construct($app = null){
         if(!$app){
             $app = app();   //Fallback when $app is not given
         }
@@ -245,7 +245,7 @@ class LaravelDebugbar extends DebugBar
             if($this->app['config']->get('laravel-debugbar::config.options.db.with_params')){
                 $queryCollector->setRenderSqlWithParams(true);
             }
-            
+
             if($this->app['config']->get('laravel-debugbar::config.options.db.backtrace')){
                 $queryCollector->setFindSource(true);
             }
@@ -309,13 +309,13 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Check if this is a request to the Debugbar OpenHandler
-     * 
+     *
      * @return bool
      */
     protected function isDebugbarRequest(){
         return $this->app['request']->segment(1) == '_debugbar';
     }
-    
+
     /**
      * Modify the response and inject the debugbar (or data in headers)
      *
@@ -343,7 +343,7 @@ class LaravelDebugbar extends DebugBar
         $sessionManager = $app['session'];
         $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
         $this->setHttpDriver($httpDriver);
-        
+
         if($this->shouldCollect('session')){
             try{
                 $this->addCollector(new SessionCollector($sessionManager));
@@ -384,14 +384,14 @@ class LaravelDebugbar extends DebugBar
                 $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         }
-        
+
         // Stop further rendering (on subrequests etc)
         $this->disable();
-        
+
         return $response;
     }
 
-    public function shouldCollect($name, $default=false){
+    public function shouldCollect($name, $default = false){
         return $this->app['config']->get('laravel-debugbar::config.collectors.'.$name, $default);
     }
 
@@ -402,7 +402,7 @@ class LaravelDebugbar extends DebugBar
      * @param string $name Internal name, used to stop the measure
      * @param string $label Public name
      */
-    public function startMeasure($name, $label=null){
+    public function startMeasure($name, $label = null){
         if($this->hasCollector('time')){
             /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
             $collector = $this->getCollector('time');
@@ -526,9 +526,9 @@ class LaravelDebugbar extends DebugBar
         }
 
         $response->setContent($content);
-        
+
     }
-    
+
     /**
      * Returns a JavascriptRenderer for this instance
      *
@@ -569,7 +569,7 @@ class LaravelDebugbar extends DebugBar
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
         }
-		
+
         // Remove all invalid (non UTF-8) characters
         array_walk_recursive($this->data, function(&$item){
                 if(is_string($item) && !mb_check_encoding($item, 'UTF-8')){
@@ -623,7 +623,7 @@ class LaravelDebugbar extends DebugBar
 
         return $this->data;
     }
-	
+
     /**
      * Magic calls for adding messages
      *

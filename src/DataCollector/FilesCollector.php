@@ -54,7 +54,7 @@ class FilesCollector extends DataCollector  implements Renderable
 
         return array(
                  'messages' => $messages,
-                 'count'=> count($included),
+                 'count' => count($included),
              );
     }
 
@@ -109,7 +109,7 @@ class FilesCollector extends DataCollector  implements Renderable
      */
     public function getWidgets()
     {
-        $name=$this->getName();
+        $name = $this->getName();
         return array(
             "$name" => array(
                 "icon" => "files-o",

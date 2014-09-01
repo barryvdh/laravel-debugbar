@@ -22,7 +22,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    function setHeaders(array $headers)
+    public function setHeaders(array $headers)
     {
         if(!is_null($this->response)){
             $this->response->headers->add($headers);
@@ -32,7 +32,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    function isSessionStarted()
+    public function isSessionStarted()
     {
         if(!$this->session->isStarted()){
             $this->session->start();
@@ -43,7 +43,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    function setSessionValue($name, $value)
+    public function setSessionValue($name, $value)
     {
         $this->session->set($name, $value);
     }
@@ -51,7 +51,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    function hasSessionValue($name)
+    public function hasSessionValue($name)
     {
         return $this->session->has($name);
     }
@@ -59,7 +59,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    function getSessionValue($name)
+    public function getSessionValue($name)
     {
         return $this->session->get($name);
     }
@@ -67,7 +67,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    function deleteSessionValue($name)
+    public function deleteSessionValue($name)
     {
         $this->session->remove($name);
     }
