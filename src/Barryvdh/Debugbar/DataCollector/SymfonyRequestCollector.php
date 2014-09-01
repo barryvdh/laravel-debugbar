@@ -32,7 +32,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
      * @param \Symfony\Component\HttpFoundation\Request $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
-    public function __construct($request, $response, $session)
+    public function __construct($request, $response, $session = null)
     {
         $this->request = $request;
         $this->response = $response;
@@ -79,10 +79,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             $responseHeaders['Set-Cookie'] = $cookies;
         }
 
-        $sessionAttributes = array();
-        foreach($this->session->all() as $key => $value){
-            $sessionAttributes[$key] = $value;
-        }
+
 
         $statusCode = $response->getStatusCode();
 
@@ -97,9 +94,16 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             'request_server'     => $request->server->all(),
             'request_cookies'    => $request->cookies->all(),
             'response_headers'   => $responseHeaders,
-            'session_attributes' => $sessionAttributes,
             'path_info'          => $request->getPathInfo(),
         );
+        
+        if($this->session){
+            $sessionAttributes = array();
+            foreach($this->session->all() as $key => $value){
+                $sessionAttributes[$key] = $value;
+            }
+            $data['session_attributes'] = $sessionAttributes;
+        }
 
         if (isset($data['request_headers']['php-auth-pw'])) {
             $data['request_headers']['php-auth-pw'] = '******';

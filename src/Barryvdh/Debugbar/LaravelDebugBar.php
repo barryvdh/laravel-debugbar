@@ -19,6 +19,7 @@ use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\AuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
+use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -342,6 +343,14 @@ class LaravelDebugbar extends DebugBar
         $sessionManager = $app['session'];
         $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
         $this->setHttpDriver($httpDriver);
+        
+        if($this->shouldCollect('session')){
+            try{
+                $this->addCollector(new SessionCollector($sessionManager));
+            }catch(\Exception $e){
+                $this->addException(new Exception('Cannot add SessionCollector to Laravel Debugbar: '. $e->getMessage(), $e->getCode(), $e));
+            }
+        }
 
         if($this->shouldCollect('symfony_request', true) and !$this->hasCollector('request')){
             try{
