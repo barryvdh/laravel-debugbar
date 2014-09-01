@@ -26,7 +26,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         $this->cssFiles[]   = __DIR__ . '/Resources/laravel-debugbar.css';
         $this->jsFiles[]    = __DIR__ . '/Resources/openhandler.js';
-        $this->cssVendors[] = __DIR__ . '/Resources/fonts.css';
+        $this->cssVendors[] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
     }
 
     /**
