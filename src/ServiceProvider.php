@@ -39,24 +39,20 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
         }
 
-        $this->app['router']->get('_debugbar/open', array('as' => 'debugbar.openhandler', function() use($app){
+        $this->app['router']->get('_debugbar/open', array(
+            'uses' => 'Barryvdh\Debugbar\Controllers\OpenHandlerController@handle',
+            'as' => 'debugbar.openhandler',
+        ));
 
-            // Reflash session data
-            $app['session']->reflash();
-            
-            $debugbar = $app['debugbar'];
-
-            if(!$debugbar->isEnabled()){
-                $app->abort('500', 'Debugbar is not enabled');
-            }
-
-            $openHandler = new \DebugBar\OpenHandler($debugbar);
-
-            $data = $openHandler->handle(null, false, false);
-            return \Response::make($data, 200, array(
-                'Content-Type'=> 'application/json'
+        $this->app['router']->get('_debugbar/assets.css', array(
+                'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@css',
+                'as' => 'debugbar.assets.css',
             ));
-        }));
+
+        $this->app['router']->get('_debugbar/assets.js', array(
+                'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@js',
+                'as' => 'debugbar.assets.js',
+            ));
 
         if($this->app['config']->get('laravel-debugbar::config.enabled'))
         {
