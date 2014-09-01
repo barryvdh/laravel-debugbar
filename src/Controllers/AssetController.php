@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Routing\Controller;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Http\Response;
 
 class AssetController extends Controller {
 
@@ -30,9 +30,11 @@ class AssetController extends Controller {
     {
         $renderer = $this->debugbar->getJavascriptRenderer();
 
-        return new StreamedResponse(function() use($renderer){
-                $renderer->dumpJsAssets();
-            }, 200, array(
+        ob_start();
+        $renderer->dumpJsAssets();
+        $content = ob_get_contents();
+
+        return new Response($content, 200, array(
                 'Content-Type' => 'text/javascript',
             ));
     }
@@ -41,9 +43,11 @@ class AssetController extends Controller {
     {
         $renderer = $this->debugbar->getJavascriptRenderer();
 
-        return new StreamedResponse(function() use($renderer){
-                $renderer->dumpCssAssets();
-            }, 200, array(
+        ob_start();
+        $renderer->dumpCssAssets();
+        $content = ob_get_contents();
+
+        return new Response($content, 200, array(
                 'Content-Type' => 'text/css',
             ));
     }

@@ -528,6 +528,22 @@ class LaravelDebugbar extends DebugBar
         $response->setContent($content);
         
     }
+    
+    /**
+     * Returns a JavascriptRenderer for this instance
+     *
+     * @param string $baseUrl
+     * @param string $basePathng
+     * @return JavascriptRenderer
+     */
+    public function getJavascriptRenderer($baseUrl = null, $basePath = null)
+    {
+        if ($this->jsRenderer === null) {
+            $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);
+            $this->jsRenderer->setUrlGenerator($this->app['url']);
+        }
+        return $this->jsRenderer;
+    }
 
     /**
      * Collect data in a CLI request
