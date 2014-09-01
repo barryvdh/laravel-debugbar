@@ -1,9 +1,9 @@
 <?php namespace Barryvdh\Debugbar\Twig\Extension;
 
-use Twig_Extension;
-use Twig_Environment;
-use Twig_SimpleFunction;
 use Illuminate\Foundation\Application;
+use Twig_Environment;
+use Twig_Extension;
+use Twig_SimpleFunction;
 
 /**
  * Access Laravels auth class in your Twig templates.

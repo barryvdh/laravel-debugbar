@@ -1,8 +1,8 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
 
 class AssetController extends Controller {
 

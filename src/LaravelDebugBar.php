@@ -1,29 +1,29 @@
 <?php namespace Barryvdh\Debugbar;
 
-use Exception;
-use DebugBar\DebugBar;
-use DebugBar\DataCollector\ConfigCollector;
-use DebugBar\DataCollector\PhpInfoCollector;
-use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataCollector\TimeDataCollector;
-use DebugBar\DataCollector\MemoryCollector;
-use DebugBar\DataCollector\ExceptionsCollector;
-use DebugBar\DataCollector\RequestDataCollector;
-use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
-use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
-use DebugBar\Bridge\MonologCollector;
-use Barryvdh\Debugbar\DataCollector\LaravelCollector;
-use Barryvdh\Debugbar\DataCollector\ViewCollector;
-use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
-use Barryvdh\Debugbar\DataCollector\FilesCollector;
-use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\AuthCollector;
+use Barryvdh\Debugbar\DataCollector\FilesCollector;
+use Barryvdh\Debugbar\DataCollector\LaravelCollector;
+use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
+use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
+use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
+use DebugBar\Bridge\MonologCollector;
+use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
+use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
+use DebugBar\DataCollector\ConfigCollector;
+use DebugBar\DataCollector\ExceptionsCollector;
+use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DataCollector\RequestDataCollector;
+use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DebugBar;
+use Exception;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Debug bar subclass which adds all without Request and with LaravelCollector.
