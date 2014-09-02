@@ -33,9 +33,7 @@ class AssetController extends Controller {
     {
         $renderer = $this->debugbar->getJavascriptRenderer();
 
-        ob_start();
-        $renderer->dumpJsAssets();
-        $content = ob_get_contents();
+        $content = $renderer->dumpAssetsToString($renderer->getAssets('js'));
 
         $response = new Response($content, 200, array(
                 'Content-Type' => 'text/javascript',
@@ -49,9 +47,7 @@ class AssetController extends Controller {
     {
         $renderer = $this->debugbar->getJavascriptRenderer();
 
-        ob_start();
-        $renderer->dumpCssAssets();
-        $content = ob_get_contents();
+        $content = $renderer->dumpAssetsToString($renderer->getAssets('css'));
 
         $response = new Response($content, 200, array(
                 'Content-Type' => 'text/css',

@@ -63,6 +63,21 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     }
     
     /**
+     * Return assets as a string
+     *
+     * @param array $files
+     * @return string
+     */
+    public function dumpAssetsToString($files)
+    {
+        $content = '';
+        foreach ($files as $file) {
+            $content .= file_get_contents($file) . "\n";
+        }
+        return $content;
+    }
+    
+    /**
      * Get the last modified time of any assets.
      * 
      * @param string $type 'js' or 'css'
