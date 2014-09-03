@@ -121,8 +121,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             return $uris;
         }
 
-        // Alternative approach to check if the uri exist already
-        if (substr($uri, 0, 1) === '/' || file_exists($uri)) {
+        if (substr($uri, 0, 1) === '/' || preg_match('/^([a-z]+:\/\/|[a-zA-Z]:\/|[a-zA-Z]:\\\)/', $uri)) {
             return $uri;
         }
         return rtrim($root, '/') . "/$uri";
