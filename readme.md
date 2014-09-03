@@ -47,12 +47,6 @@ After updating composer, add the ServiceProvider to the providers array in app/c
 
 ~~You need to publish the assets from this package.~~ Since 1.7, you don't need to publish the assets anymore.
 
-Note: The public assets can change overtime (because of upstream changes), it is recommended to re-publish them after update. You can also add the republish command in composer.json.
-
-    "post-update-cmd": [
-        "php artisan debugbar:publish"
-    ],
-
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config files.
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
 You can also only display the js of css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
