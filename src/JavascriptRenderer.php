@@ -65,15 +65,18 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     /**
      * Return assets as a string
      *
-     * @param array $files
+     * @param string $type 'js' or 'css'
      * @return string
      */
-    public function dumpAssetsToString($files)
+    public function dumpAssetsToString($type)
     {
+        $files = $this->getAssets($type);
+
         $content = '';
         foreach ($files as $file) {
             $content .= file_get_contents($file) . "\n";
         }
+
         return $content;
     }
     

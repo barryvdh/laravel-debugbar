@@ -1,8 +1,8 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class AssetController extends Controller {
 
@@ -29,11 +29,16 @@ class AssetController extends Controller {
         $this->debugbar = $this->app['debugbar'];
     }
 
+    /**
+     * Return the javascript for the Debugbar
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function js()
     {
         $renderer = $this->debugbar->getJavascriptRenderer();
 
-        $content = $renderer->dumpAssetsToString($renderer->getAssets('js'));
+        $content = $renderer->dumpAssetsToString('js');
 
         $response = new Response($content, 200, array(
                 'Content-Type' => 'text/javascript',
@@ -43,11 +48,16 @@ class AssetController extends Controller {
         return $response;
     }
 
+    /**
+     * Return the stylesheets for the Debugbar
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function css()
     {
         $renderer = $this->debugbar->getJavascriptRenderer();
 
-        $content = $renderer->dumpAssetsToString($renderer->getAssets('css'));
+        $content = $renderer->dumpAssetsToString('css');
 
         $response = new Response($content, 200, array(
                 'Content-Type' => 'text/css',
