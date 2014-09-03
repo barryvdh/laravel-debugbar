@@ -45,9 +45,7 @@ After updating composer, add the ServiceProvider to the providers array in app/c
 
     'Barryvdh\Debugbar\ServiceProvider',
 
-You need to publish the assets from this package.
-
-    $ php artisan debugbar:publish
+~~You need to publish the assets from this package.~~ Since 1.7, you don't need to publish the assets anymore.
 
 Note: The public assets can change overtime (because of upstream changes), it is recommended to re-publish them after update. You can also add the republish command in composer.json.
 
