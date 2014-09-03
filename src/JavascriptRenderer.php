@@ -99,5 +99,33 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         }
         return $latest;
     }
+    
+    /**
+     * Makes a URI relative to another
+     *
+     * @param string|array $uri
+     * @param string $root
+     * @return string
+     */
+    protected function makeUriRelativeTo($uri, $root)
+    {
+        if (!$root) {
+            return $uri;
+        }
+
+        if (is_array($uri)) {
+            $uris = array();
+            foreach ($uri as $u) {
+                $uris[] = $this->makeUriRelativeTo($u, $root);
+            }
+            return $uris;
+        }
+
+        // Alternative approach to check if the uri exist already
+        if (substr($uri, 0, 1) === '/' || file_exists($uri)) {
+            return $uri;
+        }
+        return rtrim($root, '/') . "/$uri";
+    }
 
 }
