@@ -1,10 +1,13 @@
 # Changelog for Laravel Debugbar
 
+## 1.7.x-dev (2014-..)
+
+- Deprecated `debugbar:publish` command in favor of AssetController
+
 ## 1.7.0 (2014-09-03)
 
 - Use AssetController instead of publishing assets to the public folder.
 - Inline fonts + images to base64 Data-URI
-- Deprecated `debugbar:publish` command in favor of AssetController
 - Use PSR-4 file structure
 
 ## 1.6.8 (2014-08-27)
