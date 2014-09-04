@@ -1,6 +1,5 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
-use Illuminate\Foundation\Application;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssetController extends BaseController {
@@ -9,33 +8,13 @@ class AssetController extends BaseController {
     protected $ttl = 31536000;
 
     /**
-     * The application instance.
-     *
-     * @var \Illuminate\Foundation\Application
-     */
-    protected $app;
-
-    /**
-     * The debugbar instance.
-     *
-     * @var \Barryvdh\Debugbar\LaravelDebugbar
-     */
-    protected $debugbar;
-
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-        $this->debugbar = $this->app['debugbar'];
-    }
-
-    /**
      * Return the javascript for the Debugbar
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function js()
     {
-        $renderer = $this->debugbar->getJavascriptRenderer();
+        $renderer = $this->app['debugbar']->getJavascriptRenderer();
 
         $content = $renderer->dumpAssetsToString('js');
 
@@ -54,7 +33,7 @@ class AssetController extends BaseController {
      */
     public function css()
     {
-        $renderer = $this->debugbar->getJavascriptRenderer();
+        $renderer = $this->app['debugbar']->getJavascriptRenderer();
 
         $content = $renderer->dumpAssetsToString('css');
 
