@@ -1,5 +1,10 @@
 # Changelog for Laravel Debugbar
 
+## 1.7.2 (2014-09-04)
+
+- Fix 4.0 compatibility (problem with Controller namespace)
+- Give deprecation notice instead of publishing assets.
+
 ## 1.7.1 (2014-09-03)
 
 - Deprecated `debugbar:publish` command in favor of AssetController
