@@ -3,9 +3,8 @@
 use DebugBar\OpenHandler;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 
-class OpenHandlerController extends Controller {
+class OpenHandlerController extends BaseController {
 
     /**
      * The application instance.

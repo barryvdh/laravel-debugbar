@@ -1,10 +1,9 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class AssetController extends Controller {
+class AssetController extends BaseController {
 
     /** @var int The TTL (1 year) */
     protected $ttl = 31536000;
