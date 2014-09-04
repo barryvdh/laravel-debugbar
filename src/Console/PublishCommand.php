@@ -51,29 +51,6 @@ class PublishCommand extends Command {
      */
     public function fire()
     {
-
-        $package = 'maximebf/php-debugbar';
-        if ( ! is_null($path = $this->getDebugBarPath()))
-        {
-            $this->assetPublisher->publish($package, $path);
-            $this->info('Assets published for package: '.$package);
-        }
-        else
-        {
-            $this->error('Could not find path for: '.$package);
-        }
-        $this->assetPublisher->publish('barryvdh/laravel-debugbar', $this->getPackagePublicPath());
-        $this->info('Assets published for package: barryvdh/laravel-debugbar');
-
+        $this->info('NOTICE: Since laravel-debugbar 1.7.x, publishing assets is no longer necessary. The assets in public/packages/barryvdh/laravel-debugbar and maximebf/php-debugbar can be safely removed.');
     }
-
-    protected function getDebugBarPath() {
-        $reflector = new \ReflectionClass('DebugBar\DebugBar');
-        return dirname($reflector->getFileName()) . DIRECTORY_SEPARATOR . 'Resources';
-    }
-
-    protected function getPackagePublicPath() {
-        return __DIR__.'/../Resources';
-    }
-
 }
