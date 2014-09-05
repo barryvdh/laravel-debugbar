@@ -374,7 +374,12 @@ class LaravelDebugbar extends DebugBar
             ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->format()
         ){
-            //Do nothing
+            try {
+                // Just collect + store data, don't inject it.
+                $this->collect();   
+            }catch(\Exception $e){
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
+            }
         }elseif($app['config']->get('laravel-debugbar::config.inject', true)){
             try {
                 $this->injectDebugbar($response);
