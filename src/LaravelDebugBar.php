@@ -446,7 +446,7 @@ class LaravelDebugbar extends DebugBar
      * Utility function to measure the execution of a Closure
      *
      * @param string $label
-     * @param \Closure|callable $closure
+     * @param \Closure $closure
      */
     public function measure($label, \Closure $closure)
     {

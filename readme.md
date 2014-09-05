@@ -44,6 +44,10 @@ Require this package in your composer.json and run composer update (or run `comp
 After updating composer, add the ServiceProvider to the providers array in app/config/app.php
 
     'Barryvdh\Debugbar\ServiceProvider',
+    
+If you want to use the facade to log messages, add this to your facades in app.php:
+
+    'Debugbar' => 'Barryvdh\Debugbar\Facade',
 
 ~~You need to publish the assets from this package.~~ Since 1.7, you don't need to publish the assets anymore.
 
@@ -55,11 +59,7 @@ You can also only display the js of css vendors, by setting it to 'js' or 'css'.
 
 You can also disable/enable the loggers you want. You can also use the IoC container to add extra loggers. (`$app['debugbar']->addCollector(new MyDataCollector)`)
 
-If you want to use the facade to log messages, add this to your facades in app.php:
-
-     'Debugbar' => 'Barryvdh\Debugbar\Facade',
-
-You can now add messages using the Facade, using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
+You can now add messages using the Facade (when added), using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
 
     Debugbar::info($object);
     Debugbar::error("Error!");
@@ -82,6 +82,18 @@ Or log exceptions:
     } catch (Exception $e) {
         Debugbar::addException($e);
     }
+    
+There are also helper functions available for the most common calls:
+
+    // All arguments will be dumped as a debug message
+    debug($var1, $someString, $intValue, $object);
+    
+    start_measure('render','Time for rendering');
+    stop_measure('render');
+    add_measure('now', LARAVEL_START, microtime(true));
+    measure('My long operation', function() {
+        //Do something..
+    });
 
 If you want you can add your own DataCollectors, through the Container or the Facade:
 

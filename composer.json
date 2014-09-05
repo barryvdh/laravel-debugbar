@@ -19,7 +19,10 @@
     "autoload": {
         "psr-4": {
             "Barryvdh\\Debugbar\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "extra": {
         "branch-alias": {

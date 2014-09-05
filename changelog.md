@@ -1,5 +1,9 @@
 # Changelog for Laravel Debugbar
 
+## 1.7.3 (2014-09-..)
+
+- Add helper functions (debug(), add/start/stop_measure() and measure()
+
 ## 1.7.2 (2014-09-04)
 
 - Fix 4.0 compatibility (problem with Controller namespace)
