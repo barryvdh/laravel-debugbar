@@ -2,7 +2,8 @@
 
 use Symfony\Component\HttpFoundation\Response;
 
-class AssetController extends BaseController {
+class AssetController extends BaseController
+{
 
     /** @var int The TTL (1 year) */
     protected $ttl = 31536000;
@@ -18,9 +19,11 @@ class AssetController extends BaseController {
 
         $content = $renderer->dumpAssetsToString('js');
 
-        $response = new Response($content, 200, array(
+        $response = new Response(
+            $content, 200, array(
                 'Content-Type' => 'text/javascript',
-            ));
+            )
+        );
         $response->setTtl($this->ttl);
 
         return $response;
@@ -37,9 +40,11 @@ class AssetController extends BaseController {
 
         $content = $renderer->dumpAssetsToString('css');
 
-        $response = new Response($content, 200, array(
+        $response = new Response(
+            $content, 200, array(
                 'Content-Type' => 'text/css',
-            ));
+            )
+        );
         $response->setTtl($this->ttl);
 
         return $response;

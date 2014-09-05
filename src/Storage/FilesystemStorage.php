@@ -32,24 +32,47 @@ class FilesystemStorage implements StorageInterface
     public function save($id, $data)
     {
         if (!$this->files->isDirectory($this->dirname)) {
-            if($this->files->makeDirectory($this->dirname, 0777, true)){
-                $this->files->put($this->dirname.'.gitignore', "*\n!.gitignore");
-            }else{
+            if ($this->files->makeDirectory($this->dirname, 0777, true)) {
+                $this->files->put($this->dirname . '.gitignore', "*\n!.gitignore");
+            } else {
                 throw new \Exception("Cannot create directory '$this->dirname'..");
             }
         }
 
-        try{
+        try {
             $this->files->put($this->makeFilename($id), json_encode($data));
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             //TODO; error handling
         }
 
         // Randomly check if we should collect old files
-        if(rand(1, 100) <= $this->gc_probability){
+        if (rand(1, 100) <= $this->gc_probability) {
             $this->garbageCollect();
         }
 
+    }
+
+    /**
+     * Create the filename for the data, based on the id.
+     *
+     * @param $id
+     * @return string
+     */
+    public function makeFilename($id)
+    {
+        return $this->dirname . basename($id) . ".json";
+    }
+
+    /**
+     * Delete files older then a certain age (gc_lifetime)
+     */
+    protected function garbageCollect()
+    {
+        foreach (Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
+            $this->dirname
+        ) as $file) {
+            $this->files->delete($file->getRealPath());
+        }
     }
 
     /**
@@ -66,16 +89,15 @@ class FilesystemStorage implements StorageInterface
     public function find(array $filters = array(), $max = 20, $offset = 0)
     {
         // Sort by modified time, newest first
-        $sort = function (\SplFileInfo $a, \SplFileInfo $b)
-        {
+        $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
             return strcmp($b->getMTime(), $a->getMTime());
         };
 
         // Loop through .json files, filter the metadata and stop when max is found.
         $i = 0;
         $results = array();
-        foreach(Finder::create()->files()->name('*.json')->in($this->dirname)->sort($sort) as $file){
-            if($i++ < $offset && empty($filters)){
+        foreach (Finder::create()->files()->name('*.json')->in($this->dirname)->sort($sort) as $file) {
+            if ($i++ < $offset && empty($filters)) {
                 $results[] = null;
                 continue;
             }
@@ -85,7 +107,7 @@ class FilesystemStorage implements StorageInterface
             if ($this->filter($meta, $filters)) {
                 $results[] = $meta;
             }
-            if(count($results) >= ($max + $offset)){
+            if (count($results) >= ($max + $offset)) {
                 break;
             }
         }
@@ -99,9 +121,10 @@ class FilesystemStorage implements StorageInterface
      * @param $filters
      * @return bool
      */
-    protected function filter($meta, $filters) {
-        foreach($filters as $key => $value){
-            if(!isset($meta[$key]) || fnmatch ($value, $meta[$key]) === false){
+    protected function filter($meta, $filters)
+    {
+        foreach ($filters as $key => $value) {
+            if (!isset($meta[$key]) || fnmatch($value, $meta[$key]) === false) {
                 return false;
             }
         }
@@ -113,29 +136,8 @@ class FilesystemStorage implements StorageInterface
      */
     public function clear()
     {
-        foreach(Finder::create()->files()->name('*.json')->in($this->dirname) as $file){
+        foreach (Finder::create()->files()->name('*.json')->in($this->dirname) as $file) {
             $this->files->delete($file->getRealPath());
         }
-    }
-
-    /**
-     * Delete files older then a certain age (gc_lifetime)
-     */
-    protected function garbageCollect()
-    {
-        foreach(Finder::create()->files()->name('*.json')->date('< '.$this->gc_lifetime.' hour ago')->in($this->dirname) as $file){
-            $this->files->delete($file->getRealPath());
-        }
-    }
-
-    /**
-     * Create the filename for the data, based on the id.
-     *
-     * @param $id
-     * @return string
-     */
-    public function makeFilename($id)
-    {
-        return $this->dirname . basename($id). ".json";
     }
 }

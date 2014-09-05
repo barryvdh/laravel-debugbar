@@ -8,13 +8,16 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Routing\Route;
 
-class SymfonyRouteCollector extends DataCollector  implements Renderable
+class SymfonyRouteCollector extends DataCollector implements Renderable
 {
 
     protected $router;
-    public function __construct(Router $router) {
+
+    public function __construct(Router $router)
+    {
         $this->router = $router;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -28,33 +31,33 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
     /**
      * Get the route information for a given route.
      *
-     * @param  string  $name
-     * @param  \Symfony\Component\Routing\Route  $route
+     * @param  string $name
+     * @param  \Symfony\Component\Routing\Route $route
      * @return array
      */
     protected function getRouteInformation($name, $route)
     {
-        if(!is_a($route, 'Symfony\Component\Routing\Route')){
+        if (!is_a($route, 'Symfony\Component\Routing\Route')) {
             return array();
         }
-        $uri = head($route->getMethods()).' '.$route->getPath();
+        $uri = head($route->getMethods()) . ' ' . $route->getPath();
 
         $action = $route->getAction() ?: 'Closure';
 
         return array(
-            'host'   => $route->getHost() ?: ' -',
-            'uri'    => $uri ?: ' -',
-            'name'   => $this->getRouteName($name) ?: ' -',
+            'host' => $route->getHost() ?: ' -',
+            'uri' => $uri ?: ' -',
+            'name' => $this->getRouteName($name) ?: ' -',
             'action' => $action ?: ' -',
             'before' => $this->getBeforeFilters($route) ?: ' -',
-            'after'  => $this->getAfterFilters($route) ?: ' -'
+            'after' => $this->getAfterFilters($route) ?: ' -'
         );
     }
 
     /**
      * Get the route name for the given name.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function getRouteName($name)
@@ -65,7 +68,7 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
     /**
      * Get before filters
      *
-     * @param  \Illuminate\Routing\Route  $route
+     * @param  \Illuminate\Routing\Route $route
      * @return string
      */
     protected function getBeforeFilters($route)
@@ -80,15 +83,14 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
     /**
      * Get all of the pattern filters matching the route.
      *
-     * @param  \Illuminate\Routing\Route  $route
+     * @param  \Illuminate\Routing\Route $route
      * @return array
      */
     protected function getPatternFilters($route)
     {
         $patterns = array();
 
-        foreach ($route->getMethods() as $method)
-        {
+        foreach ($route->getMethods() as $method) {
             $inner = $this->router->findPatternFilters($method, $route->getPath());
 
             $patterns = array_merge($patterns, $inner);
@@ -100,12 +102,12 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
     /**
      * Get after filters
      *
-     * @param  Route  $route
+     * @param  Route $route
      * @return string
      */
     protected function getAfterFilters($route)
     {
-        return implode(', ',$route->getAfterFilters());
+        return implode(', ', $route->getAfterFilters());
     }
 
     /**
@@ -123,18 +125,18 @@ class SymfonyRouteCollector extends DataCollector  implements Renderable
     {
         $widgets = array(
             "route" => array(
-                "icon"  => "share",
+                "icon" => "share",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "route",
                 "default" => "{}"
             )
         );
-        if (Config::get('laravel-debugbar::config.options.route.label', true)){
+        if (Config::get('laravel-debugbar::config.options.route.label', true)) {
             $widgets['currentroute'] = array(
-                "icon"      => "share",
-                "tooltip"   => "Route",
-                "map"       => "route.uri",
-                "default"   => ""
+                "icon" => "share",
+                "tooltip" => "Route",
+                "map" => "route.uri",
+                "default" => ""
             );
         }
         return $widgets;

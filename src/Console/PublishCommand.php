@@ -9,7 +9,8 @@ use Illuminate\Console\Command;
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @deprecated No longer needed because of the AssetController
  */
-class PublishCommand extends Command {
+class PublishCommand extends Command
+{
 
     /**
      * The console command name.
@@ -51,6 +52,8 @@ class PublishCommand extends Command {
      */
     public function fire()
     {
-        $this->info('NOTICE: Since laravel-debugbar 1.7.x, publishing assets is no longer necessary. The assets in public/packages/barryvdh/laravel-debugbar and maximebf/php-debugbar can be safely removed.');
+        $this->info(
+            'NOTICE: Since laravel-debugbar 1.7.x, publishing assets is no longer necessary. The assets in public/packages/barryvdh/laravel-debugbar and maximebf/php-debugbar can be safely removed.'
+        );
     }
 }

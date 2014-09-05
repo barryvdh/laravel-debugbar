@@ -39,15 +39,16 @@ class QueryCollector extends PDOCollector
      *
      * @param bool $value
      */
-    public function setFindSource($value = true) {
-        $this->findSource = (bool) $value;
+    public function setFindSource($value = true)
+    {
+        $this->findSource = (bool)$value;
     }
 
     /**
      *
-     * @param string  $query
-     * @param array  $bindings
-     * @param float  $time
+     * @param string $query
+     * @param array $bindings
+     * @param float $time
      * @param \Illuminate\Database\Connection $connection
      */
     public function addQuery($query, $bindings, $time, $connection)
@@ -60,17 +61,18 @@ class QueryCollector extends PDOCollector
         $pdo = $connection->getPdo();
         $bindings = $connection->prepareBindings($bindings);
         $bindings = $this->checkBindings($bindings);
-        if(!empty($bindings) && $this->renderSqlWithParams){
-            foreach($bindings as $binding){
+        if (!empty($bindings) && $this->renderSqlWithParams) {
+            foreach ($bindings as $binding) {
                 $query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
             }
         }
 
         $source = null;
-        if($this->findSource){
-            try{
+        if ($this->findSource) {
+            try {
                 $source = $this->findSource();
-            }catch(\Exception $e){}
+            } catch (\Exception $e) {
+            }
         }
 
         $this->queries[] = array(
@@ -86,17 +88,37 @@ class QueryCollector extends PDOCollector
     }
 
     /**
+     * Check bindings for illegal (non UTF-8) strings, like Binary data.
+     *
+     * @param $bindings
+     * @return mixed
+     */
+    protected function checkBindings($bindings)
+    {
+        foreach ($bindings as &$binding) {
+            if (is_string($binding) && !mb_check_encoding($binding, 'UTF-8')) {
+                $binding = '[BINARY DATA]';
+            }
+        }
+        return $bindings;
+    }
+
+    /**
      * Use a backtrace to search for the origin of the query.
      */
     protected function findSource()
     {
         $traces = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($traces as $trace) {
-            if (isset($trace['class']) && isset($trace['file'])  && strpos($trace['file'], DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR) === false) {
+            if (isset($trace['class']) && isset($trace['file']) && strpos(
+                    $trace['file'],
+                    DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR
+                ) === false
+            ) {
 
                 if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
                     list($file, $line) = $this->getTwigInfo($trace);
-                } elseif(strpos($trace['file'], storage_path()) !== false) {
+                } elseif (strpos($trace['file'], storage_path()) !== false) {
                     return 'Template file';
                 } else {
                     $file = $trace['file'];
@@ -104,23 +126,10 @@ class QueryCollector extends PDOCollector
                 }
 
                 return $this->normalizeFilename($file) . ':' . $line;
-            } elseif (isset($trace['function']) && $trace['function'] == 'Illuminate\Routing\{closure}'){
+            } elseif (isset($trace['function']) && $trace['function'] == 'Illuminate\Routing\{closure}') {
                 return 'Route binding';
             }
         }
-    }
-
-    /**
-     * Shorten the path by removing the relative links and base dir
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function normalizeFilename($path) {
-        if(file_exists($path)){
-            $path = realpath($path);
-        }
-        return str_replace(base_path(), '', $path);
     }
 
     /**
@@ -145,19 +154,17 @@ class QueryCollector extends PDOCollector
     }
 
     /**
-     * Check bindings for illegal (non UTF-8) strings, like Binary data.
+     * Shorten the path by removing the relative links and base dir
      *
-     * @param $bindings
-     * @return mixed
+     * @param string $path
+     * @return string
      */
-    protected function checkBindings($bindings)
+    protected function normalizeFilename($path)
     {
-        foreach ($bindings as &$binding) {
-            if(is_string($binding) && !mb_check_encoding($binding, 'UTF-8')) {
-                $binding = '[BINARY DATA]';
-            }
+        if (file_exists($path)) {
+            $path = realpath($path);
         }
-        return $bindings;
+        return str_replace(base_path(), '', $path);
     }
 
     /**
@@ -169,11 +176,11 @@ class QueryCollector extends PDOCollector
         $queries = $this->queries;
 
         $statements = array();
-        foreach($queries as $query){
+        foreach ($queries as $query) {
             $totalTime += $query['time'];
             $statements[] = array(
                 'sql' => $query['query'],
-                'params' => (object) $query['bindings'],
+                'params' => (object)$query['bindings'],
                 'duration' => $query['time'],
                 'duration_str' => $this->formatDuration($query['time']),
                 'stmt_id' => $query['source'],

@@ -43,6 +43,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
     {
         return 'request';
     }
+
     /**
      * {@inheritDoc}
      */
@@ -70,7 +71,15 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         $responseHeaders = $response->headers->all();
         $cookies = array();
         foreach ($response->headers->getCookies() as $cookie) {
-            $cookies[] = $this->getCookieHeader($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+            $cookies[] = $this->getCookieHeader(
+                $cookie->getName(),
+                $cookie->getValue(),
+                $cookie->getExpiresTime(),
+                $cookie->getPath(),
+                $cookie->getDomain(),
+                $cookie->isSecure(),
+                $cookie->isHttpOnly()
+            );
         }
         if (count($cookies) > 0) {
             $responseHeaders['Set-Cookie'] = $cookies;
@@ -79,22 +88,24 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         $statusCode = $response->getStatusCode();
 
         $data = array(
-            'format'             => $request->getRequestFormat(),
-            'content_type'       => $response->headers->get('Content-Type') ? $response->headers->get('Content-Type') : 'text/html',
-            'status_text'        => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
-            'status_code'        => $statusCode,
-            'request_query'      => $request->query->all(),
-            'request_request'    => $request->request->all(),
-            'request_headers'    => $request->headers->all(),
-            'request_server'     => $request->server->all(),
-            'request_cookies'    => $request->cookies->all(),
-            'response_headers'   => $responseHeaders,
-            'path_info'          => $request->getPathInfo(),
+            'format' => $request->getRequestFormat(),
+            'content_type' => $response->headers->get('Content-Type') ? $response->headers->get(
+                'Content-Type'
+            ) : 'text/html',
+            'status_text' => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
+            'status_code' => $statusCode,
+            'request_query' => $request->query->all(),
+            'request_request' => $request->request->all(),
+            'request_headers' => $request->headers->all(),
+            'request_server' => $request->server->all(),
+            'request_cookies' => $request->cookies->all(),
+            'response_headers' => $responseHeaders,
+            'path_info' => $request->getPathInfo(),
         );
 
-        if($this->session){
+        if ($this->session) {
             $sessionAttributes = array();
-            foreach($this->session->all() as $key => $value){
+            foreach ($this->session->all() as $key => $value) {
                 $sessionAttributes[$key] = $value;
             }
             $data['session_attributes'] = $sessionAttributes;
@@ -108,8 +119,8 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             $data['request_server']['PHP_AUTH_PW'] = '******';
         }
 
-        foreach($data as $key => $var){
-            if(!is_string($data[$key])){
+        foreach ($data as $key => $var) {
+            if (!is_string($data[$key])) {
                 $data[$key] = $this->formatVar($var);
             }
         }
@@ -124,24 +135,30 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
 
         if (0 !== $expires) {
             if (is_numeric($expires)) {
-                $expires = (int) $expires;
+                $expires = (int)$expires;
             } elseif ($expires instanceof \DateTime) {
                 $expires = $expires->getTimestamp();
             } else {
                 $expires = strtotime($expires);
                 if (false === $expires || -1 == $expires) {
-                    throw new \InvalidArgumentException(sprintf('The "expires" cookie parameter is not valid.', $expires));
+                    throw new \InvalidArgumentException(
+                        sprintf('The "expires" cookie parameter is not valid.', $expires)
+                    );
                 }
             }
 
-            $cookie .= '; expires='.substr(\DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'), 0, -5);
+            $cookie .= '; expires=' . substr(
+                    \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
+                    0,
+                    -5
+                );
         }
 
         if ($domain) {
-            $cookie .= '; domain='.$domain;
+            $cookie .= '; domain=' . $domain;
         }
 
-        $cookie .= '; path='.$path;
+        $cookie .= '; path=' . $path;
 
         if ($secure) {
             $cookie .= '; secure';

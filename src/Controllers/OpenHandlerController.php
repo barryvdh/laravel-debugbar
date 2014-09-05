@@ -3,7 +3,8 @@
 use DebugBar\OpenHandler;
 use Illuminate\Http\Response;
 
-class OpenHandlerController extends BaseController {
+class OpenHandlerController extends BaseController
+{
 
     public function handle()
     {
@@ -12,7 +13,7 @@ class OpenHandlerController extends BaseController {
 
         $debugbar = $this->app['debugbar'];
 
-        if(!$debugbar->isEnabled()){
+        if (!$debugbar->isEnabled()) {
             $this->app->abort('500', 'Debugbar is not enabled');
         }
 
@@ -20,8 +21,10 @@ class OpenHandlerController extends BaseController {
 
         $data = $openHandler->handle(null, false, false);
 
-        return new Response($data, 200, array(
+        return new Response(
+            $data, 200, array(
                 'Content-Type' => 'application/json'
-            ));
+            )
+        );
     }
 }

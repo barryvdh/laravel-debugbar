@@ -1,20 +1,23 @@
 <?php
 
 namespace Barryvdh\Debugbar;
+
 use DebugBar\HttpDriverInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 /**
  * HTTP driver for Symfony Request/Session
  */
 class SymfonyHttpDriver implements HttpDriverInterface
 {
-    /** @var \Symfony\Component\HttpFoundation\Session\Session  */
+    /** @var \Symfony\Component\HttpFoundation\Session\Session */
     protected $session;
-    /** @var \Symfony\Component\HttpFoundation\Response  */
+    /** @var \Symfony\Component\HttpFoundation\Response */
     protected $response;
 
-    public function __construct($session, $response = null) {
+    public function __construct($session, $response = null)
+    {
         $this->session = $session;
         $this->response = $response;
     }
@@ -24,7 +27,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     public function setHeaders(array $headers)
     {
-        if(!is_null($this->response)){
+        if (!is_null($this->response)) {
             $this->response->headers->add($headers);
         }
     }
@@ -34,7 +37,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     public function isSessionStarted()
     {
-        if(!$this->session->isStarted()){
+        if (!$this->session->isStarted()) {
             $this->session->start();
         }
         return $this->session->isStarted();

@@ -59,51 +59,6 @@ class LogsCollector extends MessagesCollector
     }
 
     /**
-     * Search a string for log entries
-     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
-     *
-     * @param $file
-     * @return array
-     */
-    public function getLogs($file) {
-        $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
-
-        $log_levels = $this->getLevels();
-
-        // There has GOT to be a better way of doing this...
-        preg_match_all($pattern, $file, $headings);
-        $log_data = preg_split($pattern, $file);
-
-        $log = array();
-        foreach ($headings as $h) {
-            for ($i = 0, $j = count($h); $i < $j; $i++) {
-                foreach ($log_levels as $ll) {
-                    if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
-                        $log[] = array('level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]);
-                    }
-                }
-            }
-        }
-
-        $log = array_reverse($log);
-
-        return $log;
-    }
-
-    /**
-     * Get the log levels from psr/log.
-     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
-     *
-     * @access public
-     * @return array
-     */
-    public function getLevels()
-    {
-        $class = new ReflectionClass(new LogLevel());
-        return $class->getConstants();
-    }
-
-    /**
      * By Ain Tohvri (ain)
      * http://tekkie.flashbit.net/php/tail-functionality-in-php
      * @param string $file
@@ -139,6 +94,52 @@ class LogsCollector extends MessagesCollector
         fclose($handle);
         return array_reverse($text);
 
+    }
+
+    /**
+     * Search a string for log entries
+     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
+     *
+     * @param $file
+     * @return array
+     */
+    public function getLogs($file)
+    {
+        $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
+
+        $log_levels = $this->getLevels();
+
+        // There has GOT to be a better way of doing this...
+        preg_match_all($pattern, $file, $headings);
+        $log_data = preg_split($pattern, $file);
+
+        $log = array();
+        foreach ($headings as $h) {
+            for ($i = 0, $j = count($h); $i < $j; $i++) {
+                foreach ($log_levels as $ll) {
+                    if (strpos(strtolower($h[$i]), strtolower('.' . $ll))) {
+                        $log[] = array('level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]);
+                    }
+                }
+            }
+        }
+
+        $log = array_reverse($log);
+
+        return $log;
+    }
+
+    /**
+     * Get the log levels from psr/log.
+     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
+     *
+     * @access public
+     * @return array
+     */
+    public function getLevels()
+    {
+        $class = new ReflectionClass(new LogLevel());
+        return $class->getConstants();
     }
 
 }

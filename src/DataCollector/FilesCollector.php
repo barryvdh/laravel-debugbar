@@ -6,12 +6,13 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Foundation\Application;
 
-class FilesCollector extends DataCollector  implements Renderable
+class FilesCollector extends DataCollector implements Renderable
 {
 
-    /** @var \Illuminate\Foundation\Application  */
+    /** @var \Illuminate\Foundation\Application */
     protected $app;
     protected $basePath;
+
     /**
      * @param \Illuminate\Foundation\Application $app
      */
@@ -31,19 +32,25 @@ class FilesCollector extends DataCollector  implements Renderable
 
         $included = array();
         $alreadyCompiled = array();
-        foreach($files as $file){
+        foreach ($files as $file) {
             // Skip the files from Debugbar, they are only loaded for Debugging and confuse the output.
             // Of course some files are stil always loaded (ServiceProvider, Facade etc)
-            if(strpos($file, 'vendor/maximebf/debugbar/src') !== false  || strpos($file, 'vendor/barryvdh/laravel-debugbar/src') !== false){
+            if (strpos($file, 'vendor/maximebf/debugbar/src') !== false || strpos(
+                    $file,
+                    'vendor/barryvdh/laravel-debugbar/src'
+                ) !== false
+            ) {
                 continue;
-            }elseif(!in_array($file,$compiled)){
+            } elseif (!in_array($file, $compiled)) {
                 $included[] = array(
-                    'message' => "'".$this->stripBasePath($file)."',",      // Use PHP syntax so we can copy-paste to compile config file.
+                    'message' => "'" . $this->stripBasePath($file) . "',",
+                    // Use PHP syntax so we can copy-paste to compile config file.
                     'is_string' => true,
                 );
-            }else{
+            } else {
                 $alreadyCompiled[] = array(
-                    'message' => "* '".$this->stripBasePath($file)."',",    // Mark with *, so know they are compiled anyways.
+                    'message' => "* '" . $this->stripBasePath($file) . "',",
+                    // Mark with *, so know they are compiled anyways.
                     'is_string' => true,
                 );
             }
@@ -53,9 +60,19 @@ class FilesCollector extends DataCollector  implements Renderable
         $messages = array_merge($included, $alreadyCompiled);
 
         return array(
-                 'messages' => $messages,
-                 'count' => count($included),
-             );
+            'messages' => $messages,
+            'count' => count($included),
+        );
+    }
+
+    /**
+     * Get the files included on load.
+     *
+     * @return array
+     */
+    protected function getIncludedFiles()
+    {
+        return get_included_files();
     }
 
     /**
@@ -63,12 +80,13 @@ class FilesCollector extends DataCollector  implements Renderable
      *
      * @return array
      */
-    protected function getCompiledFiles() {
-        if($this->app && class_exists('Illuminate\Foundation\Console\OptimizeCommand')){
+    protected function getCompiledFiles()
+    {
+        if ($this->app && class_exists('Illuminate\Foundation\Console\OptimizeCommand')) {
             $reflector = new \ReflectionClass('Illuminate\Foundation\Console\OptimizeCommand');
             $path = dirname($reflector->getFileName()) . '/Optimize/config.php';
 
-            if(file_exists($path)){
+            if (file_exists($path)) {
                 $app = $this->app;
                 $core = require $path;
                 return array_merge($core, $app['config']['compile']);
@@ -78,30 +96,14 @@ class FilesCollector extends DataCollector  implements Renderable
     }
 
     /**
-     * Get the files included on load.
-     *
-     * @return array
-     */
-    protected function getIncludedFiles() {
-        return get_included_files();
-    }
-
-    /**
      * Remove the basePath from the paths, so they are relative to the base
      *
      * @param $path
      * @return string
      */
-    protected function stripBasePath($path) {
-        return ltrim(str_replace($this->basePath, '', $path), '/');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
+    protected function stripBasePath($path)
     {
-        return 'files';
+        return ltrim(str_replace($this->basePath, '', $path), '/');
     }
 
     /**
@@ -122,5 +124,13 @@ class FilesCollector extends DataCollector  implements Renderable
                 "default" => "null"
             )
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'files';
     }
 }

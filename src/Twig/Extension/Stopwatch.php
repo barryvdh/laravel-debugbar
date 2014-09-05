@@ -3,6 +3,7 @@
 use Barryvdh\Debugbar\Twig\TokenParser\StopwatchTokenParser;
 use Illuminate\Foundation\Application;
 use Twig_Extension;
+
 /**
  * Access Laravels auth class in your Twig templates.
  * Based on Symfony\Bridge\Twig\Extension\StopwatchExtension
@@ -21,9 +22,9 @@ class Stopwatch extends Twig_Extension
      */
     public function __construct(Application $app)
     {
-        if($app->bound('debugbar')){
+        if ($app->bound('debugbar')) {
             $this->debugbar = $app['debugbar'];
-        }else{
+        } else {
             $this->debugbar = null;
         }
     }

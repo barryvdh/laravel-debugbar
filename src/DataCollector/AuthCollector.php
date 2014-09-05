@@ -14,9 +14,9 @@ use Illuminate\Support\Contracts\ArrayableInterface;
 class AuthCollector extends DataCollector implements Renderable
 {
 
-    /** @var \Illuminate\Auth\AuthManager  */
+    /** @var \Illuminate\Auth\AuthManager */
     protected $auth;
-    /** @var bool  */
+    /** @var bool */
     protected $showName = false;
 
     /**
@@ -33,7 +33,7 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function setShowName($showName)
     {
-        $this->showName = (bool) $showName;
+        $this->showName = (bool)$showName;
     }
 
     /**
@@ -41,9 +41,9 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        try{
+        try {
             $user = $this->auth->user();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $user = null;
         }
         return $this->getUserInformation($user);
@@ -68,13 +68,14 @@ class AuthCollector extends DataCollector implements Renderable
         // useful. Try username and email.
         $identifier = $user->getAuthIdentifier();
         if (is_numeric($identifier)) {
-            try{
+            try {
                 if ($user->username) {
                     $identifier = $user->username;
-                }elseif ($user->email) {
+                } elseif ($user->email) {
                     $identifier = $user->email;
                 }
-            }catch(\Exception $e){}
+            } catch (\Exception $e) {
+            }
         }
 
         return array(
@@ -104,7 +105,7 @@ class AuthCollector extends DataCollector implements Renderable
                 'default' => '{}'
             )
         );
-        if($this->showName){
+        if ($this->showName) {
             $widgets['auth.name'] = array(
                 'icon' => 'user',
                 'tooltip' => 'Auth status',

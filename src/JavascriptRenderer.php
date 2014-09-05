@@ -24,8 +24,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
 
-        $this->cssFiles[]   = __DIR__ . '/Resources/laravel-debugbar.css';
-        $this->jsFiles[]    = __DIR__ . '/Resources/openhandler.js';
+        $this->cssFiles[] = __DIR__ . '/Resources/laravel-debugbar.css';
+        $this->jsFiles[] = __DIR__ . '/Resources/openhandler.js';
         $this->cssVendors[] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
     }
 
@@ -44,7 +44,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function renderHead()
     {
-        if(!$this->url){
+        if (!$this->url) {
             return parent::renderHead();
         }
 
@@ -52,8 +52,16 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $cssModified = $this->getModifiedTime('css');
 
         $html = '';
-        $html .= sprintf('<link rel="stylesheet" type="text/css" href="%s?%s">' . "\n", $this->url->route('debugbar.assets.css'), $cssModified);
-        $html .= sprintf('<script type="text/javascript" src="%s?%s"></script>' . "\n", $this->url->route('debugbar.assets.js'), $jsModified);
+        $html .= sprintf(
+            '<link rel="stylesheet" type="text/css" href="%s?%s">' . "\n",
+            $this->url->route('debugbar.assets.css'),
+            $cssModified
+        );
+        $html .= sprintf(
+            '<script type="text/javascript" src="%s?%s"></script>' . "\n",
+            $this->url->route('debugbar.assets.js'),
+            $jsModified
+        );
 
         if ($this->isJqueryNoConflictEnabled()) {
             $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
@@ -61,7 +69,27 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         return $html;
     }
-    
+
+    /**
+     * Get the last modified time of any assets.
+     *
+     * @param string $type 'js' or 'css'
+     * @return int
+     */
+    protected function getModifiedTime($type)
+    {
+        $files = $this->getAssets($type);
+
+        $latest = 0;
+        foreach ($files as $file) {
+            $mtime = filemtime($file);
+            if ($mtime > $latest) {
+                $latest = $mtime;
+            }
+        }
+        return $latest;
+    }
+
     /**
      * Return assets as a string
      *
@@ -79,27 +107,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         return $content;
     }
-    
-    /**
-     * Get the last modified time of any assets.
-     * 
-     * @param string $type 'js' or 'css'
-     * @return int
-     */
-    protected function getModifiedTime($type)
-    {
-        $files = $this->getAssets($type);
 
-        $latest = 0;
-        foreach($files as $file){
-            $mtime = filemtime($file);
-            if($mtime > $latest){
-                $latest = $mtime;
-            }
-        }
-        return $latest;
-    }
-    
     /**
      * Makes a URI relative to another
      *

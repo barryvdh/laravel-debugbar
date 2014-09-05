@@ -4,7 +4,8 @@ use Illuminate\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class Middleware implements HttpKernelInterface {
+class Middleware implements HttpKernelInterface
+{
 
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     protected $kernel;

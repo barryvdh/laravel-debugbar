@@ -22,9 +22,9 @@ class Debug extends Twig_Extension
      */
     public function __construct(Application $app)
     {
-         if($app->bound('debugbar')){
+        if ($app->bound('debugbar')) {
             $this->debugbar = $app['debugbar'];
-        }else{
+        } else {
             $this->debugbar = null;
         }
     }
@@ -43,7 +43,9 @@ class Debug extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('dump', [$this, 'dump'], array('needs_context' => true, 'needs_environment' => true)),
+            new Twig_SimpleFunction(
+                'dump', [$this, 'dump'], array('needs_context' => true, 'needs_environment' => true)
+            ),
         );
     }
 
@@ -68,7 +70,7 @@ class Debug extends Twig_Extension
                     if (method_exists($value, 'toArray')) {
                         $data[$key] = $value->toArray();
                     } else {
-                        $data[$key] = "Object (". get_class($value).")";
+                        $data[$key] = "Object (" . get_class($value) . ")";
                     }
                 } else {
                     $data[$key] = $value;
