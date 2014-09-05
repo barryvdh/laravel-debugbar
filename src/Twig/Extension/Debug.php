@@ -46,6 +46,9 @@ class Debug extends Twig_Extension
             new Twig_SimpleFunction(
                 'dump', [$this, 'dump'], array('needs_context' => true, 'needs_environment' => true)
             ),
+            new Twig_SimpleFunction(
+                'debug', [$this, 'dump'], array('needs_context' => true, 'needs_environment' => true)
+            ),
         );
     }
 
