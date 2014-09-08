@@ -1,5 +1,9 @@
 # Changelog for Laravel Debugbar
 
+## 1.7.4 (2014-09-08)
+
+- Rename assets routes to prevent Nginx conflicts
+
 ## 1.7.3 (2014-09-05)
 
 - Add helper functions (debug(), add/start/stop_measure() and measure()
