@@ -51,7 +51,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app['router']->get(
-            '_debugbar/assets.css',
+            '_debugbar/assets/stylesheets',
             array(
                 'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@css',
                 'as' => 'debugbar.assets.css',
@@ -59,7 +59,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app['router']->get(
-            '_debugbar/assets.js',
+            '_debugbar/assets/javascript',
             array(
                 'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@js',
                 'as' => 'debugbar.assets.js',
