@@ -5,9 +5,6 @@ use Symfony\Component\HttpFoundation\Response;
 class AssetController extends BaseController
 {
 
-    /** @var int The TTL (1 year) */
-    protected $ttl = 31536000;
-
     /**
      * Return the javascript for the Debugbar
      *
@@ -24,9 +21,8 @@ class AssetController extends BaseController
                 'Content-Type' => 'text/javascript',
             )
         );
-        $response->setTtl($this->ttl);
 
-        return $response;
+        return $this->cacheResponse($response);
     }
 
     /**
@@ -45,7 +41,18 @@ class AssetController extends BaseController
                 'Content-Type' => 'text/css',
             )
         );
-        $response->setTtl($this->ttl);
+
+        return $this->cacheResponse($response);
+    }
+
+    /**
+     * Cache the response 1 year (31536000 sec)
+     */
+    protected function cacheResponse(Response $response)
+    {
+        $response->setSharedMaxAge(31536000);
+        $response->setMaxAge(31536000);
+        $response->setExpires(new \DateTime('+1 year'));
 
         return $response;
     }
