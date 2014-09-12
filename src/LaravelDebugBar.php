@@ -442,6 +442,7 @@ class LaravelDebugbar extends DebugBar
     {
         $app = $this->app;
         if ($app->runningInConsole() or !$this->isEnabled() || $this->isDebugbarRequest()) {
+            $this->app['session']->reflash();
             return $response;
         }
 
