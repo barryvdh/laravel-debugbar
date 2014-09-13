@@ -5,7 +5,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Auth\UserInterface;
+use Illuminate\Contracts\Auth\User as UserContract;
 use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
@@ -54,7 +54,7 @@ class AuthCollector extends DataCollector implements Renderable
      * @param \Illuminate\Auth\UserInterface $user
      * @return array
      */
-    protected function getUserInformation(UserInterface $user = null)
+    protected function getUserInformation(UserContract $user = null)
     {
         // Defaults
         if (is_null($user)) {
