@@ -186,7 +186,6 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
 }
 
 .phpdebugbar-widgets-toolbar > .fa {
-  /*  line-height: 25px;*/
     width: 25px;
     font-size: 15px;
     color: #555;
@@ -223,7 +222,6 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-sqlqueries .phpdebugbar-widgets-status {
-    /* padding : 10px !important; */
     background: none !important;
     font-family: inherit !important;
     font-weight: 400 !important;
