@@ -3,6 +3,19 @@ div.phpdebugbar {
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
 }
 
+div.phpdebugbar-resize-handle {
+    border-bottom-color: #ebebeb;
+}
+
+div.phpdebugbar-closed,
+div.phpdebugbar-minimized {
+    border-top-color: #ebebeb;
+}
+
+a.phpdebugbar-restore-btn {
+    border-right-color: #ebebeb !important;
+}
+
 div.phpdebugbar code, div.phpdebugbar pre {
     background: none;
     font-family: monospace, monospace;
@@ -15,6 +28,8 @@ div.phpdebugbar-body {
 }
 
 div.phpdebugbar-header {
+    min-height: 30px;
+    line-height: 20px;
     padding-left: 39px;
 }
 
@@ -36,8 +51,8 @@ a.phpdebugbar-open-btn {
 
 div.phpdebugbar-header,
 div.phpdebugbar-openhandler-header {
-    background-size: 23px auto;
-    background-position: 8px;
+    background-size: 21px auto;
+    background-position: 9px center;
 }
 
 a.phpdebugbar-restore-btn {
