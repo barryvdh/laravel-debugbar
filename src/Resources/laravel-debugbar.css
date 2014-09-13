@@ -98,8 +98,8 @@ ul.phpdebugbar-widgets-timeline li:nth-child(even) {
 }
 
 ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
-    height: 30px;
-    top: 0;
+    height: 5px;
+    top: 12.5px;
     background-color: #f4645f;
     border-radius: 0;
 }
