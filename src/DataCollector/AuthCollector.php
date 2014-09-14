@@ -4,8 +4,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Auth\UserInterface;
 use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
@@ -22,7 +20,7 @@ class AuthCollector extends DataCollector implements Renderable
     /**
      * @param \Illuminate\Auth\AuthManager $auth
      */
-    public function __construct(AuthManager $auth)
+    public function __construct($auth)
     {
         $this->auth = $auth;
     }
