@@ -4,16 +4,16 @@ div.phpdebugbar {
 }
 
 div.phpdebugbar-resize-handle {
-    border-bottom-color: #ebebeb;
+    border-bottom-color: #ddd;
 }
 
 div.phpdebugbar-closed,
 div.phpdebugbar-minimized {
-    border-top-color: #ebebeb;
+    border-top-color: #ddd;
 }
 
 a.phpdebugbar-restore-btn {
-    border-right-color: #ebebeb !important;
+    border-right-color: #ddd !important;
 }
 
 div.phpdebugbar code, div.phpdebugbar pre {
