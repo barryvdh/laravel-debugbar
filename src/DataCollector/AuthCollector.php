@@ -52,7 +52,7 @@ class AuthCollector extends DataCollector implements Renderable
      * @param \Illuminate\Auth\UserInterface $user
      * @return array
      */
-    protected function getUserInformation(UserInterface $user = null)
+    protected function getUserInformation($user = null)
     {
         // Defaults
         if (is_null($user)) {
