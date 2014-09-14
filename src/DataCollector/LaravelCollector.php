@@ -8,7 +8,6 @@ use Illuminate\Foundation\Application;
 
 class LaravelCollector extends DataCollector implements Renderable
 {
-
     /** @var \Illuminate\Foundation\Application $app */
     protected $app;
 

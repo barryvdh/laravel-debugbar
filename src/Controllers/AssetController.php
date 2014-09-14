@@ -4,7 +4,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AssetController extends BaseController
 {
-
     /**
      * Return the javascript for the Debugbar
      *
@@ -56,5 +55,4 @@ class AssetController extends BaseController
 
         return $response;
     }
-
 }

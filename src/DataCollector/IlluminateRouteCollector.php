@@ -33,10 +33,8 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-
         $route = \Route::current();
         return $this->getRouteInformation($route);
-
     }
 
     /**
@@ -172,5 +170,4 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
 
         $this->table->render($this->getOutput());
     }
-
 }

@@ -10,7 +10,6 @@ use Symfony\Component\Routing\Route;
 
 class SymfonyRouteCollector extends DataCollector implements Renderable
 {
-
     protected $router;
 
     public function __construct(Router $router)

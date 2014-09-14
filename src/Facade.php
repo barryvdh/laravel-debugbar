@@ -2,7 +2,6 @@
 
 class Facade extends \Illuminate\Support\Facades\Facade
 {
-
     /**
      * {@inheritDoc}
      */
@@ -10,5 +9,4 @@ class Facade extends \Illuminate\Support\Facades\Facade
     {
         return 'debugbar';
     }
-
 }

@@ -85,7 +85,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->booted) {
             return;
         }
-        
+
         if ($this->isDebugbarRequest()) {
             $this->app['session']->reflash();
         }
@@ -108,7 +108,6 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new MessagesCollector());
         }
         if ($this->shouldCollect('time', true)) {
-
             $this->addCollector(new TimeDataCollector());
 
             $this->app->booted(
@@ -136,7 +135,6 @@ class LaravelDebugbar extends DebugBar
                     $debugbar->startMeasure('after', 'After application');
                 }
             );
-
         }
         if ($this->shouldCollect('memory', true)) {
             $this->addCollector(new MemoryCollector());
@@ -237,7 +235,7 @@ class LaravelDebugbar extends DebugBar
                     $this->app['log']->listen(
                         function ($level, $message, $context) use ($logger) {
                             try {
-                                $logMessage = (string)$message;
+                                $logMessage = (string) $message;
                                 if (mb_check_encoding($logMessage, 'UTF-8')) {
                                     $logMessage .= (!empty($context) ? ' ' . json_encode($context) : '');
                                 } else {
@@ -293,7 +291,7 @@ class LaravelDebugbar extends DebugBar
                     function ($query, $bindings, $time, $connectionName) use ($db, $queryCollector) {
                         $connection = $db->connection($connectionName);
                         if (!method_exists($connection, 'logging') || $connection->logging()) {
-                            $queryCollector->addQuery((string)$query, $bindings, $time, $connection);
+                            $queryCollector->addQuery((string) $query, $bindings, $time, $connection);
                         }
                     }
                 );
@@ -363,7 +361,6 @@ class LaravelDebugbar extends DebugBar
         $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
 
         $this->booted = true;
-
     }
 
     public function shouldCollect($name, $default = false)
@@ -401,7 +398,6 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 //  $this->addException($e);
             }
-
         }
     }
 
@@ -628,7 +624,6 @@ class LaravelDebugbar extends DebugBar
         }
 
         $response->setContent($content);
-
     }
 
     /**
@@ -746,5 +741,4 @@ class LaravelDebugbar extends DebugBar
             $collector->addMessage($message, $label);
         }
     }
-
 }

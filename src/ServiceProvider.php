@@ -2,7 +2,6 @@
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -70,7 +69,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
-
         }
     }
 
@@ -129,5 +127,4 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         return array('debugbar', 'command.debugbar.publish', 'command.debugbar.clear');
     }
-
 }

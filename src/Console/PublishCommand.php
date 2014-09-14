@@ -11,7 +11,6 @@ use Illuminate\Console\Command;
  */
 class PublishCommand extends Command
 {
-
     /**
      * The console command name.
      *

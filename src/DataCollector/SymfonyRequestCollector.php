@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class SymfonyRequestCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-
     /** @var \Symfony\Component\HttpFoundation\Request $request */
     protected $request;
     /** @var  \Symfony\Component\HttpFoundation\Request $response */
@@ -64,7 +63,6 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
      */
     public function collect()
     {
-
         $request = $this->request;
         $response = $this->response;
 
@@ -126,7 +124,6 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         }
 
         return $data;
-
     }
 
     private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
@@ -135,7 +132,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
 
         if (0 !== $expires) {
             if (is_numeric($expires)) {
-                $expires = (int)$expires;
+                $expires = (int) $expires;
             } elseif ($expires instanceof \DateTime) {
                 $expires = $expires->getTimestamp();
             } else {
