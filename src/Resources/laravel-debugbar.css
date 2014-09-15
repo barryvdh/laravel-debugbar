@@ -21,6 +21,7 @@ div.phpdebugbar code, div.phpdebugbar pre {
     font-family: monospace, monospace;
     font-size: 1em;
     border: 0;
+    padding: 0;
 }
 
 div.phpdebugbar-body {
