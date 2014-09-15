@@ -9,7 +9,7 @@ It bootstraps some Collectors to work with Laravel and implements a couple custo
 It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
 Read [the documentation](http://phpdebugbar.com/docs/) for more configuration options.
 
-![Screenshot](http://i.imgur.com/VmuNA4w.png)
+![Screenshot](https://cloud.githubusercontent.com/assets/973269/4270452/740c8c8c-3ccb-11e4-8d9a-5a9e64f19351.png)
 
 Note: Use the DebugBar only in development. It can slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
 
