@@ -18,7 +18,7 @@ a.phpdebugbar-restore-btn {
 
 div.phpdebugbar code, div.phpdebugbar pre {
     background: none;
-    font-family: monospace, monospace;
+    font-family: monospace;
     font-size: 1em;
     border: 0;
     padding: 0;
