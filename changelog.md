@@ -1,5 +1,10 @@
 # Changelog for Laravel Debugbar
 
+## 1.7.7 (2014-09-..)
+
+- Make it compatible with Laravel 5.0-dev
+- Allow anonymous function as `enabled` setting (for IP checks etc)
+
 ## 1.7.6 (2014-09-12)
 
 - Fix reflash bug
