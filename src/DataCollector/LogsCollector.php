@@ -7,7 +7,6 @@ use ReflectionClass;
 
 class LogsCollector extends MessagesCollector
 {
-
     protected $lines = 124;
 
     public function __construct($path = null, $name = 'logs')
@@ -93,7 +92,6 @@ class LogsCollector extends MessagesCollector
         }
         fclose($handle);
         return array_reverse($text);
-
     }
 
     /**
@@ -141,5 +139,4 @@ class LogsCollector extends MessagesCollector
         $class = new ReflectionClass(new LogLevel());
         return $class->getConstants();
     }
-
 }

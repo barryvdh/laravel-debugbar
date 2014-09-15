@@ -7,7 +7,6 @@ use Illuminate\View\View;
 
 class ViewCollector extends ConfigCollector
 {
-
     protected $views = array();
     protected $collect_data;
 
@@ -49,5 +48,4 @@ class ViewCollector extends ConfigCollector
             $this->data[$name] = $data;
         }
     }
-
 }

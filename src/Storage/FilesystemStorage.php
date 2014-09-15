@@ -49,7 +49,6 @@ class FilesystemStorage implements StorageInterface
         if (rand(1, 100) <= $this->gc_probability) {
             $this->garbageCollect();
         }
-
     }
 
     /**

@@ -134,5 +134,4 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         }
         return rtrim($root, '/') . "/$uri";
     }
-
 }

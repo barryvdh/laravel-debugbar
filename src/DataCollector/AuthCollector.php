@@ -11,7 +11,6 @@ use Illuminate\Support\Contracts\ArrayableInterface;
  */
 class AuthCollector extends DataCollector implements Renderable
 {
-
     /** @var \Illuminate\Auth\AuthManager */
     protected $auth;
     /** @var bool */
@@ -31,7 +30,7 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function setShowName($showName)
     {
-        $this->showName = (bool)$showName;
+        $this->showName = (bool) $showName;
     }
 
     /**

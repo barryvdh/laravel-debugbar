@@ -8,7 +8,6 @@ use Illuminate\Foundation\Application;
 
 class FilesCollector extends DataCollector implements Renderable
 {
-
     /** @var \Illuminate\Foundation\Application */
     protected $app;
     protected $basePath;

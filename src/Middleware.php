@@ -6,7 +6,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class Middleware implements HttpKernelInterface
 {
-
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     protected $kernel;
     /** @var \Illuminate\Foundation\Application $app */
