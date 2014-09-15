@@ -76,7 +76,7 @@ class QueryCollector extends PDOCollector
 
         $this->queries[] = array(
             'query' => $query,
-            'bindings' => $bindings,
+            'bindings' => $this->escapeBindings($bindings),
             'time' => $time,
             'source' => $source,
         );
@@ -102,6 +102,20 @@ class QueryCollector extends PDOCollector
         return $bindings;
     }
 
+    /**
+     * Make the bindings safe for outputting.
+     *
+     * @param array $bindings
+     * @return array
+     */
+    protected function escapeBindings($bindings)
+    {
+        foreach ($bindings as &$binding) {
+            $binding = htmlentities($binding, ENT_QUOTES, 'UTF-8', false);
+        }
+        return $bindings;
+    }
+    
     /**
      * Use a backtrace to search for the origin of the query.
      */
