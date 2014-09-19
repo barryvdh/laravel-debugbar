@@ -191,7 +191,7 @@ class QueryCollector extends PDOCollector
         foreach ($queries as $query) {
             $totalTime += $query['time'];
             $statements[] = array(
-                'sql' => $query['query'],
+                'sql' => $this->formatSql($query['query']),
                 'params' => (object) $query['bindings'],
                 'duration' => $query['time'],
                 'duration_str' => $this->formatDuration($query['time']),
@@ -207,6 +207,17 @@ class QueryCollector extends PDOCollector
             'statements' => $statements
         );
         return $data;
+    }
+
+    /**
+     * Removes extra spaces at the beginning and end of the SQL query and its lines.
+     *
+     * @param string $sql
+     * @return string
+     */
+    protected function formatSql($sql)
+    {
+        return trim(preg_replace("/\s*\n\s*/", "\n", $sql));
     }
 
     /**
