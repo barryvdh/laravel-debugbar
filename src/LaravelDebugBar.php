@@ -290,9 +290,7 @@ class LaravelDebugbar extends DebugBar
                 $db->listen(
                     function ($query, $bindings, $time, $connectionName) use ($db, $queryCollector) {
                         $connection = $db->connection($connectionName);
-                        if (!method_exists($connection, 'logging') || $connection->logging()) {
-                            $queryCollector->addQuery((string) $query, $bindings, $time, $connection);
-                        }
+                        $queryCollector->addQuery((string) $query, $bindings, $time, $connection);
                     }
                 );
             } catch (\Exception $e) {
