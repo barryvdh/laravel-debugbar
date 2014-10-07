@@ -130,25 +130,23 @@ class LaravelDebugbar extends DebugBar
                 }
             );
 
-            //Check if App::before is already called.. (5.0 doesn't have App::before)
-            if ($this->checkVersion('5.0') || ($this->checkVersion('4.1') && $this->app->isBooted())) {
+            //Check if App::before is already called.. 
+            if ($this->checkVersion('4.1') && $this->app->isBooted()) {
                 $debugbar->startMeasure('application', 'Application');
             } else {
-                $this->app->before(
+                $this->app['router']->before(
                     function () use ($debugbar) {
                         $debugbar->startMeasure('application', 'Application');
                     }
                 );
             }
 
-            if ($this->checkVersion('5.0', '<')) {
-	            $this->app->after(
-	                function () use ($debugbar) {
-	                    $debugbar->stopMeasure('application');
-	                    $debugbar->startMeasure('after', 'After application');
-	                }
-	            );
-            }
+            $this->app['router']->before(
+                function () use ($debugbar) {
+                    $debugbar->stopMeasure('application');
+                    $debugbar->startMeasure('after', 'After application');
+                }
+            );
         }
         if ($this->shouldCollect('memory', true)) {
             $this->addCollector(new MemoryCollector());
