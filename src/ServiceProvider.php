@@ -113,8 +113,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->commands(array('command.debugbar.publish', 'command.debugbar.clear'));
 
-        if ($this->shouldUseMiddleware()) {
-            $this->app->middleware('Barryvdh\Debugbar\Middleware', array($this->app));
+        if ($this->shouldUseMiddleware() && method_exists($this->app, 'middleware')) {
+            $this->app->middleware('Barryvdh\Debugbar\Middleware\Stack', array($this->app));
         }
     }
 

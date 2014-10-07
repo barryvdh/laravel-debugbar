@@ -1,10 +1,10 @@
-<?php namespace Barryvdh\Debugbar;
+<?php namespace Barryvdh\Debugbar\Middleware;
 
 use Illuminate\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class Middleware implements HttpKernelInterface
+class Stack implements HttpKernelInterface
 {
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
     protected $kernel;
@@ -27,10 +27,12 @@ class Middleware implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        /** @var LaravelDebugbar $debugbar */
+        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
 
+        /** @var \Illuminate\Http\Response $response */
         $response = $this->kernel->handle($request, $type, $catch);
+        
         return $debugbar->modifyResponse($request, $response);
     }
 }
