@@ -47,6 +47,20 @@ class QueryCollector extends PDOCollector
     }
 
     /**
+     * Enable/disable the EXPLAIN queries
+     *
+     * @param  bool $enabled
+     * @param  array|null $types Array of types to explain queries (select/insert/update/delete)
+     */
+    public function setExplainSource($enabled, $types)
+    {
+        $this->explainQuery = $enabled;
+        if($types){
+            $this->explainTypes = $types;
+        }
+    }
+    
+    /**
      *
      * @param string $query
      * @param array $bindings
