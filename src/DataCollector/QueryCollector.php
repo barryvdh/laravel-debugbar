@@ -81,7 +81,7 @@ class QueryCollector extends PDOCollector
         if ($this->explainQuery && preg_match('/^('.implode($this->explainTypes).') /i', $query)) {
             $statement = $pdo->prepare('EXPLAIN ' . $query);
             $statement->execute($bindings);
-            $explainResults = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
         }
 
         $bindings = $this->checkBindings($bindings);
@@ -104,17 +104,8 @@ class QueryCollector extends PDOCollector
             'bindings' => $this->escapeBindings($bindings),
             'time' => $time,
             'source' => $source,
+            'explain' => $explainResults,
         );
-
-        //Add the results from the explain as new rows
-        foreach($explainResults as $result){
-            $this->queries[] = array(
-                'query' => 'EXPLAIN ' . $query,
-                'bindings' => $result,
-                'time' => $time,
-                'source' => $source,
-            );
-        }
 
         if ($this->timeCollector !== null) {
             $this->timeCollector->addMeasure($query, $startTime, $endTime);
@@ -232,10 +223,20 @@ class QueryCollector extends PDOCollector
                 'duration_str' => $this->formatDuration($query['time']),
                 'stmt_id' => $query['source'],
             );
+
+            //Add the results from the explain as new rows
+            foreach($query['explain'] as $explain){
+                $statements[] = array(
+                    'sql' => ' - EXPLAIN #' . $explain->id . ': ' . $explain->table . ' (' . $explain->select_type . ')',
+                    'params' => $explain,
+                    'row_count' => $explain->rows,
+                    'stmt_id' => $explain->id,
+                );
+            }
         }
 
         $data = array(
-            'nb_statements' => count($statements),
+            'nb_statements' => count($queries),
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
