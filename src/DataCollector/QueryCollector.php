@@ -227,7 +227,7 @@ class QueryCollector extends PDOCollector
             //Add the results from the explain as new rows
             foreach($query['explain'] as $explain){
                 $statements[] = array(
-                    'sql' => ' - EXPLAIN #' . $explain->id . ': ' . $explain->table . ' (' . $explain->select_type . ')',
+                    'sql' => ' - EXPLAIN #' . $explain->id . ': `' . $explain->table . '` (' . $explain->select_type . ')',
                     'params' => $explain,
                     'row_count' => $explain->rows,
                     'stmt_id' => $explain->id,
