@@ -14,6 +14,8 @@ class QueryCollector extends PDOCollector
     protected $queries = array();
     protected $renderSqlWithParams = false;
     protected $findSource = false;
+    protected $explainQuery = false;
+    protected $explainTypes = array('SELECT'); // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
 
     /**
      * @param TimeDataCollector $timeCollector
@@ -45,6 +47,20 @@ class QueryCollector extends PDOCollector
     }
 
     /**
+     * Enable/disable the EXPLAIN queries
+     *
+     * @param  bool $enabled
+     * @param  array|null $types Array of types to explain queries (select/insert/update/delete)
+     */
+    public function setExplainSource($enabled, $types)
+    {
+        $this->explainQuery = $enabled;
+        if($types){
+            $this->explainTypes = $types;
+        }
+    }
+    
+    /**
      *
      * @param string $query
      * @param array $bindings
@@ -53,12 +69,21 @@ class QueryCollector extends PDOCollector
      */
     public function addQuery($query, $bindings, $time, $connection)
     {
+        $explainResults = array();
         $time = $time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
 
         $pdo = $connection->getPdo();
         $bindings = $connection->prepareBindings($bindings);
+
+        // Run EXPLAIN on this query (if needed)
+        if ($this->explainQuery && preg_match('/^('.implode($this->explainTypes).') /i', $query)) {
+            $statement = $pdo->prepare('EXPLAIN ' . $query);
+            $statement->execute($bindings);
+            $explainResults = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
         $bindings = $this->checkBindings($bindings);
         if (!empty($bindings) && $this->renderSqlWithParams) {
             foreach ($bindings as $binding) {
@@ -80,6 +105,16 @@ class QueryCollector extends PDOCollector
             'time' => $time,
             'source' => $source,
         );
+
+        //Add the results from the explain as new rows
+        foreach($explainResults as $result){
+            $this->queries[] = array(
+                'query' => 'EXPLAIN ' . $query,
+                'bindings' => $result,
+                'time' => $time,
+                'source' => $source,
+            );
+        }
 
         if ($this->timeCollector !== null) {
             $this->timeCollector->addMeasure($query, $startTime, $endTime);

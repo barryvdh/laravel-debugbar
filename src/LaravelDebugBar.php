@@ -297,6 +297,11 @@ class LaravelDebugbar extends DebugBar
             if ($this->app['config']->get('laravel-debugbar::config.options.db.backtrace')) {
                 $queryCollector->setFindSource(true);
             }
+            
+            if ($this->app['config']->get('laravel-debugbar::config.options.db.explain.enabled')) {
+                $types = $this->app['config']->get('laravel-debugbar::config.options.db.explain.types');
+                $queryCollector->setExplainSource(true, $types);
+            }
 
             $this->addCollector($queryCollector);
 
