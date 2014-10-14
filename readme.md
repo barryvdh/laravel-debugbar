@@ -39,9 +39,9 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 
 ## Installation
 
-Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-debugbar:1.x` directly):
+Require this package with composer:
 
-    "barryvdh/laravel-debugbar": "1.*"
+    composer require barryvdh/laravel-debugbar
 
 After updating composer, add the ServiceProvider to the providers array in app/config/app.php
 
@@ -57,7 +57,7 @@ The profiler is enabled by default, if you have app.debug=true. You can override
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
 You can also only display the js of css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
 
-    $ php artisan config:publish barryvdh/laravel-debugbar
+    php artisan config:publish barryvdh/laravel-debugbar
 
 You can also disable/enable the loggers you want. You can also use the IoC container to add extra loggers. (`$app['debugbar']->addCollector(new MyDataCollector)`)
 
