@@ -1,5 +1,5 @@
 ## Laravel 4 Debugbar
-[![Packagist License](http://img.shields.io/packagist/l/barryvdh/laravel-debugbar.png)](http://choosealicense.com/licenses/mit/)
+[![Packagist License](https://poser.pugx.org/barryvdh/laravel-debugbar/license.png)](http://choosealicense.com/licenses/mit/)
 [![Latest Stable Version](https://poser.pugx.org/barryvdh/laravel-debugbar/version.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Total Downloads](https://poser.pugx.org/barryvdh/laravel-debugbar/d/total.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 
