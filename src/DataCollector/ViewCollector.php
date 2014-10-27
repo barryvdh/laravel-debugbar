@@ -29,9 +29,13 @@ class ViewCollector extends ConfigCollector
      */
     public function addView(View $view)
     {
-        $name = $view->getName();
+        $name = $originalName = $view->getName();
+        for ($i=2; isset($this->data[$name]); $i++) {
+            $name = $originalName . " ($i)";
+        }
+
         if (!$this->collect_data) {
-            $this->data[$name] = $name;
+            $this->data[$name] = $originalName;
         } else {
             $data = array();
             foreach ($view->getData() as $key => $value) {
