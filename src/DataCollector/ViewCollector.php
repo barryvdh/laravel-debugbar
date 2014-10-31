@@ -2,12 +2,13 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\ConfigCollector;
+use DebugBar\Bridge\Twig\TwigCollector;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
-class ViewCollector extends ConfigCollector
+class ViewCollector extends TwigCollector
 {
-    protected $views = array();
+    protected $templates = array();
     protected $collect_data;
 
     /**
@@ -19,7 +20,29 @@ class ViewCollector extends ConfigCollector
     {
         $this->collect_data = $collectData;
         $this->name = 'views';
-        $this->data = array();
+        $this->templates = array();
+        $this->exporter = new ValueExporter();
+    }
+
+    public function getName()
+    {
+        return 'views';
+    }
+
+    public function getWidgets()
+    {
+        return array(
+            'views' => array(
+                'icon' => 'leaf',
+                'widget' => 'PhpDebugBar.Widgets.TemplatesWidget',
+                'map' => 'views',
+                'default' => '[]'
+            ),
+            'views:badge' => array(
+                'map' => 'views.nb_templates',
+                'default' => 0
+            )
+        );
     }
 
     /**
@@ -29,27 +52,36 @@ class ViewCollector extends ConfigCollector
      */
     public function addView(View $view)
     {
-        $name = $originalName = $view->getName();
-        for ($i=2; isset($this->data[$name]); $i++) {
-            $name = $originalName . " ($i)";
-        }
+        $name = $view->getName();
+        $type = pathinfo($view->getPath(), PATHINFO_EXTENSION);
 
         if (!$this->collect_data) {
-            $this->data[$name] = $originalName;
+            $params = array_keys($view->getData());
         } else {
             $data = array();
             foreach ($view->getData() as $key => $value) {
-                if (is_object($value)) {
-                    if (method_exists($value, 'toArray')) {
-                        $data[$key] = $value->toArray();
-                    } else {
-                        $data[$key] = "Object (" . get_class($value) . ")";
-                    }
-                } else {
-                    $data[$key] = $value;
+                if (is_object($value) && method_exists($value, 'toArray')) {
+                    $value = $value->toArray();
                 }
+                $data[$key] = $this->exporter->exportValue($value);
             }
-            $this->data[$name] = $data;
+            $params = $data;
         }
+        $this->templates[] = array(
+            'name' => $name,
+            'param_count' => count($params),
+            'params' => $params,
+            'type' => $type,
+        );
+    }
+
+    public function collect()
+    {
+        $templates = $this->templates;
+
+        return array(
+            'nb_templates' => count($templates),
+            'templates' => $templates,
+        );
     }
 }
