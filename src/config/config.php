@@ -121,6 +121,7 @@ return array(
                 'enabled' => false,
                 'types' => array('SELECT'), // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
             ),
+            'hints'             => true,    // Show hints for common mistakes
         ),
         'mail' => array(
             'full_log' => false

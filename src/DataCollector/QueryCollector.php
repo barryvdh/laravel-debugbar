@@ -16,6 +16,7 @@ class QueryCollector extends PDOCollector
     protected $findSource = false;
     protected $explainQuery = false;
     protected $explainTypes = array('SELECT'); // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
+    protected $showHints = false;
 
     /**
      * @param TimeDataCollector $timeCollector
@@ -26,7 +27,7 @@ class QueryCollector extends PDOCollector
     }
 
     /**
-     * Renders the SQL of traced statements with params embeded
+     * Renders the SQL of traced statements with params embedded
      *
      * @param boolean $enabled
      * @param string $quotationChar NOT USED
@@ -34,6 +35,16 @@ class QueryCollector extends PDOCollector
     public function setRenderSqlWithParams($enabled = true, $quotationChar = "'")
     {
         $this->renderSqlWithParams = $enabled;
+    }
+
+    /**
+     * Show or hide the hints in the parameters
+     *
+     * @param boolean $enabled
+     */
+    public function setShowHints($enabled = true)
+    {
+        $this->showHints = $enabled;
     }
 
     /**
@@ -106,7 +117,7 @@ class QueryCollector extends PDOCollector
             'time' => $time,
             'source' => $source,
             'explain' => $explainResults,
-            'hints' => $hints,
+            'hints' => $this->showHints ? $hints : null,
         );
 
         if ($this->timeCollector !== null) {

@@ -302,6 +302,10 @@ class LaravelDebugbar extends DebugBar
                 $types = $this->app['config']->get('laravel-debugbar::config.options.db.explain.types');
                 $queryCollector->setExplainSource(true, $types);
             }
+            
+            if ($this->app['config']->get('laravel-debugbar::config.options.db.hints', true)) {
+                $queryCollector->setShowHints(true);
+            }
 
             $this->addCollector($queryCollector);
 
