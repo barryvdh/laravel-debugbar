@@ -77,6 +77,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
             var self = this;
             var searchBtn = $('<button />')
                 .text('Search')
+                .attr('type', 'submit')
                 .on('click', function(e) {
                     self.$table.empty();
                     var search = {};
