@@ -9,6 +9,10 @@ use Illuminate\Routing\UrlGenerator;
  */
 class JavascriptRenderer extends BaseJavascriptRenderer
 {
+    // Use XHR handler by default, instead of jQuery
+    protected $ajaxHandlerBindToJquery = false;
+    protected $ajaxHandlerBindToXHR = true;
+    
     /** @var \Illuminate\Routing\UrlGenerator */
     protected $url;
 
