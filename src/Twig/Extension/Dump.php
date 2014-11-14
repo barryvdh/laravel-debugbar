@@ -1,32 +1,28 @@
 <?php namespace Barryvdh\Debugbar\Twig\Extension;
 
-use Illuminate\Foundation\Application;
+use DebugBar\DataFormatter\DataFormatterInterface;
 use Twig_Environment;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
- * Access Laravels auth class in your Twig templates.
+ * Dump variables using the DataFormatter
  */
-class Debug extends Twig_Extension
+class Dump extends Twig_Extension
 {
     /**
-     * @var \Barryvdh\Debugbar\LaravelDebugbar
+     * @var \DebugBar\DataFormatter\DataFormatter
      */
-    protected $debugbar;
+    protected $formatter;
 
     /**
      * Create a new auth extension.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param \DebugBar\DataFormatter\DataFormatterInterface $formatter
      */
-    public function __construct(Application $app)
+    public function __construct(DataFormatterInterface $formatter)
     {
-        if ($app->bound('debugbar')) {
-            $this->debugbar = $app['debugbar'];
-        } else {
-            $this->debugbar = null;
-        }
+        $this->formatter = $formatter;
     }
 
     /**
@@ -34,7 +30,7 @@ class Debug extends Twig_Extension
      */
     public function getName()
     {
-        return 'Laravel_Debugbar_Debug';
+        return 'Laravel_Debugbar_Dump';
     }
 
     /**
@@ -44,7 +40,7 @@ class Debug extends Twig_Extension
     {
         return array(
             new Twig_SimpleFunction(
-                'debug', [$this, 'debug'], array('needs_context' => true, 'needs_environment' => true)
+                'dump', [$this, 'dump'], array('is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true)
             ),
         );
     }
@@ -55,12 +51,12 @@ class Debug extends Twig_Extension
      *
      * @param Twig_Environment $env
      * @param $context
+     *
+     * @return string
      */
-    public function debug(Twig_Environment $env, $context)
+    public function dump(Twig_Environment $env, $context)
     {
-        if (!$env->isDebug() || !$this->debugbar) {
-            return;
-        }
+        $output = '';
 
         $count = func_num_args();
         if (2 === $count) {
@@ -76,13 +72,13 @@ class Debug extends Twig_Extension
                     $data[$key] = $value;
                 }
             }
-            $this->debugbar->addMessage($data);
+            $output .= $this->formatter->formatVar($data);
         } else {
             for ($i = 2; $i < $count; $i++) {
-                $this->debugbar->addMessage(func_get_arg($i));
+                $output .= $this->formatter->formatVar(func_get_arg($i));
             }
         }
 
-        return;
+        return '<pre>'.$output.'</pre>';
     }
 }
