@@ -2,9 +2,9 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use Barryvdh\Debugbar\DataCollector\Util\ValueExporter;
 use DebugBar\Bridge\Twig\TwigCollector;
 use Illuminate\View\View;
-use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 class ViewCollector extends TwigCollector
 {
