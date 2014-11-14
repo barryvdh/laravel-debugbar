@@ -86,6 +86,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
+        $this->app->alias(
+            'DebugBar\DataFormatter\DataFormatter',
+            'DebugBar\DataFormatter\DataFormatterInterface'
+        );
+        
         $this->app['debugbar'] = $this->app->share(
             function ($app) {
                 $debugbar = new LaravelDebugBar($app);
