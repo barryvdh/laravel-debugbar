@@ -514,33 +514,29 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($response->isRedirection()) {
+        if ($response->isRedirection() || !($request instanceof \Illuminate\Http\Request)) {
             try {
                 $this->stackData();
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
-            !($request instanceof \Illuminate\Http\Request)
-            || ($response->headers->has('Content-Type') && false === strpos(
-                    $response->headers->get('Content-Type'),
-                    'html'
-                ))
+            ($request->isXmlHttpRequest() || $request->wantsJson()) and
+            $app['config']->get('laravel-debugbar::config.capture_ajax', true)
+        ) {
+            try {
+                $this->sendDataInHeaders(true);
+            } catch (\Exception $e) {
+                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            }
+        } elseif (
+            ($response->headers->has('Content-Type') and
+            strpos($response->headers->get('Content-Type'), 'html') === false)
             || 'html' !== $request->format()
         ) {
             try {
                 // Just collect + store data, don't inject it.
                 $this->collect();
-            } catch (\Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
-            }
-        } elseif (($request->isXmlHttpRequest() || $request->wantsJson()) and $app['config']->get(
-                'laravel-debugbar::config.capture_ajax',
-                true
-            )
-        ) {
-            try {
-                $this->sendDataInHeaders(true);
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
