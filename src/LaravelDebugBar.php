@@ -141,7 +141,7 @@ class LaravelDebugbar extends DebugBar
                 );
             }
 
-            $this->app['router']->before(
+            $this->app['router']->after(
                 function () use ($debugbar) {
                     $debugbar->stopMeasure('application');
                     $debugbar->startMeasure('after', 'After application');
