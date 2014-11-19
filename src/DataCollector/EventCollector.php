@@ -1,5 +1,4 @@
 <?php
-
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
@@ -15,6 +14,7 @@ class EventCollector extends TimeDataCollector
         parent::__construct($requestStartTime);
         $this->exporter = new ValueExporter();
     }
+
     public function onWildcardEvent()
     {
         $args = func_get_args();
@@ -40,7 +40,8 @@ class EventCollector extends TimeDataCollector
         return $event;
     }
 
-    protected function prepareParams($params){
+    protected function prepareParams($params)
+    {
         $data = array();
         foreach ($params as $key => $value) {
             if (is_object($value) && method_exists($value, 'toArray')) {
@@ -48,6 +49,13 @@ class EventCollector extends TimeDataCollector
             }
             $data[$key] = $this->exporter->exportValue($value);
         }
+        return $data;
+    }
+
+    public function collect()
+    {
+        $data = parent::collect();
+        $data['nb_measures'] = count($data['measures']);
         return $data;
     }
 
@@ -64,8 +72,11 @@ class EventCollector extends TimeDataCollector
                 "widget" => "PhpDebugBar.Widgets.TimelineWidget",
                 "map" => "event",
                 "default" => "{}"
+            ),
+            'events:badge' => array(
+                'map' => 'event.nb_measures',
+                'default' => 0
             )
         );
     }
-
 }
