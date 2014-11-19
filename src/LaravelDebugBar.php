@@ -1,6 +1,7 @@
 <?php namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\DataCollector\AuthCollector;
+use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
@@ -120,12 +121,13 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new MessagesCollector());
         }
         if ($this->shouldCollect('time', true)) {
-            $this->addCollector(new TimeDataCollector());
+            $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
+            $this->addCollector(new TimeDataCollector($startTime));
 
             $this->app->booted(
-                function () use ($debugbar) {
-                    if (defined('LARAVEL_START')) {
-                        $debugbar['time']->addMeasure('Booting', LARAVEL_START, microtime(true));
+                function () use ($debugbar, $startTime) {
+                    if ($startTime) {
+                        $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
                     }
                 }
             );
@@ -177,20 +179,11 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('events', false) and isset($this->app['events'])) {
             try {
-                $this->addCollector(new MessagesCollector('events'));
-                $dispatcher = $this->app['events'];
-                $dispatcher->listen(
-                    '*',
-                    function () use ($debugbar, $dispatcher) {
-                        if (method_exists($dispatcher, 'firing')) {
-                            $event = $dispatcher->firing();
-                        } else {
-                            $args = func_get_args();
-                            $event = end($args);
-                        }
-                        $debugbar['events']->info("Received event: " . $event);
-                    }
-                );
+                $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
+                $eventCollector = new EventCollector($startTime);
+                $this->addCollector($eventCollector);
+                $this->app['events']->subscribe($eventCollector);
+
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
