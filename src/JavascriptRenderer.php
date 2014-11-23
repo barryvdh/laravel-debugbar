@@ -18,15 +18,15 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
     protected $cssVendors = array(
         // 'vendor/font-awesome/css/font-awesome.min.css',  // Removed until font is embedded
-        'vendor/highlightjs/styles/github.css'
+        'highlightjs' => 'vendor/highlightjs/styles/github.css'
     );
 
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
 
-        $this->cssFiles[] = __DIR__ . '/Resources/laravel-debugbar.css';
-        $this->cssVendors[] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
+        $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
+        $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
     }
 
     /**
