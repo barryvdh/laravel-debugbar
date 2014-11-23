@@ -16,11 +16,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     /** @var \Illuminate\Routing\UrlGenerator */
     protected $url;
 
-    protected $cssVendors = array(
-        // 'vendor/font-awesome/css/font-awesome.min.css',  // Removed until font is embedded
-        'highlightjs' => 'vendor/highlightjs/styles/github.css'
-    );
-
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
