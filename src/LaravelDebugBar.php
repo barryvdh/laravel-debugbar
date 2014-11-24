@@ -72,6 +72,7 @@ class LaravelDebugbar extends DebugBar
             $app = app();   //Fallback when $app is not given
         }
         $this->app = $app;
+        $this->version = $app::VERSION;
     }
 
     /**
@@ -756,6 +757,6 @@ class LaravelDebugbar extends DebugBar
      */
     protected function checkVersion($version, $operator = ">=")
     {
-    	return version_compare($this->app->version(), $version, $operator);
+    	return version_compare($this->version, $version, $operator);
     }
 }
