@@ -74,9 +74,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     protected function shouldUseMiddleware()
     {
-        $app = $this->app;
-        list($version) = explode('-', $app::VERSION);
-        return !$app->runningInConsole() && version_compare($version, '4.1', '>=') && version_compare($version, '5.0', '<');
+        $version = $this->app->version();
+        return !$this->app->runningInConsole() && version_compare($version, '4.1-dev', '>=') && version_compare($version, '5.0-dev', '<');
     }
 
     /**

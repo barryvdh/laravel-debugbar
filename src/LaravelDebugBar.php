@@ -72,11 +72,6 @@ class LaravelDebugbar extends DebugBar
             $app = app();   //Fallback when $app is not given
         }
         $this->app = $app;
-        
-        //Normalize Laravel version
-        $version = $app::VERSION;
-        list($version) = explode('-', $version);
-        $this->version = $version;
     }
 
     /**
@@ -133,7 +128,7 @@ class LaravelDebugbar extends DebugBar
             );
 
             //Check if App::before is already called.. 
-            if ($this->checkVersion('4.1') && $this->app->isBooted()) {
+            if ($this->checkVersion('4.1-dev', '>=') && $this->app->isBooted()) {
                 $debugbar->startMeasure('application', 'Application');
             } else {
                 $this->app['router']->before(
@@ -160,7 +155,7 @@ class LaravelDebugbar extends DebugBar
                     $this->app['config']->get('laravel-debugbar::config.options.exceptions.chain', true)
                 );
                 $this->addCollector($exceptionCollector);
-                if ($this->checkVersion('5.0', '<')) {
+                if ($this->checkVersion('5.0-dev', '<')) {
 	                $this->app->error(
 	                    function (Exception $exception) use ($exceptionCollector) {
 	                        $exceptionCollector->addException($exception);
@@ -216,7 +211,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('route')) {
             try {
-                if ($this->checkVersion('4.1')) {
+                if ($this->checkVersion('4.1', '>=')) {
                     $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
                 } else {
                     $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
@@ -761,6 +756,6 @@ class LaravelDebugbar extends DebugBar
      */
     protected function checkVersion($version, $operator = ">=")
     {
-    	return version_compare($this->version, $version, $operator);
+    	return version_compare($this->app->version(), $version, $operator);
     }
 }
