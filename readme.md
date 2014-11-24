@@ -46,6 +46,7 @@ composer require barryvdh/laravel-debugbar
 ```
 
 After updating composer, add the ServiceProvider to the providers array in app/config/app.php
+> Note for Laravel 5: If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
 ```
 'Barryvdh\Debugbar\ServiceProvider',
