@@ -21,6 +21,7 @@ use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBar;
+use DebugBar\Storage\RedisStorage;
 use Exception;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class LaravelDebugbar extends DebugBar
      * @var \Illuminate\Foundation\Application
      */
     protected $app;
-    
+
     /**
      * Normalized Laravel Version
      *
@@ -104,11 +105,7 @@ class LaravelDebugbar extends DebugBar
         /** @var \Illuminate\Foundation\Application $app */
         $app = $this->app;
 
-        if ($this->app['config']->get('laravel-debugbar::config.storage.enabled')) {
-            $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
-            $storage = new FilesystemStorage($this->app['files'], $path);
-            $debugbar->setStorage($storage);
-        }
+        $this->selectStorage($debugbar);
 
         if ($this->shouldCollect('phpinfo', true)) {
             $this->addCollector(new PhpInfoCollector());
@@ -128,7 +125,7 @@ class LaravelDebugbar extends DebugBar
                 }
             );
 
-            //Check if App::before is already called.. 
+            //Check if App::before is already called..
             if ($this->checkVersion('4.1-dev', '>=') && $this->app->isBooted()) {
                 $debugbar->startMeasure('application', 'Application');
             } else {
@@ -157,11 +154,11 @@ class LaravelDebugbar extends DebugBar
                 );
                 $this->addCollector($exceptionCollector);
                 if ($this->checkVersion('5.0-dev', '<')) {
-	                $this->app->error(
-	                    function (Exception $exception) use ($exceptionCollector) {
-	                        $exceptionCollector->addException($exception);
-	                    }
-	                );
+                    $this->app->error(
+                        function (Exception $exception) use ($exceptionCollector) {
+                            $exceptionCollector->addException($exception);
+                        }
+                    );
                 }
             } catch (\Exception $e) {
             }
@@ -284,7 +281,7 @@ class LaravelDebugbar extends DebugBar
             if ($this->app['config']->get('laravel-debugbar::config.options.db.backtrace')) {
                 $queryCollector->setFindSource(true);
             }
-            
+
             if ($this->app['config']->get('laravel-debugbar::config.options.db.explain.enabled')) {
                 $types = $this->app['config']->get('laravel-debugbar::config.options.db.explain.types');
                 $queryCollector->setExplainSource(true, $types);
@@ -520,7 +517,7 @@ class LaravelDebugbar extends DebugBar
             }
         } elseif (
             ($response->headers->has('Content-Type') and
-            strpos($response->headers->get('Content-Type'), 'html') === false)
+                strpos($response->headers->get('Content-Type'), 'html') === false)
             || 'html' !== $request->format()
         ) {
             try {
@@ -747,7 +744,7 @@ class LaravelDebugbar extends DebugBar
             $collector->addMessage($message, $label);
         }
     }
-    
+
     /**
      * Check the version of Laravel
      *
@@ -757,6 +754,32 @@ class LaravelDebugbar extends DebugBar
      */
     protected function checkVersion($version, $operator = ">=")
     {
-    	return version_compare($this->version, $version, $operator);
+        return version_compare($this->version, $version, $operator);
+    }
+
+    /**
+     * @param $debugbar
+     */
+    protected function selectStorage($debugbar)
+    {
+        if ($this->app['config']->get('laravel-debugbar::config.storage.enabled')) {
+            if ($this->app['config']->get('laravel-debugbar::config.storage.driver')) {
+                $driver = $this->app['config']->get('laravel-debugbar::config.storage.driver');
+
+                switch ($driver) {
+                    case 'redis':
+                        $storage = new RedisStorage($this->app['redis']->connection());
+                        break;
+
+                    case 'file':
+                    default:
+                        $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
+                        $storage = new FilesystemStorage($this->app['files'], $path);
+                        break;
+                }
+            }
+
+            $debugbar->setStorage($storage);
+        }
     }
 }
