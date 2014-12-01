@@ -770,7 +770,7 @@ class LaravelDebugbar extends DebugBar
             switch ($driver) {
                 case 'pdo':
                     $connection = $config->get('laravel-debugbar::config.storage.connection');
-                    $table = \DB::getTablePrefix() . 'phpdebugbar';
+                    $table = $this->app['db']->getTablePrefix() . 'phpdebugbar';
                     $pdo = $this->app['db']->connection($connection)->getPdo();
                     $storage = new PdoStorage($pdo, $table);
                     break;
