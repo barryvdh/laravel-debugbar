@@ -13,8 +13,7 @@ class CreatePhpdebugbarStorageTable extends Migration
     public function up()
     {
         Schema::create('phpdebugbar', function (Blueprint $table) {
-                $table->increments('id');
-
+                $table->string('id');
                 $table->text('data');
                 $table->string('meta_utime');
                 $table->dateTime('meta_datetime');
@@ -22,6 +21,7 @@ class CreatePhpdebugbarStorageTable extends Migration
                 $table->string('meta_ip');
                 $table->string('meta_method');
 
+                $table->primary('id');
                 $table->index('meta_utime');
                 $table->index('meta_datetime');
                 $table->index('meta_uri');
