@@ -27,9 +27,9 @@ return array(
      */
     'storage' => array(
         'enabled' => true,
-        'driver' => 'file', // redis, file
+        'driver' => 'file', // redis, file, pdo
         'path' => storage_path() . '/debugbar', // For file driver
-        'connection' => null,   // Leave null for default connection (Redis)
+        'connection' => null,   // Leave null for default connection (Redis/PDO)
     ),
 
     /*

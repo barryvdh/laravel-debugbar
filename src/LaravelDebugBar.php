@@ -21,6 +21,7 @@ use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBar;
+use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
 
@@ -764,20 +765,24 @@ class LaravelDebugbar extends DebugBar
     {
         $config = $this->app['config'];
         if ($config->get('laravel-debugbar::config.storage.enabled')) {
-            if ($config->get('laravel-debugbar::config.storage.driver')) {
-                $driver = $config->get('laravel-debugbar::config.storage.driver');
+            $driver = $config->get('laravel-debugbar::config.storage.driver', 'file');
 
-                switch ($driver) {
-                    case 'redis':
-                        $connection = $config->get('laravel-debugbar::config.storage.connection');
-                        $storage = new RedisStorage($this->app['redis']->connection($connection));
-                        break;
-                    case 'file':
-                    default:
-                        $path = $config->get('laravel-debugbar::config.storage.path');
-                        $storage = new FilesystemStorage($this->app['files'], $path);
-                        break;
-                }
+            switch ($driver) {
+                case 'pdo':
+                    $connection = $config->get('laravel-debugbar::config.storage.connection');
+                    $table = \DB::getTablePrefix() . 'phpdebugbar';
+                    $pdo = $this->app['db']->connection($connection)->getPdo();
+                    $storage = new PdoStorage($pdo, $table);
+                    break;
+                case 'redis':
+                    $connection = $config->get('laravel-debugbar::config.storage.connection');
+                    $storage = new RedisStorage($this->app['redis']->connection($connection));
+                    break;
+                case 'file':
+                default:
+                    $path = $config->get('laravel-debugbar::config.storage.path');
+                    $storage = new FilesystemStorage($this->app['files'], $path);
+                    break;
             }
 
             $debugbar->setStorage($storage);
