@@ -758,22 +758,23 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * @param $debugbar
+     * @param DebugBar $debugbar
      */
-    protected function selectStorage($debugbar)
+    protected function selectStorage(DebugBar $debugbar)
     {
-        if ($this->app['config']->get('laravel-debugbar::config.storage.enabled')) {
-            if ($this->app['config']->get('laravel-debugbar::config.storage.driver')) {
-                $driver = $this->app['config']->get('laravel-debugbar::config.storage.driver');
+        $config = $this->app['config'];
+        if ($config->get('laravel-debugbar::config.storage.enabled')) {
+            if ($config->get('laravel-debugbar::config.storage.driver')) {
+                $driver = $config->get('laravel-debugbar::config.storage.driver');
 
                 switch ($driver) {
                     case 'redis':
-                        $storage = new RedisStorage($this->app['redis']->connection());
+                        $connection = $config->get('laravel-debugbar::config.storage.connection');
+                        $storage = new RedisStorage($this->app['redis']->connection($connection));
                         break;
-
                     case 'file':
                     default:
-                        $path = $this->app['config']->get('laravel-debugbar::config.storage.path');
+                        $path = $config->get('laravel-debugbar::config.storage.path');
                         $storage = new FilesystemStorage($this->app['files'], $path);
                         break;
                 }

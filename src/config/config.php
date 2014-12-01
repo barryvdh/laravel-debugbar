@@ -26,9 +26,10 @@ return array(
      |
      */
     'storage' => array(
-        'driver' => 'file', // redis, file
         'enabled' => true,
-        'path' => storage_path() . '/debugbar',
+        'driver' => 'file', // redis, file
+        'path' => storage_path() . '/debugbar', // For file driver
+        'connection' => null,   // Leave null for default connection (Redis)
     ),
 
     /*
