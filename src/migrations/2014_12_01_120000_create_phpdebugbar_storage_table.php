@@ -14,7 +14,7 @@ class CreatePhpdebugbarStorageTable extends Migration
     {
         Schema::create('phpdebugbar', function (Blueprint $table) {
                 $table->string('id');
-                $table->text('data');
+                $table->longText('data');
                 $table->string('meta_utime');
                 $table->dateTime('meta_datetime');
                 $table->string('meta_uri');
