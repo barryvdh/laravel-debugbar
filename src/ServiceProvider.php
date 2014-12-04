@@ -20,7 +20,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $app['config']->package('barryvdh/laravel-debugbar', __DIR__ . '/config');
 
         if ($app->runningInConsole()) {
-            if ($this->app['config']->get('laravel-debugbar::config.capture_console')) {
+            if ($this->app['config']->get('laravel-debugbar::config.capture_console') && method_exists($app, 'shutdown')) {
                 $app->shutdown(
                     function ($app) {
                         /** @var LaravelDebugbar $debugbar */
