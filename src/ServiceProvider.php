@@ -21,13 +21,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if ($app->runningInConsole()) {
             if ($this->app['config']->get('laravel-debugbar::config.capture_console')) {
-                $app->shutdown(
-                    function ($app) {
-                        /** @var LaravelDebugbar $debugbar */
-                        $debugbar = $app['debugbar'];
-                        $debugbar->collectConsole();
-                    }
-                );
+                /** @var LaravelDebugbar $debugbar */
+                $debugbar = $app['debugbar'];
+                $debugbar->collectConsole();
             } else {
                 $this->app['config']->set('laravel-debugbar::config.enabled', false);
             }
