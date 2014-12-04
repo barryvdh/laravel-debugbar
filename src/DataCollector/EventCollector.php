@@ -27,7 +27,7 @@ class EventCollector extends TimeDataCollector
     public function subscribe(Dispatcher $events)
     {
         $this->events = $events;
-        $events->listen('*', [$this, 'onWildcardEvent']);
+        $events->listen('*', array($this, 'onWildcardEvent'));
     }
 
     protected function getCurrentEvent($args)
