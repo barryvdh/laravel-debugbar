@@ -1,5 +1,28 @@
 # Changelog for Laravel Debugbar
 
+## 1.8.4 (2014-10-31)
+
+- Add Redis/PDO storage options
+
+## 1.8.3 (2014-11-23)
+
+- Base EventCollector on TimeData Collector
+
+## 1.8.2 (2014-11-18)
+
+- Use XHR handler instead of jQuery handler
+
+## 1.8.1 (2014-11-14)
+
+- Fix compatability with Symfony 2.3 (Laravel 4.)
+
+## 1.8.0 (2014-10-31)
+
+- Fix L5 compatability
+- add hints + explain options to QueryLogger
+- update to Debugbar 1.10.x
+- new ViewCollector layout with more information
+
 ## 1.7.7 (2014-09-15)
 
 - Make it compatible with Laravel 5.0-dev
