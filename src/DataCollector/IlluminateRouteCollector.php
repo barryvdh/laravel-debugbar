@@ -33,7 +33,7 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        $route = \Route::current();
+        $route = $this->router->current();
         return $this->getRouteInformation($route);
     }
 
@@ -49,15 +49,31 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
             return array();
         }
         $uri = head($route->methods()) . ' ' . $route->uri();
-
-        return array(
-            'host' => $route->domain() ?: '-',
-            'uri' => $uri ?: '-',
-            'name' => $route->getName() ?: '-',
-            'action' => $route->getActionName() ?: '-',
-            'before' => $this->getBeforeFilters($route) ?: '-',
-            'after' => $this->getAfterFilters($route) ?: '-'
+		$action = $route->getAction();
+		
+        $result = array(
+    	   'uri' => $uri ?: '-',
         );
+        
+        $result = array_merge($result, $action);
+		
+		if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
+			list($controller) = explode('@', $action['controller']);
+			if(class_exists($controller)) {
+			    $reflector = new \ReflectionClass($controller);
+			    $result['file'] =  $reflector->getFileName();
+			}
+		}
+		
+		if ($before = $this->getBeforeFilters($route)) {
+		    $result['before'] = $before;
+		}
+		
+		if ($after = $this->getAfterFilters($route)) {
+		    $result['after'] = $after;
+		}
+		
+        return $result;
     }
 
     /**
