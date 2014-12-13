@@ -73,13 +73,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         }
     }
 
-    protected function shouldUseMiddleware()
-    {
-        $app = $this->app;
-        $version = $app::VERSION;
-        return !$app->runningInConsole() && version_compare($version, '4.1-dev', '>=') && version_compare($version, '5.0-dev', '<');
-    }
-
     /**
      * Register the service provider.
      *
@@ -138,6 +131,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $config = $this->app['files']->getRequire(__DIR__ .'/config/config.php');
             $this->app['config']->set('laravel-debugbar::config', $config);
         }
+    }
+    
+    /**
+     * Detect if the Middelware should be used.
+     * 
+     * @return bool
+     */
+    protected function shouldUseMiddleware()
+    {
+        $app = $this->app;
+        $version = $app::VERSION;
+        return !$app->runningInConsole() && version_compare($version, '4.1-dev', '>=') && version_compare($version, '5.0-dev', '<');
     }
 
     /**
