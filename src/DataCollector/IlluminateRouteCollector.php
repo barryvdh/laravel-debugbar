@@ -50,20 +50,29 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
         }
         $uri = head($route->methods()) . ' ' . $route->uri();
 		$action = $route->getAction();
-		
+
         $result = array(
     	   'uri' => $uri ?: '-',
         );
         
         $result = array_merge($result, $action);
-		
-		if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
+
+
+        if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
 			list($controller) = explode('@', $action['controller']);
 			if(class_exists($controller)) {
 			    $reflector = new \ReflectionClass($controller);
-			    $result['file'] =  $reflector->getFileName();
 			}
-		}
+            unset($result['uses']);
+		} elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
+            $reflector = new \ReflectionFunction($action['uses']);
+            $result['uses'] = 'Closure';
+        }
+
+        if (isset($reflector)) {
+            $filename = str_replace(base_path(), '', $reflector->getFileName());
+            $result['file'] = $filename . ':' . $reflector->getStartLine();
+        }
 		
 		if ($before = $this->getBeforeFilters($route)) {
 		    $result['before'] = $before;
