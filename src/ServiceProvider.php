@@ -84,7 +84,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'DebugBar\DataFormatter\DataFormatter',
             'DebugBar\DataFormatter\DataFormatterInterface'
         );
-        
+
         $this->app['debugbar'] = $this->app->share(
             function ($app) {
                 $debugbar = new LaravelDebugBar($app);
@@ -97,27 +97,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->app['command.debugbar.publish'] = $this->app->share(
-            function ($app) {
-                //Make sure the asset publisher is registered.
-                $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
-                return new Console\PublishCommand($app['asset.publisher']);
-            }
-        );
-
         $this->app['command.debugbar.clear'] = $this->app->share(
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
             }
         );
 
-        $this->commands(array('command.debugbar.publish', 'command.debugbar.clear'));
+        $this->commands(array('command.debugbar.clear'));
 
         if ($this->shouldUseMiddleware()) {
             $this->app->middleware('Barryvdh\Debugbar\Middleware\Stack', array($this->app));
         }
     }
-    
+
     /**
      * Register configuration files, with L5 fallback
      */
@@ -132,10 +124,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->app['config']->set('laravel-debugbar::config', $config);
         }
     }
-    
+
     /**
      * Detect if the Middelware should be used.
-     * 
+     *
      * @return bool
      */
     protected function shouldUseMiddleware()
@@ -152,6 +144,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function provides()
     {
-        return array('debugbar', 'command.debugbar.publish', 'command.debugbar.clear');
+        return array('debugbar', 'command.debugbar.clear');
     }
 }
