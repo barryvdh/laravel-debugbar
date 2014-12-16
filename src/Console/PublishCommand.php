@@ -26,25 +26,6 @@ class PublishCommand extends Command
     protected $description = 'Publish the Debugbar assets';
 
     /**
-     * The asset publisher instance.
-     *
-     * @var \Illuminate\Foundation\AssetPublisher
-     */
-    protected $assetPublisher;
-
-    /**
-     * Create a new Publish command
-     *
-     * @param \Illuminate\Foundation\AssetPublisher $assetPublisher
-     */
-    public function __construct($assetPublisher)
-    {
-        parent::__construct();
-
-        $this->assetPublisher = $assetPublisher;
-    }
-
-    /**
      * Execute the console command.
      *
      * @return void

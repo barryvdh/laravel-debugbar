@@ -99,9 +99,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app['command.debugbar.publish'] = $this->app->share(
             function ($app) {
-                //Make sure the asset publisher is registered.
-                $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
-                return new Console\PublishCommand($app['asset.publisher']);
+                return new Console\PublishCommand();
             }
         );
 
