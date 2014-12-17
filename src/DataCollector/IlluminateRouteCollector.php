@@ -59,9 +59,9 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
 
 
         if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
-			list($controller) = explode('@', $action['controller']);
+			list($controller, $method) = explode('@', $action['controller']);
 			if(class_exists($controller)) {
-			    $reflector = new \ReflectionClass($controller);
+			    $reflector = new \ReflectionMethod($controller, $method);
 			}
             unset($result['uses']);
 		} elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
