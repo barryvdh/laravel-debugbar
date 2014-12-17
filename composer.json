@@ -14,7 +14,7 @@
         "php": ">=5.3.0",
         "laravel/framework": "4.*|5.0.*",
         "symfony/finder": "~2.3",
-        "maximebf/debugbar": "~1.10.1"
+        "maximebf/debugbar": "~1.10.2"
     },
     "autoload": {
         "psr-4": {
