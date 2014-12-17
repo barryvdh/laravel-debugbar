@@ -66,12 +66,12 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
             unset($result['uses']);
 		} elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
             $reflector = new \ReflectionFunction($action['uses']);
-            $result['uses'] = 'Closure';
+            $result['uses'] = $this->formatVar($result['uses']);
         }
 
         if (isset($reflector)) {
             $filename = str_replace(base_path(), '', $reflector->getFileName());
-            $result['file'] = $filename . ':' . $reflector->getStartLine();
+            $result['file'] = $filename . ':' . $reflector->getStartLine() . '-' . $reflector->getEndLine();
         }
 		
 		if ($before = $this->getBeforeFilters($route)) {
