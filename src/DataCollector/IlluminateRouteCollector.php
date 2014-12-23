@@ -70,7 +70,7 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
         }
 
         if (isset($reflector)) {
-            $filename = str_replace(base_path(), '', $reflector->getFileName());
+            $filename = ltrim(str_replace(base_path(), '', $reflector->getFileName()), '/');
             $result['file'] = $filename . ':' . $reflector->getStartLine() . '-' . $reflector->getEndLine();
         }
 		
