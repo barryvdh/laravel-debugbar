@@ -69,9 +69,6 @@ class ViewCollector extends TwigCollector
         } else {
             $data = array();
             foreach ($view->getData() as $key => $value) {
-                if (is_object($value) && method_exists($value, 'toArray')) {
-                    $value = $value->toArray();
-                }
                 $data[$key] = $this->exporter->exportValue($value);
             }
             $params = $data;
