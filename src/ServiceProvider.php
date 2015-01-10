@@ -66,7 +66,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        $this->app['config']->set('debugbar', require __DIR__ .'/../config/config.php'));
+        $this->app['config']->set('debugbar', require __DIR__ .'/../config/config.php');
         
         $this->app->alias(
             'DebugBar\DataFormatter\DataFormatter',
