@@ -3,7 +3,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
-use Barryvdh\Debugbar\DataCollector\Util\ValueExporter;
+use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 class EventCollector extends TimeDataCollector
 {
