@@ -2,13 +2,13 @@
 
 use DebugBar\OpenHandler;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 
-class OpenHandlerController extends Controller
+class OpenHandlerController extends BaseController
 {
+   
     public function handle()
     {
-        $debugbar = $this->app['debugbar'];
+        $debugbar = $this->debugbar;
 
         if (!$debugbar->isEnabled()) {
             $this->app->abort('500', 'Debugbar is not enabled');

@@ -84,6 +84,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 return $debugbar;
             }
         );
+        
+        $this->app->alias('debugbar', 'Barryvdh\Debugbar\LaravelDebugbar');
 
         $this->app['command.debugbar.clear'] = $this->app->share(
             function ($app) {
