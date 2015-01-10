@@ -3,7 +3,7 @@
 [![Latest Stable Version](https://poser.pugx.org/barryvdh/laravel-debugbar/version.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Total Downloads](https://poser.pugx.org/barryvdh/laravel-debugbar/d/total.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 
-This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel.
+This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel 5.
 It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
 It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
@@ -58,9 +58,7 @@ If you want to use the facade to log messages, add this to your facades in app.p
 'Debugbar' => 'Barryvdh\Debugbar\Facade',
 ```
 
-~~You need to publish the assets from this package.~~ Since 1.7, you don't need to publish the assets anymore.
-
-The profiler is enabled by default, if you have app.debug=true. You can override that in the config files.
+The profiler is enabled by default, if you have app.debug=true. You can override that in the config (`debugbar.enabled`). See more options in `config/config.php`
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
 You can also only display the js of css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
 

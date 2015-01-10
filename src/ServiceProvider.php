@@ -18,21 +18,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $app = $this->app;
 
-        $this->registerConfiguration();
-
-        if ($app->runningInConsole()) {
-            if ($this->app['config']->get('laravel-debugbar::config.capture_console') && method_exists($app, 'shutdown')) {
-                $app->shutdown(
-                    function ($app) {
-                        /** @var LaravelDebugbar $debugbar */
-                        $debugbar = $app['debugbar'];
-                        $debugbar->collectConsole();
-                    }
-                );
-            } else {
-                $this->app['config']->set('laravel-debugbar::config.enabled', false);
-            }
-        } elseif (!$this->shouldUseMiddleware()) {
+        if (!$app->runningInConsole()) {
             $app['router']->after(
                 function ($request, $response) use ($app) {
                     /** @var LaravelDebugbar $debugbar */
@@ -66,7 +52,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             )
         );
 
-        if ($this->app['config']->get('laravel-debugbar::config.enabled')) {
+        if ($this->app['config']->get('debugbar.enabled')) {
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
@@ -80,6 +66,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
+        $this->app['config']->set('debugbar', require __DIR__ .'/../config/config.php'));
+        
         $this->app->alias(
             'DebugBar\DataFormatter\DataFormatter',
             'DebugBar\DataFormatter\DataFormatterInterface'
@@ -97,12 +85,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->app['command.debugbar.publish'] = $this->app->share(
-            function ($app) {
-                return new Console\PublishCommand();
-            }
-        );
-
         $this->app['command.debugbar.clear'] = $this->app->share(
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
@@ -110,37 +92,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->commands(array('command.debugbar.publish', 'command.debugbar.clear'));
-
-        if ($this->shouldUseMiddleware()) {
-            $this->app->middleware('Barryvdh\Debugbar\Middleware\Stack', array($this->app));
-        }
-    }
-    
-    /**
-     * Register configuration files, with L5 fallback
-     */
-    protected function registerConfiguration()
-    {
-        // Is it possible to register the config?
-        if (method_exists($this->app['config'], 'package')) {
-            $this->app['config']->package('barryvdh/laravel-debugbar', __DIR__ . '/config');
-        } else {
-            // Load the config for now..
-            $config = $this->app['files']->getRequire(__DIR__ .'/config/config.php');
-            $this->app['config']->set('laravel-debugbar::config', $config);
-        }
-    }
-    
-    /**
-     * Detect if the Middelware should be used.
-     * 
-     * @return bool
-     */
-    protected function shouldUseMiddleware()
-    {
-        $app = $this->app;
-        $version = $app::VERSION;
-        return !$app->runningInConsole() && version_compare($version, '4.1-dev', '>=') && version_compare($version, '5.0-dev', '<');
     }
 
     /**
@@ -150,6 +101,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function provides()
     {
-        return array('debugbar', 'command.debugbar.publish', 'command.debugbar.clear');
+        return array('debugbar', 'command.debugbar.clear');
     }
 }

@@ -82,7 +82,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function enable()
     {
-        $this->app['config']->set('laravel-debugbar::config.enabled', true);
+        $this->app['config']->set('debugbar.enabled', true);
         if (!$this->booted) {
             $this->boot();
         }
@@ -127,7 +127,7 @@ class LaravelDebugbar extends DebugBar
             );
 
             //Check if App::before is already called..
-            if ($this->checkVersion('4.1-dev', '>=') && $this->app->isBooted()) {
+            if ($this->app->isBooted()) {
                 $debugbar->startMeasure('application', 'Application');
             } else {
                 $this->app['router']->before(
@@ -151,16 +151,9 @@ class LaravelDebugbar extends DebugBar
             try {
                 $exceptionCollector = new ExceptionsCollector();
                 $exceptionCollector->setChainExceptions(
-                    $this->app['config']->get('laravel-debugbar::config.options.exceptions.chain', true)
+                    $this->app['config']->get('debugbar.options.exceptions.chain', true)
                 );
                 $this->addCollector($exceptionCollector);
-                if ($this->checkVersion('5.0-dev', '<')) {
-                    $this->app->error(
-                        function (Exception $exception) use ($exceptionCollector) {
-                            $exceptionCollector->addException($exception);
-                        }
-                    );
-                }
             } catch (\Exception $e) {
             }
         }
@@ -191,7 +184,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('views', true) and isset($this->app['events'])) {
             try {
-                $collectData = $this->app['config']->get('laravel-debugbar::config.options.views.data', true);
+                $collectData = $this->app['config']->get('debugbar.options.views.data', true);
                 $this->addCollector(new ViewCollector($collectData));
                 $this->app['events']->listen(
                     'composing:*',
@@ -210,11 +203,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('route')) {
             try {
-                if ($this->checkVersion('4.1', '>=')) {
-                    $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
-                } else {
-                    $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\SymfonyRouteCollector'));
-                }
+                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
@@ -265,7 +254,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('db', true) and isset($this->app['db'])) {
             $db = $this->app['db'];
             if ($debugbar->hasCollector('time') && $this->app['config']->get(
-                    'laravel-debugbar::config.options.db.timeline',
+                    'debugbar.options.db.timeline',
                     false
                 )
             ) {
@@ -275,20 +264,20 @@ class LaravelDebugbar extends DebugBar
             }
             $queryCollector = new QueryCollector($timeCollector);
 
-            if ($this->app['config']->get('laravel-debugbar::config.options.db.with_params')) {
+            if ($this->app['config']->get('debugbar.options.db.with_params')) {
                 $queryCollector->setRenderSqlWithParams(true);
             }
 
-            if ($this->app['config']->get('laravel-debugbar::config.options.db.backtrace')) {
+            if ($this->app['config']->get('debugbar.options.db.backtrace')) {
                 $queryCollector->setFindSource(true);
             }
 
-            if ($this->app['config']->get('laravel-debugbar::config.options.db.explain.enabled')) {
-                $types = $this->app['config']->get('laravel-debugbar::config.options.db.explain.types');
+            if ($this->app['config']->get('debugbar.options.db.explain.enabled')) {
+                $types = $this->app['config']->get('debugbar.options.db.explain.types');
                 $queryCollector->setExplainSource(true, $types);
             }
 
-            if ($this->app['config']->get('laravel-debugbar::config.options.db.hints', true)) {
+            if ($this->app['config']->get('debugbar.options.db.hints', true)) {
                 $queryCollector->setShowHints(true);
             }
 
@@ -316,7 +305,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $mailer = $this->app['mailer']->getSwiftMailer();
                 $this->addCollector(new SwiftMailCollector($mailer));
-                if ($this->app['config']->get('laravel-debugbar::config.options.mail.full_log') and $this->hasCollector(
+                if ($this->app['config']->get('debugbar.options.mail.full_log') and $this->hasCollector(
                         'messages'
                     )
                 ) {
@@ -333,7 +322,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('logs', false)) {
             try {
-                $file = $this->app['config']->get('laravel-debugbar::config.options.logs.file');
+                $file = $this->app['config']->get('debugbar.options.logs.file');
                 $this->addCollector(new LogsCollector($file));
             } catch (\Exception $e) {
                 $this->addException(
@@ -351,7 +340,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $authCollector = new AuthCollector($app['auth']);
                 $authCollector->setShowName(
-                    $this->app['config']->get('laravel-debugbar::config.options.auth.show_name')
+                    $this->app['config']->get('debugbar.options.auth.show_name')
                 );
                 $this->addCollector($authCollector);
             } catch (\Exception $e) {
@@ -364,15 +353,15 @@ class LaravelDebugbar extends DebugBar
         }
 
         $renderer = $this->getJavascriptRenderer();
-        $renderer->setIncludeVendors($this->app['config']->get('laravel-debugbar::config.include_vendors', true));
-        $renderer->setBindAjaxHandlerToXHR($app['config']->get('laravel-debugbar::config.capture_ajax', true));
+        $renderer->setIncludeVendors($this->app['config']->get('debugbar.include_vendors', true));
+        $renderer->setBindAjaxHandlerToXHR($app['config']->get('debugbar.capture_ajax', true));
 
         $this->booted = true;
     }
 
     public function shouldCollect($name, $default = false)
     {
-        return $this->app['config']->get('laravel-debugbar::config.collectors.' . $name, $default);
+        return $this->app['config']->get('debugbar.collectors.' . $name, $default);
     }
 
     /**
@@ -509,7 +498,7 @@ class LaravelDebugbar extends DebugBar
             }
         } elseif (
             ($request->isXmlHttpRequest() || $request->wantsJson()) and
-            $app['config']->get('laravel-debugbar::config.capture_ajax', true)
+            $app['config']->get('debugbar.capture_ajax', true)
         ) {
             try {
                 $this->sendDataInHeaders(true);
@@ -527,7 +516,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
-        } elseif ($app['config']->get('laravel-debugbar::config.inject', true)) {
+        } elseif ($app['config']->get('debugbar.inject', true)) {
             try {
                 $this->injectDebugbar($response);
             } catch (\Exception $e) {
@@ -547,7 +536,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function isEnabled()
     {
-        return value($this->app['config']->get('laravel-debugbar::config.enabled'));
+        return value($this->app['config']->get('debugbar.enabled'));
     }
 
     /**
@@ -635,7 +624,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function disable()
     {
-        $this->app['config']->set('laravel-debugbar::config.enabled', false);
+        $this->app['config']->set('debugbar.enabled', false);
     }
 
     /**
@@ -764,23 +753,23 @@ class LaravelDebugbar extends DebugBar
     protected function selectStorage(DebugBar $debugbar)
     {
         $config = $this->app['config'];
-        if ($config->get('laravel-debugbar::config.storage.enabled')) {
-            $driver = $config->get('laravel-debugbar::config.storage.driver', 'file');
+        if ($config->get('debugbar.storage.enabled')) {
+            $driver = $config->get('debugbar.storage.driver', 'file');
 
             switch ($driver) {
                 case 'pdo':
-                    $connection = $config->get('laravel-debugbar::config.storage.connection');
+                    $connection = $config->get('debugbar.storage.connection');
                     $table = $this->app['db']->getTablePrefix() . 'phpdebugbar';
                     $pdo = $this->app['db']->connection($connection)->getPdo();
                     $storage = new PdoStorage($pdo, $table);
                     break;
                 case 'redis':
-                    $connection = $config->get('laravel-debugbar::config.storage.connection');
+                    $connection = $config->get('debugbar.storage.connection');
                     $storage = new RedisStorage($this->app['redis']->connection($connection));
                     break;
                 case 'file':
                 default:
-                    $path = $config->get('laravel-debugbar::config.storage.path');
+                    $path = $config->get('debugbar.storage.path');
                     $storage = new FilesystemStorage($this->app['files'], $path);
                     break;
             }

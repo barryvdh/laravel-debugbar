@@ -2,8 +2,9 @@
 
 use DebugBar\OpenHandler;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
 
-class OpenHandlerController extends BaseController
+class OpenHandlerController extends Controller
 {
     public function handle()
     {

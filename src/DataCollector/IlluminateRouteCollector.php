@@ -172,7 +172,7 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
                 "default" => "{}"
             )
         );
-        if (Config::get('laravel-debugbar::config.options.route.label', true)) {
+        if (Config::get('debugbar.options.route.label', true)) {
             $widgets['currentroute'] = array(
                 "icon" => "share",
                 "tooltip" => "Route",
