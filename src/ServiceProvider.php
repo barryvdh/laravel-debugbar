@@ -91,7 +91,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->commands(array('command.debugbar.publish', 'command.debugbar.clear'));
+        $this->commands(array('command.debugbar.clear'));
     }
 
     /**
