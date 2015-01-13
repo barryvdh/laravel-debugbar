@@ -16,6 +16,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
+        include __DIR__.'/../routes.php';
+        $this->package('barryvdh/laravel-debugbar', null, __DIR__);
+
         $app = $this->app;
 
         $this->registerConfiguration();

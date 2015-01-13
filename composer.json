@@ -17,6 +17,9 @@
         "maximebf/debugbar": "~1.10.2"
     },
     "autoload": {
+        "classmap": [
+            "src/controllers"
+        ],
         "psr-4": {
             "Barryvdh\\Debugbar\\": "src/"
         },
