@@ -430,7 +430,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Modify the response and inject the debugbar (or data in headers)
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Symfony\Component\HttpFoundation\Request $request
      * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -490,14 +490,14 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($response->isRedirection() || !($request instanceof \Illuminate\Http\Request)) {
+        if ($response->isRedirection()) {
             try {
                 $this->stackData();
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
-            ($request->isXmlHttpRequest() || $request->wantsJson()) and
+            $this->isJsonRequest($request) and
             $app['config']->get('debugbar.capture_ajax', true)
         ) {
             try {
@@ -508,7 +508,7 @@ class LaravelDebugbar extends DebugBar
         } elseif (
             ($response->headers->has('Content-Type') and
                 strpos($response->headers->get('Content-Type'), 'html') === false)
-            || 'html' !== $request->format()
+            || $request->getRequestFormat() !== 'html'
         ) {
             try {
                 // Just collect + store data, don't inject it.
@@ -547,6 +547,22 @@ class LaravelDebugbar extends DebugBar
     protected function isDebugbarRequest()
     {
         return $this->app['request']->segment(1) == '_debugbar';
+    }
+    
+    /**
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @return bool
+     */
+    protected function isJsonRequest($request)
+    {
+        // If XmlHttpRequest, return true
+        if ($request->isXmlHttpRequest()) {
+            return true;
+        }
+
+        // Check if the request wants Json
+        $acceptable = $request->getAcceptableContentTypes();
+        return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
     }
 
     /**
