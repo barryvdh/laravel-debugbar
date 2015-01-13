@@ -18,7 +18,7 @@
     },
     "autoload": {
         "classmap": [
-            "src/controllers"
+            "src/Controllers"
         ],
         "psr-4": {
             "Barryvdh\\Debugbar\\": "src/"
