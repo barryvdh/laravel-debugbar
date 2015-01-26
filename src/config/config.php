@@ -52,6 +52,20 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
+     | Path prefix for asset routes
+     |--------------------------------------------------------------------------
+     |
+     | In some rare cases (if, for example, your Laravel installation is located in a virtual folder)
+     | you may want to make DebugBar use specific path prefix in routing.
+     | For example, if you put your Laravel project into /laravel virtual (not physical) folder, Laravel
+     | may still omit "/laravel" prefix when building links for you. In this case you can set the prefix manually
+     |
+     */
+
+    'path_prefix' => '',
+
+    /*
+     |--------------------------------------------------------------------------
      | Capture Ajax Requests
      |--------------------------------------------------------------------------
      |

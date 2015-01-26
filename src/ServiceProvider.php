@@ -43,7 +43,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         }
 
         $this->app['router']->get(
-            '_debugbar/open',
+            $this->app['config']->get('laravel-debugbar::config.path_prefix', '') . '_debugbar/open',
             array(
                 'uses' => 'Barryvdh\Debugbar\Controllers\OpenHandlerController@handle',
                 'as' => 'debugbar.openhandler',
@@ -51,7 +51,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app['router']->get(
-            '_debugbar/assets/stylesheets',
+            $this->app['config']->get('laravel-debugbar::config.path_prefix', '') . '_debugbar/assets/stylesheets',
             array(
                 'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@css',
                 'as' => 'debugbar.assets.css',
@@ -59,7 +59,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app['router']->get(
-            '_debugbar/assets/javascript',
+            $this->app['config']->get('laravel-debugbar::config.path_prefix', '') . '_debugbar/assets/javascript',
             array(
                 'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@js',
                 'as' => 'debugbar.assets.js',
