@@ -28,29 +28,26 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             );
         }
 
-        $this->app['router']->get(
-            '_debugbar/open',
-            array(
-                'uses' => 'Barryvdh\Debugbar\Controllers\OpenHandlerController@handle',
+        $routeConfig = [
+            'namespace' => 'Barryvdh\Debugbar\Controllers',
+            'prefix' => '_debugbar',
+        ];
+        $this->app['router']->group($routeConfig, function($router) {
+            $router->get('open', [
+                'uses' => 'OpenHandlerController@handle',
                 'as' => 'debugbar.openhandler',
-            )
-        );
+            ]);
 
-        $this->app['router']->get(
-            '_debugbar/assets/stylesheets',
-            array(
-                'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@css',
+            $router->get('assets/stylesheets', [
+                'uses' => 'AssetController@css',
                 'as' => 'debugbar.assets.css',
-            )
-        );
+            ]);
 
-        $this->app['router']->get(
-            '_debugbar/assets/javascript',
-            array(
-                'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@js',
+            $router->get('assets/javascript', [
+                'uses' => 'AssetController@js',
                 'as' => 'debugbar.assets.js',
-            )
-        );
+            ]);
+        });
 
         if ($this->app['config']->get('debugbar.enabled')) {
             /** @var LaravelDebugbar $debugbar */
