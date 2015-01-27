@@ -67,7 +67,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
-        $this->loadConfigFrom('debugbar', $configPath);
+        $this->mergeConfigFrom('debugbar', $configPath);
         $this->publishes([$configPath => config_path('debugbar.php')]);
         
         $this->app->alias(
@@ -106,19 +106,5 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function provides()
     {
         return array('debugbar', 'command.debugbar.clear');
-    }
-    
-    /**
-     * Register the package defaults.
-     *
-     * @param  string  $key
-     * @param  string  $path
-     * @return void
-     */
-    protected function loadConfigFrom($key, $path)
-    {
-        $defaults = $this->app['files']->getRequire($path);
-        $config = $this->app['config']->get($key, []);
-        $this->app['config']->set($key, config_merge($defaults, $config));
     }
 }
