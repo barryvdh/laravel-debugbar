@@ -444,7 +444,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('config', false)) {
             try {
                 $configCollector = new ConfigCollector();
-                $configCollector->setData($app['config']->getItems());
+                $configCollector->setData($app['config']->all());
                 $this->addCollector($configCollector);
             } catch (\Exception $e) {
                 $this->addException(
