@@ -64,7 +64,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
-        $this->mergeConfigFrom('debugbar', $configPath);
+        $this->mergeConfigFrom($configPath, 'debugbar');
         $this->publishes([$configPath => config_path('debugbar.php')]);
         
         $this->app->alias(
