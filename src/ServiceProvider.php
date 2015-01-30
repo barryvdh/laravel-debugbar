@@ -18,14 +18,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $app = $this->app;
 
-        if (!$app->runningInConsole()) {
-            $app['router']->after(
-                function ($request, $response) use ($app) {
-                    /** @var LaravelDebugbar $debugbar */
-                    $debugbar = $app['debugbar'];
-                    $debugbar->modifyResponse($request, $response);
-                }
-            );
+        if ($app->runningInConsole()) {
+            $this->app['config']->set('debugbar.enabled', false);
+        }
+
+        if (! $this->app['config']->get('debugbar.enabled')) {
+            return;
         }
 
         $routeConfig = [
@@ -49,11 +47,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             ]);
         });
 
-        if ($this->app['config']->get('debugbar.enabled')) {
-            /** @var LaravelDebugbar $debugbar */
-            $debugbar = $this->app['debugbar'];
-            $debugbar->boot();
-        }
+        /** @var LaravelDebugbar $debugbar */
+        $debugbar = $this->app['debugbar'];
+        $debugbar->boot();
+
+        $app['router']->after(
+            function ($request, $response) use ($debugbar) {
+                $debugbar->modifyResponse($request, $response);
+            }
+        );
+
     }
 
     /**
