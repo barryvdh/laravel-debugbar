@@ -714,7 +714,9 @@ class LaravelDebugbar extends DebugBar
     {
         $messageLevels = array('emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log');
         if (in_array($method, $messageLevels)) {
-            $this->addMessage($args[0], $method);
+            foreach($args as $arg) {
+                $this->addMessage($arg, $method);
+            }
         }
     }
 
