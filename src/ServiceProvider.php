@@ -17,6 +17,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $app = $this->app;
+        
+        $configPath = __DIR__ . '/../config/debugbar.php';
+        $this->publishes([$configPath => config_path('debugbar.php')], 'config');
 
         if ($app->runningInConsole()) {
             $this->app['config']->set('debugbar.enabled', false);
@@ -68,7 +71,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
-        $this->publishes([$configPath => config_path('debugbar.php')]);
         
         $this->app->alias(
             'DebugBar\DataFormatter\DataFormatter',
