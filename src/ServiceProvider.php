@@ -18,7 +18,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $app = $this->app;
 
-        $this->registerConfiguration();
+        $app['config']->package('barryvdh/laravel-debugbar', __DIR__ . '/config');
 
         if ($app->runningInConsole()) {
             if ($this->app['config']->get('laravel-debugbar::config.capture_console') && method_exists($app, 'shutdown')) {
@@ -115,22 +115,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->app->middleware('Barryvdh\Debugbar\Middleware\Stack', array($this->app));
         }
     }
-    
-    /**
-     * Register configuration files, with L5 fallback
-     */
-    protected function registerConfiguration()
-    {
-        // Is it possible to register the config?
-        if (method_exists($this->app['config'], 'package')) {
-            $this->app['config']->package('barryvdh/laravel-debugbar', __DIR__ . '/config');
-        } else {
-            // Load the config for now..
-            $config = $this->app['files']->getRequire(__DIR__ .'/config/config.php');
-            $this->app['config']->set('laravel-debugbar::config', $config);
-        }
-    }
-    
+
     /**
      * Detect if the Middelware should be used.
      * 
