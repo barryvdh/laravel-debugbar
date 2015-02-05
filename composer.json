@@ -23,10 +23,5 @@
         "files": [
             "src/helpers.php"
         ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-v1.x": "1.8-dev"
-        }
     }
 }
