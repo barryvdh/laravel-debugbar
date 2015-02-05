@@ -43,7 +43,7 @@ class EventCollector extends TimeDataCollector
     {
         $data = array();
         foreach ($params as $key => $value) {
-            $data[$key] = $this->exporter->exportValue($value);
+            $data[$key] = htmlentities($this->exporter->exportValue($value), ENT_QUOTES, 'UTF-8', false);
         }
         return $data;
     }
