@@ -11,7 +11,7 @@ return array(
      |
      */
 
-    'enabled' => config('app.debug'),
+    'enabled' => config('app.debug') ? 'true' : 'false',
 
     /*
      |--------------------------------------------------------------------------
