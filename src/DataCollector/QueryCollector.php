@@ -117,6 +117,7 @@ class QueryCollector extends PDOCollector
             'time' => $time,
             'source' => $source,
             'explain' => $explainResults,
+            'connection' => $connection->getDatabaseName(),
             'hints' => $this->showHints ? $hints : null,
         );
 
@@ -281,6 +282,7 @@ class QueryCollector extends PDOCollector
                 'duration' => $query['time'],
                 'duration_str' => $this->formatDuration($query['time']),
                 'stmt_id' => $query['source'],
+                'connection' => $query['connection'],
             );
 
             //Add the results from the explain as new rows
