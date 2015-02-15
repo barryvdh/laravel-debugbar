@@ -10,6 +10,44 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected $defer = false;
 
     /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $configPath = __DIR__ . '/../config/debugbar.php';
+        $this->mergeConfigFrom($configPath, 'debugbar');
+        
+        $this->app->alias(
+            'DebugBar\DataFormatter\DataFormatter',
+            'DebugBar\DataFormatter\DataFormatterInterface'
+        );
+        
+        $this->app['debugbar'] = $this->app->share(
+            function ($app) {
+                $debugbar = new LaravelDebugBar($app);
+
+                $sessionManager = $app['session'];
+                $httpDriver = new SymfonyHttpDriver($sessionManager);
+                $debugbar->setHttpDriver($httpDriver);
+
+                return $debugbar;
+            }
+        );
+        
+        $this->app->alias('debugbar', 'Barryvdh\Debugbar\LaravelDebugbar');
+
+        $this->app['command.debugbar.clear'] = $this->app->share(
+            function ($app) {
+                return new Console\ClearCommand($app['debugbar']);
+            }
+        );
+
+        $this->commands(array('command.debugbar.clear'));
+    }
+
+    /**
      * Bootstrap the application events.
      *
      * @return void
@@ -60,44 +98,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $configPath = __DIR__ . '/../config/debugbar.php';
-        $this->mergeConfigFrom($configPath, 'debugbar');
-        
-        $this->app->alias(
-            'DebugBar\DataFormatter\DataFormatter',
-            'DebugBar\DataFormatter\DataFormatterInterface'
-        );
-        
-        $this->app['debugbar'] = $this->app->share(
-            function ($app) {
-                $debugbar = new LaravelDebugBar($app);
-
-                $sessionManager = $app['session'];
-                $httpDriver = new SymfonyHttpDriver($sessionManager);
-                $debugbar->setHttpDriver($httpDriver);
-
-                return $debugbar;
-            }
-        );
-        
-        $this->app->alias('debugbar', 'Barryvdh\Debugbar\LaravelDebugbar');
-
-        $this->app['command.debugbar.clear'] = $this->app->share(
-            function ($app) {
-                return new Console\ClearCommand($app['debugbar']);
-            }
-        );
-
-        $this->commands(array('command.debugbar.clear'));
     }
 
     /**
