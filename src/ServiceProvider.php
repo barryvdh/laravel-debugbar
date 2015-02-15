@@ -25,10 +25,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->app['config']->set('debugbar.enabled', false);
         }
 
-        if (! $this->app['config']->get('debugbar.enabled')) {
-            return;
-        }
-
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
             'prefix' => '_debugbar',
@@ -49,6 +45,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.assets.js',
             ]);
         });
+
+        if (! $this->app['config']->get('debugbar.enabled')) {
+            return;
+        }
 
         /** @var LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
