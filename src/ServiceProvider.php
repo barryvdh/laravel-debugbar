@@ -84,7 +84,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             ]);
         });
 
-        if (! $this->app['config']->get('debugbar.enabled')) {
+        $enabled = $this->app['config']->get('debugbar.enabled');
+
+        // If enabled is null, set from the app.debug value
+        if (is_null($enabled)) {
+            $enabled = $this->app['config']->get('app.debug');
+            $this->app['config']->set('debugbar.enabled', $enabled);
+        }
+
+        if ( ! $enabled) {
             return;
         }
 

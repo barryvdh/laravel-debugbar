@@ -8,10 +8,11 @@ return array(
      |--------------------------------------------------------------------------
      |
      | Debugbar is enabled by default, when debug is set to true in app.php.
+     | You can override the value by setting enable to true or false instead of null.
      |
      */
 
-    'enabled' => config('app.debug'),
+    'enabled' => null,
 
     /*
      |--------------------------------------------------------------------------
