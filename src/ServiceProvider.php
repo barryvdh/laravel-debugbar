@@ -65,8 +65,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
-            'prefix' => '_debugbar',
+            'prefix' => $this->app['config']->get('debugbar.route_prefix'),
         ];
+
         $this->app['router']->group($routeConfig, function($router) {
             $router->get('open', [
                 'uses' => 'OpenHandlerController@handle',
