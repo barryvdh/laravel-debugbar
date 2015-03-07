@@ -26,7 +26,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         
         $this->app['debugbar'] = $this->app->share(
             function ($app) {
-                $debugbar = new LaravelDebugBar($app);
+                $debugbar = new LaravelDebugbar($app);
 
                 $sessionManager = $app['session'];
                 $httpDriver = new SymfonyHttpDriver($sessionManager);
