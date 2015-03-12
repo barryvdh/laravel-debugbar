@@ -24,13 +24,12 @@ use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Debug bar subclass which adds all without Request and with LaravelCollector.
- * Rest is added in Service Provider
+ * Rest is added in Service Provider.
  *
  * @method void emergency($message)
  * @method void alert($message)
@@ -52,7 +51,7 @@ class LaravelDebugbar extends DebugBar
     protected $app;
 
     /**
-     * Normalized Laravel Version
+     * Normalized Laravel Version.
      *
      * @var string
      */
@@ -89,7 +88,7 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Boot the debugbar (add collectors, renderer and listener)
+     * Boot the debugbar (add collectors, renderer and listener).
      */
     public function boot()
     {
@@ -170,11 +169,10 @@ class LaravelDebugbar extends DebugBar
                 $eventCollector = new EventCollector($startTime);
                 $this->addCollector($eventCollector);
                 $this->app['events']->subscribe($eventCollector);
-
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add EventCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        'Cannot add EventCollector to Laravel Debugbar: '.$e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -195,7 +193,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add ViewCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                        'Cannot add ViewCollector to Laravel Debugbar: '.$e->getMessage(), $e->getCode(), $e
                     )
                 );
             }
@@ -207,7 +205,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add RouteCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        'Cannot add RouteCollector to Laravel Debugbar: '.$e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -225,15 +223,15 @@ class LaravelDebugbar extends DebugBar
                             try {
                                 $logMessage = (string) $message;
                                 if (mb_check_encoding($logMessage, 'UTF-8')) {
-                                    $logMessage .= (!empty($context) ? ' ' . json_encode($context) : '');
+                                    $logMessage .= (!empty($context) ? ' '.json_encode($context) : '');
                                 } else {
                                     $logMessage = "[INVALID UTF-8 DATA]";
                                 }
                             } catch (\Exception $e) {
-                                $logMessage = "[Exception: " . $e->getMessage() . "]";
+                                $logMessage = "[Exception: ".$e->getMessage()."]";
                             }
                             $logger->addMessage(
-                                '[' . date('H:i:s') . '] ' . "LOG.$level: " . $logMessage,
+                                '['.date('H:i:s').'] '."LOG.$level: ".$logMessage,
                                 $level,
                                 false
                             );
@@ -245,7 +243,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add LogsCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                        'Cannot add LogsCollector to Laravel Debugbar: '.$e->getMessage(), $e->getCode(), $e
                     )
                 );
             }
@@ -293,7 +291,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add listen to Queries for Laravel Debugbar: ' . $e->getMessage(),
+                        'Cannot add listen to Queries for Laravel Debugbar: '.$e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -314,7 +312,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add MailCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                        'Cannot add MailCollector to Laravel Debugbar: '.$e->getMessage(), $e->getCode(), $e
                     )
                 );
             }
@@ -327,7 +325,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add LogsCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                        'Cannot add LogsCollector to Laravel Debugbar: '.$e->getMessage(), $e->getCode(), $e
                     )
                 );
             }
@@ -346,7 +344,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add AuthCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                        'Cannot add AuthCollector to Laravel Debugbar: '.$e->getMessage(), $e->getCode(), $e
                     )
                 );
             }
@@ -361,13 +359,13 @@ class LaravelDebugbar extends DebugBar
 
     public function shouldCollect($name, $default = false)
     {
-        return $this->app['config']->get('debugbar.collectors.' . $name, $default);
+        return $this->app['config']->get('debugbar.collectors.'.$name, $default);
     }
 
     /**
-     * Starts a measure
+     * Starts a measure.
      *
-     * @param string $name Internal name, used to stop the measure
+     * @param string $name  Internal name, used to stop the measure
      * @param string $label Public name
      */
     public function startMeasure($name, $label = null)
@@ -380,7 +378,7 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Stops a measure
+     * Stops a measure.
      *
      * @param string $name
      */
@@ -398,7 +396,7 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Adds an exception to be profiled in the debug bar
+     * Adds an exception to be profiled in the debug bar.
      *
      * @param Exception $e
      */
@@ -412,10 +410,11 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Returns a JavascriptRenderer for this instance
+     * Returns a JavascriptRenderer for this instance.
      *
      * @param string $baseUrl
      * @param string $basePathng
+     *
      * @return JavascriptRenderer
      */
     public function getJavascriptRenderer($baseUrl = null, $basePath = null)
@@ -424,14 +423,16 @@ class LaravelDebugbar extends DebugBar
             $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);
             $this->jsRenderer->setUrlGenerator($this->app['url']);
         }
+
         return $this->jsRenderer;
     }
 
     /**
-     * Modify the response and inject the debugbar (or data in headers)
+     * Modify the response and inject the debugbar (or data in headers).
      *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  \Symfony\Component\HttpFoundation\Response $response
+     * @param \Symfony\Component\HttpFoundation\Request  $request
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function modifyResponse($request, $response)
@@ -449,7 +450,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add ConfigCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        'Cannot add ConfigCollector to Laravel Debugbar: '.$e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -468,7 +469,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add SessionCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        'Cannot add SessionCollector to Laravel Debugbar: '.$e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -482,7 +483,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
-                        'Cannot add SymfonyRequestCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        'Cannot add SymfonyRequestCollector to Laravel Debugbar: '.$e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -494,7 +495,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->stackData();
             } catch (\Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         } elseif (
             $this->isJsonRequest($request) and
@@ -503,7 +504,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->sendDataInHeaders(true);
             } catch (\Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         } elseif (
             ($response->headers->has('Content-Type') and
@@ -514,13 +515,13 @@ class LaravelDebugbar extends DebugBar
                 // Just collect + store data, don't inject it.
                 $this->collect();
             } catch (\Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         } elseif ($app['config']->get('debugbar.inject', true)) {
             try {
                 $this->injectDebugbar($response);
             } catch (\Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+                $app['log']->error('Debugbar exception: '.$e->getMessage());
             }
         }
 
@@ -531,7 +532,8 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Check if the Debugbar is enabled
+     * Check if the Debugbar is enabled.
+     *
      * @return boolean
      */
     public function isEnabled()
@@ -540,7 +542,7 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Check if this is a request to the Debugbar OpenHandler
+     * Check if this is a request to the Debugbar OpenHandler.
      *
      * @return bool
      */
@@ -548,9 +550,10 @@ class LaravelDebugbar extends DebugBar
     {
         return $this->app['request']->segment(1) == '_debugbar';
     }
-    
+
     /**
-     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return bool
      */
     protected function isJsonRequest($request)
@@ -562,11 +565,12 @@ class LaravelDebugbar extends DebugBar
 
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
+
         return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
     }
 
     /**
-     * Collects the data from the collectors
+     * Collects the data from the collectors.
      *
      * @return array
      */
@@ -575,16 +579,16 @@ class LaravelDebugbar extends DebugBar
         /** @var Request $request */
         $request = $this->app['request'];
 
-        $this->data = array(
-            '__meta' => array(
+        $this->data = [
+            '__meta' => [
                 'id' => $this->getCurrentRequestId(),
                 'datetime' => date('Y-m-d H:i:s'),
                 'utime' => microtime(true),
                 'method' => $request->getMethod(),
                 'uri' => $request->getRequestUri(),
-                'ip' => $request->getClientIp()
-            )
-        );
+                'ip' => $request->getClientIp(),
+            ],
+        ];
 
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
@@ -611,7 +615,7 @@ class LaravelDebugbar extends DebugBar
      * Injects the web debug toolbar into the given Response.
      *
      * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
-     * Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
+     *                                                             Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
      */
     public function injectDebugbar(Response $response)
     {
@@ -623,20 +627,20 @@ class LaravelDebugbar extends DebugBar
             $renderer->setOpenHandlerUrl($openHandlerUrl);
         }
 
-        $renderedContent = $renderer->renderHead() . $renderer->render();
+        $renderedContent = $renderer->renderHead().$renderer->render();
 
         $pos = strripos($content, '</body>');
         if (false !== $pos) {
-            $content = substr($content, 0, $pos) . $renderedContent . substr($content, $pos);
+            $content = substr($content, 0, $pos).$renderedContent.substr($content, $pos);
         } else {
-            $content = $content . $renderedContent;
+            $content = $content.$renderedContent;
         }
 
         $response->setContent($content);
     }
 
     /**
-     * Disable the Debugbar
+     * Disable the Debugbar.
      */
     public function disable()
     {
@@ -644,11 +648,11 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Adds a measure
+     * Adds a measure.
      *
      * @param string $label
-     * @param float $start
-     * @param float $end
+     * @param float  $start
+     * @param float  $end
      */
     public function addMeasure($label, $start, $end)
     {
@@ -660,9 +664,9 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Utility function to measure the execution of a Closure
+     * Utility function to measure the execution of a Closure.
      *
-     * @param string $label
+     * @param string   $label
      * @param \Closure $closure
      */
     public function measure($label, \Closure $closure)
@@ -677,7 +681,7 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Collect data in a CLI request
+     * Collect data in a CLI request.
      *
      * @return array
      */
@@ -687,16 +691,16 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        $this->data = array(
-            '__meta' => array(
+        $this->data = [
+            '__meta' => [
                 'id' => $this->getCurrentRequestId(),
                 'datetime' => date('Y-m-d H:i:s'),
                 'utime' => microtime(true),
                 'method' => 'CLI',
                 'uri' => isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : null,
-                'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null
-            )
-        );
+                'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null,
+            ],
+        ];
 
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
@@ -720,28 +724,29 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Magic calls for adding messages
+     * Magic calls for adding messages.
      *
      * @param string $method
-     * @param array $args
+     * @param array  $args
+     *
      * @return mixed|void
      */
     public function __call($method, $args)
     {
-        $messageLevels = array('emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log');
+        $messageLevels = ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'];
         if (in_array($method, $messageLevels)) {
-            foreach($args as $arg) {
+            foreach ($args as $arg) {
                 $this->addMessage($arg, $method);
             }
         }
     }
 
     /**
-     * Adds a message to the MessagesCollector
+     * Adds a message to the MessagesCollector.
      *
      * A message can be anything from an object to a string
      *
-     * @param mixed $message
+     * @param mixed  $message
      * @param string $label
      */
     public function addMessage($message, $label = 'info')
@@ -754,10 +759,11 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Check the version of Laravel
+     * Check the version of Laravel.
      *
      * @param string $version
      * @param string $operator (default: '>=')
+     *
      * @return boolean
      */
     protected function checkVersion($version, $operator = ">=")
@@ -777,7 +783,7 @@ class LaravelDebugbar extends DebugBar
             switch ($driver) {
                 case 'pdo':
                     $connection = $config->get('debugbar.storage.connection');
-                    $table = $this->app['db']->getTablePrefix() . 'phpdebugbar';
+                    $table = $this->app['db']->getTablePrefix().'phpdebugbar';
                     $pdo = $this->app['db']->connection($connection)->getPdo();
                     $storage = new PdoStorage($pdo, $table);
                     break;

@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * Based on Illuminate\Foundation\Console\RoutesCommand for Taylor Otwell
- * https://github.com/laravel/framework/blob/master/src/Illuminate/Foundation/Console/RoutesCommand.php
- *
+ * https://github.com/laravel/framework/blob/master/src/Illuminate/Foundation/Console/RoutesCommand.php.
  */
 class IlluminateRouteCollector extends DataCollector implements Renderable
 {
@@ -34,61 +33,63 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
     public function collect()
     {
         $route = $this->router->current();
+
         return $this->getRouteInformation($route);
     }
 
     /**
      * Get the route information for a given route.
      *
-     * @param  \Illuminate\Routing\Route $route
+     * @param \Illuminate\Routing\Route $route
+     *
      * @return array
      */
     protected function getRouteInformation($route)
     {
         if (!is_a($route, 'Illuminate\Routing\Route')) {
-            return array();
+            return [];
         }
-        $uri = head($route->methods()) . ' ' . $route->uri();
-		$action = $route->getAction();
+        $uri = head($route->methods()).' '.$route->uri();
+        $action = $route->getAction();
 
-        $result = array(
-    	   'uri' => $uri ?: '-',
-        );
-        
+        $result = [
+           'uri' => $uri ?: '-',
+        ];
+
         $result = array_merge($result, $action);
 
-
         if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
-			list($controller, $method) = explode('@', $action['controller']);
-			if(class_exists($controller)) {
-			    $reflector = new \ReflectionMethod($controller, $method);
-			}
+            list($controller, $method) = explode('@', $action['controller']);
+            if (class_exists($controller)) {
+                $reflector = new \ReflectionMethod($controller, $method);
+            }
             unset($result['uses']);
-		} elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
+        } elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
             $reflector = new \ReflectionFunction($action['uses']);
             $result['uses'] = $this->formatVar($result['uses']);
         }
 
         if (isset($reflector)) {
             $filename = ltrim(str_replace(base_path(), '', $reflector->getFileName()), '/');
-            $result['file'] = $filename . ':' . $reflector->getStartLine() . '-' . $reflector->getEndLine();
+            $result['file'] = $filename.':'.$reflector->getStartLine().'-'.$reflector->getEndLine();
         }
-		
-		if ($before = $this->getBeforeFilters($route)) {
-		    $result['before'] = $before;
-		}
-		
-		if ($after = $this->getAfterFilters($route)) {
-		    $result['after'] = $after;
-		}
-		
+
+        if ($before = $this->getBeforeFilters($route)) {
+            $result['before'] = $before;
+        }
+
+        if ($after = $this->getAfterFilters($route)) {
+            $result['after'] = $after;
+        }
+
         return $result;
     }
 
     /**
-     * Get before filters
+     * Get before filters.
      *
-     * @param  \Illuminate\Routing\Route $route
+     * @param \Illuminate\Routing\Route $route
+     *
      * @return string
      */
     protected function getBeforeFilters($route)
@@ -109,12 +110,13 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
     /**
      * Get all of the pattern filters matching the route.
      *
-     * @param  \Illuminate\Routing\Route $route
+     * @param \Illuminate\Routing\Route $route
+     *
      * @return array
      */
     protected function getPatternFilters($route)
     {
-        $patterns = array();
+        $patterns = [];
 
         foreach ($route->methods() as $method) {
             // For each method supported by the route we will need to gather up the patterned
@@ -131,8 +133,9 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
     /**
      * Get the pattern filters for a given URI and method.
      *
-     * @param  string $uri
-     * @param  string $method
+     * @param string $uri
+     * @param string $method
+     *
      * @return array
      */
     protected function getMethodPatterns($uri, $method)
@@ -141,9 +144,10 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
     }
 
     /**
-     * Get after filters
+     * Get after filters.
      *
-     * @param  Route $route
+     * @param Route $route
+     *
      * @return string
      */
     protected function getAfterFilters($route)
@@ -164,30 +168,30 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
      */
     public function getWidgets()
     {
-        $widgets = array(
-            "route" => array(
+        $widgets = [
+            "route" => [
                 "icon" => "share",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "route",
-                "default" => "{}"
-            )
-        );
+                "default" => "{}",
+            ],
+        ];
         if (Config::get('debugbar.options.route.label', true)) {
-            $widgets['currentroute'] = array(
+            $widgets['currentroute'] = [
                 "icon" => "share",
                 "tooltip" => "Route",
                 "map" => "route.uri",
-                "default" => ""
-            );
+                "default" => "",
+            ];
         }
+
         return $widgets;
     }
 
     /**
      * Display the route information on the console.
      *
-     * @param  array $routes
-     * @return void
+     * @param array $routes
      */
     protected function displayRoutes(array $routes)
     {

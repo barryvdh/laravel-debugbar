@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Stores collected data into files
+ * Stores collected data into files.
  */
 class FilesystemStorage implements StorageInterface
 {
@@ -17,13 +17,13 @@ class FilesystemStorage implements StorageInterface
     protected $gc_probability = 5;   // Probability of GC being run on a save request. (5/100)
 
     /**
-     * @param \Illuminate\Filesystem\Filesystem $files The filesystem
-     * @param string $dirname Directories where to store files
+     * @param \Illuminate\Filesystem\Filesystem $files   The filesystem
+     * @param string                            $dirname Directories where to store files
      */
     public function __construct($files, $dirname)
     {
         $this->files = $files;
-        $this->dirname = rtrim($dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $this->dirname = rtrim($dirname, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -33,7 +33,7 @@ class FilesystemStorage implements StorageInterface
     {
         if (!$this->files->isDirectory($this->dirname)) {
             if ($this->files->makeDirectory($this->dirname, 0777, true)) {
-                $this->files->put($this->dirname . '.gitignore', "*\n!.gitignore");
+                $this->files->put($this->dirname.'.gitignore', "*\n!.gitignore");
             } else {
                 throw new \Exception("Cannot create directory '$this->dirname'..");
             }
@@ -55,19 +55,20 @@ class FilesystemStorage implements StorageInterface
      * Create the filename for the data, based on the id.
      *
      * @param $id
+     *
      * @return string
      */
     public function makeFilename($id)
     {
-        return $this->dirname . basename($id) . ".json";
+        return $this->dirname.basename($id).".json";
     }
 
     /**
-     * Delete files older then a certain age (gc_lifetime)
+     * Delete files older then a certain age (gc_lifetime).
      */
     protected function garbageCollect()
     {
-        foreach (Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
+        foreach (Finder::create()->files()->name('*.json')->date('< '.$this->gc_lifetime.' hour ago')->in(
             $this->dirname
         ) as $file) {
             $this->files->delete($file->getRealPath());
@@ -85,7 +86,7 @@ class FilesystemStorage implements StorageInterface
     /**
      * {@inheritDoc}
      */
-    public function find(array $filters = array(), $max = 20, $offset = 0)
+    public function find(array $filters = [], $max = 20, $offset = 0)
     {
         // Sort by modified time, newest first
         $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
@@ -94,7 +95,7 @@ class FilesystemStorage implements StorageInterface
 
         // Loop through .json files, filter the metadata and stop when max is found.
         $i = 0;
-        $results = array();
+        $results = [];
         foreach (Finder::create()->files()->name('*.json')->in($this->dirname)->sort($sort) as $file) {
             if ($i++ < $offset && empty($filters)) {
                 $results[] = null;
@@ -110,6 +111,7 @@ class FilesystemStorage implements StorageInterface
                 break;
             }
         }
+
         return array_slice($results, $offset, $max);
     }
 
@@ -118,6 +120,7 @@ class FilesystemStorage implements StorageInterface
      *
      * @param $meta
      * @param $filters
+     *
      * @return bool
      */
     protected function filter($meta, $filters)
@@ -127,6 +130,7 @@ class FilesystemStorage implements StorageInterface
                 return false;
             }
         }
+
         return true;
     }
 

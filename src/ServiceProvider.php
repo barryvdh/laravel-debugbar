@@ -11,19 +11,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
-        $configPath = __DIR__ . '/../config/debugbar.php';
+        $configPath = __DIR__.'/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
-        
+
         $this->app->alias(
             'DebugBar\DataFormatter\DataFormatter',
             'DebugBar\DataFormatter\DataFormatterInterface'
         );
-        
+
         $this->app['debugbar'] = $this->app->share(
             function ($app) {
                 $debugbar = new LaravelDebugbar($app);
@@ -35,7 +33,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 return $debugbar;
             }
         );
-        
+
         $this->app->alias('debugbar', 'Barryvdh\Debugbar\LaravelDebugbar');
 
         $this->app['command.debugbar.clear'] = $this->app->share(
@@ -44,19 +42,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->commands(array('command.debugbar.clear'));
+        $this->commands(['command.debugbar.clear']);
     }
 
     /**
      * Bootstrap the application events.
-     *
-     * @return void
      */
     public function boot()
     {
         $app = $this->app;
-        
-        $configPath = __DIR__ . '/../config/debugbar.php';
+
+        $configPath = __DIR__.'/../config/debugbar.php';
         $this->publishes([$configPath => config_path('debugbar.php')], 'config');
 
         if ($app->runningInConsole()) {
@@ -68,7 +64,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'prefix' => $this->app['config']->get('debugbar.route_prefix'),
         ];
 
-        $this->app['router']->group($routeConfig, function($router) {
+        $this->app['router']->group($routeConfig, function ($router) {
             $router->get('open', [
                 'uses' => 'OpenHandlerController@handle',
                 'as' => 'debugbar.openhandler',
@@ -93,7 +89,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->app['config']->set('debugbar.enabled', $enabled);
         }
 
-        if ( ! $enabled) {
+        if (! $enabled) {
             return;
         }
 
@@ -106,7 +102,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $debugbar->modifyResponse($request, $response);
             }
         );
-
     }
 
     /**
@@ -116,6 +111,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function provides()
     {
-        return array('debugbar', 'command.debugbar.clear');
+        return ['debugbar', 'command.debugbar.clear'];
     }
 }

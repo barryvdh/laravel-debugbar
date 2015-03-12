@@ -10,7 +10,8 @@ class EventCollector extends TimeDataCollector
     protected $events = null;
     protected $exporter;
 
-    public function __construct($requestStartTime = null){
+    public function __construct($requestStartTime = null)
+    {
         parent::__construct($requestStartTime);
         $this->exporter = new ValueExporter();
     }
@@ -20,31 +21,33 @@ class EventCollector extends TimeDataCollector
         $args = func_get_args();
         $name = $this->getCurrentEvent($args);
         $time = microtime(true);
-        $this->addMeasure($name, $time, $time, $this->prepareParams($args) );
+        $this->addMeasure($name, $time, $time, $this->prepareParams($args));
     }
 
     public function subscribe(Dispatcher $events)
     {
         $this->events = $events;
-        $events->listen('*', array($this, 'onWildcardEvent'));
+        $events->listen('*', [$this, 'onWildcardEvent']);
     }
 
     protected function getCurrentEvent($args)
     {
-        if(method_exists($this->events, 'firing')){
+        if (method_exists($this->events, 'firing')) {
             $event = $this->events->firing();
-        }else{
+        } else {
             $event = end($args);
         }
+
         return $event;
     }
 
     protected function prepareParams($params)
     {
-        $data = array();
+        $data = [];
         foreach ($params as $key => $value) {
             $data[$key] = htmlentities($this->exporter->exportValue($value), ENT_QUOTES, 'UTF-8', false);
         }
+
         return $data;
     }
 
@@ -52,6 +55,7 @@ class EventCollector extends TimeDataCollector
     {
         $data = parent::collect();
         $data['nb_measures'] = count($data['measures']);
+
         return $data;
     }
 
@@ -62,17 +66,17 @@ class EventCollector extends TimeDataCollector
 
     public function getWidgets()
     {
-        return array(
-            "events" => array(
+        return [
+            "events" => [
                 "icon" => "tasks",
                 "widget" => "PhpDebugBar.Widgets.TimelineWidget",
                 "map" => "event",
-                "default" => "{}"
-            ),
-            'events:badge' => array(
+                "default" => "{}",
+            ],
+            'events:badge' => [
                 'map' => 'event.nb_measures',
-                'default' => 0
-            )
-        );
+                'default' => 0,
+            ],
+        ];
     }
 }

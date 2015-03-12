@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
      |--------------------------------------------------------------------------
@@ -26,12 +26,12 @@ return array(
      | can also be used. For PDO, run the package migrations first.
      |
      */
-    'storage' => array(
+    'storage' => [
         'enabled' => true,
         'driver' => 'file', // redis, file, pdo
-        'path' => storage_path() . '/debugbar', // For file driver
+        'path' => storage_path().'/debugbar', // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
-    ),
+    ],
 
     /*
      |--------------------------------------------------------------------------
@@ -70,7 +70,7 @@ return array(
      |
      */
 
-    'collectors' => array(
+    'collectors' => [
         'phpinfo'         => true,  // Php version
         'messages'        => true,  // Messages
         'time'            => true,  // Time Datalogger
@@ -90,7 +90,7 @@ return array(
         'config'          => false, // Display config settings
         'auth'            => false, // Display Laravel authentication status
         'session'         => false, // Display session data in a separate tab
-    ),
+    ],
 
     /*
      |--------------------------------------------------------------------------
@@ -101,33 +101,33 @@ return array(
      |
      */
 
-    'options' => array(
-        'auth' => array(
+    'options' => [
+        'auth' => [
             'show_name' => false,   // Also show the users name/email in the debugbar
-        ),
-        'db' => array(
+        ],
+        'db' => [
             'with_params'       => true,   // Render SQL with the parameters substituted
             'timeline'          => false,  // Add the queries to the timeline
             'backtrace'         => false,  // EXPERIMENTAL: Use a backtrace to find the origin of the query in your files.
-            'explain' => array(            // EXPERIMENTAL: Show EXPLAIN output on queries
+            'explain' => [            // EXPERIMENTAL: Show EXPLAIN output on queries
                 'enabled' => false,
-                'types' => array('SELECT'), // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
-            ),
+                'types' => ['SELECT'], // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
+            ],
             'hints'             => true,    // Show hints for common mistakes
-        ),
-        'mail' => array(
-            'full_log' => false
-        ),
-        'views' => array(
+        ],
+        'mail' => [
+            'full_log' => false,
+        ],
+        'views' => [
             'data' => false,    //Note: Can slow down the application, because the data can be quite large..
-        ),
-        'route' => array(
-            'label' => true  // show complete route on bar
-        ),
-        'logs' => array(
-            'file' => null
-        ),
-    ),
+        ],
+        'route' => [
+            'label' => true,  // show complete route on bar
+        ],
+        'logs' => [
+            'file' => null,
+        ],
+    ],
 
     /*
      |--------------------------------------------------------------------------
@@ -154,4 +154,4 @@ return array(
      */
     'route_prefix' => '_debugbar',
 
-);
+];
