@@ -5,7 +5,7 @@ use Illuminate\Http\Response;
 class AssetController extends BaseController
 {
     /**
-     * Return the javascript for the Debugbar
+     * Return the javascript for the Debugbar.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -16,16 +16,16 @@ class AssetController extends BaseController
         $content = $renderer->dumpAssetsToString('js');
 
         $response = new Response(
-            $content, 200, array(
+            $content, 200, [
                 'Content-Type' => 'text/javascript',
-            )
+            ]
         );
 
         return $this->cacheResponse($response);
     }
 
     /**
-     * Return the stylesheets for the Debugbar
+     * Return the stylesheets for the Debugbar.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -36,16 +36,16 @@ class AssetController extends BaseController
         $content = $renderer->dumpAssetsToString('css');
 
         $response = new Response(
-            $content, 200, array(
+            $content, 200, [
                 'Content-Type' => 'text/css',
-            )
+            ]
         );
 
         return $this->cacheResponse($response);
     }
 
     /**
-     * Cache the response 1 year (31536000 sec)
+     * Cache the response 1 year (31536000 sec).
      */
     protected function cacheResponse(Response $response)
     {

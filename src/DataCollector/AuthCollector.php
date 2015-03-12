@@ -7,7 +7,7 @@ use DebugBar\DataCollector\Renderable;
 use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
- * Collector for Laravel's Auth provider
+ * Collector for Laravel's Auth provider.
  */
 class AuthCollector extends DataCollector implements Renderable
 {
@@ -25,7 +25,8 @@ class AuthCollector extends DataCollector implements Renderable
     }
 
     /**
-     * Set to show the users name/email
+     * Set to show the users name/email.
+     *
      * @param bool $showName
      */
     public function setShowName($showName)
@@ -43,22 +44,25 @@ class AuthCollector extends DataCollector implements Renderable
         } catch (\Exception $e) {
             $user = null;
         }
+
         return $this->getUserInformation($user);
     }
 
     /**
-     * Get displayed user information
+     * Get displayed user information.
+     *
      * @param \Illuminate\Auth\UserInterface $user
+     *
      * @return array
      */
     protected function getUserInformation($user = null)
     {
         // Defaults
         if (is_null($user)) {
-            return array(
+            return [
                 'name' => 'Guest',
-                'user' => array('guest' => true),
-            );
+                'user' => ['guest' => true],
+            ];
         }
 
         // The default auth identifer is the ID number, which isn't all that
@@ -75,10 +79,10 @@ class AuthCollector extends DataCollector implements Renderable
             }
         }
 
-        return array(
+        return [
             'name' => $identifier,
             'user' => $user instanceof ArrayableInterface ? $user->toArray() : $user,
-        );
+        ];
     }
 
     /**
@@ -94,22 +98,23 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function getWidgets()
     {
-        $widgets = array(
-            'auth' => array(
+        $widgets = [
+            'auth' => [
                 'icon' => 'lock',
                 'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
                 'map' => 'auth.user',
-                'default' => '{}'
-            )
-        );
+                'default' => '{}',
+            ],
+        ];
         if ($this->showName) {
-            $widgets['auth.name'] = array(
+            $widgets['auth.name'] = [
                 'icon' => 'user',
                 'tooltip' => 'Auth status',
                 'map' => 'auth.name',
                 'default' => '',
-            );
+            ];
         }
+
         return $widgets;
     }
 }

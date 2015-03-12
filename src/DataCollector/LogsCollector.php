@@ -18,18 +18,18 @@ class LogsCollector extends MessagesCollector
     }
 
     /**
-     * Get the path to the logs file
+     * Get the path to the logs file.
      *
      * @return string
      */
     public function getLogsFile()
     {
         //Default log location (single file)
-        $path = storage_path() . '/logs/laravel.log';
+        $path = storage_path().'/logs/laravel.log';
 
         //Rotating logs (Laravel 4.0)
         if (!file_exists($path)) {
-            $path = storage_path() . '/logs/log-' . php_sapi_name() . '-' . date('Y-m-d') . '.txt';
+            $path = storage_path().'/logs/log-'.php_sapi_name().'-'.date('Y-m-d').'.txt';
         }
 
         return $path;
@@ -37,7 +37,7 @@ class LogsCollector extends MessagesCollector
 
     /**
      * get logs apache in app/storage/logs
-     * only 24 last of current day
+     * only 24 last of current day.
      *
      * @param string $path
      *
@@ -53,15 +53,17 @@ class LogsCollector extends MessagesCollector
         $file = implode("", $this->tailFile($path, $this->lines));
 
         foreach ($this->getLogs($file) as $log) {
-            $this->addMessage($log['header'] . $log['stack'], $log['level'], false);
+            $this->addMessage($log['header'].$log['stack'], $log['level'], false);
         }
     }
 
     /**
      * By Ain Tohvri (ain)
-     * http://tekkie.flashbit.net/php/tail-functionality-in-php
+     * http://tekkie.flashbit.net/php/tail-functionality-in-php.
+     *
      * @param string $file
-     * @param int $lines
+     * @param int    $lines
+     *
      * @return array
      */
     protected function tailFile($file, $lines)
@@ -70,7 +72,7 @@ class LogsCollector extends MessagesCollector
         $linecounter = $lines;
         $pos = -2;
         $beginning = false;
-        $text = array();
+        $text = [];
         while ($linecounter > 0) {
             $t = " ";
             while ($t != "\n") {
@@ -91,14 +93,16 @@ class LogsCollector extends MessagesCollector
             }
         }
         fclose($handle);
+
         return array_reverse($text);
     }
 
     /**
      * Search a string for log entries
-     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
+     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand.
      *
      * @param $file
+     *
      * @return array
      */
     public function getLogs($file)
@@ -111,12 +115,12 @@ class LogsCollector extends MessagesCollector
         preg_match_all($pattern, $file, $headings);
         $log_data = preg_split($pattern, $file);
 
-        $log = array();
+        $log = [];
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $ll) {
-                    if (strpos(strtolower($h[$i]), strtolower('.' . $ll))) {
-                        $log[] = array('level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]);
+                    if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
+                        $log[] = ['level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]];
                     }
                 }
             }
@@ -129,14 +133,16 @@ class LogsCollector extends MessagesCollector
 
     /**
      * Get the log levels from psr/log.
-     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
+     * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand.
      *
      * @access public
+     *
      * @return array
      */
     public function getLevels()
     {
         $class = new ReflectionClass(new LogLevel());
+
         return $class->getConstants();
     }
 }

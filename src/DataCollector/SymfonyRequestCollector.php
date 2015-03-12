@@ -8,9 +8,7 @@ use DebugBar\DataCollector\Renderable;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- *
- * Based on \Symfony\Component\HttpKernel\DataCollector\RequestDataCollector by Fabien Potencier <fabien@symfony.com>
- *
+ * Based on \Symfony\Component\HttpKernel\DataCollector\RequestDataCollector by Fabien Potencier <fabien@symfony.com>.
  */
 class SymfonyRequestCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
@@ -22,10 +20,10 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
     protected $session;
 
     /**
-     * Create a new SymfonyRequestCollector
+     * Create a new SymfonyRequestCollector.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Request $response
+     * @param \Symfony\Component\HttpFoundation\Request                  $request
+     * @param \Symfony\Component\HttpFoundation\Request                  $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
     public function __construct($request, $response, $session = null)
@@ -48,14 +46,14 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
      */
     public function getWidgets()
     {
-        return array(
-            "request" => array(
+        return [
+            "request" => [
                 "icon" => "tags",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "request",
-                "default" => "{}"
-            )
-        );
+                "default" => "{}",
+            ],
+        ];
     }
 
     /**
@@ -67,7 +65,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         $response = $this->response;
 
         $responseHeaders = $response->headers->all();
-        $cookies = array();
+        $cookies = [];
         foreach ($response->headers->getCookies() as $cookie) {
             $cookies[] = $this->getCookieHeader(
                 $cookie->getName(),
@@ -85,7 +83,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
 
         $statusCode = $response->getStatusCode();
 
-        $data = array(
+        $data = [
             'format' => $request->getRequestFormat(),
             'content_type' => $response->headers->get('Content-Type') ? $response->headers->get(
                 'Content-Type'
@@ -99,10 +97,10 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
             'request_cookies' => $request->cookies->all(),
             'response_headers' => $responseHeaders,
             'path_info' => $request->getPathInfo(),
-        );
+        ];
 
         if ($this->session) {
-            $sessionAttributes = array();
+            $sessionAttributes = [];
             foreach ($this->session->all() as $key => $value) {
                 $sessionAttributes[$key] = $value;
             }
@@ -144,7 +142,7 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
                 }
             }
 
-            $cookie .= '; expires=' . substr(
+            $cookie .= '; expires='.substr(
                     \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
                     0,
                     -5
@@ -152,10 +150,10 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         }
 
         if ($domain) {
-            $cookie .= '; domain=' . $domain;
+            $cookie .= '; domain='.$domain;
         }
 
-        $cookie .= '; path=' . $path;
+        $cookie .= '; path='.$path;
 
         if ($secure) {
             $cookie .= '; secure';

@@ -6,7 +6,7 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
- * Dump variables using the DataFormatter
+ * Dump variables using the DataFormatter.
  */
 class Dump extends Twig_Extension
 {
@@ -38,16 +38,16 @@ class Dump extends Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new Twig_SimpleFunction(
-                'dump', [$this, 'dump'], array('is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true)
+                'dump', [$this, 'dump'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
             ),
-        );
+        ];
     }
 
     /**
      * Based on Twig_Extension_Debug / twig_var_dump
-     * (c) 2011 Fabien Potencier
+     * (c) 2011 Fabien Potencier.
      *
      * @param Twig_Environment $env
      * @param $context
@@ -60,13 +60,13 @@ class Dump extends Twig_Extension
 
         $count = func_num_args();
         if (2 === $count) {
-            $data = array();
+            $data = [];
             foreach ($context as $key => $value) {
                 if (is_object($value)) {
                     if (method_exists($value, 'toArray')) {
                         $data[$key] = $value->toArray();
                     } else {
-                        $data[$key] = "Object (" . get_class($value) . ")";
+                        $data[$key] = "Object (".get_class($value).")";
                     }
                 } else {
                     $data[$key] = $value;

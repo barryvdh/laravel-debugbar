@@ -3,7 +3,7 @@
 use Barryvdh\Debugbar\Twig\Node\StopwatchNode;
 
 /**
- * Token Parser for the stopwatch tag. Based on Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
+ * Token Parser for the stopwatch tag. Based on Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;.
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
@@ -27,7 +27,7 @@ class StopwatchTokenParser extends \Twig_TokenParser
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
         // {% endstopwatch %}
-        $body = $this->parser->subparse(array($this, 'decideStopwatchEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideStopwatchEnd'], true);
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
         if ($this->debugbarAvailable) {

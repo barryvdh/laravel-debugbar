@@ -5,7 +5,6 @@ use Illuminate\Http\Response;
 
 class OpenHandlerController extends BaseController
 {
-   
     public function handle()
     {
         $debugbar = $this->debugbar;
@@ -19,9 +18,9 @@ class OpenHandlerController extends BaseController
         $data = $openHandler->handle(null, false, false);
 
         return new Response(
-            $data, 200, array(
-                'Content-Type' => 'application/json'
-            )
+            $data, 200, [
+                'Content-Type' => 'application/json',
+            ]
         );
     }
 }

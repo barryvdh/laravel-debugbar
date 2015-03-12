@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * HTTP driver for Symfony Request/Session
+ * HTTP driver for Symfony Request/Session.
  */
 class SymfonyHttpDriver implements HttpDriverInterface
 {
@@ -40,6 +40,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
+
         return $this->session->isStarted();
     }
 

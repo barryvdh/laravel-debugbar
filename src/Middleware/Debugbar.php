@@ -4,10 +4,10 @@ use Closure;
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Routing\Middleware;
 
-class Debugbar implements Middleware {
-
+class Debugbar implements Middleware
+{
     /**
-     * The Laravel Application
+     * The Laravel Application.
      *
      * @var Application
      */
@@ -16,8 +16,7 @@ class Debugbar implements Middleware {
     /**
      * Create a new middleware instance.
      *
-     * @param  Application  $app
-     * @return void
+     * @param Application $app
      */
     public function __construct(Application $app)
     {
@@ -27,8 +26,9 @@ class Debugbar implements Middleware {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -38,7 +38,7 @@ class Debugbar implements Middleware {
 
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
-        
+
         return $debugbar->modifyResponse($request, $response);
     }
 }

@@ -42,16 +42,16 @@ class Debug extends Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new Twig_SimpleFunction(
-                'debug', [$this, 'debug'], array('needs_context' => true, 'needs_environment' => true)
+                'debug', [$this, 'debug'], ['needs_context' => true, 'needs_environment' => true]
             ),
-        );
+        ];
     }
 
     /**
      * Based on Twig_Extension_Debug / twig_var_dump
-     * (c) 2011 Fabien Potencier
+     * (c) 2011 Fabien Potencier.
      *
      * @param Twig_Environment $env
      * @param $context
@@ -64,13 +64,13 @@ class Debug extends Twig_Extension
 
         $count = func_num_args();
         if (2 === $count) {
-            $data = array();
+            $data = [];
             foreach ($context as $key => $value) {
                 if (is_object($value)) {
                     if (method_exists($value, 'toArray')) {
                         $data[$key] = $value->toArray();
                     } else {
-                        $data[$key] = "Object (" . get_class($value) . ")";
+                        $data[$key] = "Object (".get_class($value).")";
                     }
                 } else {
                     $data[$key] = $value;

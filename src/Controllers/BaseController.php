@@ -16,8 +16,6 @@ class BaseController extends Controller
      * Create a new controller instance.
      *
      * @param \Barryvdh\Debugbar\LaravelDebugbar $debugbar
-     *
-     * @return void
      */
     public function __construct(LaravelDebugbar $debugbar)
     {

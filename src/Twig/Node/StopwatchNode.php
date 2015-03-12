@@ -1,7 +1,7 @@
 <?php namespace Barryvdh\Debugbar\Twig\Node;
 
 /**
- * Represents a stopwatch node. Based on Symfony\Bridge\Twig\Node\StopwatchNode
+ * Represents a stopwatch node. Based on Symfony\Bridge\Twig\Node\StopwatchNode.
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
@@ -14,7 +14,7 @@ class StopwatchNode extends \Twig_Node
         $lineno = 0,
         $tag = null
     ) {
-        parent::__construct(array('body' => $body, 'name' => $name, 'var' => $var), array(), $lineno, $tag);
+        parent::__construct(['body' => $body, 'name' => $name, 'var' => $var], [], $lineno, $tag);
     }
 
     public function compile(\Twig_Compiler $compiler)
