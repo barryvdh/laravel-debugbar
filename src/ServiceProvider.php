@@ -101,7 +101,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $debugbar = $this->app['debugbar'];
         $debugbar->boot();
 
-        $app['router']->after(
+        $app['events']->listen('kernel.handled',
             function ($request, $response) use ($debugbar) {
                 $debugbar->modifyResponse($request, $response);
             }
