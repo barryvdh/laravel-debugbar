@@ -61,6 +61,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if ($app->runningInConsole()) {
             $this->app['config']->set('debugbar.enabled', false);
+            return;
+        }
+        
+        $enabled = $this->app['config']->get('debugbar.enabled');
+
+        // If enabled is null, set from the app.debug value
+        if (is_null($enabled)) {
+            $enabled = $this->app['config']->get('app.debug');
+            $this->app['config']->set('debugbar.enabled', $enabled);
+        }
+
+        if ( ! $enabled) {
+            return;
         }
 
         $routeConfig = [
@@ -84,18 +97,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.assets.js',
             ]);
         });
-
-        $enabled = $this->app['config']->get('debugbar.enabled');
-
-        // If enabled is null, set from the app.debug value
-        if (is_null($enabled)) {
-            $enabled = $this->app['config']->get('app.debug');
-            $this->app['config']->set('debugbar.enabled', $enabled);
-        }
-
-        if ( ! $enabled) {
-            return;
-        }
 
         /** @var LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
