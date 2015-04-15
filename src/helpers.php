@@ -1,5 +1,17 @@
 <?php
 
+if (!function_exists('debugbar')) {
+    /**
+     * Adds one or more messages to the MessagesCollector
+     *
+     * @return \Barryvdh\Debugbar\LaravelDebugbar
+     */
+    function debugbar()
+    {
+        return app('debugbar');
+    }
+}
+
 if (!function_exists('debug')) {
     /**
      * Adds one or more messages to the MessagesCollector
