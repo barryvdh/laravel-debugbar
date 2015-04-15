@@ -2,7 +2,7 @@
 
 if (!function_exists('debugbar')) {
     /**
-     * Adds one or more messages to the MessagesCollector
+     * Get the Debugbar instance
      *
      * @return \Barryvdh\Debugbar\LaravelDebugbar
      */
