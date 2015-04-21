@@ -164,7 +164,7 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new RequestDataCollector());
         }
 
-        if ($this->shouldCollect('events', false) and isset($this->app['events'])) {
+        if ($this->shouldCollect('events', false) && isset($this->app['events'])) {
             try {
                 $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
                 $eventCollector = new EventCollector($startTime);
@@ -182,7 +182,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('views', true) and isset($this->app['events'])) {
+        if ($this->shouldCollect('views', true) && isset($this->app['events'])) {
             try {
                 $collectData = $this->app['config']->get('debugbar.options.views.data', true);
                 $this->addCollector(new ViewCollector($collectData));
@@ -251,7 +251,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('db', true) and isset($this->app['db'])) {
+        if ($this->shouldCollect('db', true) && isset($this->app['db'])) {
             $db = $this->app['db'];
             if ($debugbar->hasCollector('time') && $this->app['config']->get(
                     'debugbar.options.db.timeline',
@@ -305,7 +305,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $mailer = $this->app['mailer']->getSwiftMailer();
                 $this->addCollector(new SwiftMailCollector($mailer));
-                if ($this->app['config']->get('debugbar.options.mail.full_log') and $this->hasCollector(
+                if ($this->app['config']->get('debugbar.options.mail.full_log') && $this->hasCollector(
                         'messages'
                     )
                 ) {
@@ -437,7 +437,7 @@ class LaravelDebugbar extends DebugBar
     public function modifyResponse($request, $response)
     {
         $app = $this->app;
-        if ($app->runningInConsole() or !$this->isEnabled() || $this->isDebugbarRequest()) {
+        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
             return $response;
         }
 
@@ -476,7 +476,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('symfony_request', true) and !$this->hasCollector('request')) {
+        if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
                 $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager));
             } catch (\Exception $e) {
@@ -497,7 +497,7 @@ class LaravelDebugbar extends DebugBar
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
-            $this->isJsonRequest($request) and
+            $this->isJsonRequest($request) &&
             $app['config']->get('debugbar.capture_ajax', true)
         ) {
             try {
@@ -506,7 +506,7 @@ class LaravelDebugbar extends DebugBar
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
-            ($response->headers->has('Content-Type') and
+            ($response->headers->has('Content-Type') &&
                 strpos($response->headers->get('Content-Type'), 'html') === false)
             || $request->getRequestFormat() !== 'html'
         ) {
@@ -548,7 +548,7 @@ class LaravelDebugbar extends DebugBar
     {
         return $this->app['request']->segment(1) == '_debugbar';
     }
-    
+
     /**
      * @param  \Symfony\Component\HttpFoundation\Request $request
      * @return bool
