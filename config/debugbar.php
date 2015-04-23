@@ -55,8 +55,8 @@ return array(
      |--------------------------------------------------------------------------
      |
      | Could be easily disable specific vendor by setting following array.
-     | you should inject jquery library menually.
-     | Options: 'jquery', 'highlightjs', 'fontawesome'
+     | You should inject jquery library menually.
+     | Options: 'jquery', 'highlightjs', 'fontawesome'.
      |
      */
 
