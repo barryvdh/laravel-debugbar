@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "~5.0.17",
+        "illuminate/support": "~5.0.17|5.1.*",
         "symfony/finder": "~2.6",
         "maximebf/debugbar": "~1.10.2"
     },
