@@ -61,18 +61,16 @@ class AuthCollector extends DataCollector implements Renderable
             );
         }
 
-        // The default auth identifer is the ID number, which isn't all that
-        // useful. Try username and email.
-        $identifier = $user->getAuthIdentifier();
-        if (is_numeric($identifier)) {
-            try {
-                if ($user->username) {
-                    $identifier = $user->username;
-                } elseif ($user->email) {
-                    $identifier = $user->email;
-                }
-            } catch (\Exception $e) {
+        // We try to display first the username or the email attribute of the User object
+        // Otherwise, the identifier, which is most likely the ID number, will be displayed as a fallback.
+        try {
+            if ($user->username) {
+                $identifier = $user->username;
+            } elseif ($user->email) {
+                $identifier = $user->email;
             }
+        } catch (\Exception $e) {
+            $identifier = $user->getAuthIdentifier();
         }
 
         return array(
