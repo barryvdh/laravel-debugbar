@@ -251,7 +251,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('db', true) && isset($this->app['db']) && $this->app['db']->logging()) {
+        if ($this->shouldCollect('db', true) && isset($this->app['db'])) {
             $db = $this->app['db'];
             if ($debugbar->hasCollector('time') && $this->app['config']->get(
                     'debugbar.options.db.timeline',
