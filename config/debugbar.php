@@ -89,7 +89,7 @@ return array(
         'files'           => false, // Show the included files
         'config'          => false, // Display config settings
         'auth'            => false, // Display Laravel authentication status
-        'session'         => false, // Display session data in a separate tab
+        'session'         => true,  // Display session data
     ),
 
     /*
