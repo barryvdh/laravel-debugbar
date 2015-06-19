@@ -51,13 +51,13 @@ After updating composer, add the ServiceProvider to the providers array in confi
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
 ```
-'Barryvdh\Debugbar\ServiceProvider',
+Barryvdh\Debugbar\ServiceProvider::class,
 ```
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
 ```
-'Debugbar' => 'Barryvdh\Debugbar\Facade',
+'Debugbar'  => Barryvdh\Debugbar\Facade::class,
 ```
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config (`debugbar.enabled`). See more options in `config/debugbar.php`
