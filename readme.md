@@ -53,11 +53,20 @@ After updating composer, add the ServiceProvider to the providers array in confi
 ```
 'Barryvdh\Debugbar\ServiceProvider',
 ```
+For Laravel 5.1
+```
+Barryvdh\Debugbar\ServiceProvider::class,
+```
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
 ```
 'Debugbar' => 'Barryvdh\Debugbar\Facade',
+```
+
+For Laravel 5.1
+```
+'Debugbar'  => Barryvdh\Debugbar\Facade::class,
 ```
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config (`debugbar.enabled`). See more options in `config/debugbar.php`
