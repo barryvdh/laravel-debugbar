@@ -1,10 +1,9 @@
 <?php namespace Barryvdh\Debugbar\Middleware;
 
 use Closure;
-use Illuminate\Foundation\Application;
-use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Contracts\Foundation\Application;
 
-class Debugbar implements Middleware {
+class Debugbar {
 
     /**
      * The Laravel Application
