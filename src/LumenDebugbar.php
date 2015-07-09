@@ -205,8 +205,7 @@ class LumenDebugbar extends LaravelDebugbar
 
         if ($this->shouldCollect('logs', false)) {
             try {
-                $file = $this->app['config']->get('debugbar.options.logs.file');
-                $this->addCollector(new LogsCollector($file));
+                $this->addCollector(new LogsCollector(base_path('storage/logs/lumen.log')));
             } catch (\Exception $e) {
                 $this->addException(
                     new Exception(
