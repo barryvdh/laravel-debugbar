@@ -1,9 +1,8 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
 use Barryvdh\Debugbar\LaravelDebugbar;
-use Illuminate\Routing\Controller;
 
-class BaseController extends Controller
+class BaseController
 {
     /**
      * The laravel debugbar instance.
