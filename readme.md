@@ -50,6 +50,8 @@ composer require barryvdh/laravel-debugbar
 After updating composer, add the ServiceProvider to the providers array in config/app.php
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
+### Laravel 5.x:
+
 ```
 'Barryvdh\Debugbar\ServiceProvider',
 ```
@@ -59,6 +61,7 @@ If you want to use the facade to log messages, add this to your facades in app.p
 ```
 'Debugbar' => 'Barryvdh\Debugbar\Facade',
 ```
+
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config (`debugbar.enabled`). See more options in `config/debugbar.php`
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
@@ -70,7 +73,21 @@ Copy the package config to your local config with the publish command:
 php artisan vendor:publish
 ```
 
-You can also disable/enable the loggers you want. You can also use the IoC container to add extra loggers. (`$app['debugbar']->addCollector(new MyDataCollector)`)
+### Lumen:
+
+For Lumen, register a different Provider in `bootstrap/app.php`:
+
+```
+$app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+```
+
+To change the configuration, copy the file to your config folder and enable it:
+
+```
+$app->configure('debugbar');
+```
+
+## Usage
 
 You can now add messages using the Facade (when added), using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
 

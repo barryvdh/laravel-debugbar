@@ -25,6 +25,7 @@ use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
 
+use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -66,7 +67,14 @@ class LaravelDebugbar extends DebugBar
     protected $booted = false;
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * True when this is a Lumen application
+     *
+     * @var bool
+     */
+    protected $is_lumen = false;
+
+    /**
+     * @param Application $app
      */
     public function __construct($app = null)
     {
@@ -75,6 +83,7 @@ class LaravelDebugbar extends DebugBar
         }
         $this->app = $app;
         $this->version = $app->version();
+        $this->is_lumen = str_contains($this->version, 'Lumen');
     }
 
     /**
@@ -103,7 +112,8 @@ class LaravelDebugbar extends DebugBar
 
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this;
-        /** @var \Illuminate\Foundation\Application $app */
+
+        /** @var Application $app */
         $app = $this->app;
 
         $this->selectStorage($debugbar);
@@ -111,42 +121,51 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('phpinfo', true)) {
             $this->addCollector(new PhpInfoCollector());
         }
+
         if ($this->shouldCollect('messages', true)) {
             $this->addCollector(new MessagesCollector());
         }
+
         if ($this->shouldCollect('time', true)) {
             $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
             $this->addCollector(new TimeDataCollector($startTime));
 
-            $this->app->booted(
-                function () use ($debugbar, $startTime) {
-                    if ($startTime) {
-                        $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
-                    }
-                }
-            );
-
-            //Check if App::before is already called..
-            if ($this->app->isBooted()) {
+            if ($this->isLumen()) {
                 $debugbar->startMeasure('application', 'Application');
             } else {
-                $this->app['router']->before(
-                    function () use ($debugbar) {
-                        $debugbar->startMeasure('application', 'Application');
-                    }
+                $this->app->booted(
+                  function () use ($debugbar, $startTime) {
+                      if ($startTime) {
+                          $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
+                      }
+                  }
+                );
+
+                //Check if App::before is already called..
+                if ($this->app->isBooted()) {
+                    $debugbar->startMeasure('application', 'Application');
+                } else {
+                    $this->app['router']->before(
+                      function () use ($debugbar) {
+                          $debugbar->startMeasure('application', 'Application');
+                      }
+                    );
+                }
+
+                $this->app['router']->after(
+                  function () use ($debugbar) {
+                      $debugbar->stopMeasure('application');
+                      $debugbar->startMeasure('after', 'After application');
+                  }
                 );
             }
 
-            $this->app['router']->after(
-                function () use ($debugbar) {
-                    $debugbar->stopMeasure('application');
-                    $debugbar->startMeasure('after', 'After application');
-                }
-            );
         }
+
         if ($this->shouldCollect('memory', true)) {
             $this->addCollector(new MemoryCollector());
         }
+
         if ($this->shouldCollect('exceptions', true)) {
             try {
                 $exceptionCollector = new ExceptionsCollector();
@@ -157,9 +176,11 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
             }
         }
+
         if ($this->shouldCollect('laravel', false)) {
             $this->addCollector(new LaravelCollector($this->app));
         }
+
         if ($this->shouldCollect('default_request', false)) {
             $this->addCollector(new RequestDataCollector());
         }
@@ -201,7 +222,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('route')) {
+        if (!$this->isLumen() && $this->shouldCollect('route')) {
             try {
                 $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
             } catch (\Exception $e) {
@@ -215,7 +236,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('log', true)) {
+        if (!$this->isLumen() && $this->shouldCollect('log', true)) {
             try {
                 if ($this->hasCollector('messages')) {
                     $logger = new MessagesCollector('log');
@@ -301,7 +322,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('mail', true)) {
+        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider')) {
             try {
                 $mailer = $this->app['mailer']->getSwiftMailer();
                 $this->addCollector(new SwiftMailCollector($mailer));
@@ -763,6 +784,11 @@ class LaravelDebugbar extends DebugBar
     protected function checkVersion($version, $operator = ">=")
     {
         return version_compare($this->version, $version, $operator);
+    }
+
+    protected function isLumen()
+    {
+        return $this->is_lumen;
     }
 
     /**

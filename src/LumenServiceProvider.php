@@ -31,7 +31,7 @@ class LumenServiceProvider extends \Illuminate\Support\ServiceProvider
         
         $this->app['debugbar'] = $this->app->share(
             function ($app) {
-                $debugbar = new LumenDebugbar($app);
+                $debugbar = new LaravelDebugbar($app);
 
                 $sessionManager = $app['session'];
                 $httpDriver = new SymfonyHttpDriver($sessionManager);
@@ -99,6 +99,8 @@ class LumenServiceProvider extends \Illuminate\Support\ServiceProvider
         if ( ! $enabled) {
             return;
         }
+
+        $this->app['config']->set('debugbar.options.logs.file', storage_path('logs/lumen.log'));
 
         /** @var LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
