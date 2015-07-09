@@ -74,7 +74,7 @@ class LaravelDebugbar extends DebugBar
             $app = app();   //Fallback when $app is not given
         }
         $this->app = $app;
-        $this->version = $app::VERSION;
+        $this->version = $app->version();
     }
 
     /**
