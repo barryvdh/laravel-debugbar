@@ -89,11 +89,9 @@ class LumenDebugbar extends LaravelDebugbar
                 }
             );
 
-
             $debugbar->startMeasure('application', 'Application');
-
-
         }
+
         if ($this->shouldCollect('memory', true)) {
             $this->addCollector(new MemoryCollector());
         }
@@ -151,7 +149,6 @@ class LumenDebugbar extends LaravelDebugbar
             }
         }
 
-
         if ($this->shouldCollect('db', true) && isset($this->app['db'])) {
             $db = $this->app['db'];
             if ($debugbar->hasCollector('time') && $this->app['config']->get(
@@ -202,6 +199,24 @@ class LumenDebugbar extends LaravelDebugbar
             }
         }
 
+        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider')) {
+            try {
+                $mailer = $this->app['mailer']->getSwiftMailer();
+                $this->addCollector(new SwiftMailCollector($mailer));
+                if ($this->app['config']->get('debugbar.options.mail.full_log') && $this->hasCollector(
+                    'messages'
+                  )
+                ) {
+                    $this['messages']->aggregate(new SwiftLogCollector($mailer));
+                }
+            } catch (\Exception $e) {
+                $this->addException(
+                  new Exception(
+                    'Cannot add MailCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                  )
+                );
+            }
+        }
 
         if ($this->shouldCollect('logs', false)) {
             try {
