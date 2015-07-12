@@ -101,12 +101,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $debugbar = $this->app['debugbar'];
         $debugbar->boot();
 
-        $app['events']->listen('kernel.handled',
-            function ($request, $response) use ($debugbar) {
-                $debugbar->modifyResponse($request, $response);
-            }
-        );
-
+        $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
+        $kernel->pushMiddleware('Barryvdh\Debugbar\Middleware\Debugbar');
     }
 
     /**
