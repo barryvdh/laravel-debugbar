@@ -36,10 +36,23 @@ class Converter {
         ];
 
 
+        if (isset($data['request'])) {
+            $request = $data['request'];
+
+            $output['responseStatus'] = $request['status_code'];
+            foreach($request as $key => $value){
+                $output['headers'][$key] = [$value];
+            }
+        }
+
         if (isset($data['time'])) {
             $time = $data['time'];
             $output['responseTime'] = $time['end'];
             $output['responseDuration'] = $time['duration'] * 1000;
+            foreach($time['measures'] as $measure) {
+                $measure['duration'] = $measure['duration'] * 1000;
+                $output['timelineData'][] = $measure;
+            }
         }
 
         if (isset($data['route'])) {
@@ -55,11 +68,7 @@ class Converter {
             $output['messages'] = $messages['messages'];
         }
 
-        if (isset($data['request'])) {
-            $request = $data['request'];
 
-            $output['responseStatus'] = $request['status_code'];
-        }
 
         if (isset($data['queries'])) {
             $queries = $data['queries'];
@@ -79,64 +88,4 @@ class Converter {
         return $output;
     }
 
-   protected function unvar_dump($str) {
-        $str = str_replace($str, '\n', "\n");
-        if (strpos($str, "\n") === false) {
-            //Add new lines:
-            $regex = array(
-                '#(\\[.*?\\]=>)#',
-                '#(string\\(|int\\(|float\\(|array\\(|NULL|object\\(|})#',
-            );
-            $str = preg_replace($regex, "\n\\1", $str);
-            $str = trim($str);
-        }
-        $regex = array(
-            '#^\\040*NULL\\040*$#m',
-            '#^\\s*array\\((.*?)\\)\\s*{\\s*$#m',
-            '#^\\s*string\\((.*?)\\)\\s*(.*?)$#m',
-            '#^\\s*int\\((.*?)\\)\\s*$#m',
-            '#^\\s*bool\\(true\\)\\s*$#m',
-            '#^\\s*bool\\(false\\)\\s*$#m',
-            '#^\\s*float\\((.*?)\\)\\s*$#m',
-            '#^\\s*\[(\\d+)\\]\\s*=>\\s*$#m',
-            '#\\s*?\\r?\\n\\s*#m',
-        );
-        $replace = array(
-            'N',
-            'a:\\1:{',
-            's:\\1:\\2',
-            'i:\\1',
-            'b:1',
-            'b:0',
-            'd:\\1',
-            'i:\\1',
-            ';'
-        );
-        $serialized = preg_replace($regex, $replace, $str);
-        $func = create_function(
-            '$match',
-            'return "s:".strlen($match[1]).":\\"".$match[1]."\\"";'
-        );
-        $serialized = preg_replace_callback(
-            '#\\s*\\["(.*?)"\\]\\s*=>#',
-            $func,
-            $serialized
-        );
-        $func = create_function(
-            '$match',
-            'return "O:".strlen($match[1]).":\\"".$match[1]."\\":".$match[2].":{";'
-        );
-        $serialized = preg_replace_callback(
-            '#object\\((.*?)\\).*?\\((\\d+)\\)\\s*{\\s*;#',
-            $func,
-            $serialized
-        );
-        $serialized = preg_replace(
-            array('#};#', '#{;#'),
-            array('}', '{'),
-            $serialized
-        );
-
-        return unserialize($serialized);
-    }
 }
