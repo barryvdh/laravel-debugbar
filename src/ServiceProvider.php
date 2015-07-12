@@ -73,6 +73,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'uses' => 'OpenHandlerController@handle',
                 'as' => 'debugbar.openhandler',
             ]);
+            
+            $router->get('clockwork/{id?}', [
+                'uses' => 'OpenHandlerController@clockwork',
+                'as' => 'debugbar.clockwork',
+            ]);
 
             $router->get('assets/stylesheets', [
                 'uses' => 'AssetController@css',
@@ -102,6 +107,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $debugbar->boot();
 
         $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
+
+        if ($this->app['config']->get('debugbar.clockwork')) {
+            $kernel->pushMiddleware('Barryvdh\Debugbar\Support\Clockwork\Middleware');
+        }
+
         $kernel->pushMiddleware('Barryvdh\Debugbar\Middleware\Debugbar');
     }
 
