@@ -100,7 +100,7 @@ class Converter {
                 $output['databaseQueries'][] = [
                     'query' => $statement['sql'],
                     'bindings' => $statement['params'],
-                    'time' => $statement['duration'] * 1000,
+                    'duration' => $statement['duration'] * 1000,
                     'connection' => $statement['connection']
                 ];
             }
