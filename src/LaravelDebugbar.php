@@ -20,6 +20,7 @@ use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
@@ -511,6 +512,23 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        if ($app['config']->get('debugbar.clockwork')) {
+
+            try {
+                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
+            } catch (\Exception $e) {
+                $this->addException(
+                  new Exception(
+                    'Cannot add ClockworkCollector to Laravel Debugbar: ' . $e->getMessage(),
+                    $e->getCode(),
+                    $e
+                  )
+                );
+            }
+
+            $this->addClockworkHeaders($response);
+        }
+
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
@@ -545,9 +563,6 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($app['config']->get('debugbar.clockwork')) {
-            $this->addClockworkHeaders($response);
-        }
 
         // Stop further rendering (on subrequests etc)
         $this->disable();

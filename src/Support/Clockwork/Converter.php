@@ -33,14 +33,8 @@ class Converter {
             'responseDuration' => 0,
         ];
 
-
-        if (isset($data['request'])) {
-            $request = $data['request'];
-
-            $output['responseStatus'] = $request['status_code'];
-            foreach($request as $key => $value){
-                $output['headers'][$key] = [$value];
-            }
+        if (isset($data['clockwork'])) {
+            $output = array_merge($output, $data['clockwork']);
         }
 
         if (isset($data['time'])) {
@@ -121,10 +115,6 @@ class Converter {
                     ],
                 ];
             }
-        }
-
-        if (isset($data['session'])) {
-            $output['sessionData'] = $data['session'];
         }
 
         return $output;
