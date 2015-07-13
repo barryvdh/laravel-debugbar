@@ -545,6 +545,10 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        if ($app['config']->get('debugbar.clockwork')) {
+            $this->addClockworkHeaders($response);
+        }
+
         // Stop further rendering (on subrequests etc)
         $this->disable();
 
@@ -820,5 +824,12 @@ class LaravelDebugbar extends DebugBar
 
             $debugbar->setStorage($storage);
         }
+    }
+
+    protected function addClockworkHeaders($response)
+    {
+        $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
+        $response->headers->set('X-Clockwork-Version', 1, true);
+        $response->headers->set('X-Clockwork-Path','/_debugbar/clockwork/', true);
     }
 }

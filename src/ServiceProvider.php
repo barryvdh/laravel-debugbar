@@ -107,11 +107,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $debugbar->boot();
 
         $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
-
-        if ($this->app['config']->get('debugbar.clockwork')) {
-            $kernel->pushMiddleware('Barryvdh\Debugbar\Support\Clockwork\Middleware');
-        }
-
         $kernel->pushMiddleware('Barryvdh\Debugbar\Middleware\Debugbar');
     }
 
