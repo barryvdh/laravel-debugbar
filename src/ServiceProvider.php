@@ -74,7 +74,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.openhandler',
             ]);
             
-            $router->get('clockwork/{id?}', [
+            $router->get('clockwork/{id}', [
                 'uses' => 'OpenHandlerController@clockwork',
                 'as' => 'debugbar.clockwork',
             ]);
