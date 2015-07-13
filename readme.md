@@ -78,7 +78,9 @@ php artisan vendor:publish
 For Lumen, register a different Provider in `bootstrap/app.php`:
 
 ```
-$app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+if (env('APP_DEBUG')) {
+ $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+}
 ```
 
 To change the configuration, copy the file to your config folder and enable it:
