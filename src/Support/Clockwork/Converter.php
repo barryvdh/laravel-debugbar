@@ -22,7 +22,6 @@ class Converter {
             'cookies' => [],
             'emailsData' => [],
             'getData' => [],
-            'headers' => [],
             'log' => [],
             'postData' => [],
             'sessionData' => [],
@@ -32,7 +31,6 @@ class Converter {
             'responseTime' => null,
             'responseStatus' => null,
             'responseDuration' => 0,
-            'log' => [],
         ];
 
 
@@ -47,28 +45,54 @@ class Converter {
 
         if (isset($data['time'])) {
             $time = $data['time'];
+            $output['time'] = $time['start'];
             $output['responseTime'] = $time['end'];
             $output['responseDuration'] = $time['duration'] * 1000;
             foreach($time['measures'] as $measure) {
-                $measure['duration'] = $measure['duration'] * 1000;
-                $output['timelineData'][] = $measure;
+                $output['timelineData'][] = [
+                    'data' => [],
+                    'description' => $measure['label'],
+                    'duration' => $measure['duration'] * 1000,
+                    'end' => $measure['end'],
+                    'start' => $measure['start'],
+                    'relative_start' => $measure['start'] - $time['start'],
+                ];
             }
         }
 
         if (isset($data['route'])) {
             $route = $data['route'];
 
-            if (isset($route['uses'])) {
-                $output['controller'] = $route['uses'];
+            $controller = null;
+            if (isset($route['controller'])) {
+                $controller = $route['controller'];
+            } elseif (isset($route['uses'])) {
+                $controller = $route['uses'];
             }
+
+            $output['controller'] = $controller;
+
+            list($method, $uri) = explode(' ', $route['uri'], 2);
+
+            $output['routes'][] = [
+                'action' => $controller,
+                'after' => isset($route['after']) ? $route['after'] : null,
+                'before' => isset($route['before']) ? $route['before'] : null,
+                'method' => $method,
+                'name' => isset($route['as']) ? $route['as'] : null,
+                'uri' => $uri,
+            ];
         }
 
         if (isset($data['messages'])) {
-            $messages = $data['messages'];
-            $output['messages'] = $messages['messages'];
+            foreach($data['messages']['messages'] as $message) {
+                $output['log'][] = [
+                    'message' => $message['message'],
+                    'time' => $message['time'],
+                    'level' => $message['label'],
+                ];
+            }
         }
-
-
 
         if (isset($data['queries'])) {
             $queries = $data['queries'];
@@ -82,7 +106,25 @@ class Converter {
             }
 
             $output['databaseDuration'] = $queries['accumulated_duration'] * 1000;
+        }
 
+        if (isset($data['views'])) {
+            foreach ($data['views']['templates'] as $view) {
+                $output['viewsData'][] = [
+                    'description' => 'Rendering a view',
+                    'duration' => 0,
+                    'end' => 0,
+                    'start' => 0,
+                    'data' => [
+                        'name' => $view['name'],
+                        'data' => $view['params'],
+                    ],
+                ];
+            }
+        }
+
+        if (isset($data['session'])) {
+            $output['sessionData'] = $data['session'];
         }
 
         return $output;
