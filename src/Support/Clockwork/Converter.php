@@ -117,6 +117,18 @@ class Converter {
             }
         }
 
+        if (isset($data['swiftmailer_mails'])) {
+            foreach($data['swiftmailer_mails']['mails'] as $mail) {
+                $output['emailsData'][] = [
+                    'data' => [
+                        'to' => $mail['to'],
+                        'subject' => $mail['subject'],
+                        'headers' => isset($mail['headers']) ? explode("\n", $mail['headers']) : null,
+                    ],
+                ];
+            }
+        }
+
         return $output;
     }
 
