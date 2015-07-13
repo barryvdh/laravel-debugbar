@@ -843,8 +843,9 @@ class LaravelDebugbar extends DebugBar
 
     protected function addClockworkHeaders($response)
     {
+        $prefix = $this->app['config']->get('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
         $response->headers->set('X-Clockwork-Version', 1, true);
-        $response->headers->set('X-Clockwork-Path','/_debugbar/clockwork/', true);
+        $response->headers->set('X-Clockwork-Path', $prefix .'/clockwork/', true);
     }
 }
