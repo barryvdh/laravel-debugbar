@@ -43,7 +43,7 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 
 Require this package with composer:
 
-```
+```sh
 composer require barryvdh/laravel-debugbar
 ```
 
@@ -52,13 +52,13 @@ After updating composer, add the ServiceProvider to the providers array in confi
 
 ### Laravel 5.x:
 
-```
+```php
 'Barryvdh\Debugbar\ServiceProvider',
 ```
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
-```
+```php
 'Debugbar' => 'Barryvdh\Debugbar\Facade',
 ```
 
@@ -69,7 +69,7 @@ You can also only display the js of css vendors, by setting it to 'js' or 'css'.
 
 Copy the package config to your local config with the publish command:
 
-```
+```sh
 php artisan vendor:publish
 ```
 
@@ -77,7 +77,7 @@ php artisan vendor:publish
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
 
-```
+```php
 if (env('APP_DEBUG')) {
  $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
 }
@@ -85,7 +85,7 @@ if (env('APP_DEBUG')) {
 
 To change the configuration, copy the file to your config folder and enable it:
 
-```
+```php
 $app->configure('debugbar');
 ```
 
@@ -180,14 +180,14 @@ Add the following extensions to your TwigBridge config/extensions.php (or regist
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,
 instead of showing it directly in the template. It dumps the arguments, or when empty; all context variables.
 
-```
+```php
 {{ debug() }}
 {{ debug(user, categories) }}
 ```
 
 The Stopwatch extension adds a [stopwatch tag](http://symfony.com/blog/new-in-symfony-2-4-a-stopwatch-tag-for-twig)  similar to the one in Symfony/Silex Twigbridge.
 
-```
+```php
 {% stopwatch "foo" %}
     …some things that gets timed
 {% endstopwatch %}
