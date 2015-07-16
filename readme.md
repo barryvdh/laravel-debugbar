@@ -53,13 +53,13 @@ After updating composer, add the ServiceProvider to the providers array in confi
 ### Laravel 5.x:
 
 ```
-'Barryvdh\Debugbar\ServiceProvider',
+Barryvdh\Debugbar\ServiceProvider::class,
 ```
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
 ```
-'Debugbar' => 'Barryvdh\Debugbar\Facade',
+'Debugbar' => Barryvdh\Debugbar\Facade::class,
 ```
 
 
