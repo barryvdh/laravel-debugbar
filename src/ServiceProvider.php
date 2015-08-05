@@ -26,8 +26,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'DebugBar\DataFormatter\DataFormatterInterface'
         );
         
-        $this->app['debugbar'] = $this->app->share(
-            function ($app) {
+        $this->app->singleton('debugbar', function ($app) {
                 $debugbar = new LaravelDebugbar($app);
 
                 $sessionManager = $app['session'];
