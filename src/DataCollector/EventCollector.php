@@ -9,10 +9,13 @@ class EventCollector extends TimeDataCollector
 {
     protected $events = null;
     protected $exporter;
+    protected $time;
 
-    public function __construct($requestStartTime = null){
+     public function __construct($requestStartTime = null)
+    {
         parent::__construct($requestStartTime);
         $this->exporter = new ValueExporter();
+        $this->time = microtime(true);
     }
 
     public function onWildcardEvent()
@@ -20,7 +23,8 @@ class EventCollector extends TimeDataCollector
         $args = func_get_args();
         $name = $this->getCurrentEvent($args);
         $time = microtime(true);
-        $this->addMeasure($name, $time, $time, $this->prepareParams($args) );
+        $this->addMeasure($name, $this->time, $time, $this->prepareParams($args));
+        $this->time = $time;
     }
 
     public function subscribe(Dispatcher $events)
