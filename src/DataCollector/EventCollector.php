@@ -7,36 +7,60 @@ use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 class EventCollector extends TimeDataCollector
 {
-    protected $events = null;
+    /** @var Dispatcher */
+    protected $events;
+
+    /** @var ValueExporter  */
     protected $exporter;
 
-    public function __construct($requestStartTime = null){
+    public function __construct($requestStartTime = null)
+    {
         parent::__construct($requestStartTime);
+
         $this->exporter = new ValueExporter();
     }
 
     public function onWildcardEvent()
     {
-        $args = func_get_args();
-        $name = $this->getCurrentEvent($args);
+        $name = $this->events->firing();
         $time = microtime(true);
-        $this->addMeasure($name, $time, $time, $this->prepareParams($args) );
+
+        $params = $this->prepareParams(func_get_args());
+
+        foreach($this->events->getListeners($name) as $i => $listener) {
+            if (is_array($listener) && count($listener) > 1 && is_object($listener[0])) {
+                list($class, $method) = $listener;
+
+                // Skip this class itself
+                if ($class instanceof static) {
+                    continue;
+                }
+
+                // Format thet listener to readable format
+                $listener = get_class($class) . '@' . $method;
+                
+            } elseif ($listener instanceof \Closure) {
+                $reflector = new \ReflectionFunction($listener);
+
+                if($reflector->getNamespaceName() == 'Barryvdh\Debugbar') {
+                    continue;
+                }
+
+                $filename = ltrim(str_replace(base_path(), '', $reflector->getFileName()), '/');
+                $listener = $reflector->getName() . ' ('.$filename . ':' . $reflector->getStartLine() . '-' . $reflector->getEndLine() . ')';
+            } else {
+                $listener = $this->formatVar($listener);
+            }
+
+            $params['listeners.'.$i] = $listener;
+        }
+        $this->addMeasure($name, $time, $time,  $params);
     }
 
     public function subscribe(Dispatcher $events)
     {
         $this->events = $events;
         $events->listen('*', array($this, 'onWildcardEvent'));
-    }
-
-    protected function getCurrentEvent($args)
-    {
-        if(method_exists($this->events, 'firing')){
-            $event = $this->events->firing();
-        }else{
-            $event = end($args);
-        }
-        return $event;
     }
 
     protected function prepareParams($params)
