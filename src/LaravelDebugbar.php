@@ -459,7 +459,7 @@ class LaravelDebugbar extends DebugBar
     public function modifyResponse($request, $response)
     {
         $app = $this->app;
-        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
+        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest() || $this->isAllowedRoute($request)) {
             return $response;
         }
 
@@ -603,6 +603,43 @@ class LaravelDebugbar extends DebugBar
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
         return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
+    }
+
+    /**
+     * Check if requested route is not blacklisted.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @return bool
+     */
+    protected function isAllowedRoute($request)
+    {
+        $ignored_routes = $this->app['config']->get('debugbar.ignored_routes');
+        $current_route = $request->getRequestUri();
+
+        if($current_route[strlen($current_route)-1] == "/")
+            $current_route = substr($current_route, 0, strlen($current_route)-1);
+
+        if($current_route == "")
+            $current_route = "/";
+
+        foreach($ignored_routes as $ignored_route)
+        {
+            if($ignored_route == "")
+                $ignored_route = "/";
+
+            $ignored_route = preg_replace("({[^{|}]+})", "[A-Za-z0-9]+", $ignored_route);
+
+            if(strlen($ignored_route) > 1 && $ignored_route[0] != "/") // To allow rules writes as "/route" and "route"
+                $ignored_route = "/".$ignored_route;
+
+            if($ignored_route[strlen($ignored_route)-1] == "/")
+                $ignored_route = substr($ignored_route, 0, strlen($ignored_route)-1);
+
+            if(preg_match("{^".$ignored_route."$}", $current_route))
+                return true;
+        }
+
+        return false;
     }
 
     /**

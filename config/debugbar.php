@@ -165,4 +165,20 @@ return array(
      */
     'route_prefix' => '_debugbar',
 
+    /*
+     |--------------------------------------------------------------------------
+     | Ignored routes
+     |--------------------------------------------------------------------------
+     |
+     | There is a possibility that there are routes which should never display
+     | DebugBar even in debug mode - e.g. plain API responses with JSON data.
+     | This way API clients don't have to implement more complicated parsing.
+     |
+     | Syntax supports basic routes like: "route/dostuff" and routes with parameters "route/{whateveryoulike}/dostuff
+     |
+     */
+    'ignored_routes' => array(
+        'retrieve/{parameterA}/{parameterB}/plain',
+        'simple/route'
+    ),
 );
