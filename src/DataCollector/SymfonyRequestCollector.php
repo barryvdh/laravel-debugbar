@@ -110,7 +110,8 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
         }
 
         foreach ($data['request_server'] as $key => $value) {
-            if (str_is('*_KEY', $key) || str_is('*_PASSWORD', $key) || str_is('*_SECRET', $key)) {
+            if (str_is('*_KEY', $key) || str_is('*_PASSWORD', $key)
+                    || str_is('*_SECRET', $key) || str_is('*_PW', $key)) {
                 $data['request_server'][$key] = '******';
             }
         }
