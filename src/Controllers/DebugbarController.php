@@ -1,6 +1,4 @@
-<?php
-
-namespace Barryvdh\Debugbar\Controllers;
+<?php namespace Barryvdh\Debugbar\Controllers;
 
 use View, App, Controller, Config;
 
@@ -9,9 +7,9 @@ use DebugBar\Storage\FileStorage;
 use DebugBar\OpenHandler;
 use Barryvdh\Debugbar\Facade as Debugbar;
 
-class DebugbarController extends Controller {
+class DebugbarController extends BaseController {
   public function getIndex() {
-    $path = Config::get('laravel-debugbar::storage.path');
+    $path = Config::get('debugbar.storage.path');
 
     if (!file_exists($path))
       return 'Debug directory does not exist: '.$path;

@@ -1,6 +1,4 @@
-﻿<?php namespace Barryvdh\Debugbar;
-
-use Illuminate\Routing\Router;
+<?php namespace Barryvdh\Debugbar;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -20,12 +18,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
-        
+
         $this->app->alias(
             'DebugBar\DataFormatter\DataFormatter',
             'DebugBar\DataFormatter\DataFormatterInterface'
         );
-        
+
         $this->app->singleton('debugbar', function ($app) {
                 $debugbar = new LaravelDebugbar($app);
 
@@ -36,7 +34,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 return $debugbar;
             }
         );
-        
+
         $this->app->alias('debugbar', 'Barryvdh\Debugbar\LaravelDebugbar');
 
         $this->app['command.debugbar.clear'] = $this->app->share(
@@ -55,8 +53,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        include __DIR__.'/../routes.php';
-        $this->package('barryvdh/laravel-debugbar', null, __DIR__);
+	    if (! $this->app->routesAreCached()) {
+		    require __DIR__.'/../routes.php';
+	    }
+
+	    $this->loadViewsFrom(__DIR__.'/views', 'laravel-debugbar');
+
 
         $app = $this->app;
 
@@ -142,7 +144,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->publishes([$configPath => config_path('debugbar.php')], 'config');
             }
-    
+
     /**
      * Register the Debugbar Middleware
      *
@@ -153,7 +155,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
         $kernel->pushMiddleware($middleware);
     }
-    
+
     /**
      * Check the App Debug status
      */
