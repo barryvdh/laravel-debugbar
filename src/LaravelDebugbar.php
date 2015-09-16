@@ -46,6 +46,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class LaravelDebugbar extends DebugBar
 {
+    public function setData($data) {
+        $this->data = $data;
+    }
+
+    public function setCurrentRequestId($id) {
+        $this->requestId = $id;
+    }
+
     /**
      * The Laravel application instance.
      *

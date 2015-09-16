@@ -1,4 +1,4 @@
-<?php namespace Barryvdh\Debugbar;
+﻿<?php namespace Barryvdh\Debugbar;
 
 use Illuminate\Routing\Router;
 
@@ -55,6 +55,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
+        include __DIR__.'/../routes.php';
+        $this->package('barryvdh/laravel-debugbar', null, __DIR__);
+
         $app = $this->app;
 
         $configPath = __DIR__ . '/../config/debugbar.php';
@@ -62,7 +65,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if ($app->runningInConsole()) {
             $this->app['config']->set('debugbar.enabled', false);
-        }
+                    }
 
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
@@ -103,9 +106,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return;
         }
 
-        /** @var LaravelDebugbar $debugbar */
-        $debugbar = $this->app['debugbar'];
-        $debugbar->boot();
+            /** @var LaravelDebugbar $debugbar */
+            $debugbar = $this->app['debugbar'];
+            $debugbar->boot();
 
         $this->registerMiddleware('Barryvdh\Debugbar\Middleware\Debugbar');
     }
@@ -118,7 +121,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function getRouter()
     {
         return $this->app['router'];
-    }
+            }
 
     /**
      * Get the config path
@@ -128,7 +131,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function getConfigPath()
     {
         return config_path('debugbar.php');
-    }
+            }
 
     /**
      * Publish the config file
@@ -138,8 +141,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function publishConfig($configPath)
     {
         $this->publishes([$configPath => config_path('debugbar.php')], 'config');
-    }
-
+            }
+    
     /**
      * Register the Debugbar Middleware
      *
@@ -150,7 +153,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
         $kernel->pushMiddleware($middleware);
     }
-
+    
     /**
      * Check the App Debug status
      */
