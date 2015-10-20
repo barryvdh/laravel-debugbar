@@ -141,24 +141,6 @@ class LaravelDebugbar extends DebugBar
                       }
                   }
                 );
-
-                //Check if App::before is already called..
-                if ($this->app->isBooted()) {
-                    $debugbar->startMeasure('application', 'Application');
-                } else {
-                    $this->app['router']->before(
-                      function () use ($debugbar) {
-                          $debugbar->startMeasure('application', 'Application');
-                      }
-                    );
-                }
-
-                $this->app['router']->after(
-                  function () use ($debugbar) {
-                      $debugbar->stopMeasure('application');
-                      $debugbar->startMeasure('after', 'After application');
-                  }
-                );
             }
 
         }
