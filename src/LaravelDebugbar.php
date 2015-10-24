@@ -456,7 +456,7 @@ class LaravelDebugbar extends DebugBar
      * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function modifyResponse($request, $response)
+    public function modifyResponse(Request $request, Response $response)
     {
         $app = $this->app;
         if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
@@ -593,7 +593,7 @@ class LaravelDebugbar extends DebugBar
      * @param  \Symfony\Component\HttpFoundation\Request $request
      * @return bool
      */
-    protected function isJsonRequest($request)
+    protected function isJsonRequest(Request $request)
     {
         // If XmlHttpRequest, return true
         if ($request->isXmlHttpRequest()) {
@@ -841,7 +841,7 @@ class LaravelDebugbar extends DebugBar
         }
     }
 
-    protected function addClockworkHeaders($response)
+    protected function addClockworkHeaders(Response $response)
     {
         $prefix = $this->app['config']->get('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
