@@ -374,6 +374,15 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        if ($this->shouldCollect('gate', false)) {
+            try {
+                $gateCollector = $this->app->make(GateCollector::class);
+                $this->addCollector($gateCollector);
+            } catch (\Exception $e){
+                // No Gate collector
+            }
+        }
+
         $renderer = $this->getJavascriptRenderer();
         $renderer->setIncludeVendors($this->app['config']->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToXHR($app['config']->get('debugbar.capture_ajax', true));
