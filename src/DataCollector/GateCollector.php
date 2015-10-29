@@ -23,15 +23,15 @@ class GateCollector extends MessagesCollector
         }
     }
 
-    public function addCheck(Authenticatable $user, $ability, $result = null, $arguments = [])
+    public function addCheck(Authenticatable $user, $ability, $result, $arguments = [])
     {
         $label = $result ? 'success' : 'error';
 
         $this->addMessage([
             'ability' => $ability,
             'result' => $result,
+            'user' => $user->getAuthIdentifier(),
             'arguments' => $arguments,
-            'user' => $user ? $user->getAuthIdentifier() : null,
         ], $label, false);
     }
 }
