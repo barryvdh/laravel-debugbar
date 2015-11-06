@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Support\Contracts\ArrayableInterface;
+use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * Collector for Laravel's Auth provider
@@ -77,7 +77,7 @@ class AuthCollector extends DataCollector implements Renderable
 
         return array(
             'name' => $identifier,
-            'user' => $user instanceof ArrayableInterface ? $user->toArray() : $user,
+            'user' => $user instanceof Arrayable ? $user->toArray() : $user,
         );
     }
 
