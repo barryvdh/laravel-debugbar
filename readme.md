@@ -70,7 +70,7 @@ You can also only display the js of css vendors, by setting it to 'js' or 'css'.
 Copy the package config to your local config with the publish command:
 
 ```
-php artisan vendor:publish
+php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 ```
 
 ### Lumen:
