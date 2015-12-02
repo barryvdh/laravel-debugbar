@@ -25,6 +25,24 @@ class AssetController extends BaseController
     }
 
     /**
+     * Return the Debugbar javascript as a module for use with requirejs
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function module()
+    {
+        $content = file_get_contents(__DIR__ . "/../Resources/debugbar-all.js");
+
+        $response = new Response(
+            $content, 200, array(
+                'Content-Type' => 'text/javascript',
+            )
+        );
+
+        return $this->cacheResponse($response);
+    }
+
+    /**
      * Return the stylesheets for the Debugbar
      *
      * @return \Symfony\Component\HttpFoundation\Response

@@ -166,4 +166,17 @@ return array(
      */
     'route_prefix' => '_debugbar',
 
+    /*
+     |--------------------------------------------------------------------------
+     | Requirejs Compatible
+     |--------------------------------------------------------------------------
+     |
+     | Outputs the debugbar javascript in a format the is compatible with requirejs.
+     | You will need to setup a path for debugbar-all in your requirejs config. Probably
+     | something like "debugbar-all": "../_debugbar/assets/debugbar"
+     | Fixes the issue noted here: https://github.com/barryvdh/laravel-debugbar/issues/105
+     |
+     */
+    'requirejs_compatible' => false,
+
 );

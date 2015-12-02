@@ -12,7 +12,10 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     // Use XHR handler by default, instead of jQuery
     protected $ajaxHandlerBindToJquery = false;
     protected $ajaxHandlerBindToXHR = true;
-    
+
+    // Format the javascript output so it is compatible with requirejs
+    protected $requirejsCompatible = false;
+
     /** @var \Illuminate\Routing\UrlGenerator */
     protected $url;
 
@@ -52,17 +55,32 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             $this->url->route('debugbar.assets.css'),
             $cssModified
         );
-        $html .= sprintf(
-            '<script type="text/javascript" src="%s?%s"></script>' . "\n",
-            $this->url->route('debugbar.assets.js'),
-            $jsModified
-        );
+        if (!$this->requirejsCompatible) {
+            $html .= sprintf(
+                '<script type="text/javascript" src="%s?%s"></script>' . "\n",
+                $this->url->route('debugbar.assets.js'),
+                $jsModified
+            );
+        }
 
-        if ($this->isJqueryNoConflictEnabled()) {
+        if ($this->isJqueryNoConflictEnabled() && !$this->requirejsCompatible) {
             $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
         }
 
         return $html;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render($initialize = true, $renderStackedData = true)
+    {
+        $js = parent::render($initialize, $renderStackedData);
+        if ($this->requirejsCompatible) {
+            $js = str_replace('<script type="text/javascript">', "<script type=\"text/javascript\">\nrequire(['debugbar-all'], function(PhpDebugBar){", $js);
+            $js = str_replace('</script>', "});\n</script>", $js);
+        }
+        return $js;
     }
 
     /**
@@ -128,5 +146,15 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             return $uri;
         }
         return rtrim($root, '/') . "/$uri";
+    }
+
+    /**
+     * Sets the requirejsCompatible property
+     *
+     * @param $value
+     */
+    public function setRequirejsCompatible($value)
+    {
+        $this->requirejsCompatible = $value;
     }
 }

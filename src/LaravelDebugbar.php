@@ -386,6 +386,7 @@ class LaravelDebugbar extends DebugBar
         $renderer = $this->getJavascriptRenderer();
         $renderer->setIncludeVendors($this->app['config']->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToXHR($app['config']->get('debugbar.capture_ajax', true));
+        $renderer->setRequirejsCompatible($app['config']->get('debugbar.requirejs_compatible'), false);
 
         $this->booted = true;
     }
