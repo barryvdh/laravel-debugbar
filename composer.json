@@ -13,7 +13,7 @@
         "php": ">=5.5.0",
         "illuminate/support": "~5.0.17|5.1.*",
         "symfony/finder": "~2.6",
-        "maximebf/debugbar": "~1.10.2"
+        "maximebf/debugbar": "~1.10.2|1.11.x"
     },
     "autoload": {
         "psr-4": {
