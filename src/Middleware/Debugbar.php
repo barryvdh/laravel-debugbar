@@ -44,6 +44,8 @@ class Debugbar {
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
 
+        $debugbar->startMeasure('application', 'Application');
+
         try {
             /** @var \Illuminate\Http\Response $response */
             $response = $next($request);
@@ -53,6 +55,9 @@ class Debugbar {
             $this->exceptionHandler->report($e);
             $response = $this->exceptionHandler->render($request, $e);
         }
+
+        $debugbar->stopMeasure('application');
+        $debugbar->startMeasure('after', 'After application');
 
         return $debugbar->modifyResponse($request, $response);
 
