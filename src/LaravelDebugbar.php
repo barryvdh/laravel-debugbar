@@ -131,9 +131,7 @@ class LaravelDebugbar extends DebugBar
             $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
             $this->addCollector(new TimeDataCollector($startTime));
 
-            if ($this->isLumen()) {
-                $debugbar->startMeasure('application', 'Application');
-            } else {
+            if ( ! $this->isLumen()) {
                 $this->app->booted(
                   function () use ($debugbar, $startTime) {
                       if ($startTime) {
@@ -142,7 +140,8 @@ class LaravelDebugbar extends DebugBar
                   }
                 );
             }
-
+            
+            $debugbar->startMeasure('application', 'Application');
         }
 
         if ($this->shouldCollect('memory', true)) {
