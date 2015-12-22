@@ -288,8 +288,20 @@ class LaravelDebugbar extends DebugBar
 
             try {
                 $db->listen(
-                    function ($query, $bindings, $time, $connectionName) use ($db, $queryCollector) {
-                        $connection = $db->connection($connectionName);
+                    function ($query, $bindings = null, $time = null, $connectionName = null) use ($db, $queryCollector) {
+                        // Laravel 5.2 changed the way some core events worked. We must account for
+                        // the first argument being an "event object", where arguments are passed
+                        // via object properties, instead of individual arguments.
+                        if (version_compare($this->version, '5.2.0', '>=')) {
+                            $bindings = $query->bindings;
+                            $time = $query->time;
+                            $connection = $query->connection;
+
+                            $query = $query->sql;
+                        } else {
+                            $connection = $db->connection($connectionName);
+                        }
+
                         $queryCollector->addQuery((string) $query, $bindings, $time, $connection);
                     }
                 );
