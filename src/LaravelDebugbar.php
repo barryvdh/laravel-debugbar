@@ -27,6 +27,7 @@ use DebugBar\Storage\RedisStorage;
 use Exception;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request as LaravelRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -461,7 +462,7 @@ class LaravelDebugbar extends DebugBar
     public function modifyResponse(Request $request, Response $response)
     {
         $app = $this->app;
-        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
+        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest() || $this->isAllowedRoute($request)) {
             return $response;
         }
 
@@ -605,6 +606,24 @@ class LaravelDebugbar extends DebugBar
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
         return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
+    }
+
+    /**
+     * Check if requested route is not blacklisted.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @return bool
+     */
+    protected function isAllowedRoute($request)
+    {
+        $laravel_request = LaravelRequest::createFromBase($request);
+        $ignored_routes = $this->app['config']->get('debugbar.ignored_routes');
+
+        foreach ($ignored_routes as $ignored_route)
+            if ($laravel_request->is($ignored_route))
+                return true;
+
+        return false;
     }
 
     /**
