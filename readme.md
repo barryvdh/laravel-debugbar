@@ -73,6 +73,8 @@ Copy the package config to your local config with the publish command:
 php artisan vendor:publish
 ```
 
+Standalone route to Debugbar, /debugbar, is also registered. It might be useful e.g. when debugging REST APIs.
+
 ### Lumen:
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
