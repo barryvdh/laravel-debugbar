@@ -41,6 +41,10 @@ class Debugbar {
      */
     public function handle($request, Closure $next)
     {
+        $enabled = function () {
+            return config('debugbar.enabled');
+        };
+
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
 
@@ -48,10 +52,13 @@ class Debugbar {
             /** @var \Illuminate\Http\Response $response */
             $response = $next($request);
         } catch (\Exception $e) {
-            $debugbar->addException($e);
-
-            $this->exceptionHandler->report($e);
-            $response = $this->exceptionHandler->render($request, $e);
+            if ($enabled()) {
+                $debugbar->addException($e);
+                $this->exceptionHandler->report($e);
+                $response = $this->exceptionHandler->render($request, $e);
+            } else {
+                return $next($request);
+            }
         }
 
         return $debugbar->modifyResponse($request, $response);
