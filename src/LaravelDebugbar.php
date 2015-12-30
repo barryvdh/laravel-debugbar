@@ -369,7 +369,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('gate', false)) {
             try {
-                $gateCollector = $this->app->make(GateCollector::class);
+                $gateCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\GateCollector');
                 $this->addCollector($gateCollector);
             } catch (\Exception $e){
                 // No Gate collector
