@@ -3,6 +3,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 class EventCollector extends TimeDataCollector
@@ -75,6 +76,9 @@ class EventCollector extends TimeDataCollector
     {
         $data = array();
         foreach ($params as $key => $value) {
+            if (is_object($value) && Str::is('Illuminate\*\Events\*', get_class($value))) {
+                $value =  $this->prepareParams(get_object_vars($value));
+            }
             $data[$key] = htmlentities($this->exporter->exportValue($value), ENT_QUOTES, 'UTF-8', false);
         }
 
