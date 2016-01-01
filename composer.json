@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "~5.0.17|5.1.*|5.2.*",
-        "symfony/finder": "~2.6|~3.0",
+        "illuminate/support": "5.2.*",
+        "symfony/finder": "~2.8|~3.0",
         "maximebf/debugbar": "~1.11.0"
     },
     "autoload": {
