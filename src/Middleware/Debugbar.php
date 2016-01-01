@@ -1,35 +1,25 @@
 <?php namespace Barryvdh\Debugbar\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Contracts\Foundation\Application;
+use Barryvdh\Debugbar\LaravelDebugbar;
 
 class Debugbar {
 
     /**
-     * The Laravel Application
-     *
-     * @var Application
-     */
-    protected $app;
-
-    /**
      * The Exception Handler
      *
-     * @var ExceptionHandler
+     * @var LaravelDebugbar
      */
-    protected $exceptionHandler;
+    protected $debugbar;
 
     /**
      * Create a new middleware instance.
      *
-     * @param  Application $app
-     * @param  ExceptionHandler $exceptionHandler
+     * @param  LaravelDebugbar $debugbar
      */
-    public function __construct(Application $app, ExceptionHandler $exceptionHandler)
+    public function __construct(LaravelDebugbar $debugbar)
     {
-        $this->app = $app;
-        $this->exceptionHandler = $exceptionHandler;
+        $this->debugbar = $debugbar;
     }
 
     /**
@@ -41,20 +31,11 @@ class Debugbar {
      */
     public function handle($request, Closure $next)
     {
-        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
-        $debugbar = $this->app['debugbar'];
+        $response = $next($request);
 
-        try {
-            /** @var \Illuminate\Http\Response $response */
-            $response = $next($request);
-        } catch (\Exception $e) {
-            $debugbar->addException($e);
+        $this->debugbar->modifyResponse($request, $response);
 
-            $this->exceptionHandler->report($e);
-            $response = $this->exceptionHandler->render($request, $e);
-        }
-
-        return $debugbar->modifyResponse($request, $response);
+        return $response;
 
     }
 }
