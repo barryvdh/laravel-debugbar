@@ -787,7 +787,7 @@ class LaravelDebugbar extends DebugBar
                     break;
                 case 'custom':
                     $class = $config->get('debugbar.storage.provider');
-                    $storage = app($class);
+                    $storage = $this->app->make($class);
                     break;
                 case 'file':
                 default:
