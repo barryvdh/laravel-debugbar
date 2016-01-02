@@ -1,6 +1,7 @@
 <?php namespace Barryvdh\Debugbar;
 
 use Illuminate\Routing\Router;
+use Illuminate\Session\SessionManager;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -29,9 +30,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->singleton('debugbar', function ($app) {
                 $debugbar = new LaravelDebugbar($app);
 
-                $sessionManager = $app['session'];
-                $httpDriver = new SymfonyHttpDriver($sessionManager);
-                $debugbar->setHttpDriver($httpDriver);
+                if ($app->bound(SessionManager::class)) {
+                    $sessionManager = $app->make(SessionManager::class);
+                    $httpDriver = new SymfonyHttpDriver($sessionManager);
+                    $debugbar->setHttpDriver($httpDriver);
+                }
 
                 return $debugbar;
             }
