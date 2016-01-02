@@ -12,9 +12,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     // Use XHR handler by default, instead of jQuery
     protected $ajaxHandlerBindToJquery = false;
     protected $ajaxHandlerBindToXHR = true;
-    
-    /** @var \Illuminate\Routing\UrlGenerator */
-    protected $url;
 
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
@@ -28,10 +25,11 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Set the URL Generator
      *
      * @param \Illuminate\Routing\UrlGenerator $url
+     * @deprecated
      */
     public function setUrlGenerator($url)
     {
-        $this->url = $url;
+
     }
 
     /**
@@ -39,22 +37,18 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function renderHead()
     {
-        if (!$this->url) {
-            return parent::renderHead();
-        }
-
         $jsModified = $this->getModifiedTime('js');
         $cssModified = $this->getModifiedTime('css');
 
         $html = '';
         $html .= sprintf(
             '<link rel="stylesheet" type="text/css" href="%s?%s">' . "\n",
-            $this->url->route('debugbar.assets.css'),
+            route('debugbar.assets.css'),
             $cssModified
         );
         $html .= sprintf(
             '<script type="text/javascript" src="%s?%s"></script>' . "\n",
-            $this->url->route('debugbar.assets.js'),
+            route('debugbar.assets.js'),
             $jsModified
         );
 
