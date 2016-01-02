@@ -27,6 +27,7 @@ use DebugBar\Storage\RedisStorage;
 use Exception;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Session\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -107,8 +108,8 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        if ($this->isDebugbarRequest()) {
-            $this->app['session']->reflash();
+        if ($this->isDebugbarRequest() && $this->app->bound(SessionManager::class)) {
+            $this->app->make(SessionManager::class)->reflash();
         }
 
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
@@ -133,14 +134,14 @@ class LaravelDebugbar extends DebugBar
 
             if ( ! $this->isLumen()) {
                 $this->app->booted(
-                  function () use ($debugbar, $startTime) {
-                      if ($startTime) {
-                          $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
-                      }
-                  }
+                    function () use ($debugbar, $startTime) {
+                        if ($startTime) {
+                            $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
+                        }
+                    }
                 );
             }
-            
+
             $debugbar->startMeasure('application', 'Application');
         }
 
@@ -446,7 +447,6 @@ class LaravelDebugbar extends DebugBar
     {
         if ($this->jsRenderer === null) {
             $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);
-            $this->jsRenderer->setUrlGenerator($this->app['url']);
         }
         return $this->jsRenderer;
     }
@@ -464,7 +464,7 @@ class LaravelDebugbar extends DebugBar
         if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
             return $response;
         }
-        
+
         // Show the Http Response Exception in the Debugbar, when available
         if (isset($response->exception)) {
             $this->addException($response->exception);
@@ -486,23 +486,28 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        /** @var \Illuminate\Session\SessionManager $sessionManager */
-        $sessionManager = $app['session'];
-        $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
-        $this->setHttpDriver($httpDriver);
+        if ($this->app->bound(SessionManager::class)){
 
-        if ($this->shouldCollect('session')) {
-            try {
-                $this->addCollector(new SessionCollector($sessionManager));
-            } catch (\Exception $e) {
-                $this->addException(
-                    new Exception(
-                        'Cannot add SessionCollector to Laravel Debugbar: ' . $e->getMessage(),
-                        $e->getCode(),
-                        $e
-                    )
-                );
+            /** @var \Illuminate\Session\SessionManager $sessionManager */
+            $sessionManager = $app->make(SessionManager::class);
+            $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
+            $this->setHttpDriver($httpDriver);
+
+            if ($this->shouldCollect('session')) {
+                try {
+                    $this->addCollector(new SessionCollector($sessionManager));
+                } catch (\Exception $e) {
+                    $this->addException(
+                        new Exception(
+                            'Cannot add SessionCollector to Laravel Debugbar: ' . $e->getMessage(),
+                            $e->getCode(),
+                            $e
+                        )
+                    );
+                }
             }
+        } else {
+            $sessionManager = null;
         }
 
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
@@ -525,11 +530,11 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
             } catch (\Exception $e) {
                 $this->addException(
-                  new Exception(
-                    'Cannot add ClockworkCollector to Laravel Debugbar: ' . $e->getMessage(),
-                    $e->getCode(),
-                    $e
-                  )
+                    new Exception(
+                        'Cannot add ClockworkCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        $e->getCode(),
+                        $e
+                    )
                 );
             }
 
@@ -666,7 +671,7 @@ class LaravelDebugbar extends DebugBar
 
         $renderer = $this->getJavascriptRenderer();
         if ($this->getStorage()) {
-            $openHandlerUrl = $this->app['url']->route('debugbar.openhandler');
+            $openHandlerUrl = route('debugbar.openhandler');
             $renderer->setOpenHandlerUrl($openHandlerUrl);
         }
 
