@@ -464,6 +464,11 @@ class LaravelDebugbar extends DebugBar
         if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
             return $response;
         }
+        
+        // Show the Http Response Exception in the Debugbar, when available
+        if (isset($response->exception)) {
+            $this->addException($response->exception);
+        }
 
         if ($this->shouldCollect('config', false)) {
             try {
