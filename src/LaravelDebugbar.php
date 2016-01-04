@@ -842,6 +842,10 @@ class LaravelDebugbar extends DebugBar
                     $connection = $config->get('debugbar.storage.connection');
                     $storage = new RedisStorage($this->app['redis']->connection($connection));
                     break;
+                case 'custom':
+                    $class = $config->get('debugbar.storage.provider');
+                    $storage = $this->app->make($class);
+                    break;
                 case 'file':
                 default:
                     $path = $config->get('debugbar.storage.path');
