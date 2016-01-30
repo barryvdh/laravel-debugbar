@@ -6,6 +6,7 @@ use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
+use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
@@ -355,7 +356,14 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('auth', false)) {
             try {
-                $authCollector = new AuthCollector($app['auth']);
+                if($this->checkVersion('5.2')) {
+                    // fix for compatibility with Laravel 5.2.*
+                    $guards = array_keys($this->app['config']->get('auth.guards'));
+                    $authCollector = new MultiAuthCollector($app['auth'], $guards);
+                } else {
+                    $authCollector = new AuthCollector($app['auth']);
+                }
+
                 $authCollector->setShowName(
                     $this->app['config']->get('debugbar.options.auth.show_name')
                 );
