@@ -3,6 +3,7 @@
 use Barryvdh\Debugbar\DataCollector\AuthCollector;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
+use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
