@@ -197,6 +197,26 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     border: none;
     font-family: inherit;
     overflow: visible;
+    display: flex;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
+    flex: 1 1 auto;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
+    flex: 0 0 auto;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-database {
+    flex: 0 0 auto;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-params {
+    flex: 1 1 auto;
+    order: -1;
+    width: auto;
+    max-width: 200px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) {
