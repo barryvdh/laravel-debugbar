@@ -64,7 +64,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
         if ($app->runningInConsole()) {
-            $this->app['config']->set('debugbar.enabled', false);
+            if(false === array_key_exists(1, \Request::server('argv'))
+                || true === empty($artisanCommand = \Request::server('argv')[1]) 
+                || 'config:cache' !== $artisanCommand
+            ) {
+                $this->app['config']->set('debugbar.enabled', false);
+            }
         }
 
         $routeConfig = [
