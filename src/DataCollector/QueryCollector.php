@@ -82,7 +82,7 @@ class QueryCollector extends PDOCollector
     {
         // If the query argument is an instance of QueryExecuted the rest of the
         // arguments are probably wrong types and are going to crash
-        // the colletor.
+        // the collector.
         if ( $query instanceof \Illuminate\Database\Events\QueryExecuted )
         {
             $bindings = $query->bindings;
