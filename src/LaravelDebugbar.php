@@ -295,7 +295,9 @@ class LaravelDebugbar extends DebugBar
                         // Laravel 5.2 changed the way some core events worked. We must account for
                         // the first argument being an "event object", where arguments are passed
                         // via object properties, instead of individual arguments.
-                        if (version_compare($this->version, '5.2.0', '>=')) {
+                        // In my opinion it is better to type check rather than version check for the
+                        // long term. 
+                        if ( $query instanceof \Illuminate\Database\Events\QueryExecuted ) {
                             $bindings = $query->bindings;
                             $time = $query->time;
                             $connection = $query->connection;
