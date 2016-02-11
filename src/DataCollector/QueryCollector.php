@@ -80,17 +80,6 @@ class QueryCollector extends PDOCollector
      */
     public function addQuery($query, $bindings, $time, $connection)
     {
-        // If the query argument is an instance of QueryExecuted the rest of the
-        // arguments are probably wrong types and are going to crash
-        // the collector.
-        if ( $query instanceof \Illuminate\Database\Events\QueryExecuted )
-        {
-            $bindings = $query->bindings;
-            $time = $query->time;
-            $connection = $query->connection;
-            $query = $query->sql;
-        }
-        
         $explainResults = array();
         $time = $time / 1000;
         $endTime = microtime(true);
