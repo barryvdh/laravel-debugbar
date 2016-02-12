@@ -63,9 +63,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
-        if ($app->runningInConsole()) {
-            $this->app['config']->set('debugbar.enabled', false);
-        }
+        //if ($app->runningInConsole()) {
+        //    $this->app['config']->set('debugbar.enabled', false);
+        //}
 
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
