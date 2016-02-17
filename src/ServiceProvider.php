@@ -64,7 +64,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
         if ($app->runningInConsole()) {
-            $this->app['config']->set('debugbar.enabled', false);
+            return;
         }
 
         $routeConfig = [
