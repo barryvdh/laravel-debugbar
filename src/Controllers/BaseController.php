@@ -2,6 +2,7 @@
 
 use Barryvdh\Debugbar\LaravelDebugbar;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\Request;
 
 if (class_exists('Illuminate\Routing\Controller')) {
 
@@ -9,9 +10,13 @@ if (class_exists('Illuminate\Routing\Controller')) {
     {
         protected $debugbar;
 
-        public function __construct(LaravelDebugbar $debugbar)
+        public function __construct(Request $request, LaravelDebugbar $debugbar)
         {
             $this->debugbar = $debugbar;
+
+            if ($request->hasSession()){
+                $request->session()->reflash();
+            }
         }
     }
 
@@ -21,10 +26,13 @@ if (class_exists('Illuminate\Routing\Controller')) {
     {
         protected $debugbar;
 
-        public function __construct(LaravelDebugbar $debugbar)
+        public function __construct(Request $request, LaravelDebugbar $debugbar)
         {
             $this->debugbar = $debugbar;
+
+            if ($request->hasSession()){
+                $request->session()->reflash();
+            }
         }
     }
 }
-
