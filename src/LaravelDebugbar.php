@@ -110,10 +110,6 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        if ($this->isDebugbarRequest() && $this->app->bound(SessionManager::class)) {
-            $this->app->make(SessionManager::class)->reflash();
-        }
-
         /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this;
 
