@@ -283,8 +283,7 @@ class LaravelDebugbar extends DebugBar
                 $queryCollector->setFindSource(true);
             }
 
-            if ($this->app['config']->get('laravel-debugbar::config.options.db.explain.enabled') && ($this->app['db']->getDriverName( ) == 'mysql')
-            ) {
+            if ($this->app['config']->get('laravel-debugbar::config.options.db.explain.enabled')) {
                 $types = $this->app['config']->get('laravel-debugbar::config.options.db.explain.types');
                 $queryCollector->setExplainSource(true, $types);
             }
