@@ -33,7 +33,7 @@ class FilesystemStorage implements StorageInterface
     {
         if (!$this->files->isDirectory($this->dirname)) {
             if ($this->files->makeDirectory($this->dirname, 0777, true)) {
-                $this->files->put($this->dirname . '.gitignore', "*\n!.gitignore");
+                $this->files->put($this->dirname . '.gitignore', "*\n!.gitignore\n");
             } else {
                 throw new \Exception("Cannot create directory '$this->dirname'..");
             }
