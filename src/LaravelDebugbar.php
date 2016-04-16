@@ -71,6 +71,13 @@ class LaravelDebugbar extends DebugBar
     protected $booted = false;
 
     /**
+     * True when enabled, false disabled an null for still unknown
+     *
+     * @var bool
+     */
+    protected $enabled = null;
+
+    /**
      * True when this is a Lumen application
      *
      * @var bool
@@ -95,7 +102,8 @@ class LaravelDebugbar extends DebugBar
      */
     public function enable()
     {
-        $this->app['config']->set('debugbar.enabled', true);
+        $this->enabled = true;
+
         if (!$this->booted) {
             $this->boot();
         }
@@ -580,10 +588,6 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-
-        // Stop further rendering (on subrequests etc)
-        $this->disable();
-
         return $response;
     }
 
@@ -593,7 +597,11 @@ class LaravelDebugbar extends DebugBar
      */
     public function isEnabled()
     {
-        return value($this->app['config']->get('debugbar.enabled'));
+        if ($this->enabled === null) {
+            $this->enabled = value($this->app['config']->get('debugbar.enabled'));
+        }
+
+        return $this->enabled;
     }
 
     /**
@@ -697,7 +705,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function disable()
     {
-        $this->app['config']->set('debugbar.enabled', false);
+        $this->enabled = false;
     }
 
     /**
