@@ -99,7 +99,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // If enabled is null, set from the app.debug value
         if (is_null($enabled)) {
             $enabled = $this->checkAppDebug();
-            $this->app['config']->set('debugbar.enabled', $enabled);
         }
 
         if ( ! $enabled) {
@@ -108,6 +107,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         /** @var LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
+        $debugbar->enable();
         $debugbar->boot();
 
         $this->registerMiddleware('Barryvdh\Debugbar\Middleware\Debugbar');
