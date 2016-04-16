@@ -506,7 +506,7 @@ class LaravelDebugbar extends DebugBar
             $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
             $this->setHttpDriver($httpDriver);
 
-            if ($this->shouldCollect('session')) {
+            if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
                 try {
                     $this->addCollector(new SessionCollector($sessionManager));
                 } catch (\Exception $e) {
@@ -537,7 +537,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($app['config']->get('debugbar.clockwork')) {
+        if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
 
             try {
                 $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
