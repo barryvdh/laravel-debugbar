@@ -135,12 +135,12 @@ class LaravelDebugbar extends DebugBar
         }
 
         if ($this->shouldCollect('time', true)) {
-            $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
-            $this->addCollector(new TimeDataCollector($startTime));
+            $this->addCollector(new TimeDataCollector());
 
             if ( ! $this->isLumen()) {
                 $this->app->booted(
-                    function () use ($debugbar, $startTime) {
+                    function () use ($debugbar) {
+                        $startTime = $this->app['request']->server('REQUEST_TIME_FLOAT');
                         if ($startTime) {
                             $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
                         }
@@ -176,7 +176,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('events', false) && isset($this->app['events'])) {
             try {
-                $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
+                $startTime = $this->app['request']->server('REQUEST_TIME_FLOAT');
                 $eventCollector = new EventCollector($startTime);
                 $this->addCollector($eventCollector);
                 $this->app['events']->subscribe($eventCollector);
