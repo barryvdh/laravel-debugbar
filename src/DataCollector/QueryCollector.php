@@ -258,6 +258,14 @@ class QueryCollector extends PDOCollector
         }
         return str_replace(base_path(), '', $path);
     }
+    
+    /**
+     * Reset the queries.
+     */
+    public function reset()
+    {
+        $this->queries = array();
+    }
 
     /**
      * {@inheritDoc}
