@@ -309,6 +309,11 @@ class LaravelDebugbar extends DebugBar
                             $connection = $db->connection($connectionName);
                         }
 
+                        //check for query length limit
+                        if ($this->app['config']->get('debugbar.options.db.query.length')) {
+                            $query = substr($query, 0, $this->app['config']->get('debugbar.options.db.query.length'));
+                        }
+
                         $queryCollector->addQuery((string) $query, $bindings, $time, $connection);
                     }
                 );
