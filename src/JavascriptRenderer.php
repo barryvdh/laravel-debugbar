@@ -37,20 +37,16 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function renderHead()
     {
-        $jsModified = $this->getModifiedTime('js');
-        $cssModified = $this->getModifiedTime('css');
+        $cssRoute = route('debugbar.assets.css', [
+            'v' => $this->getModifiedTime('css')
+        ]);
 
-        $html = '';
-        $html .= sprintf(
-            '<link rel="stylesheet" type="text/css" href="%s?%s">' . "\n",
-            route('debugbar.assets.css'),
-            $cssModified
-        );
-        $html .= sprintf(
-            '<script type="text/javascript" src="%s?%s"></script>' . "\n",
-            route('debugbar.assets.js'),
-            $jsModified
-        );
+        $jsRoute = route('debugbar.assets.js', [
+            'v' => $this->getModifiedTime('js')
+       ]);
+
+        $html  = "<link rel='stylesheet' type='text/css' href='{$cssRoute}'>";
+        $html .= "<script type='text/javascript' src='{$jsRoute}'></script>";
 
         if ($this->isJqueryNoConflictEnabled()) {
             $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
