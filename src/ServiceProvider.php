@@ -63,10 +63,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
-        if ($app->runningInConsole()) {
-            return;
-        }
-
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
             'prefix' => $this->app['config']->get('debugbar.route_prefix'),
@@ -93,6 +89,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.assets.js',
             ]);
         });
+
+        if ($app->runningInConsole()) {
+            return;
+        }
 
         $enabled = $this->app['config']->get('debugbar.enabled');
 
