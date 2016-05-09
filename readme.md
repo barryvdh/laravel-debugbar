@@ -161,6 +161,12 @@ You can enable or disable the debugbar during run time.
 \Debugbar::enable();
 \Debugbar::disable();
 ```
+At laravel5,it shuold be:
+```php
+$debugbar = new \Barryvdh\Debugbar\LaravelDebugbar();
+$debugbar->enable();
+$debugbar->disable();
+```
 
 NB. Once enabled, the collectors are added (and could produce extra overhead), so if you want to use the debugbar in production, disable in the config and only enable when needed.
 
