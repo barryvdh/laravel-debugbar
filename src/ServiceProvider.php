@@ -101,7 +101,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             ]);
         });
 
-        if ($app->runningInConsole() || $app->runningUnitTests()) {
+        if ($app->runningInConsole() || $app->environment('testing')) {
             return;
         }
 
