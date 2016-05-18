@@ -17,6 +17,7 @@ class QueryCollector extends PDOCollector
     protected $explainQuery = false;
     protected $explainTypes = array('SELECT'); // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
     protected $showHints = false;
+    protected $reflection = [];
 
     /**
      * @param TimeDataCollector $timeCollector
@@ -211,7 +212,13 @@ class QueryCollector extends PDOCollector
                 if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
                     list($file, $line) = $this->getTwigInfo($trace);
                 } elseif (strpos($trace['file'], storage_path()) !== false) {
-                    return 'Template file';
+                    $hash = pathinfo($trace['file'], PATHINFO_FILENAME);
+                    $line = isset($trace['line']) ? $trace['line'] : '?';
+
+                    if ($name = $this->findViewFromHash($hash)) {
+                        return 'view::' . $name . ':' . $line;
+                    }
+                    return 'view::' . $hash . ':' . $line;
                 } else {
                     $file = $trace['file'];
                     $line = isset($trace['line']) ? $trace['line'] : '?';
@@ -220,6 +227,32 @@ class QueryCollector extends PDOCollector
                 return $this->normalizeFilename($file) . ':' . $line;
             } elseif (isset($trace['function']) && $trace['function'] == 'Illuminate\Routing\{closure}') {
                 return 'Route binding';
+            }
+        }
+    }
+
+    /**
+     * Find the template name from the hash.
+     *
+     * @param  string $hash
+     * @return null|string
+     */
+    protected function findViewFromHash($hash)
+    {
+        $finder = app('view')->getFinder();
+
+        if (isset($this->reflection['viewfinderViews'])) {
+            $property = $this->reflection['viewfinderViews'];
+        } else {
+            $reflection = new \ReflectionClass($finder);
+            $property = $reflection->getProperty('views');
+            $property->setAccessible(true);
+            $this->reflection['viewfinderViews'] = $property;
+        }
+
+        foreach ($property->getValue($finder) as $name => $path){
+            if (sha1($path) == $hash || md5($path) == $hash) {
+                return $name;
             }
         }
     }
