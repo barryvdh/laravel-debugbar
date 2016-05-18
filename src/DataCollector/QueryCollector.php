@@ -17,6 +17,7 @@ class QueryCollector extends PDOCollector
     protected $explainQuery = false;
     protected $explainTypes = array('SELECT'); // array('SELECT', 'INSERT', 'UPDATE', 'DELETE'); for MySQL 5.6.3+
     protected $showHints = false;
+    protected $reflection = [];
 
     /**
      * @param TimeDataCollector $timeCollector
@@ -239,12 +240,18 @@ class QueryCollector extends PDOCollector
     protected function findViewFromHash($hash)
     {
         $finder = app('view')->getFinder();
-        $reflection = new \ReflectionClass($finder);
-        $property = $reflection->getProperty('views');
-        $property->setAccessible(true);
+
+        if (isset($this->reflection['viewfinderViews'])) {
+            $property = $this->reflection['viewfinderViews'];
+        } else {
+            $reflection = new \ReflectionClass($finder);
+            $property = $reflection->getProperty('views');
+            $property->setAccessible(true);
+            $this->reflection['viewfinderViews'] = $property;
+        }
 
         foreach ($property->getValue($finder) as $name => $path){
-            if (sha1($path) == $hash) {
+            if (sha1($path) == $hash || md5($path) == $hash) {
                 return $name;
             }
         }
