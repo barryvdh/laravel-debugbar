@@ -65,7 +65,7 @@ If you want to use the facade to log messages, add this to your facades in app.p
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config (`debugbar.enabled`). See more options in `config/debugbar.php`
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
-You can also only display the js of css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
+You can also only display the js or css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
 
 Copy the package config to your local config with the publish command:
 
