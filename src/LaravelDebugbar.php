@@ -30,6 +30,7 @@ use Exception;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Session\SessionManager;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -480,7 +481,11 @@ class LaravelDebugbar extends DebugBar
 
         // Show the Http Response Exception in the Debugbar, when available
         if (isset($response->exception)) {
-            $this->addException($response->exception);
+            if ($this->hasThrowable($response->exception)) {
+                $this->addException(new FatalThrowableError($response->exception));
+            } else {
+                $this->addException($response->exception);
+            }
         }
 
         if ($this->shouldCollect('config', false)) {
@@ -589,6 +594,21 @@ class LaravelDebugbar extends DebugBar
         }
 
         return $response;
+    }
+
+    /**
+     * Checks if the exception or any of its children are not extended from Exception
+     * @param Exception|\Throwable $exception
+     * @return bool
+     */
+    protected function hasThrowable($exception)
+    {
+        if (!($exception instanceof Exception)) {
+            return true;
+        } elseif ($previous = $exception->getPrevious()) {
+            return $this->hasThrowable($previous);
+        }
+        return false;
     }
 
     /**
