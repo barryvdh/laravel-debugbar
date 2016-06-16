@@ -151,7 +151,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function registerMiddleware($middleware)
     {
         $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
-        $kernel->pushMiddleware($middleware);
+        $kernel->prependMiddleware($middleware);
     }
 
     /**
