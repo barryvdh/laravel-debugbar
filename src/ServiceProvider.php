@@ -70,6 +70,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $enabled = $this->checkAppDebug();
         }
 
+        if ($enabled instanceof \Closure) {
+            $enabled = $enabled();
+        }
+
         if (! $enabled) {
             return;
         }
