@@ -16,9 +16,9 @@ class AssetController extends BaseController
         $content = $renderer->dumpAssetsToString('js');
 
         $response = new Response(
-            $content, 200, array(
+            $content, 200, [
                 'Content-Type' => 'text/javascript',
-            )
+            ]
         );
 
         return $this->cacheResponse($response);
@@ -36,9 +36,9 @@ class AssetController extends BaseController
         $content = $renderer->dumpAssetsToString('css');
 
         $response = new Response(
-            $content, 200, array(
+            $content, 200, [
                 'Content-Type' => 'text/css',
-            )
+            ]
         );
 
         return $this->cacheResponse($response);

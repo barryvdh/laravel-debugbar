@@ -55,10 +55,10 @@ class AuthCollector extends DataCollector implements Renderable
     {
         // Defaults
         if (is_null($user)) {
-            return array(
+            return [
                 'name' => 'Guest',
-                'user' => array('guest' => true),
-            );
+                'user' => ['guest' => true],
+            ];
         }
 
         // The default auth identifer is the ID number, which isn't all that
@@ -75,10 +75,10 @@ class AuthCollector extends DataCollector implements Renderable
             }
         }
 
-        return array(
+        return [
             'name' => $identifier,
             'user' => $user instanceof Arrayable ? $user->toArray() : $user,
-        );
+        ];
     }
 
     /**
@@ -94,21 +94,21 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function getWidgets()
     {
-        $widgets = array(
-            'auth' => array(
+        $widgets = [
+            'auth' => [
                 'icon' => 'lock',
                 'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
                 'map' => 'auth.user',
                 'default' => '{}'
-            )
-        );
+            ]
+        ];
         if ($this->showName) {
-            $widgets['auth.name'] = array(
+            $widgets['auth.name'] = [
                 'icon' => 'user',
                 'tooltip' => 'Auth status',
                 'map' => 'auth.name',
                 'default' => '',
-            );
+            ];
         }
         return $widgets;
     }

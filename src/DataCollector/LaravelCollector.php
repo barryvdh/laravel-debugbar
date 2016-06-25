@@ -27,11 +27,11 @@ class LaravelCollector extends DataCollector implements Renderable
         // Fallback if not injected
         $app = $this->app ?: app();
 
-        return array(
+        return [
             "version" => $app::VERSION,
             "environment" => $app->environment(),
             "locale" => $app->getLocale(),
-        );
+        ];
     }
 
     /**
@@ -47,25 +47,25 @@ class LaravelCollector extends DataCollector implements Renderable
      */
     public function getWidgets()
     {
-        return array(
-            "version" => array(
+        return [
+            "version" => [
                 "icon" => "github",
                 "tooltip" => "Version",
                 "map" => "laravel.version",
                 "default" => ""
-            ),
-            "environment" => array(
+            ],
+            "environment" => [
                 "icon" => "desktop",
                 "tooltip" => "Environment",
                 "map" => "laravel.environment",
                 "default" => ""
-            ),
-            "locale" => array(
+            ],
+            "locale" => [
                 "icon" => "flag",
                 "tooltip" => "Current locale",
                 "map" => "laravel.locale",
                 "default" => "",
-            ),
+            ],
         );
     }
 }

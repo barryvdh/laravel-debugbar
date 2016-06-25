@@ -85,7 +85,7 @@ class FilesystemStorage implements StorageInterface
     /**
      * {@inheritDoc}
      */
-    public function find(array $filters = array(), $max = 20, $offset = 0)
+    public function find(array $filters = [], $max = 20, $offset = 0)
     {
         // Sort by modified time, newest first
         $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
@@ -94,7 +94,7 @@ class FilesystemStorage implements StorageInterface
 
         // Loop through .json files, filter the metadata and stop when max is found.
         $i = 0;
-        $results = array();
+        $results = [];
         foreach (Finder::create()->files()->name('*.json')->in($this->dirname)->sort($sort) as $file) {
             if ($i++ < $offset && empty($filters)) {
                 $results[] = null;

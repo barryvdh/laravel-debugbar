@@ -38,11 +38,11 @@ class Dump extends Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new Twig_SimpleFunction(
-                'dump', [$this, 'dump'], array('is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true)
+                'dump', [$this, 'dump'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
             ),
-        );
+        ];
     }
 
     /**
@@ -60,7 +60,7 @@ class Dump extends Twig_Extension
 
         $count = func_num_args();
         if (2 === $count) {
-            $data = array();
+            $data = [];
             foreach ($context as $key => $value) {
                 if (is_object($value)) {
                     if (method_exists($value, 'toArray')) {

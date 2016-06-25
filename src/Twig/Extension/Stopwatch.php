@@ -39,14 +39,14 @@ class Stopwatch extends Twig_Extension
 
     public function getTokenParsers()
     {
-        return array(
+        return [
             /*
              * {% stopwatch foo %}
              * Some stuff which will be recorded on the timeline
              * {% endstopwatch %}
              */
             new StopwatchTokenParser($this->debugbar !== null),
-        );
+        ];
     }
 
     public function getDebugbar()

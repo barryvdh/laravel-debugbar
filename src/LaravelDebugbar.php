@@ -640,16 +640,16 @@ class LaravelDebugbar extends DebugBar
         /** @var Request $request */
         $request = $this->app['request'];
 
-        $this->data = array(
-            '__meta' => array(
+        $this->data = [
+            '__meta' => [
                 'id' => $this->getCurrentRequestId(),
                 'datetime' => date('Y-m-d H:i:s'),
                 'utime' => microtime(true),
                 'method' => $request->getMethod(),
                 'uri' => $request->getRequestUri(),
                 'ip' => $request->getClientIp()
-            )
-        );
+            ]
+        ];
 
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
@@ -752,16 +752,16 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        $this->data = array(
-            '__meta' => array(
+        $this->data = [
+            '__meta' => [
                 'id' => $this->getCurrentRequestId(),
                 'datetime' => date('Y-m-d H:i:s'),
                 'utime' => microtime(true),
                 'method' => 'CLI',
                 'uri' => isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : null,
                 'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null
-            )
-        );
+            ]
+        ];
 
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
@@ -793,7 +793,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function __call($method, $args)
     {
-        $messageLevels = array('emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log');
+        $messageLevels = ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'];
         if (in_array($method, $messageLevels)) {
             foreach($args as $arg) {
                 $this->addMessage($arg, $method);

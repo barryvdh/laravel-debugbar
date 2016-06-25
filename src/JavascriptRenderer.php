@@ -107,7 +107,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         }
 
         if (is_array($uri)) {
-            $uris = array();
+            $uris = [];
             foreach ($uri as $u) {
                 $uris[] = $this->makeUriRelativeTo($u, $root);
             }

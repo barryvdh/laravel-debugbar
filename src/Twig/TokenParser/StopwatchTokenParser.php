@@ -27,7 +27,7 @@ class StopwatchTokenParser extends \Twig_TokenParser
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
         // {% endstopwatch %}
-        $body = $this->parser->subparse(array($this, 'decideStopwatchEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideStopwatchEnd'], true);
         $stream->expect(\Twig_Token::BLOCK_END_TYPE);
 
         if ($this->debugbarAvailable) {
