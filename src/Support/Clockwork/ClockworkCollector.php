@@ -59,7 +59,7 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
         $request = $this->request;
         $response = $this->response;
 
-        $data = array(
+        $data = [
             'getData' => $request->query->all(),
             'postData' => $request->request->all(),
             'headers' => $request->headers->all(),
@@ -67,10 +67,10 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
             'uri' => $request->getRequestUri(),
             'method' => $request->getMethod(),
             'responseStatus' => $response->getStatusCode(),
-        );
+        ];
 
         if ($this->session) {
-            $sessionAttributes = array();
+            $sessionAttributes = [];
             foreach ($this->session->all() as $key => $value) {
                 $sessionAttributes[$key] = $value;
             }

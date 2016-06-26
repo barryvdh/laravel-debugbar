@@ -69,12 +69,12 @@ class EventCollector extends TimeDataCollector
     public function subscribe(Dispatcher $events)
     {
         $this->events = $events;
-        $events->listen('*', array($this, 'onWildcardEvent'));
+        $events->listen('*', [$this, 'onWildcardEvent']);
     }
 
     protected function prepareParams($params)
     {
-        $data = array();
+        $data = [];
         foreach ($params as $key => $value) {
             if (is_object($value) && Str::is('Illuminate\*\Events\*', get_class($value))) {
                 $value =  $this->prepareParams(get_object_vars($value));
@@ -100,17 +100,17 @@ class EventCollector extends TimeDataCollector
 
     public function getWidgets()
     {
-        return array(
-          "events" => array(
+        return [
+          "events" => [
             "icon" => "tasks",
             "widget" => "PhpDebugBar.Widgets.TimelineWidget",
             "map" => "event",
             "default" => "{}",
-          ),
-          'events:badge' => array(
+          ],
+          'events:badge' => [
             'map' => 'event.nb_measures',
             'default' => 0,
-          ),
-        );
+          ],
+        ];
     }
 }

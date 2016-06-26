@@ -29,8 +29,8 @@ class FilesCollector extends DataCollector implements Renderable
         $files = $this->getIncludedFiles();
         $compiled = $this->getCompiledFiles();
 
-        $included = array();
-        $alreadyCompiled = array();
+        $included = [];
+        $alreadyCompiled = [];
         foreach ($files as $file) {
             // Skip the files from Debugbar, they are only loaded for Debugging and confuse the output.
             // Of course some files are stil always loaded (ServiceProvider, Facade etc)
@@ -41,27 +41,27 @@ class FilesCollector extends DataCollector implements Renderable
             ) {
                 continue;
             } elseif (!in_array($file, $compiled)) {
-                $included[] = array(
+                $included[] = [
                     'message' => "'" . $this->stripBasePath($file) . "',",
                     // Use PHP syntax so we can copy-paste to compile config file.
                     'is_string' => true,
-                );
+                ];
             } else {
-                $alreadyCompiled[] = array(
+                $alreadyCompiled[] = [
                     'message' => "* '" . $this->stripBasePath($file) . "',",
                     // Mark with *, so know they are compiled anyways.
                     'is_string' => true,
-                );
+                ];
             }
         }
 
         // First the included files, then those that are going to be compiled.
         $messages = array_merge($included, $alreadyCompiled);
 
-        return array(
+        return [
             'messages' => $messages,
             'count' => count($included),
-        );
+        ];
     }
 
     /**
@@ -91,7 +91,7 @@ class FilesCollector extends DataCollector implements Renderable
                 return array_merge($core, $app['config']['compile']);
             }
         }
-        return array();
+        return [];
     }
 
     /**
@@ -111,18 +111,18 @@ class FilesCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         $name = $this->getName();
-        return array(
-            "$name" => array(
+        return [
+            "$name" => [
                 "icon" => "files-o",
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
                 "map" => "$name.messages",
                 "default" => "{}"
-            ),
-            "$name:badge" => array(
+            ],
+            "$name:badge" => [
                 "map" => "$name.count",
                 "default" => "null"
-            )
-        );
+            ]
+        ];
     }
 
     /**
