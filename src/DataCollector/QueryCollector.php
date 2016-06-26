@@ -99,8 +99,9 @@ class QueryCollector extends PDOCollector
 
         $bindings = $this->checkBindings($bindings);
         if (!empty($bindings) && $this->renderSqlWithParams) {
-            foreach ($bindings as $binding) {
-                $query = preg_replace('/\?/', $pdo->quote($binding), $query, 1);
+            foreach ($bindings as $key => $binding) {
+                $regex = is_numeric($key) ? '/\?/' : "/:{$key}/";
+                $query = preg_replace($regex, $pdo->quote($binding), $query, 1);
             }
         }
 
@@ -196,7 +197,7 @@ class QueryCollector extends PDOCollector
         }
         return implode("<br />", $hints);
     }
-    
+
     /**
      * Use a backtrace to search for the origin of the query.
      */
@@ -291,7 +292,7 @@ class QueryCollector extends PDOCollector
         }
         return str_replace(base_path(), '', $path);
     }
-    
+
     /**
      * Reset the queries.
      */
