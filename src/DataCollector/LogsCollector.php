@@ -116,7 +116,7 @@ class LogsCollector extends MessagesCollector
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $ll) {
                     if (strpos(strtolower($h[$i]), strtolower('.' . $ll))) {
-                        $log[] = [('level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]];
+                        $log[] = ['level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]];
                     }
                 }
             }
