@@ -66,6 +66,6 @@ class LaravelCollector extends DataCollector implements Renderable
                 "map" => "laravel.locale",
                 "default" => "",
             ],
-        );
+        ];
     }
 }
