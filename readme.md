@@ -43,7 +43,7 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 
 Require this package with composer:
 
-```
+```shell
 composer require barryvdh/laravel-debugbar
 ```
 
@@ -52,16 +52,15 @@ After updating composer, add the ServiceProvider to the providers array in confi
 
 ### Laravel 5.x:
 
-```
+```php
 Barryvdh\Debugbar\ServiceProvider::class,
 ```
 
 If you want to use the facade to log messages, add this to your facades in app.php:
 
-```
+```php
 'Debugbar' => Barryvdh\Debugbar\Facade::class,
 ```
-
 
 The profiler is enabled by default, if you have app.debug=true. You can override that in the config (`debugbar.enabled`). See more options in `config/debugbar.php`
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
@@ -69,7 +68,7 @@ You can also only display the js or css vendors, by setting it to 'js' or 'css'.
 
 Copy the package config to your local config with the publish command:
 
-```
+```shell
 php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 ```
 
@@ -77,7 +76,7 @@ php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
 
-```
+```php
 if (env('APP_DEBUG')) {
  $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
 }
@@ -85,7 +84,7 @@ if (env('APP_DEBUG')) {
 
 To change the configuration, copy the file to your config folder and enable it:
 
-```
+```php
 $app->configure('debugbar');
 ```
 
@@ -180,14 +179,14 @@ Add the following extensions to your TwigBridge config/extensions.php (or regist
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,
 instead of showing it directly in the template. It dumps the arguments, or when empty; all context variables.
 
-```
+```twig
 {{ debug() }}
 {{ debug(user, categories) }}
 ```
 
 The Stopwatch extension adds a [stopwatch tag](http://symfony.com/blog/new-in-symfony-2-4-a-stopwatch-tag-for-twig)  similar to the one in Symfony/Silex Twigbridge.
 
-```
+```twig
 {% stopwatch "foo" %}
     …some things that gets timed
 {% endstopwatch %}
