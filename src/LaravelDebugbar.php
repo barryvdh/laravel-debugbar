@@ -697,7 +697,9 @@ class LaravelDebugbar extends DebugBar
             $content = $content . $renderedContent;
         }
 
+        // Update the new content and reset the content length
         $response->setContent($content);
+        $response->headers->remove('Content-Length');
     }
 
     /**
