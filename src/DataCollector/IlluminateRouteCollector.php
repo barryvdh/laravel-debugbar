@@ -74,26 +74,7 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
             $result['file'] = $filename . ':' . $reflector->getStartLine() . '-' . $reflector->getEndLine();
         }
 
-		if ($middleware = $this->getMiddleware($route)) {
-		    $result['middleware'] = $middleware;
-		}
-
-
-
         return $result;
-    }
-
-    /**
-     * Get middleware
-     *
-     * @param  \Illuminate\Routing\Route $route
-     * @return string
-     */
-    protected function getMiddleware($route)
-    {
-        $middleware = array_keys($route->middleware());
-
-        return implode(', ', $middleware);
     }
 
     /**
