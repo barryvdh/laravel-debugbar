@@ -1,6 +1,8 @@
 div.phpdebugbar {
     font-size: 13px;
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+    direction: ltr;
+    text-align: left;
 }
 
 div.phpdebugbar-resize-handle {
