@@ -157,6 +157,19 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | No Debugbar Injection Header
+     |--------------------------------------------------------------------------
+     |
+     | Specify an optional header you can add to individual requests to disable
+     | debugbar data collection and response injection.  This is useful when you
+     | have a certain request that must be unaltered.
+     |
+     */
+
+    'no_injection_header' => 'X-NO-DEBUGBAR',
+
+    /*
+     |--------------------------------------------------------------------------
      | DebugBar route prefix
      |--------------------------------------------------------------------------
      |

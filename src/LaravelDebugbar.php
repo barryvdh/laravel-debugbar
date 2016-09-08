@@ -474,7 +474,7 @@ class LaravelDebugbar extends DebugBar
     public function modifyResponse(Request $request, Response $response)
     {
         $app = $this->app;
-        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
+        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest() || $request->header($app['config']->get('debugbar.no_injection_header') )) {
             return $response;
         }
 
