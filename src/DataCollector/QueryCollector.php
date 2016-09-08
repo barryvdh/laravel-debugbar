@@ -100,7 +100,12 @@ class QueryCollector extends PDOCollector
         $bindings = $this->checkBindings($bindings);
         if (!empty($bindings) && $this->renderSqlWithParams) {
             foreach ($bindings as $key => $binding) {
-                $regex = is_numeric($key) ? '/\?/' : "/:{$key}/";
+                // This regex matches placeholders only, not the question marks,
+                // nested in quotes, while we iterate through the bindings
+                // and substitute placeholders by suitable values.
+                $regex = is_numeric($key)
+                    ? "/\?(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/"
+                    : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
                 $query = preg_replace($regex, $pdo->quote($binding), $query, 1);
             }
         }
