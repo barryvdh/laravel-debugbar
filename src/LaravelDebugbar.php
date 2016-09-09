@@ -26,10 +26,12 @@ use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
+use Error;
 use Exception;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Session\SessionManager;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -480,7 +482,11 @@ class LaravelDebugbar extends DebugBar
 
         // Show the Http Response Exception in the Debugbar, when available
         if (isset($response->exception)) {
-            $this->addException($response->exception);
+            if ($response->exception instanceof Error) {
+                $this->addException(new FatalThrowableError($response->exception));
+            } else {
+                $this->addException($response->exception);
+            }
         }
 
         if ($this->shouldCollect('config', false)) {
