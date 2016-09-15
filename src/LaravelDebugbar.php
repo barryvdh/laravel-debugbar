@@ -182,7 +182,7 @@ class LaravelDebugbar extends DebugBar
                 $this->app['events']->subscribe($eventCollector);
 
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add EventCollector to Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
@@ -203,7 +203,7 @@ class LaravelDebugbar extends DebugBar
                     }
                 );
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add ViewCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
                     )
@@ -215,7 +215,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add RouteCollector to Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
@@ -253,7 +253,7 @@ class LaravelDebugbar extends DebugBar
                     $this->addCollector(new MonologCollector($this->app['log']->getMonolog()));
                 }
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add LogsCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
                     )
@@ -313,7 +313,7 @@ class LaravelDebugbar extends DebugBar
                     }
                 );
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add listen to Queries for Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
@@ -334,7 +334,7 @@ class LaravelDebugbar extends DebugBar
                     $this['messages']->aggregate(new SwiftLogCollector($mailer));
                 }
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add MailCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
                     )
@@ -347,7 +347,7 @@ class LaravelDebugbar extends DebugBar
                 $file = $this->app['config']->get('debugbar.options.logs.file');
                 $this->addCollector(new LogsCollector($file));
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add LogsCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
                     )
@@ -373,7 +373,7 @@ class LaravelDebugbar extends DebugBar
                 );
                 $this->addCollector($authCollector);
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add AuthCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
                     )
@@ -430,7 +430,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $collector->stopMeasure($name);
             } catch (\Exception $e) {
-                //  $this->addException($e);
+                //  $this->addThrowable($e);
             }
         }
     }
@@ -439,13 +439,24 @@ class LaravelDebugbar extends DebugBar
      * Adds an exception to be profiled in the debug bar
      *
      * @param Exception $e
+     * @deprecated in favor of addThrowable
      */
     public function addException(Exception $e)
+    {
+        return $this->addThrowable($e);
+    }
+
+    /**
+     * Adds an exception to be profiled in the debug bar
+     *
+     * @param Exception $e
+     */
+    public function addThrowable($e)
     {
         if ($this->hasCollector('exceptions')) {
             /** @var \DebugBar\DataCollector\ExceptionsCollector $collector */
             $collector = $this->getCollector('exceptions');
-            $collector->addException($e);
+            $collector->addThrowable($e);
         }
     }
 
@@ -480,7 +491,7 @@ class LaravelDebugbar extends DebugBar
 
         // Show the Http Response Exception in the Debugbar, when available
         if (isset($response->exception)) {
-            $this->addException($response->exception);
+            $this->addThrowable($response->exception);
         }
 
         if ($this->shouldCollect('config', false)) {
@@ -489,7 +500,7 @@ class LaravelDebugbar extends DebugBar
                 $configCollector->setData($app['config']->all());
                 $this->addCollector($configCollector);
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add ConfigCollector to Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
@@ -510,7 +521,7 @@ class LaravelDebugbar extends DebugBar
                 try {
                     $this->addCollector(new SessionCollector($sessionManager));
                 } catch (\Exception $e) {
-                    $this->addException(
+                    $this->addThrowable(
                         new Exception(
                             'Cannot add SessionCollector to Laravel Debugbar: ' . $e->getMessage(),
                             $e->getCode(),
@@ -527,7 +538,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager));
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add SymfonyRequestCollector to Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
@@ -542,7 +553,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
             } catch (\Exception $e) {
-                $this->addException(
+                $this->addThrowable(
                     new Exception(
                         'Cannot add ClockworkCollector to Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
