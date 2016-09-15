@@ -1,11 +1,13 @@
 <?php namespace Barryvdh\Debugbar\Middleware;
 
+use Error;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class Debugbar
 {
@@ -48,6 +50,9 @@ class Debugbar
             /** @var \Illuminate\Http\Response $response */
             $response = $next($request);
         } catch (Exception $e) {
+            $response = $this->handleException($request, $e);
+        } catch (Error $error) {
+            $e = new FatalThrowableError($error);
             $response = $this->handleException($request, $e);
         }
 
