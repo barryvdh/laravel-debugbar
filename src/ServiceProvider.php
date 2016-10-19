@@ -48,32 +48,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->commands(['command.debugbar.clear']);
-    }
-
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $app = $this->app;
-
-        $configPath = __DIR__ . '/../config/debugbar.php';
-        $this->publishes([$configPath => $this->getConfigPath()], 'config');
-
-        // If enabled is null, set from the app.debug value
-        $enabled = $this->app['config']->get('debugbar.enabled');
-
-        if (is_null($enabled)) {
-            $enabled = $this->checkAppDebug();
-        }
-
-        if (! $enabled) {
-            return;
-        }
-
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
             'prefix' => $this->app['config']->get('debugbar.route_prefix'),
@@ -100,6 +74,34 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.assets.js',
             ]);
         });
+
+        $this->commands(['command.debugbar.clear']);
+    }
+
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $app = $this->app;
+
+        $configPath = __DIR__ . '/../config/debugbar.php';
+        $this->publishes([$configPath => $this->getConfigPath()], 'config');
+
+        // If enabled is null, set from the app.debug value
+        $enabled = $this->app['config']->get('debugbar.enabled');
+
+        if (is_null($enabled)) {
+            $enabled = $this->checkAppDebug();
+        }
+
+        if (! $enabled) {
+            return;
+        }
+
+
 
         if ($app->runningInConsole() || $app->environment('testing')) {
             return;
