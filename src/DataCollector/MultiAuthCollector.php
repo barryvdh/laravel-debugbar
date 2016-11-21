@@ -1,6 +1,8 @@
 <?php
 
 namespace Barryvdh\Debugbar\DataCollector;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Auth\SessionGuard;
 
 /**
  * Collector for Laravel's Auth provider
@@ -30,8 +32,10 @@ class MultiAuthCollector extends AuthCollector
         $names = '';
 
         foreach($this->guards as $guardName) {
-            $user = $this->auth->guard($guardName)->user();
+            $user = $this->resolveUser($this->auth->guard($guardName));
+
             $data['guards'][$guardName] = $this->getUserInformation($user);
+
             if(!is_null($user)) {
                 $names .= $guardName . ": " . $data['guards'][$guardName]['name'] . ', ';
             }
@@ -46,6 +50,23 @@ class MultiAuthCollector extends AuthCollector
         $data['names'] = rtrim($names, ', ');
 
         return $data;
+    }
+
+    private function resolveUser(Guard $guard)
+    {
+        // if we're logging in using remember token
+        // then we must resolve user „manually”
+        // to prevent csrf token regeneration
+
+        $usingSession = $guard instanceof SessionGuard;
+        $recaller = $usingSession ? $guard->getRequest()->cookies->get($guard->getRecallerName()) : null;
+
+        if($usingSession && !is_null($recaller)) {
+            list($id, $token) = explode('|', $recaller);
+            return $guard->getProvider()->retrieveByToken($id, $token);
+        } else {
+            return $guard->user();
+        }
     }
     
     /**
