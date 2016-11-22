@@ -80,12 +80,18 @@ class ViewCollector extends TwigCollector
             $params = $data;
         }
 
-        $this->templates[] = [
+        $template = [
             'name' => $path ? sprintf('%s (%s)', $name, $path) : $name,
             'param_count' => count($params),
             'params' => $params,
             'type' => $type,
         ];
+
+        if ( $this->getXdebugLink($path)) {
+            $template['xdebug_link'] = $this->getXdebugLink($path);
+        }
+
+        $this->templates[] = $template;
     }
 
     public function collect()
