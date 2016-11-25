@@ -51,11 +51,16 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>";
         $html .= "<script type='text/javascript' src='{$jsRoute}'></script>";
 
+        return $html;
+    }
+    protected function getJsInitializationCode()
+    {
+        $js = '';
         if ($this->isJqueryNoConflictEnabled()) {
-            $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
+            $js .= 'jQuery.noConflict(true);' . "\n";
         }
 
-        return $html;
+        return $js . parent::getJsInitializationCode();
     }
 
     /**
@@ -96,6 +101,24 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         return $content;
     }
 
+    /**
+     * Return the init script as a string
+     *
+     * @return string
+     */
+    public function renderInitScript()
+    {
+        $openHandlerUrl = route('debugbar.openhandler');
+        $this->setOpenHandlerUrl($openHandlerUrl);
+        $content = $this->getJsInitializationCode();
+        $content .= sprintf(
+            "%s.loadDataSet($(\"span[data-debugbar-id]\").attr(\"data-debugbar-id\"), \"(ajax)\");\n",
+            $this->variableName,
+            $this->openHandlerClass,
+            json_encode(array("url" => $this->openHandlerUrl))
+        );
+        return $content;
+    }
     /**
      * Makes a URI relative to another
      *
