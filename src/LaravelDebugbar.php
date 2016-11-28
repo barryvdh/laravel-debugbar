@@ -591,7 +591,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
-        } elseif ($app['config']->get('debugbar.inject', true) && $app['config']->get('debugbar.csp-compatible', true)) {
+        } elseif ($app['config']->get('debugbar.inject', true) && $app['config']->get('debugbar.csp-compatible', false)) {
             try {
                 $this->injectDebugbarCSP($response);
             } catch (\Exception $e) {
