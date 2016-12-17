@@ -44,7 +44,7 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 Require this package with composer:
 
 ```shell
-composer require barryvdh/laravel-debugbar
+composer require barryvdh/laravel-debugbar --dev
 ```
 
 After updating composer, add the ServiceProvider to the providers array in config/app.php
