@@ -231,7 +231,16 @@ class LaravelDebugbar extends DebugBar
                     $logger = new MessagesCollector('log');
                     $this['messages']->aggregate($logger);
                     $this->app['log']->listen(
-                        function ($level, $message, $context) use ($logger) {
+                        function ($level, $message = null, $context = null) use ($logger) {
+                            // Laravel 5.4 changed how the global log listeners are called. We must account for
+                            // the first argument being an "event object", where arguments are passed
+                            // via object properties, instead of individual arguments.
+                            if ($level instanceof \Illuminate\Log\Events\MessageLogged) {
+                                $message = $level->message;
+                                $context = $level->context;
+                                $level = $level->level;
+                            }
+
                             try {
                                 $logMessage = (string) $message;
                                 if (mb_check_encoding($logMessage, 'UTF-8')) {
