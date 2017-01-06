@@ -8,13 +8,13 @@ use DebugBar\DataCollector\Renderable;
 
 class SessionCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface|\Illuminate\Contracts\Session\Session $session */
     protected $session;
 
     /**
      * Create a new SessionCollector
      *
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface|\Illuminate\Contracts\Session\Session $session
      */
     public function __construct($session)
     {
