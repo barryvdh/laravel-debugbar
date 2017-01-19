@@ -91,9 +91,7 @@ class IlluminateRouteCollector extends DataCollector implements Renderable
      */
     protected function getMiddleware($route)
     {
-        $middleware = array_keys($route->middleware());
-
-        return implode(', ', $middleware);
+        return implode(', ', $route->middleware());
     }
 
     /**
