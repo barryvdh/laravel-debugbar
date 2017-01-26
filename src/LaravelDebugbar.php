@@ -878,7 +878,11 @@ class LaravelDebugbar extends DebugBar
                     break;
                 case 'redis':
                     $connection = $config->get('debugbar.storage.connection');
-                    $storage = new RedisStorage($this->app['redis']->connection($connection));
+                    $client = $this->app['redis']->connection($connection);
+                    if (is_a($client, 'Illuminate\Redis\Connections\PredisConnection', false)) {
+                        $client = $client->client();
+                    }
+                    $storage = new RedisStorage($client);
                     break;
                 case 'custom':
                     $class = $config->get('debugbar.storage.provider');
