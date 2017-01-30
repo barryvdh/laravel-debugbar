@@ -6,6 +6,7 @@ use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
+use Barryvdh\Debugbar\DataCollector\LumenCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
@@ -168,6 +169,10 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('laravel', false)) {
             $this->addCollector(new LaravelCollector($this->app));
+        }
+
+        if ($this->isLumen() && $this->shouldCollect('lumen', false)) {
+            $this->addCollector(new LumenCollector($this->app));
         }
 
         if ($this->shouldCollect('default_request', false)) {
