@@ -924,7 +924,7 @@ class LaravelDebugbar extends DebugBar
                 $headers[] = sprintf('%d=%F; "%s"', $k, $m['duration'], str_replace('"', "'", $m['label']));
             }
 
-            $response->headers->set('Server-Timing', $collector->getServerTimingHeaders(), false);
+            $response->headers->set('Server-Timing', $headers, false);
         }
     }
 }
