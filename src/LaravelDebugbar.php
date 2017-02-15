@@ -611,6 +611,8 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        $this->addServerTimingHeaders($response);
+
         return $response;
     }
 
@@ -905,5 +907,24 @@ class LaravelDebugbar extends DebugBar
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
         $response->headers->set('X-Clockwork-Version', 1, true);
         $response->headers->set('X-Clockwork-Path', $prefix .'/clockwork/', true);
+    }
+
+    /**
+     * Add Server-Timing headers for the TimeData collector
+     *
+     * @see https://www.w3.org/TR/server-timing/
+     * @param Response $response
+     */
+    protected function addServerTimingHeaders(Response $response)
+    {
+        if ($this->hasCollector('time')) {
+            $collector = $this->getCollector('time');
+
+            foreach ($collector->collect()['measures'] as $k => $m) {
+                $headers[] = sprintf('%d=%F; "%s"', $k, $m['duration'], str_replace('"', "'", $m['label']));
+            }
+
+            $response->headers->set('Server-Timing', $collector->getServerTimingHeaders(), false);
+        }
     }
 }
