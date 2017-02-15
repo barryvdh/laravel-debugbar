@@ -379,7 +379,7 @@ class QueryCollector extends PDOCollector
     {
         return [
             "queries" => [
-                "icon" => "inbox",
+                "icon" => "database",
                 "widget" => "PhpDebugBar.Widgets.SQLQueriesWidget",
                 "map" => "queries",
                 "default" => "[]"
