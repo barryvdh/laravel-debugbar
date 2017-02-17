@@ -200,25 +200,36 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     font-family: inherit;
     overflow: visible;
     display: flex;
+    flex-wrap: wrap;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
-    flex: 1 1 auto;
+    flex: 1;
+    margin-right: 5px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
-    flex: 0 0 auto;
+    /*flex: 0 0 auto;*/
+    margin-left: auto;
+    margin-right: 5px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-database {
-    flex: 0 0 auto;
+    /*flex: 0 0 auto;*/
+    margin-left: auto;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id {
+    /*flex: 0 0 auto;*/
+    margin-left: auto;
+    margin-right: 5px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-params {
+    background-color: rgba(255, 255, 255, .5);
     flex: 1 1 auto;
-    order: -1;
-    width: auto;
-    max-width: 200px;
+    margin: 10px 100% 10px 0;
+    max-width: 100%;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) {
@@ -243,8 +254,39 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     color: #f1c40f;
 }
 
+div.phpdebugbar-widgets-sqlqueries {
+    line-height: 20px;
+}
+
 div.phpdebugbar-widgets-sqlqueries .phpdebugbar-widgets-status {
     background: none !important;
     font-family: inherit !important;
     font-weight: 400 !important;
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params th,
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
+    padding: 5px 10px;
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
+    text-align: right;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-value {
+    text-align: left;
+}
+
+ul.phpdebugbar-widgets-list ul.phpdebugbar-widgets-table-list {
+    text-align: left;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-table-list-item {
+    /*padding: 5px 10px;*/
+}
+
+.phpdebugbar-text-muted {
+    color: #888;
 }

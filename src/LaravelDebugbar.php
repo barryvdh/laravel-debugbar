@@ -22,6 +22,7 @@ use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
@@ -286,12 +287,15 @@ class LaravelDebugbar extends DebugBar
             }
             $queryCollector = new QueryCollector($timeCollector);
 
+            $queryCollector->setDataFormatter(new QueryFormatter());
+
             if ($this->app['config']->get('debugbar.options.db.with_params')) {
                 $queryCollector->setRenderSqlWithParams(true);
             }
 
             if ($this->app['config']->get('debugbar.options.db.backtrace')) {
-                $queryCollector->setFindSource(true);
+                $middleware = $this->app['router']->getMiddleware();
+                $queryCollector->setFindSource(true, $middleware);
             }
 
             if ($this->app['config']->get('debugbar.options.db.explain.enabled')) {
