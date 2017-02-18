@@ -337,6 +337,37 @@ class LaravelDebugbar extends DebugBar
                     )
                 );
             }
+
+            try {
+                $db->getEventDispatcher()->listen([
+                    \Illuminate\Database\Events\TransactionBeginning::class,
+                    'connection.*.beganTransaction',
+                ], function ($transaction) use ($queryCollector) {
+                    $queryCollector->collectTransactionEvent('Begin Transaction', $transaction->connection);
+                });
+
+                $db->getEventDispatcher()->listen([
+                    \Illuminate\Database\Events\TransactionCommitted::class,
+                    'connection.*.committed',
+                ], function ($transaction) use ($queryCollector) {
+                    $queryCollector->collectTransactionEvent('Commit Transaction', $transaction->connection);
+                });
+
+                $db->getEventDispatcher()->listen([
+                    \Illuminate\Database\Events\TransactionRolledBack::class,
+                    'connection.*.rollingBack',
+                ], function ($transaction) use ($queryCollector) {
+                    $queryCollector->collectTransactionEvent('Rollback Transaction', $transaction->connection);
+                });
+            } catch (\Exception $e) {
+                $this->addThrowable(
+                    new Exception(
+                        'Cannot add listen transactions to Queries for Laravel Debugbar: ' . $e->getMessage(),
+                        $e->getCode(),
+                        $e
+                    )
+                );
+            }
         }
 
         if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider')) {
