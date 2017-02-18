@@ -203,6 +203,10 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     flex-wrap: wrap;
 }
 
+.phpdebugbar-widgets-sql.phpdebugbar-widgets-name {
+    font-weight: bold;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
     flex: 1;
     margin-right: 5px;

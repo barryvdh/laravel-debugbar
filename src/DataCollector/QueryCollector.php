@@ -124,6 +124,7 @@ class QueryCollector extends PDOCollector
 
         $this->queries[] = [
             'query' => $query,
+            'type' => 'query',
             'bindings' => $this->getDataFormatter()->escapeBindings($bindings),
             'time' => $time,
             'source' => $source,
@@ -208,7 +209,6 @@ class QueryCollector extends PDOCollector
             'index' => $index,
             'namespace' => null,
             'name' => null,
-            'file' => null,
             'line' => isset($trace['line']) ? $trace['line'] : '?',
         ];
 
@@ -223,12 +223,12 @@ class QueryCollector extends PDOCollector
                 DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR
             ) === false
         ) {
-            $frame->file = $trace['file'];
+            $file = $trace['file'];
 
             if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
-                list($frame->file, $frame->line) = $this->getTwigInfo($trace);
-            } elseif (strpos($frame->file, storage_path()) !== false) {
-                $hash = pathinfo($frame->file, PATHINFO_FILENAME);
+                list($file, $frame->line) = $this->getTwigInfo($trace);
+            } elseif (strpos($file, storage_path()) !== false) {
+                $hash = pathinfo($file, PATHINFO_FILENAME);
 
                 if (! $frame->name = $this->findViewFromHash($hash)) {
                     $frame->name = $hash;
@@ -237,19 +237,19 @@ class QueryCollector extends PDOCollector
                 $frame->namespace = 'view';
 
                 return $frame;
-            } elseif (strpos($frame->file, 'Middleware') !== false) {
-                $frame->name = $this->findMiddlewareFromFile($frame->file);
+            } elseif (strpos($file, 'Middleware') !== false) {
+                $frame->name = $this->findMiddlewareFromFile($file);
 
                 if ($frame->name) {
                     $frame->namespace = 'middleware';
                 } else {
-                    $frame->name = $this->normalizeFilename($frame->file);
+                    $frame->name = $this->normalizeFilename($file);
                 }
 
                 return $frame;
             }
 
-            $frame->name = $this->normalizeFilename($frame->file);
+            $frame->name = $this->normalizeFilename($file);
 
             return $frame;
         }
@@ -355,6 +355,7 @@ class QueryCollector extends PDOCollector
 
         $this->queries[] = [
             'query' => $event,
+            'type' => 'transaction',
             'bindings' => [],
             'time' => 0,
             'source' => $source,
@@ -384,13 +385,15 @@ class QueryCollector extends PDOCollector
         foreach ($queries as $query) {
             $totalTime += $query['time'];
 
-            $metadata = $this->getDataFormatter()->formatMetadata($query);
-
             $statements[] = [
                 'sql' => $this->getDataFormatter()->formatSql($query['query']),
-                'params' => $metadata,
+                'type' => $query['type'],
+                'params' => [],
+                'bindings' => $query['bindings'],
+                'hints' => $query['hints'],
+                'backtrace' => array_values($query['source']),
                 'duration' => $query['time'],
-                'duration_str' => $this->formatDuration($query['time']),
+                'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
                 'stmt_id' => $this->getDataFormatter()->formatSource(reset($query['source'])),
                 'connection' => $query['connection'],
             ];
@@ -399,6 +402,7 @@ class QueryCollector extends PDOCollector
             foreach($query['explain'] as $explain){
                 $statements[] = [
                     'sql' => ' - EXPLAIN #' . $explain->id . ': `' . $explain->table . '` (' . $explain->select_type . ')',
+                    'type' => 'explain',
                     'params' => $explain,
                     'row_count' => $explain->rows,
                     'stmt_id' => $explain->id,
@@ -406,8 +410,12 @@ class QueryCollector extends PDOCollector
             }
         }
 
+        $nb_statements = array_filter($queries, function ($query) {
+            return $query['type'] == 'query';
+        });
+
         $data = [
-            'nb_statements' => count($queries),
+            'nb_statements' => count($nb_statements),
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
@@ -432,7 +440,7 @@ class QueryCollector extends PDOCollector
         return [
             "queries" => [
                 "icon" => "database",
-                "widget" => "PhpDebugBar.Widgets.SQLQueriesWidget",
+                "widget" => "PhpDebugBar.Widgets.LaravelSQLQueriesWidget",
                 "map" => "queries",
                 "default" => "[]"
             ],
