@@ -1,6 +1,6 @@
 <?php namespace Barryvdh\Debugbar\Controllers;
 
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class AssetController extends BaseController
 {
