@@ -201,7 +201,7 @@ class QueryCollector extends PDOCollector
      *
      * @param  int    $index
      * @param  array  $trace
-     * @return array|bool
+     * @return object|bool
      */
     protected function parseTrace($index, array $trace)
     {
@@ -220,7 +220,10 @@ class QueryCollector extends PDOCollector
 
         if (isset($trace['class']) && isset($trace['file']) && strpos(
                 $trace['file'],
-                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR
+                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'framework'
+            ) === false && strpos(
+                $trace['file'],
+                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'barryvdh' . DIRECTORY_SEPARATOR . 'laravel-debugbar'
             ) === false
         ) {
             $file = $trace['file'];
