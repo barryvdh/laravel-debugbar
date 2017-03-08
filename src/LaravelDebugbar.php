@@ -294,7 +294,7 @@ class LaravelDebugbar extends DebugBar
             }
 
             if ($this->app['config']->get('debugbar.options.db.backtrace')) {
-                $middleware = $this->app['router']->getMiddleware();
+                $middleware = ! $this->is_lumen ? $this->app['router']->getMiddleware() : [];
                 $queryCollector->setFindSource(true, $middleware);
             }
 
