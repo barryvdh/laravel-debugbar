@@ -116,7 +116,7 @@ Or log exceptions:
 try {
     throw new Exception('foobar');
 } catch (Exception $e) {
-    Debugbar::addException($e);
+    Debugbar::addThrowable($e);
 }
 ```
 
