@@ -58,9 +58,11 @@ return [
      | The Debugbar can capture Ajax requests and display them. If you don't want this (ie. because of errors),
      | you can use this option to disable sending the data through the headers.
      |
+     | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
      */
 
     'capture_ajax' => true,
+    'add_ajax_timing' => false,
 
     /*
      |--------------------------------------------------------------------------
