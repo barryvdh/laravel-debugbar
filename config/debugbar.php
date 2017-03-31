@@ -64,6 +64,17 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Custom Error Handler for Deprecated warnings
+     |--------------------------------------------------------------------------
+     |
+     | When enabled, the Debugbar shows deprecated warnings for Symfony components
+     | in the Messages tab.
+     |
+     */
+    'error_handler' => false,
+    
+    /*
+     |--------------------------------------------------------------------------
      | Clockwork integration
      |--------------------------------------------------------------------------
      |
