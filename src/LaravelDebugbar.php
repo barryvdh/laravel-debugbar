@@ -124,6 +124,11 @@ class LaravelDebugbar extends DebugBar
 
         /** @var Application $app */
         $app = $this->app;
+        
+        // Set custom error handler
+        if ($app['config']->get('debugbar.error_handler' , false)) {
+            set_error_handler([$this, 'handleError']);
+        }
 
         $this->selectStorage($debugbar);
 
@@ -447,6 +452,25 @@ class LaravelDebugbar extends DebugBar
     public function shouldCollect($name, $default = false)
     {
         return $this->app['config']->get('debugbar.collectors.' . $name, $default);
+    }
+
+    /**
+     * Handle silenced errors
+     *
+     * @param $level
+     * @param $message
+     * @param string $file
+     * @param int $line
+     * @param array $context
+     * @throws \ErrorException
+     */
+    public function handleError($level, $message, $file = '', $line = 0, $context = [])
+    {
+        if (error_reporting() & $level) {
+            throw new \ErrorException($message, 0, $level, $file, $line);
+        } else {
+            $this->addMessage($message, 'deprecation');
+        }
     }
 
     /**
