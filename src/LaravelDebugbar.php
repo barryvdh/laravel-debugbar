@@ -648,6 +648,11 @@ class LaravelDebugbar extends DebugBar
         ) {
             try {
                 $this->sendDataInHeaders(true);
+
+                if ($app['config']->get('debugbar.add_ajax_timing', false)) {
+                    $this->addServerTimingHeaders($response);
+                }
+
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
@@ -670,7 +675,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        $this->addServerTimingHeaders($response);
+
 
         return $response;
     }
@@ -979,6 +984,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->hasCollector('time')) {
             $collector = $this->getCollector('time');
 
+            $headers = [];
             foreach ($collector->collect()['measures'] as $k => $m) {
                 $headers[] = sprintf('%d=%F; "%s"', $k, $m['duration'], str_replace('"', "'", $m['label']));
             }
