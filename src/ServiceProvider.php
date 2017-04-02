@@ -77,6 +77,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
             'prefix' => $this->app['config']->get('debugbar.route_prefix'),
+            'domain' => $this->app['config']->get('debugbar.route_domain'),
         ];
 
         $this->getRouter()->group($routeConfig, function($router) {
