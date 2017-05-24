@@ -1,9 +1,10 @@
 <?php
 
 namespace Barryvdh\Debugbar\DataCollector;
-use Illuminate\Auth\Recaller;
+
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Str;
 
 /**
  * Collector for Laravel's Auth provider
@@ -60,14 +61,16 @@ class MultiAuthCollector extends AuthCollector
         // to prevent csrf token regeneration
 
         $recaller = $guard instanceof SessionGuard
-            ? new Recaller($guard->getRequest()->cookies->get($guard->getRecallerName()))
+            ? $guard->getRequest()->cookies->get($guard->getRecallerName())
             : null;
 
-        if (!is_null($recaller) && $recaller->valid()) {
-            return $guard->getProvider()->retrieveByToken($recaller->id(), $recaller->token());
-        } else {
-            return $guard->user();
+        if (is_string($recaller) && Str::contains($recaller, '|')) {
+            $segments = explode('|', $recaller);
+            if (count($segments) == 2 && trim($segments[0]) !== '' && trim($segments[1]) !== '') {
+                return $guard->getProvider()->retrieveByToken($segments[0], $segments[1]);
+            }
         }
+        return $guard->user();
     }
 
     /**
