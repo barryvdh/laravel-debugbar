@@ -180,4 +180,13 @@ return [
      */
     'route_prefix' => '_debugbar',
 
+    /*
+     |--------------------------------------------------------------------------
+     | DebugBar route domain
+     |--------------------------------------------------------------------------
+     |
+     | By default DebugBar route served from the same domain that request served.
+     | To override default domain, specify it as a non-empty value.
+     */
+    'route_domain' => null,
 ];
