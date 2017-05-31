@@ -5,18 +5,22 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 /**
  * Collector for Laravel's Auth provider
  */
 class GateCollector extends MessagesCollector
 {
+    /** @var ValueExporter */
+    protected $exporter;
     /**
      * @param Gate $gate
      */
     public function __construct(Gate $gate)
     {
         parent::__construct('gate');
+        $this->exporter = new ValueExporter();
 
         if (method_exists($gate, 'after')) {
             $gate->after([$this, 'addCheck']);
@@ -31,7 +35,7 @@ class GateCollector extends MessagesCollector
             'ability' => $ability,
             'result' => $result,
             'user' => $user->getAuthIdentifier(),
-            'arguments' => $arguments,
+            'arguments' => $this->exporter->exportValue($arguments),
         ], $label, false);
     }
 }
