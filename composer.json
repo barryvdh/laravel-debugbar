@@ -26,6 +26,14 @@
     "extra": {
         "branch-alias": {
             "dev-master": "2.3-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Barryvdh\\Debugbar\\ServiceProvider"
+            ],
+            "aliases": {
+                "Debugbar": "Barryvdh\\Debugbar\\Facade"
+            }
         }
     }
 }
