@@ -64,7 +64,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
         // If enabled is null, set from the app.debug value
-        $enabled = $this->app['config']->get('debugbar.enabled');
+        $enabled = value($this->app['config']->get('debugbar.enabled'));
 
         if (is_null($enabled)) {
             $enabled = $this->checkAppDebug();
