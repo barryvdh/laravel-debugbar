@@ -348,21 +348,45 @@ class LaravelDebugbar extends DebugBar
                     \Illuminate\Database\Events\TransactionBeginning::class,
                     'connection.*.beganTransaction',
                 ], function ($transaction) use ($queryCollector) {
-                    $queryCollector->collectTransactionEvent('Begin Transaction', $transaction->connection);
+
+                    // Laravel 5.2 changed the way some core events worked. We must account for
+                    // the first argument being an "event object", where arguments are passed
+                    // via object properties, instead of individual arguments.
+                    if($transaction instanceof \Illuminate\Database\Events\TransactionBeginning) {
+                        $connection = $transaction->connection;
+                    } else {
+                        $connection = $transaction;
+                    }
+
+                    $queryCollector->collectTransactionEvent('Begin Transaction', $connection);
                 });
 
                 $db->getEventDispatcher()->listen([
                     \Illuminate\Database\Events\TransactionCommitted::class,
                     'connection.*.committed',
                 ], function ($transaction) use ($queryCollector) {
-                    $queryCollector->collectTransactionEvent('Commit Transaction', $transaction->connection);
+
+                    if($transaction instanceof \Illuminate\Database\Events\TransactionCommitted) {
+                        $connection = $transaction->connection;
+                    } else {
+                        $connection = $transaction;
+                    }
+
+                    $queryCollector->collectTransactionEvent('Commit Transaction', $connection);
                 });
 
                 $db->getEventDispatcher()->listen([
                     \Illuminate\Database\Events\TransactionRolledBack::class,
                     'connection.*.rollingBack',
                 ], function ($transaction) use ($queryCollector) {
-                    $queryCollector->collectTransactionEvent('Rollback Transaction', $transaction->connection);
+
+                    if($transaction instanceof \Illuminate\Database\Events\TransactionRolledBack) {
+                        $connection = $transaction->connection;
+                    } else {
+                        $connection = $transaction;
+                    }
+
+                    $queryCollector->collectTransactionEvent('Rollback Transaction', $connection);
                 });
             } catch (\Exception $e) {
                 $this->addThrowable(
