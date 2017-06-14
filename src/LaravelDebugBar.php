@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @method void debug($message)
  * @method void log($message)
  */
-class LaravelDebugbar extends DebugBar
+class LaravelDebugBar extends DebugBar
 {
     /**
      * The Laravel application instance.
@@ -101,7 +101,7 @@ class LaravelDebugbar extends DebugBar
             $this->app['session']->reflash();
         }
 
-        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
+        /** @var \Barryvdh\Debugbar\LaravelDebugBar $debugbar */
         $debugbar = $this;
         /** @var \Illuminate\Foundation\Application $app */
         $app = $this->app;

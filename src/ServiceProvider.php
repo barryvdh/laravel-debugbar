@@ -24,7 +24,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             if ($this->app['config']->get('laravel-debugbar::config.capture_console') && method_exists($app, 'shutdown')) {
                 $app->shutdown(
                     function ($app) {
-                        /** @var LaravelDebugbar $debugbar */
+                        /** @var LaravelDebugBar $debugbar */
                         $debugbar = $app['debugbar'];
                         $debugbar->collectConsole();
                     }
@@ -35,7 +35,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         } elseif (!$this->shouldUseMiddleware()) {
             $app['router']->after(
                 function ($request, $response) use ($app) {
-                    /** @var LaravelDebugbar $debugbar */
+                    /** @var LaravelDebugBar $debugbar */
                     $debugbar = $app['debugbar'];
                     $debugbar->modifyResponse($request, $response);
                 }
@@ -67,7 +67,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         if ($this->app['config']->get('laravel-debugbar::config.enabled')) {
-            /** @var LaravelDebugbar $debugbar */
+            /** @var LaravelDebugBar $debugbar */
             $debugbar = $this->app['debugbar'];
             $debugbar->boot();
         }
