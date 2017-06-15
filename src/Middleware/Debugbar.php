@@ -33,7 +33,7 @@ class Debugbar implements Middleware {
      */
     public function handle($request, Closure $next)
     {
-        /** @var \Barryvdh\Debugbar\LaravelDebugBar $debugbar */
+        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
 
         /** @var \Illuminate\Http\Response $response */

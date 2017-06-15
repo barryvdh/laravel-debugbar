@@ -27,7 +27,7 @@ class Stack implements HttpKernelInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        /** @var \Barryvdh\Debugbar\LaravelDebugBar $debugbar */
+        /** @var \Barryvdh\Debugbar\LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
 
         /** @var \Illuminate\Http\Response $response */

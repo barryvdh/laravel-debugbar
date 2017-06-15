@@ -11,7 +11,7 @@ use Twig_Extension;
 class Stopwatch extends Twig_Extension
 {
     /**
-     * @var \Barryvdh\Debugbar\LaravelDebugBar
+     * @var \Barryvdh\Debugbar\LaravelDebugbar
      */
     protected $debugbar;
 
