@@ -29,7 +29,7 @@
         },
         "laravel": {
             "providers": [
-                "Barryvdh\\Debugbar\\ServiceProvider"
+                "Barryvdh\\Debugbar\\DebugBarServiceProvider"
             ],
             "aliases": {
                 "Debugbar": "Barryvdh\\Debugbar\\Facade"

@@ -2,7 +2,7 @@
 
 use Laravel\Lumen\Application;
 
-class LumenServiceProvider extends ServiceProvider
+class LumenDebugBarServiceProvider extends DebugBarServiceProvider
 {
     /** @var  Application */
     protected $app;
