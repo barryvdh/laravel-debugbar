@@ -84,7 +84,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'DebugBar\DataFormatter\DataFormatter',
             'DebugBar\DataFormatter\DataFormatterInterface'
         );
-        
+
         $this->app['debugbar'] = $this->app->share(
             function ($app) {
                 $debugbar = new LaravelDebugbar($app);
@@ -117,8 +117,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Detect if the Middelware should be used.
-     * 
+     * Detect if the Middleware should be used.
+     *
      * @return bool
      */
     protected function shouldUseMiddleware()
