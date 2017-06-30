@@ -42,29 +42,33 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             );
         }
 
-        $this->app['router']->get(
-            '_debugbar/open',
-            array(
-                'uses' => 'Barryvdh\Debugbar\Controllers\OpenHandlerController@handle',
-                'as' => 'debugbar.openhandler',
-            )
-        );
+        $this->app['router']->group(
+            ['prefix' => $this->app['config']->get('laravel-debugbar::config.route_prefix')], function () {
 
-        $this->app['router']->get(
-            '_debugbar/assets/stylesheets',
-            array(
-                'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@css',
-                'as' => 'debugbar.assets.css',
-            )
-        );
+            $this->app['router']->get(
+                '_debugbar/open',
+                array(
+                    'uses' => 'Barryvdh\Debugbar\Controllers\OpenHandlerController@handle',
+                    'as' => 'debugbar.openhandler',
+                )
+            );
 
-        $this->app['router']->get(
-            '_debugbar/assets/javascript',
-            array(
-                'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@js',
-                'as' => 'debugbar.assets.js',
-            )
-        );
+            $this->app['router']->get(
+                '_debugbar/assets/stylesheets',
+                array(
+                    'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@css',
+                    'as' => 'debugbar.assets.css',
+                )
+            );
+
+            $this->app['router']->get(
+                '_debugbar/assets/javascript',
+                array(
+                    'uses' => 'Barryvdh\Debugbar\Controllers\AssetController@js',
+                    'as' => 'debugbar.assets.js',
+                )
+            );
+        });
 
         if ($this->app['config']->get('laravel-debugbar::config.enabled')) {
             /** @var LaravelDebugbar $debugbar */
