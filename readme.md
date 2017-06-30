@@ -47,14 +47,14 @@ Require this package with composer:
 composer require barryvdh/laravel-debugbar:~1.8
 ```
 
-After updating composer, add the ServiceProvider to the providers array in app/config/app.php
+After updating composer, add the ServiceProvider to the providers array in `app/config/app.php`
 > Note for Laravel 5: If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
 ```
 'Barryvdh\Debugbar\ServiceProvider',
 ```
 
-If you want to use the facade to log messages, add this to your facades in app.php:
+If you want to use the facade to log messages, add this to your aliases in `app/config/app.php`:
 
 ```
 'Debugbar' => 'Barryvdh\Debugbar\Facade',
