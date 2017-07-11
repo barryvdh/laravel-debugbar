@@ -70,6 +70,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $enabled = $this->checkAppDebug();
         }
 
+        if ($enabled instanceof \Closure) {
+            $enabled = $enabled();
+        }
+
         if (! $enabled) {
             return;
         }
@@ -152,7 +156,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function registerMiddleware($middleware)
     {
         $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
-        $kernel->pushMiddleware($middleware);
+        $kernel->prependMiddleware($middleware);
     }
 
     /**
