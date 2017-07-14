@@ -211,6 +211,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
     flex: 1;
     margin-right: 5px;
+    cursor: text;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
