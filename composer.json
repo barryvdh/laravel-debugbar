@@ -10,10 +10,11 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9",
-        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
-        "symfony/finder": "~2.7|~3.0",
-        "maximebf/debugbar": "~1.13.0"
+        "php": ">=7.0",
+        "maximebf/debugbar": "~1.14.0",
+        "illuminate/support": "5.5.*",
+        "symfony/debug": "~3.3",
+        "symfony/finder": "~3.3"
     },
     "autoload": {
         "psr-4": {
@@ -23,9 +24,11 @@
             "src/helpers.php"
         ]
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.4-dev"
+            "dev-master": "3.0-dev"
         },
         "laravel": {
             "providers": [
