@@ -22,18 +22,5 @@
         "files": [
             "src/helpers.php"
         ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.4-dev"
-        },
-        "laravel": {
-            "providers": [
-                "Barryvdh\\Debugbar\\ServiceProvider"
-            ],
-            "aliases": {
-                "Debugbar": "Barryvdh\\Debugbar\\Facade"
-            }
-        }
     }
 }
