@@ -12,9 +12,11 @@
     "require": {
         "php": ">=7.0",
         "maximebf/debugbar": "~1.14.0",
-        "illuminate/support": "5.5.*",
-        "symfony/debug": "~3.3",
-        "symfony/finder": "~3.3"
+        "illuminate/support": "5.5.x",
+        "illuminate/session": "5.5.x",
+        "symfony/debug": "^3.3",
+        "symfony/finder": "^3.3",
+        "illuminate/routing": "5.5.x"
     },
     "autoload": {
         "psr-4": {

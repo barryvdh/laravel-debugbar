@@ -11,8 +11,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class SymfonyHttpDriver implements HttpDriverInterface
 {
-    /** @var \Symfony\Component\HttpFoundation\Session\Session|\Illuminate\Contracts\Session\Session|\Illuminate\Session\SessionManager */
+    /** @var \Illuminate\Contracts\Session\Session|\Illuminate\Session\SessionManager */
     protected $session;
+
     /** @var \Symfony\Component\HttpFoundation\Response */
     protected $response;
 
@@ -40,6 +41,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
+
         return $this->session->isStarted();
     }
 
@@ -48,14 +50,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     public function setSessionValue($name, $value)
     {
-        // In Laravel 5.4 the session changed to use their own custom implementation
-        // instead of the one from Symfony. One of the changes was the set method
-        // that was changed to put. Here we check if we are using the new one.
-        if (method_exists($this->session, 'driver') && $this->session->driver() instanceof \Illuminate\Contracts\Session\Session) {
-            $this->session->put($name, $value);
-            return;
-        }
-        $this->session->set($name, $value);
+        $this->session->put($name, $value);
     }
 
     /**

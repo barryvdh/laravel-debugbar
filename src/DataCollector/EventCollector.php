@@ -23,14 +23,6 @@ class EventCollector extends TimeDataCollector
 
     public function onWildcardEvent($name = null, $data = [])
     {
-        // Pre-Laravel 5.4, using 'firing' to get the current event name.
-        if (method_exists($this->events, 'firing')) {
-            $name = $this->events->firing();
-
-            // Get the arguments passed to the event
-            $data = func_get_args();
-        }
-
         $params = $this->prepareParams($data);
         $time = microtime(true);
 

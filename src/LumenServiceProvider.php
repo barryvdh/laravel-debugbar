@@ -38,14 +38,6 @@ class LumenServiceProvider extends ServiceProvider
     }
 
     /**
-     * Check the App Debug status
-     */
-    protected function checkAppDebug()
-    {
-        return env('APP_DEBUG');
-    }
-
-    /**
      * Get the services provided by the provider.
      *
      * @return array

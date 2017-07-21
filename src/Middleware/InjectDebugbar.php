@@ -9,7 +9,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
-class Debugbar
+class InjectDebugbar
 {
     /**
      * The App container

@@ -22,9 +22,7 @@ class GateCollector extends MessagesCollector
         parent::__construct('gate');
         $this->exporter = new ValueExporter();
 
-        if (method_exists($gate, 'after')) {
-            $gate->after([$this, 'addCheck']);
-        }
+        $gate->after([$this, 'addCheck']);
     }
 
     public function addCheck(Authenticatable $user, $ability, $result, $arguments = [])
