@@ -56,9 +56,24 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
         }
 
+        $html .= $this->getInlineHtml();
+
+
         return $html;
     }
 
+    protected function getInlineHtml()
+    {
+        $html = '';
+
+        foreach (['head', 'css', 'js'] as $asset) {
+            foreach ($this->getAssets('inline_' . $asset) as $item) {
+                $html .= $item . "\n";
+            }
+        }
+
+        return $html;
+    }
     /**
      * Get the last modified time of any assets.
      *

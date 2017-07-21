@@ -9,13 +9,14 @@ use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
-use Barryvdh\Debugbar\DataCollector\SymfonyRequestCollector;
+use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
+use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
@@ -222,7 +223,7 @@ class LaravelDebugbar extends DebugBar
 
         if (!$this->isLumen() && $this->shouldCollect('route')) {
             try {
-                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\IlluminateRouteCollector'));
+                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\RouteCollector'));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
@@ -474,6 +475,25 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
+     * Adds a data collector
+     *
+     * @param DataCollectorInterface $collector
+     *
+     * @throws DebugBarException
+     * @return $this
+     */
+    public function addCollector(DataCollectorInterface $collector)
+    {
+        parent::addCollector($collector);
+
+        if (method_exists($collector, 'useHtmlVarDumper')) {
+            $collector->useHtmlVarDumper();
+        }
+
+        return $this;
+    }
+
+    /**
      * Handle silenced errors
      *
      * @param $level
@@ -626,7 +646,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
-                $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager));
+                $this->addCollector(new RequestCollector($request, $response, $sessionManager));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Config;
  * https://github.com/laravel/framework/blob/master/src/Illuminate/Foundation/Console/RoutesCommand.php
  *
  */
-class IlluminateRouteCollector extends DataCollector implements Renderable
+class RouteCollector extends DataCollector implements Renderable
 {
     /**
      * The router instance.

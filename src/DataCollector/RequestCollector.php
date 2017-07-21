@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Based on \Symfony\Component\HttpKernel\DataCollector\RequestDataCollector by Fabien Potencier <fabien@symfony.com>
  *
  */
-class SymfonyRequestCollector extends DataCollector implements DataCollectorInterface, Renderable
+class RequestCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
     /** @var \Symfony\Component\HttpFoundation\Request $request */
     protected $request;
