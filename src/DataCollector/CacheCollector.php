@@ -81,7 +81,7 @@ class CacheCollector extends TimeDataCollector
 
     public function subscribe(Dispatcher $events)
     {
-        if (version_compare(\Illuminate\Foundation\Application::VERSION, '5.2.0', '>=')) {
+        if (class_exists('Illuminate\Cache\Events\CacheHit')) {
             $events->listen('Illuminate\Cache\Events\*', [$this, 'onClassEvent']);
         } else {
             $events->listen('cache.*', [$this, 'onStringEvent']);
