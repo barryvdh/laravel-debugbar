@@ -1,6 +1,7 @@
 <?php namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\DataCollector\AuthCollector;
+use Barryvdh\Debugbar\DataCollector\CacheCollector;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
@@ -459,6 +460,25 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector($gateCollector);
             } catch (\Exception $e){
                 // No Gate collector
+            }
+        }
+
+        if ($this->shouldCollect('cache', false) && isset($this->app['events'])) {
+            try {
+                $collectValues = $this->app['config']->get('debugbar.options.cache.values', true);
+                $startTime = $this->app['request']->server('REQUEST_TIME_FLOAT');
+                $cacheCollector = new CacheCollector($startTime, $collectValues);
+                $this->addCollector($cacheCollector);
+                $this->app['events']->subscribe($cacheCollector);
+
+            } catch (\Exception $e) {
+                $this->addThrowable(
+                    new Exception(
+                        'Cannot add CacheCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        $e->getCode(),
+                        $e
+                    )
+                );
             }
         }
 

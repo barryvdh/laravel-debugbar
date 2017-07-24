@@ -116,6 +116,7 @@ return [
         'logs'            => false, // Add the latest log messages
         'files'           => false, // Show the included files
         'config'          => false, // Display config settings
+        'cache'           => false, // Display cache events
     ],
 
     /*
@@ -152,6 +153,9 @@ return [
         ],
         'logs' => [
             'file' => null
+        ],
+        'cache' => [
+            'values' => true // collect cache values
         ],
     ],
 
