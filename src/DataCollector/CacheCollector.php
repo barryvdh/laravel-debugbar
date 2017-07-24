@@ -3,13 +3,9 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
-use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 class CacheCollector extends TimeDataCollector
 {
-    /** @var ValueExporter */
-    protected $exporter;
-
     /** @var bool */
     protected $collectValues;
 
@@ -25,7 +21,6 @@ class CacheCollector extends TimeDataCollector
     {
         parent::__construct();
 
-        $this->exporter = new ValueExporter();
         $this->collectValues = $collectValues;
     }
 
@@ -41,7 +36,7 @@ class CacheCollector extends TimeDataCollector
 
             if(isset($event->value)) {
                 if ($this->collectValues) {
-                    $params['value'] = serialize($event->value);
+                    $params['value'] = $this->getDataFormatter()->formatVar($event->value);
                 } else {
                     $params['value'] = '(values collecting turned off)';
                 }
@@ -67,7 +62,7 @@ class CacheCollector extends TimeDataCollector
 
             if (isset($payload[1])) {
                 if ($this->collectValues) {
-                    $params['value'] = serialize($payload[1]);
+                    $params['value'] = $this->getDataFormatter()->formatVar($payload[1]);
                 } else {
                     $params['value'] = '(values collecting turned off)';
                 }
