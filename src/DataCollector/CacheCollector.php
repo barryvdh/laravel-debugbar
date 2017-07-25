@@ -24,8 +24,16 @@ class CacheCollector extends TimeDataCollector
         $this->collectValues = $collectValues;
     }
 
-    public function onClassEvent($event)
+    public function onClassEvent($name, $event = null)
     {
+        if(is_object($name)) {
+            $event = $name;
+        }
+
+        if(is_array($event)) {
+            $event = $event[0];
+        }
+
         $class = get_class($event);
         if (isset($this->classMap[$class])) {
             $params = [];
