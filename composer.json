@@ -40,5 +40,8 @@
                 "Debugbar": "Barryvdh\\Debugbar\\Facade"
             }
         }
+    },
+    "require-dev": {
+        "illuminate/framework": "5.5.x"
     }
 }
