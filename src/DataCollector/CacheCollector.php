@@ -108,14 +108,14 @@ class CacheCollector extends TimeDataCollector
     {
         return [
           'cache' => [
-            'icon' => 'lock',
+            'icon' => 'clipboard',
             'widget' => 'PhpDebugBar.Widgets.TimelineWidget',
             'map' => 'cache',
             'default' => '{}',
           ],
           'cache:badge' => [
             'map' => 'cache.nb_measures',
-            'default' => 0,
+            'default' => 'null',
           ],
         ];
     }
