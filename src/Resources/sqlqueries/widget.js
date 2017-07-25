@@ -210,6 +210,20 @@
                 if (duplicate) {
                     t.append(", " + duplicate + " of which were duplicated");
                     t.append(", " + (data.nb_statements - duplicate) + " unique");
+
+                    // add toggler for displaying only duplicated queries
+                    var duplicatedText = "Show only duplicated";
+                    var id = "phpdebugbar-show-duplicates";
+                    t.append(". <a id='" + id + "'>" + duplicatedText + "</a>");
+
+                    $(".phpdebugbar #" + id).click(function () {
+                        var $this = $(this);
+                        $this.toggleClass("shown_duplicated");
+                        $this.text($this.hasClass("shown_duplicated") ? "Show All" : duplicatedText);
+                        $(".phpdebugbar-widgets-sqlqueries .phpdebugbar-widgets-list-item")
+                            .not(".phpdebugbar-widgets-sql-duplicate")
+                            .toggle();
+                    });
                 }
                 if (data.accumulated_duration_str) {
                     this.$status.append($('<span title="Accumulated duration" />').addClass(csscls('duration')).text(data.accumulated_duration_str));

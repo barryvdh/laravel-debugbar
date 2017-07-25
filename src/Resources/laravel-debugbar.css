@@ -294,3 +294,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-table-list-item {
 .phpdebugbar-text-muted {
     color: #888;
 }
+
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
+    background-color: #d4d4d4;
+}
