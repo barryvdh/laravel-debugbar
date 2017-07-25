@@ -2,6 +2,11 @@
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
+use Illuminate\Cache\Events\CacheEvent;
+use Illuminate\Cache\Events\CacheHit;
+use Illuminate\Cache\Events\CacheMissed;
+use Illuminate\Cache\Events\KeyForgotten;
+use Illuminate\Cache\Events\KeyWritten;
 use Illuminate\Events\Dispatcher;
 
 class CacheCollector extends TimeDataCollector
@@ -11,10 +16,10 @@ class CacheCollector extends TimeDataCollector
 
     /** @var array */
     protected $classMap = [
-        'Illuminate\Cache\Events\CacheHit' => 'hit',
-        'Illuminate\Cache\Events\CacheMissed' => 'missed',
-        'Illuminate\Cache\Events\KeyWritten' => 'write',
-        'Illuminate\Cache\Events\KeyForgotten' => 'delete',
+        CacheHit::class => 'hit',
+        CacheMissed::class => 'missed',
+        KeyWritten::class => 'written',
+        KeyForgotten::class => 'forgotten',
     ];
 
     public function __construct($requestStartTime = null, $collectValues)
@@ -24,70 +29,28 @@ class CacheCollector extends TimeDataCollector
         $this->collectValues = $collectValues;
     }
 
-    public function onClassEvent($name, $event = null)
+    public function onCacheEvent(CacheEvent $event)
     {
-        if(is_object($name)) {
-            $event = $name;
-        }
-
-        if(is_array($event)) {
-            $event = $event[0];
-        }
-
         $class = get_class($event);
-        if (isset($this->classMap[$class])) {
-            $params = [];
+        $params = get_object_vars($event);
 
-            if(isset($event->minutes)) {
-                $params['minutes'] = $event->minutes;
-            }
-
-            if(isset($event->value)) {
-                if ($this->collectValues) {
-                    $params['value'] = $this->getDataFormatter()->formatVar($event->value);
-                } else {
-                    $params['value'] = '(values collecting turned off)';
-                }
-            }
-
-            if(!empty($event->tags)) {
-                $params['tags'] = $event->tags;
-            }
-
-            $time = microtime(true);
-            $this->addMeasure($this->classMap[$class] . ' ' . $event->key, $time, $time, $params);
-        }
-    }
-
-    public function onStringEvent($event, $payload)
-    {
-        $params = [];
-
-        if(is_array($payload)) {
-            if (isset($payload[2])) {
-                $params['minutes'] = $payload[2];
-            }
-
-            if (isset($payload[1])) {
-                if ($this->collectValues) {
-                    $params['value'] = $this->getDataFormatter()->formatVar($payload[1]);
-                } else {
-                    $params['value'] = '(values collecting turned off)';
-                }
+        if(isset($params['value'])) {
+            if ($this->collectValues) {
+                $params['value'] = $this->getDataFormatter()->formatVar($event->value);
+            } else {
+                unset($params['value']);
             }
         }
 
         $time = microtime(true);
-        $this->addMeasure( str_replace('cache.', '', $event) . ' ' . (is_array($payload) ? $payload[0] : $payload),
-            $time, $time, $params);
+        $this->addMeasure($this->classMap[$class] . "\t" . $event->key, $time, $time, $params);
     }
 
-    public function subscribe(Dispatcher $events)
+
+    public function subscribe(Dispatcher $dispatcher)
     {
-        if (class_exists('Illuminate\Cache\Events\CacheHit')) {
-            $events->listen('Illuminate\Cache\Events\*', [$this, 'onClassEvent']);
-        } else {
-            $events->listen('cache.*', [$this, 'onStringEvent']);
+        foreach ($this->classMap as $eventClass => $type) {
+            $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
         }
     }
 
