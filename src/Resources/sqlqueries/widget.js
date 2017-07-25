@@ -223,6 +223,8 @@
                         $(".phpdebugbar-widgets-sqlqueries .phpdebugbar-widgets-list-item")
                             .not(".phpdebugbar-widgets-sql-duplicate")
                             .toggle();
+
+                        return false;
                     });
                 }
                 if (data.accumulated_duration_str) {
