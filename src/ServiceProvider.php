@@ -67,7 +67,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
-        $enabled = (bool) $this->app['config']->get('debugbar.enabled');
+        $enabled = $this->app['config']->get('debugbar.enabled');
+        if ($enabled === null) {
+            $enabled = $this->app['config']->get('app.debug');
+        }
 
         if (! $enabled) {
             return;
