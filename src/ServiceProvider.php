@@ -64,14 +64,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
         // If enabled is null, set from the app.debug value
+        $load_debugbar = $this->app['config']->get('debugbar.load_debugbar');
         $enabled = $this->app['config']->get('debugbar.enabled');
 
+        if (! $load_debugbar) {
+            return;
+        }
         if (is_null($enabled)) {
             $enabled = $this->checkAppDebug();
-        }
-
-        if (! $enabled) {
-            return;
         }
 
         $routeConfig = [
@@ -108,7 +108,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         /** @var LaravelDebugbar $debugbar */
         $debugbar = $this->app['debugbar'];
-        $debugbar->enable();
         $debugbar->boot();
 
         $this->registerMiddleware('Barryvdh\Debugbar\Middleware\Debugbar');

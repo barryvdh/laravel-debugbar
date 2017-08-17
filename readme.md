@@ -156,7 +156,7 @@ Note: Not using the auto-inject, will disable the Request information, because t
 You can add the default_request datacollector in the config as alternative.
 
 ## Enabling/Disabling on run time
-You can enable or disable the debugbar during run time.
+You can enable or disable the debugbar during run time.Just make sure you have loaded debugbar at first time.
 
 ```php
 \Debugbar::enable();

@@ -7,11 +7,17 @@ return [
      | Debugbar Settings
      |--------------------------------------------------------------------------
      |
-     | Debugbar is enabled by default, when debug is set to true in app.php.
-     | You can override the value by setting enable to true or false instead of null.
+     | Debugbar is loaded by default, and will be enabled when debug is set to 
+     | true in app.php.You can override the value by setting enable to true or
+     | false instead of null.
+     | NEED TO KNOW:
+     |   1.when you don't use debugbar at all, like in production env, just set
+     |     load_debugbar to false, debugbar will not load.
+     |   2.when you need to disable debugbar and enable it later, set enabled
+     |     to false and keep load_debugbar true.
      |
      */
-
+    'load_debugbar' =>  env('LOAD_DEBUGBAR', true),
     'enabled' => env('DEBUGBAR_ENABLED', null),
 
     /*
