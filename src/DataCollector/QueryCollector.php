@@ -220,8 +220,11 @@ class QueryCollector extends PDOCollector
 
         if (isset($trace['class']) && isset($trace['file']) && strpos(
                 $trace['file'],
-                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'framework'
+                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'framework/src/Illuminate/Database'
             ) === false && strpos(
+               $trace['file'],
+               DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'framework/src/Illuminate/Events'
+           ) === false && strpos(
                 $trace['file'],
                 DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'barryvdh' . DIRECTORY_SEPARATOR . 'laravel-debugbar'
             ) === false
