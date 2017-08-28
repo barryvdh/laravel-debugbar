@@ -3,6 +3,8 @@
 [![Latest Stable Version](https://poser.pugx.org/barryvdh/laravel-debugbar/version.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Total Downloads](https://poser.pugx.org/barryvdh/laravel-debugbar/d/total.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 
+### Note for v3: Debugbar is now enabled by requiring the package, but still needs APP_DEBUG=true by default!
+
 ### For Laravel < 5.5, please use the [2.4 branch](https://github.com/barryvdh/laravel-debugbar/tree/2.4)!
 
 This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel 5.
@@ -42,20 +44,19 @@ It also provides a Facade interface for easy logging Messages, Exceptions and Ti
 
 ## Installation
 
-Require this package with composer:
+Require this package with composer. It is recommended to only require the package for development.
 
 ```shell
-composer require barryvdh/laravel-debugbar
+composer require barryvdh/laravel-debugbar --dev
 ```
 
 Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
 
 The Debugbar will be enabled when `APP_DEBUG` is `true`.
 
-
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
-### Laravel 5:
+### Laravel 5.5+:
 
 If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
 
