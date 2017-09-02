@@ -6,17 +6,10 @@ use Illuminate\Http\Response;
 
 class OpenHandlerController extends BaseController
 {
-   
+
     public function handle()
     {
-        $debugbar = $this->debugbar;
-
-        if (!$debugbar->isEnabled()) {
-            $this->app->abort('500', 'Debugbar is not enabled');
-        }
-
-        $openHandler = new OpenHandler($debugbar);
-
+        $openHandler = new OpenHandler($this->debugbar);
         $data = $openHandler->handle(null, false, false);
 
         return new Response(
@@ -40,14 +33,7 @@ class OpenHandlerController extends BaseController
             'id' => $id,
         ];
 
-        $debugbar = $this->debugbar;
-
-        if (!$debugbar->isEnabled()) {
-            $this->app->abort('500', 'Debugbar is not enabled');
-        }
-
-        $openHandler = new OpenHandler($debugbar);
-
+        $openHandler = new OpenHandler($this->debugbar);
         $data = $openHandler->handle($request, false, false);
 
         // Convert to Clockwork

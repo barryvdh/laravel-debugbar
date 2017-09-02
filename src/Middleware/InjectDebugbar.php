@@ -46,6 +46,12 @@ class InjectDebugbar
      */
     public function handle($request, Closure $next)
     {
+        if (!$this->debugbar->isEnabled()) {
+            return $next($request);
+        }
+
+        $this->debugbar->boot();
+
         try {
             /** @var \Illuminate\Http\Response $response */
             $response = $next($request);

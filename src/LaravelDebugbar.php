@@ -126,7 +126,7 @@ class LaravelDebugbar extends DebugBar
 
         /** @var Application $app */
         $app = $this->app;
-        
+
         // Set custom error handler
         if ($app['config']->get('debugbar.error_handler' , false)) {
             set_error_handler([$this, 'handleError']);
@@ -615,7 +615,7 @@ class LaravelDebugbar extends DebugBar
     public function modifyResponse(Request $request, Response $response)
     {
         $app = $this->app;
-        if ($app->runningInConsole() || !$this->isEnabled() || $this->isDebugbarRequest()) {
+        if (!$this->isEnabled() || $this->isDebugbarRequest()) {
             return $response;
         }
 
@@ -747,7 +747,14 @@ class LaravelDebugbar extends DebugBar
     public function isEnabled()
     {
         if ($this->enabled === null) {
-            $this->enabled = value($this->app['config']->get('debugbar.enabled'));
+            $config = $this->app['config'];
+            $configEnabled = value($config->get('debugbar.enabled'));
+
+            if ($configEnabled === null) {
+                $configEnabled = $config->get('app.debug');
+            }
+
+            $this->enabled = $configEnabled && !$this->app->runningInConsole() && !$this->app->environment('testing');
         }
 
         return $this->enabled;
