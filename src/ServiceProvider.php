@@ -1,5 +1,6 @@
 <?php namespace Barryvdh\Debugbar;
 
+use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
@@ -62,24 +63,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        $app = $this->app;
-
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
-
-        $enabled = $this->app['config']->get('debugbar.enabled');
-        if ($enabled === null) {
-            $enabled = $this->app['config']->get('app.debug');
-        }
-
-        if (! $enabled) {
-            return;
-        }
 
         $routeConfig = [
             'namespace' => 'Barryvdh\Debugbar\Controllers',
             'prefix' => $this->app['config']->get('debugbar.route_prefix'),
             'domain' => $this->app['config']->get('debugbar.route_domain'),
+            'middleware' => [DebugbarEnabled::class],
         ];
 
         $this->getRouter()->group($routeConfig, function($router) {
@@ -103,15 +94,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.assets.js',
             ]);
         });
-
-        if ($app->runningInConsole() || $app->environment('testing')) {
-            return;
-        }
-
-        /** @var LaravelDebugbar $debugbar */
-        $debugbar = $this->app['debugbar'];
-        $debugbar->enable();
-        $debugbar->boot();
 
         $this->registerMiddleware(InjectDebugbar::class);
     }
