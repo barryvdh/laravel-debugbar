@@ -93,6 +93,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'uses' => 'AssetController@js',
                 'as' => 'debugbar.assets.js',
             ]);
+
+            $router->delete('cache/{key}/{tags?}', [
+                'uses' => 'CacheController@delete',
+                'as' => 'debugbar.cache.delete',
+            ]);
         });
 
         $this->registerMiddleware(InjectDebugbar::class);
