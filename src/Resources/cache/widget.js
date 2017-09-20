@@ -8,7 +8,7 @@
      * Options:
      *  - data
      */
-    var LaravelCacheWidget = PhpDebugBar.Widgets.LaravelCacheWidget = PhpDebugBar.Widget.extend({
+    var LaravelCacheWidget = PhpDebugBar.Widgets.LaravelCacheWidget = PhpDebugBar.Widgets.TimelineWidget.extend({
 
         tagName: 'ul',
 
@@ -27,30 +27,17 @@
         },
 
         render: function() {
+            LaravelCacheWidget.__super__.render.apply(this);
+
             this.bindAttr('data', function(data) {
-                this.$el.empty();
+
                 if (data.measures) {
                     var self = this;
+                    var lines = this.$el.find('.'+csscls('measure'));
 
                     for (var i = 0; i < data.measures.length; i++) {
                         var measure = data.measures[i];
-                        var m = $('<div />').addClass(csscls('measure')),
-                            li = $('<li />'),
-                            left = (measure.relative_start * 100 / data.duration).toFixed(2),
-                            width = Math.min((measure.duration * 100 / data.duration).toFixed(2), 100 - left);
-
-                        m.append($('<span />').addClass(csscls('value')).css({
-                            left: left + "%",
-                            width: width + "%"
-                        }));
-                        m.append($('<span />').addClass(csscls('label')).text(measure.label + " (" + measure.duration_str + ")"));
-
-                        if (measure.collector) {
-                            $('<span />').addClass(csscls('collector')).text(measure.collector).appendTo(m);
-                        }
-
-                        m.appendTo(li);
-                        this.$el.append(li);
+                        var m = lines[i];
 
                         if (measure.params && !$.isEmptyObject(measure.params)) {
 
@@ -62,30 +49,11 @@
                                     .one('click', function(e) { self.onForgetClick(e, this); })
                                     .appendTo(m);
                             }
-
-                            var table = $('<table><tr><th colspan="2">Params</th></tr></table>').addClass(csscls('params')).appendTo(li);
-                            for (var key in measure.params) {
-                                if (typeof measure.params[key] !== 'function') {
-                                    table.append('<tr><td class="' + csscls('name') + '">' + key + '</td><td class="' + csscls('value') +
-                                    '"><pre><code>' + measure.params[key] + '</code></pre></td></tr>');
-                                }
-                            }
-                            li.css('cursor', 'pointer').click(function() {
-                                var table = $(this).find('table');
-                                if (table.is(':visible')) {
-                                    table.hide();
-                                } else {
-                                    table.show();
-                                }
-                            });
                         }
                     }
                 }
             });
         }
-
-
-
     });
 
 })(PhpDebugBar.$);
