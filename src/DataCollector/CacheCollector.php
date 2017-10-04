@@ -34,16 +34,26 @@ class CacheCollector extends TimeDataCollector
         $class = get_class($event);
         $params = get_object_vars($event);
 
-        if(isset($params['value'])) {
+        $label = $this->classMap[$class];
+
+        if (isset($params['value'])) {
             if ($this->collectValues) {
-                $params['value'] = $this->getDataFormatter()->formatVar($event->value);
+                $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($event->value));
             } else {
                 unset($params['value']);
             }
         }
 
+
+        if (!empty($params['key']) && in_array($label, ['hit', 'written'])) {
+            $params['delete'] = route('debugbar.cache.delete', [
+                'key' => urlencode($params['key']),
+                'tags' => !empty($params['tags']) ? json_encode($params['tags']) : '',
+            ]);
+        }
+
         $time = microtime(true);
-        $this->addMeasure($this->classMap[$class] . "\t" . $event->key, $time, $time, $params);
+        $this->addMeasure($label . "\t" . $event->key, $time, $time, $params);
     }
 
 
@@ -72,7 +82,7 @@ class CacheCollector extends TimeDataCollector
         return [
           'cache' => [
             'icon' => 'clipboard',
-            'widget' => 'PhpDebugBar.Widgets.TimelineWidget',
+            'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
             'map' => 'cache',
             'default' => '{}',
           ],

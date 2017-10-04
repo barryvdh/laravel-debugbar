@@ -303,3 +303,15 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-table-list-item {
 .phpdebugbar-text-muted {
     color: #888;
 }
+
+ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
+    float: right;
+    font-size: 12px;
+    padding: 0 4px;
+    background: #f4645f;
+    margin: 0 2px;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1.5rem;
+}
