@@ -186,6 +186,9 @@
                         if (data.statements[i].bindings && data.statements[i].bindings.length) {
                             stmt += JSON.stringify(data.statements[i].bindings);
                         }
+                        if (data.statements[i].connection) {
+                            stmt += '@' + data.statements[i].connection;
+                        }
                         sql[stmt] = sql[stmt] || { keys: [] };
                         sql[stmt].keys.push(i);
                     }
