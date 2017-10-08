@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
 /**
@@ -25,14 +25,14 @@ class GateCollector extends MessagesCollector
         $gate->after([$this, 'addCheck']);
     }
 
-    public function addCheck(Authenticatable $user, $ability, $result, $arguments = [])
+    public function addCheck(Authorizable $user, $ability, $result, $arguments = [])
     {
         $label = $result ? 'success' : 'error';
 
         $this->addMessage([
             'ability' => $ability,
             'result' => $result,
-            'user' => $user->getAuthIdentifier(),
+            snake_case(class_basename($user)) => $user->id,
             'arguments' => $this->exporter->exportValue($arguments),
         ], $label, false);
     }
