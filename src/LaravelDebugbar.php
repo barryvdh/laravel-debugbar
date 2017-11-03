@@ -874,7 +874,7 @@ class LaravelDebugbar extends DebugBar
         $response->headers->remove('Content-Length');
 
         if ($overrideType) {
-            $response->headers->set('Content-Type', 'text/html; charset='.$response->getCharset());
+            $response->headers->set('Content-Type', 'text/html; charset='.($response->getCharset() ?: 'UTF-8'));
         }
     }
 
