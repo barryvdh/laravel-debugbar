@@ -695,6 +695,14 @@ class LaravelDebugbar extends DebugBar
             $this->addClockworkHeaders($response);
         }
 
+        $forceInject = false;
+        $forceInjectContentTypes = $app['config']->get('debugbar.force_inject_content_types', []);
+        foreach ($forceInjectContentTypes as $forceInjectContentType) {
+            if (strpos($response->headers->get('Content-Type'), $forceInjectContentType) !== false) {
+                $forceInject = true;
+                break;
+            }
+        }
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
@@ -712,6 +720,12 @@ class LaravelDebugbar extends DebugBar
                     $this->addServerTimingHeaders($response);
                 }
 
+            } catch (\Exception $e) {
+                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            }
+        } elseif ($forceInject && $app['config']->get('debugbar.inject', true)) {
+            try {
+                $this->injectDebugbar($response, true);
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
@@ -833,8 +847,10 @@ class LaravelDebugbar extends DebugBar
      *
      * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
      * Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
+     * 
+     * @param bool $overrideType
      */
-    public function injectDebugbar(Response $response)
+    public function injectDebugbar(Response $response, $overrideType = false)
     {
         $content = $response->getContent();
 
@@ -856,6 +872,10 @@ class LaravelDebugbar extends DebugBar
         // Update the new content and reset the content length
         $response->setContent($content);
         $response->headers->remove('Content-Length');
+
+        if ($overrideType) {
+            $response->headers->set('Content-Type', 'text/html; charset='.$response->getCharset());
+        }
     }
 
     /**
