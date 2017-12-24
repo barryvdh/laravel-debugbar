@@ -205,7 +205,7 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
-    padding: 5px 10px;
+    padding: 15px 10px;
     border: none;
     font-family: inherit;
     overflow: visible;
