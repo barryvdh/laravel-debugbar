@@ -4,18 +4,18 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Container\Container;
 
 class FilesCollector extends DataCollector implements Renderable
 {
-    /** @var \Illuminate\Contracts\Foundation\Application */
+    /** @var \Illuminate\Container\Container */
     protected $app;
     protected $basePath;
 
     /**
-     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param \Illuminate\Container\Container $app
      */
-    public function __construct(Application $app = null)
+    public function __construct(Container $app = null)
     {
         $this->app = $app;
         $this->basePath = base_path();
