@@ -179,6 +179,19 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Force Inject Content Types
+     |--------------------------------------------------------------------------
+     |
+     | Debugbar would be injected in Response if the type string appear in the
+     | Content-Type field of the Response header, and the Content-Type would be
+     | overridden.
+     |
+     */
+
+    'force_inject_content_types' => [],   // ['json', 'xml', 'text', ...]
+
+    /*
+     |--------------------------------------------------------------------------
      | DebugBar route prefix
      |--------------------------------------------------------------------------
      |
