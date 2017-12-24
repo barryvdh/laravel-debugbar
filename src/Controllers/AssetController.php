@@ -11,6 +11,7 @@ class AssetController extends BaseController
      */
     public function js()
     {
+        $this->debugbar->enable();
         $renderer = $this->debugbar->getJavascriptRenderer();
 
         $content = $renderer->dumpAssetsToString('js');
@@ -31,6 +32,7 @@ class AssetController extends BaseController
      */
     public function css()
     {
+        $this->debugbar->enable();
         $renderer = $this->debugbar->getJavascriptRenderer();
 
         $content = $renderer->dumpAssetsToString('css');
