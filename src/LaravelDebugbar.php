@@ -438,7 +438,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('auth', false)) {
             try {
-                $guards = array_keys($this->app['config']->get('auth.guards'));
+                $guards = array_keys($this->app['config']->get('auth.guards', []));
                 $authCollector = new MultiAuthCollector($app['auth'], $guards);
 
                 $authCollector->setShowName(
