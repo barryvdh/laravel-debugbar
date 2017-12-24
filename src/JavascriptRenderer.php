@@ -75,6 +75,16 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         return $html;
     }
+    protected function getJsInitializationCode()
+    {
+        $js = '';
+        if ($this->isJqueryNoConflictEnabled()) {
+            $js .= 'jQuery.noConflict(true);' . "\n";
+        }
+
+        return $js . parent::getJsInitializationCode();
+    }
+
     /**
      * Get the last modified time of any assets.
      *
@@ -113,6 +123,24 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         return $content;
     }
 
+    /**
+     * Return the init script as a string
+     *
+     * @return string
+     */
+    public function renderInitScript()
+    {
+        $openHandlerUrl = route('debugbar.openhandler');
+        $this->setOpenHandlerUrl($openHandlerUrl);
+        $content = $this->getJsInitializationCode();
+        $content .= sprintf(
+            "%s.loadDataSet($(\"span[data-debugbar-id]\").attr(\"data-debugbar-id\"), \"(ajax)\");\n",
+            $this->variableName,
+            $this->openHandlerClass,
+            json_encode(array("url" => $this->openHandlerUrl))
+        );
+        return $content;
+    }
     /**
      * Makes a URI relative to another
      *

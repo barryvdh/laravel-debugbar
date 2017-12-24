@@ -44,6 +44,17 @@ class AssetController extends BaseController
         return $this->cacheResponse($response);
     }
 
+    public function init()
+    {
+        $renderer = $this->debugbar->getJavascriptRenderer();
+        $content = $renderer->renderInitScript();
+        $response = new Response(
+            $content, 200, [
+                'Content-Type' => 'text/javascript',
+            ]
+        );
+        return $this->cacheResponse($response);
+    }
     /**
      * Cache the response 1 year (31536000 sec)
      */

@@ -730,6 +730,12 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
+        } elseif ($app['config']->get('debugbar.inject', true) && $app['config']->get('debugbar.csp-compatible', false)) {
+            try {
+                $this->injectDebugbarCSP($response);
+            } catch (\Exception $e) {
+                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            }
         } elseif ($app['config']->get('debugbar.inject', true)) {
             try {
                 $this->injectDebugbar($response);
@@ -861,6 +867,43 @@ class LaravelDebugbar extends DebugBar
         $response->headers->remove('Content-Length');
     }
 
+    public function injectDebugbarCSP(Response $response)
+    {
+        if (!$this->app['config']->get('debugbar.storage.enabled')) {
+            throw new \Exception('Store needs to be enabled for content security policy');
+        }
+        //collect and store data
+        $this->collect();
+
+        $content = $response->getContent();
+
+        $renderer = $this->getJavascriptRenderer();
+        if ($this->getStorage()) {
+            $openHandlerUrl = route('debugbar.openhandler');
+            $renderer->setOpenHandlerUrl($openHandlerUrl);
+        }
+
+        $initRoute = route('debugbar.assets.init', [
+            'v' => filemtime(config_path('debugbar.php'))
+        ]);
+	
+	$initRoute = preg_replace('/\Ahttps?:/', '', $initRoute);
+	
+        $scriptContent = $renderer->renderHead() .
+            "<span data-debugbar-id='{$this->getCurrentRequestId()}'></span> 
+            <script type='text/javascript' src='{$initRoute}'></script>";
+
+        $pos = strripos($content, '</body>');
+        if (false !== $pos) {
+            $content = substr($content, 0, $pos) . $scriptContent . substr($content, $pos);
+        } else {
+            $content = $content . $scriptContent;
+        }
+
+        // Update the new content and reset the content length
+        $response->setContent($content);
+        $response->headers->remove('Content-Length');
+    }
     /**
      * Disable the Debugbar
      */
