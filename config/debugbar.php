@@ -161,6 +161,17 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Content security policy compatible
+     |--------------------------------------------------------------------------
+     |
+     | If you have set a content security policy in your header you need to set
+     | this variable to true. You need to add "img-src:'self' data:" to your
+     | csp header. Note: Storage needs to be enabled for this to work.
+     |
+     */
+    'csp-compatible' => false,
+    /*
+     |--------------------------------------------------------------------------
      | Inject Debugbar in Response
      |--------------------------------------------------------------------------
      |

@@ -100,6 +100,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'uses' => 'AssetController@js',
                 'as' => 'debugbar.assets.js',
             ]);
+            $router->get('assets/init', [
+                'uses' => 'AssetController@init',
+                'as' => 'debugbar.assets.init',
+            ]);
         });
 
         if ($app->runningInConsole() || $app->environment('testing')) {
