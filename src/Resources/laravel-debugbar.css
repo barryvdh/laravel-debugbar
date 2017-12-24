@@ -3,6 +3,7 @@ div.phpdebugbar {
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
     direction: ltr;
     text-align: left;
+    z-index: 100000;
 }
 
 div.phpdebugbar-resize-handle {
@@ -219,6 +220,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
     flex: 1;
     margin-right: 5px;
+    cursor: text;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
