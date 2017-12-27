@@ -57,19 +57,6 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Disable Vendors
-     |--------------------------------------------------------------------------
-     |
-     | Could be easily disable specific vendor by setting following array.
-     | You should inject jquery library manually.
-     | Options: 'jquery', 'highlightjs', 'fontawesome'.
-     |
-     */
-
-    'disableVendors' => [],
-
-    /*
-     |--------------------------------------------------------------------------
      | Capture Ajax Requests
      |--------------------------------------------------------------------------
      |

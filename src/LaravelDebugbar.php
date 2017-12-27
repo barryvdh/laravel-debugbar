@@ -483,12 +483,6 @@ class LaravelDebugbar extends DebugBar
         }
 
         $renderer = $this->getJavascriptRenderer();
-        $disableVendors = $this->app['config']->get('debugbar.disableVendors', []);
-        if (!empty($disableVendors)) {
-            foreach($disableVendors as $vendor) {
-                $renderer->disableVendor($vendor);
-            {
-        }
         $renderer->setIncludeVendors($this->app['config']->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToXHR($app['config']->get('debugbar.capture_ajax', true));
 
