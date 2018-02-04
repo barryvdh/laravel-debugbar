@@ -5,7 +5,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Access\Authorizable;
-use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 /**
  * Collector for Laravel's Auth provider
@@ -20,7 +20,7 @@ class GateCollector extends MessagesCollector
     public function __construct(Gate $gate)
     {
         parent::__construct('gate');
-        $this->exporter = new ValueExporter();
+        $this->exporter = new VarCloner();
 
         $gate->after([$this, 'addCheck']);
     }
@@ -33,7 +33,7 @@ class GateCollector extends MessagesCollector
             'ability' => $ability,
             'result' => $result,
             snake_case(class_basename($user)) => $user->id,
-            'arguments' => $this->exporter->exportValue($arguments),
+            'arguments' => $this->exporter->cloneVar($arguments),
         ], $label, false);
     }
 }

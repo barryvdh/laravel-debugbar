@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\Bridge\Twig\TwigCollector;
 use Illuminate\View\View;
-use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class ViewCollector extends TwigCollector
 {
@@ -21,7 +21,7 @@ class ViewCollector extends TwigCollector
         $this->collect_data = $collectData;
         $this->name = 'views';
         $this->templates = [];
-        $this->exporter = new ValueExporter();
+        $this->exporter = new VarCloner();
     }
 
     public function getName()
@@ -75,7 +75,7 @@ class ViewCollector extends TwigCollector
         } else {
             $data = [];
             foreach ($view->getData() as $key => $value) {
-                $data[$key] = $this->exporter->exportValue($value);
+                $data[$key] = $this->exporter->cloneVar($value);
             }
             $params = $data;
         }
