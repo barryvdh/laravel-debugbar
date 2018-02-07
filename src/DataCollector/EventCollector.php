@@ -4,21 +4,21 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class EventCollector extends TimeDataCollector
 {
     /** @var Dispatcher */
     protected $events;
 
-    /** @var ValueExporter */
+    /** @var VarCloner */
     protected $exporter;
 
     public function __construct($requestStartTime = null)
     {
         parent::__construct($requestStartTime);
 
-        $this->exporter = new ValueExporter();
+        $this->exporter = new VarCloner();
     }
 
     public function onWildcardEvent($name = null, $data = [])
@@ -76,7 +76,7 @@ class EventCollector extends TimeDataCollector
             if (is_object($value) && Str::is('Illuminate\*\Events\*', get_class($value))) {
                 $value =  $this->prepareParams(get_object_vars($value));
             }
-            $data[$key] = htmlentities($this->exporter->exportValue($value), ENT_QUOTES, 'UTF-8', false);
+            $data[$key] = htmlentities($this->exporter->cloneVar($value), ENT_QUOTES, 'UTF-8', false);
         }
 
         return $data;
