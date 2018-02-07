@@ -11,7 +11,7 @@ class EventCollector extends TimeDataCollector
     /** @var Dispatcher */
     protected $events;
 
-    /** @var ValueExporter */
+    /** @var VarCloner */
     protected $exporter;
 
     public function __construct($requestStartTime = null)
