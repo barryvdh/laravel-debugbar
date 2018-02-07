@@ -25,14 +25,14 @@ class GateCollector extends MessagesCollector
         $gate->after([$this, 'addCheck']);
     }
 
-    public function addCheck(Authorizable $user, $ability, $result, $arguments = [])
+    public function addCheck(Authorizable $user = null, $ability, $result, $arguments = [])
     {
         $label = $result ? 'success' : 'error';
 
         $this->addMessage([
             'ability' => $ability,
             'result' => $result,
-            snake_case(class_basename($user)) => $user->id,
+            ($user ? snake_case(class_basename($user)) : 'user') => ($user ? $user->id : null),
             'arguments' => $this->exporter->cloneVar($arguments),
         ], $label, false);
     }
