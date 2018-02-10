@@ -12,7 +12,7 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
  */
 class GateCollector extends MessagesCollector
 {
-    /** @var ValueExporter */
+    /** @var VarCloner */
     protected $exporter;
     /**
      * @param Gate $gate
