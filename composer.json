@@ -2,6 +2,7 @@
     "name": "barryvdh/laravel-debugbar",
     "description": "PHP Debugbar integration for Laravel",
     "keywords": ["laravel", "debugbar", "profiler", "debug", "webprofiler"],
+    "type": "laravel-package",
     "license": "MIT",
     "authors": [
         {
