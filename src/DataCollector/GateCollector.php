@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Access\Authorizable;
@@ -12,16 +13,13 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
  */
 class GateCollector extends MessagesCollector
 {
-    /** @var ValueExporter */
-    protected $exporter;
     /**
      * @param Gate $gate
      */
     public function __construct(Gate $gate)
     {
         parent::__construct('gate');
-        $this->exporter = new VarCloner();
-
+        $this->setDataFormatter(new SimpleFormatter());
         $gate->after([$this, 'addCheck']);
     }
 
@@ -33,7 +31,7 @@ class GateCollector extends MessagesCollector
             'ability' => $ability,
             'result' => $result,
             ($user ? snake_case(class_basename($user)) : 'user') => ($user ? $user->id : null),
-            'arguments' => $this->exporter->cloneVar($arguments),
+            'arguments' => $this->getDataFormatter()->formatVar($arguments),
         ], $label, false);
     }
 }

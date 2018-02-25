@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\Bridge\Twig\TwigCollector;
 use Illuminate\View\View;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
@@ -18,10 +19,10 @@ class ViewCollector extends TwigCollector
      */
     public function __construct($collectData = true)
     {
+        $this->setDataFormatter(new SimpleFormatter());
         $this->collect_data = $collectData;
         $this->name = 'views';
         $this->templates = [];
-        $this->exporter = new VarCloner();
     }
 
     public function getName()
@@ -75,7 +76,7 @@ class ViewCollector extends TwigCollector
         } else {
             $data = [];
             foreach ($view->getData() as $key => $value) {
-                $data[$key] = $this->exporter->cloneVar($value);
+                $data[$key] = $this->getDataFormatter()->formatVar($value);
             }
             $params = $data;
         }
