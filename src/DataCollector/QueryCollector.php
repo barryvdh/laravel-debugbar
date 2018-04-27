@@ -218,16 +218,9 @@ class QueryCollector extends PDOCollector
             return $frame;
         }
 
-        if (isset($trace['class']) && isset($trace['file']) && strpos(
-                $trace['file'],
-                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'framework/src/Illuminate/Database'
-            ) === false && strpos(
-               $trace['file'],
-               DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'framework/src/Illuminate/Events'
-           ) === false && strpos(
-                $trace['file'],
-                DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'barryvdh' . DIRECTORY_SEPARATOR . 'laravel-debugbar'
-            ) === false
+        if (isset($trace['class']) &&
+            isset($trace['file']) &&
+            !$this->fileIsInExcludedPath($trace['file'])
         ) {
             $file = $trace['file'];
 
@@ -260,6 +253,31 @@ class QueryCollector extends PDOCollector
             return $frame;
         }
 
+
+        return false;
+    }
+
+    /**
+     * Check if the given file is to be excluded from analysis
+     *
+     * @param string $file
+     * @return bool
+     */
+    protected function fileIsInExcludedPath($file)
+    {
+        $excludedPaths = [
+            '/vendor/laravel/framework/src/Illuminate/Database',
+            '/vendor/laravel/framework/src/Illuminate/Events',
+            '/vendor/barryvdh/laravel-debugbar',
+        ];
+
+        $normalizedPath = str_replace('\\', '/', $file);
+
+        foreach ($excludedPaths as $excludedPath) {
+            if (strpos($normalizedPath, $excludedPath) !== false) {
+                return true;
+            }
+        }
 
         return false;
     }
