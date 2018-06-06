@@ -163,7 +163,7 @@ return [
             'values' => true // collect cache values
         ],
         'log' => [
-            'request_global_stats' => true // log route, memory_usage, request_duration, number of queries & views
+            'request_global_stats' => false // log route uri, request_duration, memory_usage, number of queries & views
         ]
     ],
 
