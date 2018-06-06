@@ -162,6 +162,9 @@ return [
         'cache' => [
             'values' => true // collect cache values
         ],
+        'log' => [
+            'request_global_stats' => true // log route, memory_usage, request_duration, number of queries & views
+        ]
     ],
 
     /*

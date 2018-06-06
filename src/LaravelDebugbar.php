@@ -828,6 +828,10 @@ class LaravelDebugbar extends DebugBar
             $this->storage->save($this->getCurrentRequestId(), $this->data);
         }
 
+        if ($this->app['config']->get('debugbar.options.log.request_global_stats')){
+            $this->logRequestGlobalStats($this->data);
+        }
+
         return $this->data;
     }
 
@@ -940,6 +944,10 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->storage !== null) {
             $this->storage->save($this->getCurrentRequestId(), $this->data);
+        }
+
+        if ($this->app['config']->get('debugbar.options.log.request_global_stats')){
+            $this->logRequestGlobalStats($this->data);
         }
 
         return $this->data;
@@ -1061,5 +1069,22 @@ class LaravelDebugbar extends DebugBar
 
             $response->headers->set('Server-Timing', $headers, false);
         }
+    }
+
+    /**
+     * Log each request global stats
+     *
+     * @param $data
+     */
+    protected function logRequestGlobalStats($data)
+    {
+        $log = array_filter([
+            'route' => array_get($data, 'route.uri'),
+            'duration' => array_get($data, 'time.duration_str'),
+            'memory' => array_get($data, 'memory.peak_usage_str'),
+            'queries' => array_get($data, 'queries.nb_statements'),
+            'views' => array_get($data, 'views.nb_templates'),
+        ]);
+        \Log::info('LaravelDebugbar-RequestStats', $log);
     }
 }
