@@ -244,9 +244,11 @@
                 this.$status.append($('<span title="Copy to Clipboard" />').addClass(csscls('copy-clipboard')).text('Export')
                     .on('click', function(){
                         let $this = $(this),
-                            csvContent = "";
+                            csvContent = "id,sql,duration (ms),stmt_id\r\n",
+                            st;
                         for (let i = 0; i < data.statements.length; i++) {
-                            csvContent += data.statements[i].sql +",\r\n";
+                            st = data.statements[i];
+                            csvContent += [i, '"' + st.sql + '"', st.duration, st.stmt_id, "\r\n"].join(',');
                         }
                         $this
                             .text(PhpDebugBar.utils.copyToClipboard(csvContent) ? 'Copied to clipboard' : 'Error copying to clipboard')
