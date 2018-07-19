@@ -214,6 +214,19 @@
                     t.append(", " + duplicate + " of which were duplicated");
                     t.append(", " + (data.nb_statements - duplicate) + " unique");
                 }
+                this.$status.append($('<span title="Export Queries to CSV" />').addClass(csscls('export-to-csv')).text('Export Queries')).on('click', function(){
+                    let csvContent = "data:text/csv;charset=utf-8,";
+                    for (let i = 0; i < data.statements.length; i++) {
+                        csvContent += data.statements[i].sql +",\r\n";
+                    }
+                    let link = document.createElement("a");
+                    link.setAttribute("style", "display: none");
+                    link.setAttribute("href", encodeURI(csvContent));
+                    link.setAttribute("download", "queries.csv");
+                    link.innerHTML= "Click Here to download";
+                    document.body.appendChild(link);
+                    link.click();
+                });
                 if (data.accumulated_duration_str) {
                     this.$status.append($('<span title="Accumulated duration" />').addClass(csscls('duration')).text(data.accumulated_duration_str));
                 }
