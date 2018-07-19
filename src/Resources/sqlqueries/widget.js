@@ -241,7 +241,10 @@
                     t.append(", " + duplicate + " of which were duplicated");
                     t.append(", " + (data.nb_statements - duplicate) + " unique");
                 }
-                this.$status.append($('<span title="Copy to Clipboard" />').addClass(csscls('copy-clipboard')).text('Export')
+                this.$status.append($('<span title="Copy to Clipboard" />')
+                    .css('cursor','pointer')
+                    .addClass(csscls('copy-clipboard'))
+                    .text('Export')
                     .on('click', function(){
                         let $this = $(this),
                             csvContent = "id,sql,duration (ms),stmt_id\r\n",
