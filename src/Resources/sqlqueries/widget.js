@@ -1,5 +1,32 @@
 (function($) {
 
+    PhpDebugBar.utils.copyToClipboard = function(text) {
+        var doc = document;
+
+        // Create temp element
+        var textarea = doc.createElement('textarea');
+        textarea.style.position = 'absolute';
+        textarea.style.opacity  = '0';
+        textarea.textContent    = text;
+
+        doc.body.appendChild(textarea);
+
+        textarea.focus();
+        textarea.setSelectionRange(0, textarea.value.length);
+
+        // copy the selection
+        var success;
+        try {
+            success = doc.execCommand("copy");
+        } catch(e) {
+            success = false;
+        }
+
+        textarea.remove();
+
+        return success;
+    };
+
     var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
 
     /**
@@ -214,18 +241,18 @@
                     t.append(", " + duplicate + " of which were duplicated");
                     t.append(", " + (data.nb_statements - duplicate) + " unique");
                 }
-                this.$status.append($('<span title="Export Queries to CSV" />').addClass(csscls('export-to-csv')).text('Export Queries')).on('click', function(){
-                    let csvContent = "data:text/csv;charset=utf-8,";
-                    for (let i = 0; i < data.statements.length; i++) {
-                        csvContent += data.statements[i].sql +",\r\n";
-                    }
-                    let link = document.createElement("a");
-                    link.setAttribute("style", "display: none");
-                    link.setAttribute("href", encodeURI(csvContent));
-                    link.setAttribute("download", "queries.csv");
-                    link.innerHTML= "Click Here to download";
-                    document.body.appendChild(link);
-                    link.click();
+                this.$status.append($('<span title="Export Queries to CSV" />').addClass(csscls('copy-clipboard')).text('Copy Queries'))
+                    .on('click', function(){
+                        // let csvContent = "data:text/csv;charset=utf-8,";
+                        // for (let i = 0; i < data.statements.length; i++) {
+                        //     csvContent += data.statements[i].sql +",\r\n";
+                        // }
+                        let csvContent = "";
+                        for (let i = 0; i < data.statements.length; i++) {
+                            csvContent += data.statements[i].sql +",\r\n";
+                        }
+                        $(this).text(PhpDebugBar.utils.copyToClipboard(csvContent) ? 'Copied to clipboard' : 'Error copying to clipboard')
+                             .delay(2000).text('Copy Queries');
                 });
                 if (data.accumulated_duration_str) {
                     this.$status.append($('<span title="Accumulated duration" />').addClass(csscls('duration')).text(data.accumulated_duration_str));
@@ -235,6 +262,7 @@
                 }
             });
         }
+
 
     });
 
