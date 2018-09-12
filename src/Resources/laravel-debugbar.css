@@ -243,7 +243,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-params {
     background-color: rgba(255, 255, 255, .5);
     flex: 1 1 auto;
-    margin: 10px 100% 10px 0;
+    /*margin: 10px 100% 10px 0;*/
     max-width: 100%;
 }
 
