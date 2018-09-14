@@ -109,7 +109,13 @@ class QueryCollector extends PDOCollector
                 $regex = is_numeric($key)
                     ? "/\?(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/"
                     : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
-                $query = preg_replace($regex, $pdo->quote($binding), $query, 1);
+
+                // Mimic bindValue and only quote non-integer and non-float data types
+                if (!is_int($binding) && !is_float($binding)) {
+                    $binding = $pdo->quote($binding);
+                }
+
+                $query = preg_replace($regex, $binding, $query, 1);
             }
         }
 
