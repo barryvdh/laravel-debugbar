@@ -35,9 +35,9 @@ class FilesCollector extends DataCollector implements Renderable
             // Skip the files from Debugbar, they are only loaded for Debugging and confuse the output.
             // Of course some files are stil always loaded (ServiceProvider, Facade etc)
             if (strpos($file, 'vendor/maximebf/debugbar/src') !== false || strpos(
-                    $file,
-                    'vendor/barryvdh/laravel-debugbar/src'
-                ) !== false
+                $file,
+                'vendor/barryvdh/laravel-debugbar/src'
+            ) !== false
             ) {
                 continue;
             } elseif (!in_array($file, $compiled)) {

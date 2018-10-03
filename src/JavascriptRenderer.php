@@ -31,7 +31,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function setUrlGenerator($url)
     {
-
     }
 
     /**

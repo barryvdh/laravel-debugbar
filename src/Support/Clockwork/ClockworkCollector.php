@@ -87,5 +87,4 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
 
         return $data;
     }
-
 }

@@ -23,5 +23,4 @@ class CacheController extends BaseController
 
         return response()->json(compact('success'));
     }
-
 }

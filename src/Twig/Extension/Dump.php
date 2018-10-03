@@ -40,7 +40,9 @@ class Dump extends Twig_Extension
     {
         return [
             new Twig_SimpleFunction(
-                'dump', [$this, 'dump'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
+                'dump',
+                [$this, 'dump'],
+                ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
             ),
         ];
     }

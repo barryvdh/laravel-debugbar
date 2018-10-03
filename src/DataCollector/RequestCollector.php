@@ -152,10 +152,10 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             }
 
             $cookie .= '; expires=' . substr(
-                    \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
-                    0,
-                    -5
-                );
+                \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
+                0,
+                -5
+            );
         }
 
         if ($domain) {

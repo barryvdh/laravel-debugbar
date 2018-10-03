@@ -74,7 +74,6 @@ class InjectDebugbar
         $this->debugbar->modifyResponse($request, $response);
 
         return $response;
-
     }
 
     /**

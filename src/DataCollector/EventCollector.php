@@ -25,7 +25,6 @@ class EventCollector extends TimeDataCollector
 
         // Find all listeners for the current event
         foreach ($this->events->getListeners($name) as $i => $listener) {
-
             // Check if it's an object + method name
             if (is_array($listener) && count($listener) > 1 && is_object($listener[0])) {
                 list($class, $method) = $listener;

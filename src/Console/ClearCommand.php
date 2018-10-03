@@ -21,12 +21,11 @@ class ClearCommand extends Command
         $this->debugbar->boot();
 
         if ($storage = $this->debugbar->getStorage()) {
-            try
-            {
+            try {
                 $storage->clear();
-            } catch(\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {
                 // hide InvalidArgumentException if storage location does not exist
-                if(strpos($e->getMessage(), 'does not exist') === false) {
+                if (strpos($e->getMessage(), 'does not exist') === false) {
                     throw $e;
                 }
             }

@@ -1,6 +1,7 @@
 <?php namespace Barryvdh\Debugbar\Support\Clockwork;
 
-class Converter {
+class Converter
+{
 
     /**
      * Convert the phpdebugbar data to Clockwork format.
@@ -42,7 +43,7 @@ class Converter {
             $output['time'] = $time['start'];
             $output['responseTime'] = $time['end'];
             $output['responseDuration'] = $time['duration'] * 1000;
-            foreach($time['measures'] as $measure) {
+            foreach ($time['measures'] as $measure) {
                 $output['timelineData'][] = [
                     'data' => [],
                     'description' => $measure['label'],
@@ -79,7 +80,7 @@ class Converter {
         }
 
         if (isset($data['messages'])) {
-            foreach($data['messages']['messages'] as $message) {
+            foreach ($data['messages']['messages'] as $message) {
                 $output['log'][] = [
                     'message' => $message['message'],
                     'time' => $message['time'],
@@ -90,7 +91,7 @@ class Converter {
 
         if (isset($data['queries'])) {
             $queries = $data['queries'];
-            foreach($queries['statements'] as $statement){
+            foreach ($queries['statements'] as $statement) {
                 if ($statement['type'] === 'explain') {
                     continue;
                 }
@@ -121,7 +122,7 @@ class Converter {
         }
 
         if (isset($data['swiftmailer_mails'])) {
-            foreach($data['swiftmailer_mails']['mails'] as $mail) {
+            foreach ($data['swiftmailer_mails']['mails'] as $mail) {
                 $output['emailsData'][] = [
                     'data' => [
                         'to' => $mail['to'],
@@ -134,5 +135,4 @@ class Converter {
 
         return $output;
     }
-
 }

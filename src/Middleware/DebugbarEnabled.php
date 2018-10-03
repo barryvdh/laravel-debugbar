@@ -37,6 +37,5 @@ class DebugbarEnabled
         }
 
         return $next($request);
-
     }
 }

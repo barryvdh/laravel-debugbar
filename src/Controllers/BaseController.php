@@ -14,7 +14,7 @@ if (class_exists('Illuminate\Routing\Controller')) {
         {
             $this->debugbar = $debugbar;
 
-            if ($request->hasSession()){
+            if ($request->hasSession()) {
                 $request->session()->reflash();
             }
         }
@@ -30,7 +30,7 @@ if (class_exists('Illuminate\Routing\Controller')) {
         {
             $this->debugbar = $debugbar;
 
-            if ($request->hasSession()){
+            if ($request->hasSession()) {
                 $request->session()->reflash();
             }
         }

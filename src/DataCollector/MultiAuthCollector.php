@@ -9,7 +9,6 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
 
-
 /**
  * Collector for Laravel's Auth provider
  */
@@ -50,7 +49,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         $data = [];
         $names = '';
 
-        foreach($this->guards as $guardName) {
+        foreach ($this->guards as $guardName) {
             try {
                 $user = $this->resolveUser($this->auth->guard($guardName));
             } catch (\Exception $e) {
@@ -59,7 +58,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
             $data['guards'][$guardName] = $this->getUserInformation($user);
 
-            if(!is_null($user)) {
+            if (!is_null($user)) {
                 $names .= $guardName . ": " . $data['guards'][$guardName]['name'] . ', ';
             }
         }
@@ -162,5 +161,4 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         return $widgets;
     }
-
 }
