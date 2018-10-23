@@ -5,6 +5,8 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -99,7 +101,6 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             'request_server' => $request->server->all(),
             'request_cookies' => $request->cookies->all(),
             'response_headers' => $responseHeaders,
-
         ];
 
         if ($this->session) {
@@ -135,7 +136,17 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         }
 
-        return $data;
+        $htmlData = [];
+        if (class_exists(Telescope::class)) {
+            $entry = IncomingEntry::make([
+                'requestId' => $this->currentRequestId,
+            ])->type('debugbar');
+            Telescope::$entriesQueue[] = $entry;
+            $url = route('debugbar.telescope', [$entry->uuid]);
+            $htmlData['telescope'] = '<a href="'.$url.'" target="_blank">View in Telescope</a>';
+        }
+
+        return $htmlData + $data;
     }
 
     private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
