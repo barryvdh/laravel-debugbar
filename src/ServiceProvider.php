@@ -84,6 +84,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 'as' => 'debugbar.clockwork',
             ]);
 
+            $router->get('telescope/{id}', [
+                'uses' => 'TelescopeController@show',
+                'as' => 'debugbar.telescope',
+            ]);
+            
             $router->get('assets/stylesheets', [
                 'uses' => 'AssetController@css',
                 'as' => 'debugbar.assets.css',
