@@ -51,7 +51,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         return [
             "request" => [
                 "icon" => "tags",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "request",
                 "default" => "{}"
             ]
@@ -86,19 +86,20 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         $statusCode = $response->getStatusCode();
 
         $data = [
+            'path_info' => $request->getPathInfo(),
+            'status_code' => $statusCode,
+            'status_text' => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
             'format' => $request->getRequestFormat(),
             'content_type' => $response->headers->get('Content-Type') ? $response->headers->get(
                 'Content-Type'
             ) : 'text/html',
-            'status_text' => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
-            'status_code' => $statusCode,
             'request_query' => $request->query->all(),
             'request_request' => $request->request->all(),
             'request_headers' => $request->headers->all(),
             'request_server' => $request->server->all(),
             'request_cookies' => $request->cookies->all(),
             'response_headers' => $responseHeaders,
-            'path_info' => $request->getPathInfo(),
+
         ];
 
         if ($this->session) {
@@ -123,11 +124,15 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         if (isset($data['request_server']['PHP_AUTH_PW'])) {
             $data['request_server']['PHP_AUTH_PW'] = '******';
         }
+       ;
 
         foreach ($data as $key => $var) {
             if (!is_string($data[$key])) {
-                $data[$key] = $this->formatVar($var);
+                $data[$key] = DataCollector::getDefaultVarDumper()->renderVar($var);
+            } else {
+                $data[$key] = e($data[$key]);
             }
+
         }
 
         return $data;
