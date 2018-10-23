@@ -63,12 +63,6 @@
   border: solid 0.08em #eeeeee;
   border-radius: .1em;
 }
-.pull-right {
-  float: right;
-}
-.pull-left {
-  float: left;
-}
 .phpdebugbar-fa.pull-left {
   margin-right: .3em;
 }
