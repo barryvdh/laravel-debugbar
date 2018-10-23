@@ -22,6 +22,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     protected $response;
     /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
     protected $session;
+    /** @var string|null */
+    protected $currentRequestId;
 
     /**
      * Create a new SymfonyRequestCollector
@@ -30,11 +32,12 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
      * @param \Symfony\Component\HttpFoundation\Request $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
-    public function __construct($request, $response, $session = null)
+    public function __construct($request, $response, $session = null, $currentRequestId = null)
     {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
+        $this->currentRequestId = $currentRequestId;
     }
 
     /**
