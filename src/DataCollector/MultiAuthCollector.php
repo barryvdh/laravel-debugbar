@@ -119,7 +119,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
                 } elseif ($user->email) {
                     $identifier = $user->email;
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
             }
         }
 
