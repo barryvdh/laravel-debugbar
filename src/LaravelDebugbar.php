@@ -669,7 +669,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
-                $this->addCollector(new RequestCollector($request, $response, $sessionManager));
+                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $this->getCurrentRequestId()));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(

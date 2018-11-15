@@ -5,6 +5,8 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -20,6 +22,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     protected $response;
     /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
     protected $session;
+    /** @var string|null */
+    protected $currentRequestId;
 
     /**
      * Create a new SymfonyRequestCollector
@@ -28,11 +32,12 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
      * @param \Symfony\Component\HttpFoundation\Request $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
-    public function __construct($request, $response, $session = null)
+    public function __construct($request, $response, $session = null, $currentRequestId = null)
     {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
+        $this->currentRequestId = $currentRequestId;
     }
 
     /**
@@ -99,7 +104,6 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             'request_server' => $request->server->all(),
             'request_cookies' => $request->cookies->all(),
             'response_headers' => $responseHeaders,
-
         ];
 
         if ($this->session) {
@@ -135,7 +139,17 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         }
 
-        return $data;
+        $htmlData = [];
+        if (class_exists(Telescope::class)) {
+            $entry = IncomingEntry::make([
+                'requestId' => $this->currentRequestId,
+            ])->type('debugbar');
+            Telescope::$entriesQueue[] = $entry;
+            $url = route('debugbar.telescope', [$entry->uuid]);
+            $htmlData['telescope'] = '<a href="'.$url.'" target="_blank">View in Telescope</a>';
+        }
+
+        return $htmlData + $data;
     }
 
     private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
