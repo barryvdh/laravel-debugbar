@@ -111,7 +111,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         // The default auth identifer is the ID number, which isn't all that
         // useful. Try username and email.
-        $identifier = $user->getAuthIdentifier();
+        $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
         if (is_numeric($identifier)) {
             try {
                 if ($user->username) {
