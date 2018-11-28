@@ -5,6 +5,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
@@ -111,7 +112,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         // The default auth identifer is the ID number, which isn't all that
         // useful. Try username and email.
-        $identifier = $user->getAuthIdentifier();
+        $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
         if (is_numeric($identifier)) {
             try {
                 if ($user->username) {
