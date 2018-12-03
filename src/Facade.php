@@ -2,6 +2,7 @@
 
 /**
  * @method static \Barryvdh\Debugbar\LaravelDebugbar addCollector(\DebugBar\DataCollector\DataCollectorInterface $collector)
+ * @method static void addMessage(mixed $message, string $label = 'info')
  * @method static void alert(string $message)
  * @method static void critical(string $message)
  * @method static void debug(string $message)
