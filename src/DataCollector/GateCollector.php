@@ -20,12 +20,12 @@ class GateCollector extends MessagesCollector
     {
         parent::__construct('gate');
         $this->setDataFormatter(new SimpleFormatter());
-        $gate->after(function (Authenticatable $user = null, $ability, $result, $arguments = []) {
+        $gate->after(function ($user = null, $ability, $result, $arguments = []) {
             $this->addCheck($user, $ability, $result, $arguments);
         });
     }
 
-    public function addCheck(Authenticatable $user = null, $ability, $result, $arguments = [])
+    public function addCheck($user = null, $ability, $result, $arguments = [])
     {
         $userKey = 'user';
         $userId = null;
