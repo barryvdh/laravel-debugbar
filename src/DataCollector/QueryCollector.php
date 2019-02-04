@@ -70,9 +70,10 @@ class QueryCollector extends PDOCollector
     public function setExplainSource($enabled, $types)
     {
         $this->explainQuery = $enabled;
-        if($types){
-            $this->explainTypes = $types;
-        }
+        // workaround ['SELECT'] only. https://github.com/barryvdh/laravel-debugbar/issues/888
+//        if($types){
+//            $this->explainTypes = $types;
+//        }
     }
 
     /**
