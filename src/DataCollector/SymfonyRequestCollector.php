@@ -21,6 +21,8 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
     /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
     protected $session;
 
+    protected $options;
+
     /**
      * Create a new SymfonyRequestCollector
      *
@@ -28,11 +30,12 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
      * @param \Symfony\Component\HttpFoundation\Request $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
-    public function __construct($request, $response, $session = null)
+    public function __construct($request, $response, $session = null, $options = null)
     {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
+        $this->options = $options;
     }
 
     /**
@@ -114,6 +117,22 @@ class SymfonyRequestCollector extends DataCollector implements DataCollectorInte
                     || str_is('*_SECRET', $key) || str_is('*_PW', $key)) {
                 $data['request_server'][$key] = '******';
             }
+        }
+
+        if (count($hide = $this->options['hide'])) {
+            $data['request_server'] = array_filter($data['request_server'], function ($key) use ($hide) {
+                return count(array_filter($hide, function ($pattern) use ($key) {
+                    return str_is($pattern, $key);
+                }));
+            }, ARRAY_FILTER_USE_KEY);
+        }
+
+        if (count($secret = $this->options['secrets'])) {
+            array_walk($keys, function (&$value, $key) use ($secret) {
+                $value = count(array_filter($secret, function ($pattern) use ($key) {
+                    return str_is($pattern, $key);
+                })) ? '******' : $value;
+            });
         }
 
         if (isset($data['request_headers']['php-auth-pw'])) {

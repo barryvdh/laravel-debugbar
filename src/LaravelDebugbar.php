@@ -651,7 +651,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
-                $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager));
+                $this->addCollector(new SymfonyRequestCollector($request, $response, $sessionManager, $this->app['config']->get('debugbar.options.request')));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(

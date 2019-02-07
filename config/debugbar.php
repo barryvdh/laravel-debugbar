@@ -74,7 +74,7 @@ return [
      |
      */
     'error_handler' => false,
-    
+
     /*
      |--------------------------------------------------------------------------
      | Clockwork integration
@@ -157,6 +157,10 @@ return [
         'cache' => [
             'values' => true // collect cache values
         ],
+        'request' => [
+            'hide' => [], // will  be removed from the collection
+            'secrets' => [], // will be replace by '******'
+        ]
     ],
 
     /*
