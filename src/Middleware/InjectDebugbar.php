@@ -70,8 +70,10 @@ class InjectDebugbar
             $response = $this->handleException($request, $e);
         }
 
-        // Modify the response to add the Debugbar
-        $this->debugbar->modifyResponse($request, $response);
+        if(!$request->isXmlHttpRequest()) {
+            // Modify the response to add the Debugbar
+            $this->debugbar->modifyResponse($request, $response);
+        }
 
         return $response;
 
