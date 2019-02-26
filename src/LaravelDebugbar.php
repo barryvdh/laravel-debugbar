@@ -723,6 +723,7 @@ class LaravelDebugbar extends DebugBar
                 strpos($response->headers->get('Content-Type'), 'html') === false)
             || $request->getRequestFormat() !== 'html'
             || $response->getContent() === false
+            || $request->isXmlHttpRequest()
         ) {
             try {
                 // Just collect + store data, don't inject it.
