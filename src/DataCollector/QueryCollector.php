@@ -78,22 +78,13 @@ class QueryCollector extends PDOCollector
 
     /**
      *
-     * @param string $query
+     * @param \PDO $pdo
      * @param array $bindings
-     * @param float $time
-     * @param \Illuminate\Database\Connection $connection
+     * @return array
      */
-    public function addQuery($query, $bindings, $time, $connection)
+    protected function explainPdoQuery(\PDO $pdo, array $bindings): array
     {
         $explainResults = [];
-        $time = $time / 1000;
-        $endTime = microtime(true);
-        $startTime = $endTime - $time;
-        $hints = $this->performQueryAnalysis($query);
-
-        $pdo = $connection->getPdo();
-        $bindings = $connection->prepareBindings($bindings);
-
         // Run EXPLAIN on this query (if needed)
         if ($this->explainQuery && preg_match('/^\s*('.implode('|', $this->explainTypes).') /i', $query)) {
             $statement = $pdo->prepare('EXPLAIN ' . $query);
@@ -101,7 +92,19 @@ class QueryCollector extends PDOCollector
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
         }
 
-        $bindings = $this->getDataFormatter()->checkBindings($bindings);
+        return $explainResults;
+    }
+
+    /**
+     *
+     * @param \PDO $pdo
+     * @param string $query
+     * @param array $bindings
+     * @return string
+     */
+    protected function replaceBindings(\PDO $pdo, string $query, array $bindings): string
+    {
+
         if (!empty($bindings) && $this->renderSqlWithParams) {
             foreach ($bindings as $key => $binding) {
                 // This regex matches placeholders only, not the question marks,
@@ -118,6 +121,33 @@ class QueryCollector extends PDOCollector
 
                 $query = preg_replace($regex, $binding, $query, 1);
             }
+        }
+
+        return $query;
+    }
+
+    /**
+     *
+     * @param string $query
+     * @param array $bindings
+     * @param float $time
+     * @param \Illuminate\Database\Connection $connection
+     */
+    public function addQuery($query, $bindings, $time, $connection)
+    {
+        $explainResults = [];
+        $time = $time / 1000;
+        $endTime = microtime(true);
+        $startTime = $endTime - $time;
+        $hints = $this->performQueryAnalysis($query);
+
+        $bindings = $connection->prepareBindings($bindings);
+        $pdo = $connection->getPdo();
+
+        if($pdo) {
+            $explainResults = $this->explainPdoQuery($pdo, $bindings);
+            $bindings = $this->getDataFormatter()->checkBindings($bindings);
+            $query = $this->replaceBindings($pdo, $query, $bindings);
         }
 
         $source = [];
