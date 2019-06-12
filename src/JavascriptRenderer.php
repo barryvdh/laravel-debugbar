@@ -19,6 +19,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
         $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
+        $this->jsFiles['laravel-templates'] = __DIR__ . '/Resources/templates/widget.js';
         $this->jsFiles['laravel-sql'] = __DIR__ . '/Resources/sqlqueries/widget.js';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
     }
