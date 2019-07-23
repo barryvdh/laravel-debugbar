@@ -19,6 +19,11 @@ class QueryCollector extends PDOCollector
     protected $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
     protected $showHints = false;
     protected $reflection = [];
+    protected $backtraceExcludePaths = [
+        '/vendor/laravel/framework/src/Illuminate/Database',
+        '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/barryvdh/laravel-debugbar',
+    ];
 
     /**
      * @param TimeDataCollector $timeCollector
@@ -59,6 +64,16 @@ class QueryCollector extends PDOCollector
     {
         $this->findSource = (bool) $value;
         $this->middleware = $middleware;
+    }
+
+    /**
+     * Set additional paths to exclude from the backtrace
+     *
+     * @param array $excludePaths Array of file paths to exclude from backtrace
+     */
+    public function mergeBacktraceExcludePaths(array $excludePaths)
+    {
+        $this->backtraceExcludePaths = array_merge($this->backtraceExcludePaths, $excludePaths);
     }
 
     /**
@@ -272,15 +287,9 @@ class QueryCollector extends PDOCollector
      */
     protected function fileIsInExcludedPath($file)
     {
-        $excludedPaths = [
-            '/vendor/laravel/framework/src/Illuminate/Database',
-            '/vendor/laravel/framework/src/Illuminate/Events',
-            '/vendor/barryvdh/laravel-debugbar',
-        ];
-
         $normalizedPath = str_replace('\\', '/', $file);
 
-        foreach ($excludedPaths as $excludedPath) {
+        foreach ($this->backtraceExcludePaths as $excludedPath) {
             if (strpos($normalizedPath, $excludedPath) !== false) {
                 return true;
             }
