@@ -7,6 +7,7 @@ use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
+use Barryvdh\Debugbar\DataCollector\ModelsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
@@ -401,6 +402,15 @@ class LaravelDebugbar extends DebugBar
                         $e
                     )
                 );
+            }
+        }
+
+        if ($this->shouldCollect('models', false)) {
+            try {
+                $modelsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\ModelsCollector');
+                $this->addCollector($modelsCollector);
+            } catch (\Exception $e){
+                // No Models collector
             }
         }
 
