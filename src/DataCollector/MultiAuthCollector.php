@@ -111,9 +111,9 @@ class MultiAuthCollector extends DataCollector implements Renderable
         $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
         if (is_numeric($identifier)) {
             try {
-                if ($user->username) {
+                if (isset($user->username)) {
                     $identifier = $user->username;
-                } elseif ($user->email) {
+                } elseif (isset($user->email)) {
                     $identifier = $user->email;
                 }
             } catch (\Throwable $e) {
