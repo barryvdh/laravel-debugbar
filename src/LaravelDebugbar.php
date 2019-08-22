@@ -449,23 +449,23 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new FilesCollector($app));
         }
 
-//         if ($this->shouldCollect('auth', false)) {
-//             try {
-//                 $guards = $this->app['config']->get('auth.guards', []);
-//                 $authCollector = new MultiAuthCollector($app['auth'], $guards);
+         if ($this->shouldCollect('auth', false)) {
+             try {
+                 $guards = $this->app['config']->get('auth.guards', []);
+                 $authCollector = new MultiAuthCollector($app['auth'], $guards);
 
-//                 $authCollector->setShowName(
-//                     $this->app['config']->get('debugbar.options.auth.show_name')
-//                 );
-//                 $this->addCollector($authCollector);
-//             } catch (\Exception $e) {
-//                 $this->addThrowable(
-//                     new Exception(
-//                         'Cannot add AuthCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
-//                     )
-//                 );
-//             }
-//         }
+                 $authCollector->setShowName(
+                     $this->app['config']->get('debugbar.options.auth.show_name')
+                 );
+                 $this->addCollector($authCollector);
+             } catch (\Exception $e) {
+                 $this->addThrowable(
+                     new Exception(
+                         'Cannot add AuthCollector to Laravel Debugbar: ' . $e->getMessage(), $e->getCode(), $e
+                     )
+                 );
+             }
+         }
 
         if ($this->shouldCollect('gate', false)) {
             try {

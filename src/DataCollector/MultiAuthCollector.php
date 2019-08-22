@@ -50,20 +50,26 @@ class MultiAuthCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        $data = [];
+        $data = [
+            'guards' => [],
+        ];
         $names = '';
 
         foreach($this->guards as $guardName => $config) {
             try {
-                $user = $this->resolveUser($this->auth->guard($guardName), $config);
+                $guard = $this->auth->guard($guardName);
+                if ($this->hasUser($guard)) {
+                    $user = $guard->user();
+
+                    if(!is_null($user)) {
+                        $data['guards'][$guardName] = $this->getUserInformation($user);
+                        $names .= $guardName . ": " . $data['guards'][$guardName]['name'] . ', ';
+                    }
+                } else {
+                    $data['guards'][$guardName] = null;
+                }
             } catch (\Exception $e) {
                 continue;
-            }
-
-            $data['guards'][$guardName] = $this->getUserInformation($user);
-
-            if(!is_null($user)) {
-                $names .= $guardName . ": " . $data['guards'][$guardName]['name'] . ', ';
             }
         }
 
@@ -78,23 +84,18 @@ class MultiAuthCollector extends DataCollector implements Renderable
         return $data;
     }
 
-    private function resolveUser(Guard $guard, array $config)
+    private function hasUser(Guard $guard)
     {
-        // if we're logging in using remember token
-        // then we must resolve user „manually”
-        // to prevent csrf token regeneration
-        if ($guard instanceof SessionGuard) {
-
-            $recaller = new Recaller($guard->getRequest()->cookies->get($guard->getRecallerName()));
-            $provider = $this->auth->createUserProvider($config['provider']);
-
-            $user = $provider->retrieveByToken($recaller->id(), $recaller->token());
-            if ($user) {
-                return $user;
-            }
+        if (method_exists($guard, 'hasUser')) {
+            return $guard->hasUser();
         }
 
-        return $guard->user();
+        // For Laravel 5.5
+        if (method_exists($guard, 'alreadyAuthenticated')) {
+            return $guard->alreadyAuthenticated();
+        }
+
+        return false;
     }
 
     /**
