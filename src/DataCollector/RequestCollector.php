@@ -5,6 +5,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Symfony\Component\HttpFoundation\Response;
@@ -115,8 +116,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         foreach ($data['request_server'] as $key => $value) {
-            if (str_is('*_KEY', $key) || str_is('*_PASSWORD', $key)
-                    || str_is('*_SECRET', $key) || str_is('*_PW', $key)) {
+            if (Str::is('*_KEY', $key) || Str::is('*_PASSWORD', $key)
+                    || Str::is('*_SECRET', $key) || Str::is('*_PW', $key)) {
                 $data['request_server'][$key] = '******';
             }
         }
