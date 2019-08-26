@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\MessagesCollector;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
 
 /**
