@@ -24,6 +24,8 @@ class ModelsCollector extends MessagesCollector
 
         $events->listen('eloquent.*', function ($event, $models) {
             if (Str::contains($event, 'eloquent.retrieved')) {
+                $models = array_filter($models);
+
                 foreach ($models as $model) {
                     $class = get_class($model);
                     $this->models[$class] = ($this->models[$class] ?? 0) + 1;
