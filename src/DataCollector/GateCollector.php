@@ -7,6 +7,7 @@ use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Illuminate\Support\Str;
 
 /**
  * Collector for Laravel's Auth provider
@@ -31,7 +32,7 @@ class GateCollector extends MessagesCollector
         $userId = null;
 
         if ($user) {
-            $userKey = snake_case(class_basename($user));
+            $userKey = Str::snake(class_basename($user));
             $userId = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
         }
 
