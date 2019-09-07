@@ -74,7 +74,7 @@ The profiler is enabled by default, if you have APP_DEBUG=true. You can override
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
 You can also only display the js or css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
 
-Copy the package config to your local config with the publish command:
+#### Copy the package config to your local config with the publish command:
 
 ```shell
 php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
