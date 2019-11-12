@@ -1,5 +1,6 @@
 <?php namespace Barryvdh\Debugbar;
 
+use Barryvdh\Debugbar\Exception\ConfigException;
 use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
@@ -70,7 +71,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'namespace' => 'Barryvdh\Debugbar\Controllers',
             'prefix' => $this->app['config']->get('debugbar.route_prefix'),
             'domain' => $this->app['config']->get('debugbar.route_domain'),
-            'middleware' => [DebugbarEnabled::class],
+            'middleware' => $this->getRouteMiddlewareConfig(),
         ];
 
         $this->getRouter()->group($routeConfig, function($router) {
@@ -106,6 +107,27 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         });
 
         $this->registerMiddleware(InjectDebugbar::class);
+    }
+
+    /**
+     * Get the middleware which gets applied to the debugbar route
+     *
+     * @return array
+     */
+    protected function getRouteMiddlewareConfig()
+    {
+        $middleware = $this->app['config']->get('debugbar.route_additional_middleware') ?: [];
+
+        if (!is_array($middleware)) {
+            throw new ConfigException('Configured route middleware must be an array');
+        }
+
+        return array_merge(
+            [
+                DebugbarEnabled::class
+            ],
+            $middleware
+        );
     }
 
     /**

@@ -199,4 +199,13 @@ return [
      | To override default domain, specify it as a non-empty value.
      */
     'route_domain' => null,
+
+    /*
+     |--------------------------------------------------------------------------
+     | DebugBar route additional middleware
+     |--------------------------------------------------------------------------
+     |
+     | This middleware will be appended to the DebugBar route group.
+     */
+    'route_additional_middleware' => [],
 ];
