@@ -769,7 +769,7 @@ class LaravelDebugbar extends DebugBar
                 $configEnabled = $config->get('app.debug');
             }
 
-            $this->enabled = $configEnabled && !$this->app->runningInConsole() && !$this->app->environment('testing');
+            $this->enabled = $configEnabled && !$this->app->runningInConsole();
         }
 
         return $this->enabled;
