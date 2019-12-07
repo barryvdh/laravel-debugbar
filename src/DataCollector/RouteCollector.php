@@ -58,7 +58,7 @@ class RouteCollector extends DataCollector implements Renderable
         $result = array_merge($result, $action);
 
 
-        if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
+        if (isset($action['controller']) && is_string($action['controller']) && strpos($action['controller'], '@') !== false) {
 			list($controller, $method) = explode('@', $action['controller']);
 			if(class_exists($controller) && method_exists($controller, $method)) {
 			    $reflector = new \ReflectionMethod($controller, $method);
