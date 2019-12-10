@@ -204,6 +204,10 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
     text-align: center;
 }
 
+ul.phpdebugbar-widgets-list {
+    counter-reset: phpdebugbar-widgets-list-counter;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     padding: 15px 10px;
     border: none;
@@ -211,6 +215,12 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     overflow: visible;
     display: flex;
     flex-wrap: wrap;
+    counter-increment: phpdebugbar-widgets-list-counter;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:before {
+    content: counter(phpdebugbar-widgets-list-counter) ".";
+    margin-right: 10px;
 }
 
 .phpdebugbar-widgets-sql.phpdebugbar-widgets-name {
