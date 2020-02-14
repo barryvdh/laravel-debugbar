@@ -33,7 +33,7 @@ class GateCollector extends MessagesCollector
 
         if ($user) {
             $userKey = Str::snake(class_basename($user));
-            $userId = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
+            $userId = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->user()->id;
         }
 
         $label = $result ? 'success' : 'error';
