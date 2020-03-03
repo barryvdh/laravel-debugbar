@@ -12,10 +12,11 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     // Use XHR handler by default, instead of jQuery
     protected $ajaxHandlerBindToJquery = false;
     protected $ajaxHandlerBindToXHR = true;
+    protected $cspNonce;
 
-    public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
+    public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null, $cspNonce = null)
     {
-        parent::__construct($debugBar, $baseUrl, $basePath);
+        parent::__construct($debugBar, $baseUrl, $basePath, $cspNonce);
 
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
         $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
@@ -50,11 +51,13 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $cssRoute = preg_replace('/\Ahttps?:/', '', $cssRoute);
         $jsRoute  = preg_replace('/\Ahttps?:/', '', $jsRoute);
 
+        $nonce = $this->getNonceAttribute();
+
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>";
         $html .= "<script type='text/javascript' src='{$jsRoute}'></script>";
 
         if ($this->isJqueryNoConflictEnabled()) {
-            $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
+            $html .= '<script type="text/javascript" ' . $nonce . '>jQuery.noConflict(true);</script>' . "\n";
         }
 
         $html .= $this->getInlineHtml();
