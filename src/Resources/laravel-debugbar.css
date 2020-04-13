@@ -434,14 +434,15 @@ a.phpdebugbar-maximize-btn {
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {
-    background: #fa262bbf;
+    background: #fa5661;
+    background-image: none;
     color: #fff;
     text-shadow: 1px 1px #000;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
     background-color: white;
-    color: #fa262bbf;
+    color: #fa5661;
     text-shadow: 1px 1px #ebebeb;
 }
 
@@ -449,7 +450,7 @@ a.phpdebugbar-tab span.phpdebugbar-badge {
     vertical-align: 0px;
     padding: 2px 8px 3px 8px;
     text-align: center;
-    background: #fa262bbf;
+    background: #fa5661;
     font-size: 11px;
     font-family: monospace;
     color: #fff;
@@ -590,6 +591,10 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value {
+    display: inline-flex;
+}
+
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
     font-family: PhpDebugbarFontAwesome;
     content: "\f005";
@@ -680,7 +685,7 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     float: right;
     font-size: 12px;
     padding: 0 4px;
-    background: #fa262bbf;
+    background: #fa5661;
     margin: 0 2px;
     border-radius: 4px;
     color: #fff;
