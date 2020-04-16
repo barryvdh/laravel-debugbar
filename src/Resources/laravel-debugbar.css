@@ -262,7 +262,7 @@ a.phpdebugbar-restore-btn {
 
 div.phpdebugbar-header > div > * {
     font-size: 13px;
-    padding: 5px 8px;
+    padding: 5px;
 }
 
 div.phpdebugbar-header .phpdebugbar-tab {
