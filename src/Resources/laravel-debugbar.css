@@ -453,7 +453,7 @@ a.phpdebugbar-tab span.phpdebugbar-badge {
     font-size: 11px;
     font-family: monospace;
     color: #fff;
-    text-shadow: 1px 1px rgb(46, 46, 46);
+    text-shadow: 1px 1px #bf3039;
     border-radius: 10px;
     top: -1px;
     position: relative;
