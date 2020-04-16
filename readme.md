@@ -3,17 +3,14 @@
 [![Latest Stable Version](https://poser.pugx.org/barryvdh/laravel-debugbar/version.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Total Downloads](https://poser.pugx.org/barryvdh/laravel-debugbar/d/total.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 
-### Note for v3: Debugbar is now enabled by requiring the package, but still needs APP_DEBUG=true by default!
-
-### For Laravel < 5.5, please use the [2.4 branch](https://github.com/barryvdh/laravel-debugbar/tree/2.4)!
-
-This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel 5.
+This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel.
 It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
 It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
 Read [the documentation](http://phpdebugbar.com/docs/) for more configuration options.
 
-![Screenshot](https://cloud.githubusercontent.com/assets/973269/4270452/740c8c8c-3ccb-11e4-8d9a-5a9e64f19351.png)
+![Debugbar 3.3 Screenshot](https://user-images.githubusercontent.com/973269/79428890-196cc680-7fc7-11ea-8229-189f5eac9009.png)
+
 
 Note: Use the DebugBar only in development. It can slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
 
@@ -50,13 +47,13 @@ Require this package with composer. It is recommended to only require the packag
 composer require barryvdh/laravel-debugbar --dev
 ```
 
-Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
+Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
 
 The Debugbar will be enabled when `APP_DEBUG` is `true`.
 
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
-### Laravel 5.5+:
+### Laravel without auto-discovery:
 
 If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
 
