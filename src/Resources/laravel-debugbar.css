@@ -323,19 +323,17 @@ ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
 ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label,
 ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-collector {
     top: 0px;
-    color: #fff;
-    font-size: 11px;
-    text-shadow: 1px 1px #000;
-}
-
-ul.phpdebugbar-widgets-timeline > li:nth-child(n+2) span.phpdebugbar-widgets-label {
     color: #000;
-    text-shadow: none;
+    font-size: 11px;
 }
 
 ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-value span.phpdebugbar-widgets-label {
     color: #fff;
     text-shadow: 1px 1px #000;
+}
+
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params {
+    font-size: 11px;
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
