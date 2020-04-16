@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 class ModelsCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
     public $models = [];
+    public $count = 0;
 
     /**
      * @param Dispatcher $events
@@ -25,6 +26,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
                 foreach (array_filter($models) as $model) {
                     $class = get_class($model);
                     $this->models[$class] = ($this->models[$class] ?? 0) + 1;
+                    $this->count++;
                 }
             }
         });
@@ -34,7 +36,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
     {
         ksort($this->models, SORT_NUMERIC);
 
-        return array_reverse($this->models);
+        return ['data' => array_reverse($this->models), 'count' => $this->count];
     }
 
     /**
@@ -54,8 +56,12 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
             "models" => [
                 "icon" => "cubes",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
-                "map" => "models",
+                "map" => "models.data",
                 "default" => "{}"
+            ],
+            'models:badge' => [
+                'map' => 'models.count',
+                'default' => 0
             ]
         ];
     }
