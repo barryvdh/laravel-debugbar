@@ -435,8 +435,8 @@ a.phpdebugbar-maximize-btn {
 a.phpdebugbar-tab.phpdebugbar-active {
     background: #fa5661;
     background-image: none;
-    color: #fff;
-    text-shadow: 1px 1px #000;
+    color: #fff !important;
+    text-shadow: 1px 1px #bf3039;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
