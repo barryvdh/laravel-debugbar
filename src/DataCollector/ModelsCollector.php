@@ -2,15 +2,16 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
-use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\DataCollectorInterface;
+use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
 
 /**
  * Collector for Models.
  */
-class ModelsCollector extends MessagesCollector
+class ModelsCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
     public $models = [];
 
@@ -19,9 +20,6 @@ class ModelsCollector extends MessagesCollector
      */
     public function __construct(Dispatcher $events)
     {
-        parent::__construct('models');
-        $this->setDataFormatter(new SimpleFormatter());
-
         $events->listen('eloquent.*', function ($event, $models) {
             if (Str::contains($event, 'eloquent.retrieved')) {
                 foreach (array_filter($models) as $model) {
@@ -34,21 +32,31 @@ class ModelsCollector extends MessagesCollector
 
     public function collect()
     {
-        foreach ($this->models as $type => $count) {
-            $this->addMessage($count, $type);
-        }
+        ksort($this->models, SORT_NUMERIC);
 
-        return [
-            'count' => array_sum($this->models),
-            'messages' => $this->getMessages(),
-        ];
+        return array_reverse($this->models);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'models';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getWidgets()
     {
-        $widgets = parent::getWidgets();
-        $widgets['models']['icon'] = 'cubes';
-
-        return $widgets;
+        return [
+            "models" => [
+                "icon" => "cubes",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
+                "map" => "models",
+                "default" => "{}"
+            ]
+        ];
     }
 }
