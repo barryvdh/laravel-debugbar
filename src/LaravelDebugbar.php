@@ -403,7 +403,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('models', false)) {
+        if ($this->shouldCollect('models', true)) {
             try {
                 $modelsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\ModelsCollector');
                 $this->addCollector($modelsCollector);
