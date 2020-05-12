@@ -301,11 +301,11 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
 }
 
 dl.phpdebugbar-widgets-kvlist dt {
-    width: 200px;
+    width: 25%;
 }
 
 dl.phpdebugbar-widgets-kvlist dd {
-    margin-left: 210px;
+    margin-left: 25%;
 }
 
 ul.phpdebugbar-widgets-timeline .phpdebugbar-widgets-measure {
