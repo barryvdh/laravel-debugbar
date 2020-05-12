@@ -900,16 +900,18 @@ class LaravelDebugbar extends DebugBar
      *
      * @param string $label
      * @param \Closure $closure
+     * @return mixed
      */
     public function measure($label, \Closure $closure)
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
             $collector = $this->getCollector('time');
-            $collector->measure($label, $closure);
+            $result = $collector->measure($label, $closure);
         } else {
-            $closure();
+            $result = $closure();
         }
+        return $result;
     }
 
     /**
