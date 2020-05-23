@@ -412,6 +412,17 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        if ($this->shouldCollect('livewire', true) && $this->app->bound('livewire')) {
+            try {
+                $livewireCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\LivewireCollector');
+                $this->addCollector($livewireCollector);
+            } catch (\Exception $e){
+                $this->addThrowable(
+                    new Exception('Cannot add Livewire Collector: ' . $e->getMessage(), $e->getCode(), $e)
+                );
+            }
+        }
+
         if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider')) {
             try {
                 $mailer = $this->app['mailer']->getSwiftMailer();
