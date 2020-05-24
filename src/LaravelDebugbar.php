@@ -307,6 +307,11 @@ class LaravelDebugbar extends DebugBar
                 $queryCollector->setFindSource(true, $middleware);
             }
 
+            if ($this->app['config']->get('debugbar.options.db.backtrace_exclude_paths')) {
+                $excludePaths = $this->app['config']->get('debugbar.options.db.backtrace_exclude_paths');
+                $queryCollector->mergeBacktraceExcludePaths($excludePaths);
+            }
+
             if ($this->app['config']->get('debugbar.options.db.explain.enabled')) {
                 $types = $this->app['config']->get('debugbar.options.db.explain.types');
                 $queryCollector->setExplainSource(true, $types);
