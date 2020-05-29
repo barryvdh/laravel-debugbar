@@ -731,7 +731,7 @@ class LaravelDebugbar extends DebugBar
             }
         } elseif (
             $this->isJsonRequest($request) &&
-            $app['config']->get('debugbar.capture_ajax', true)
+            !$app['config']->get('debugbar.capture_ajax', false)
         ) {
             try {
                 $this->sendDataInHeaders(true);
@@ -753,6 +753,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 // Just collect + store data, don't inject it.
                 $this->collect();
+                $this->injectDebugbar($response);
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
