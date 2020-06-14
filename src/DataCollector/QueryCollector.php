@@ -139,7 +139,7 @@ class QueryCollector extends PDOCollector
 
         if ($this->findSource) {
             try {
-                $source = $this->findSource();
+                $source = array_slice($this->findSource(), 0, 5);
             } catch (\Exception $e) {
             }
         }
