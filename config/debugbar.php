@@ -149,7 +149,7 @@ return [
                 'enabled' => false,
                 'types' => ['SELECT'],     // // workaround ['SELECT'] only. https://github.com/barryvdh/laravel-debugbar/issues/888 ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
             ],
-            'hints'             => true,    // Show hints for common mistakes
+            'hints'             => false,    // Show hints for common mistakes
         ],
         'mail' => [
             'full_log' => false
