@@ -6,7 +6,6 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Str;
 
 /**
  * Collector for Models.
@@ -21,13 +20,11 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
      */
     public function __construct(Dispatcher $events)
     {
-        $events->listen('eloquent.*', function ($event, $models) {
-            if (Str::contains($event, 'eloquent.retrieved')) {
-                foreach (array_filter($models) as $model) {
-                    $class = get_class($model);
-                    $this->models[$class] = ($this->models[$class] ?? 0) + 1;
-                    $this->count++;
-                }
+        $events->listen('eloquent.retrieved:*', function ($event, $models) {
+            foreach (array_filter($models) as $model) {
+                $class = get_class($model);
+                $this->models[$class] = ($this->models[$class] ?? 0) + 1;
+                $this->count++;
             }
         });
     }
