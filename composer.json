@@ -18,6 +18,10 @@
         "symfony/debug": "^3|^4|^5",
         "symfony/finder": "^3|^4|^5"
     },
+    "require-dev": {
+        "orchestra/testbench": "^3.5|^4.0|^5.0",
+        "phpunit/phpunit": "^6.0|^7.0|^8.5|^9.0"
+    },
     "autoload": {
         "psr-4": {
             "Barryvdh\\Debugbar\\": "src/"
@@ -25,6 +29,11 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Barryvdh\\Debugbar\\Tests\\": "tests"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -40,8 +49,5 @@
                 "Debugbar": "Barryvdh\\Debugbar\\Facade"
             }
         }
-    },
-    "require-dev": {
-        "laravel/framework": "5.5.x"
     }
 }
