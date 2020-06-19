@@ -39,6 +39,8 @@ And the default collectors:
 
 It also provides a Facade interface for easy logging Messages, Exceptions and Time
 
+### :film_strip: Video tutorial available [here](https://youtu.be/l9BUTeE2h_M)
+
 ## Installation
 
 Require this package with composer. It is recommended to only require the package for development.
