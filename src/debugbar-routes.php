@@ -4,7 +4,7 @@ $routeConfig = [
     'namespace' => 'Barryvdh\Debugbar\Controllers',
     'prefix' => $this->app['config']->get('debugbar.route_prefix'),
     'domain' => $this->app['config']->get('debugbar.route_domain'),
-    'middleware' => [DebugbarEnabled::class],
+    'middleware' => [\Barryvdh\Debugbar\Middleware\DebugbarEnabled::class],
 ];
 
 $this->app['router']->group($routeConfig, function($router) {
