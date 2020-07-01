@@ -54,7 +54,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $html .= "<script type='text/javascript' src='{$jsRoute}'></script>";
 
         if ($this->isJqueryNoConflictEnabled()) {
-            $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
+            $html .= '<script type="text/javascript">typeof jQuery === "function" && jQuery.noConflict(true);</script>' . "\n";
         }
 
         $html .= $this->getInlineHtml();
