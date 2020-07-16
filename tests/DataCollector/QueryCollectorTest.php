@@ -31,7 +31,7 @@ class QueryCollectorTest extends TestCase
 
             tap(Arr::first($collection['statements']), function (array $statement) {
                 $this->assertEquals([3, '{4}'], $statement['bindings']);
-                $this->assertEquals("SELECT ('[1, 2, 3]'::jsonb ?? 3) as a, ('[4, 5, 6]'::jsonb ??| '{4}') as b, 'hello world ?' as c", $statement['sql']);
+                $this->assertEquals("SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ?' as c", $statement['sql']);
             });
         });
     }

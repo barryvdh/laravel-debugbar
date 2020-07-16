@@ -126,7 +126,6 @@ class QueryCollector extends PDOCollector
                     ? "/(?<!\?)\?(?=(?:[^'\\\']*'[^'\\']*')*[^'\\\']*$)(?!\?)/"
                     : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
 
-
                 // Mimic bindValue and only quote non-integer and non-float data types
                 if (!is_int($binding) && !is_float($binding)) {
                     $binding = $pdo->quote($binding);
@@ -195,8 +194,8 @@ class QueryCollector extends PDOCollector
             $hints[] = '<code>LIMIT</code> without <code>ORDER BY</code> causes non-deterministic results, depending on the query execution plan';
         }
         if (preg_match('/LIKE\\s[\'"](%.*?)[\'"]/i', $query, $matches)) {
-            $hints[] = 	'An argument has a leading wildcard character: <code>' . $matches[1]. '</code>.
-                                The predicate with this argument is not sargable and cannot use an index if one exists.';
+            $hints[] = 'An argument has a leading wildcard character: <code>' . $matches[1]. '</code>.
+                The predicate with this argument is not sargable and cannot use an index if one exists.';
         }
         return $hints;
     }
