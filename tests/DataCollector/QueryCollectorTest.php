@@ -20,7 +20,7 @@ class QueryCollectorTest extends TestCase
         /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
         $collector  = $this->debugbar()->getCollector('queries');
         $collector->addQuery(
-            "SELECT ('[1, 2, 3]'::jsonb ?? ?) as a, ('[4, 5, 6]'::jsonb ??| ?) as b, 'hello world ?' as c",
+            "SELECT ('[1, 2, 3]'::jsonb ?? ?) as a, ('[4, 5, 6]'::jsonb ??| ?) as b, 'hello world ? example ??' as c",
             [3, '{4}'],
             0,
             $this->app['db']->connection()
@@ -31,7 +31,7 @@ class QueryCollectorTest extends TestCase
 
             tap(Arr::first($collection['statements']), function (array $statement) {
                 $this->assertEquals([3, '{4}'], $statement['bindings']);
-                $this->assertEquals("SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ?' as c", $statement['sql']);
+                $this->assertEquals("SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ? example ??' as c", $statement['sql']);
             });
         });
     }
