@@ -2,14 +2,9 @@
 
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\Tests\TestCase;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class QueryCollectorTest extends TestCase
 {
