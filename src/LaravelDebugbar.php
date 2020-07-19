@@ -1084,7 +1084,7 @@ class LaravelDebugbar extends DebugBar
 
             $headers = [];
             foreach ($collector->collect()['measures'] as $k => $m) {
-                $headers[] = sprintf('app;desc="%s";dur=%F',$m['label'], $m['duration'] * 1000);
+                $headers[] = sprintf('app;desc="%s";dur=%F', str_replace('"', "'", $m['label']), $m['duration'] * 1000);
             }
 
             $response->headers->set('Server-Timing', $headers, false);
