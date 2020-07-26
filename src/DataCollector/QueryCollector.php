@@ -106,11 +106,16 @@ class QueryCollector extends PDOCollector
         $startTime = $endTime - $time;
         $hints = $this->performQueryAnalysis($query);
 
-        $pdo = $connection->getPdo();
+        $pdo = null;
+        try {
+            $pdo = $connection->getPdo();
+        } catch (\Exception $e) {
+            // ignore error for non-pdo laravel drivers
+        }
         $bindings = $connection->prepareBindings($bindings);
 
         // Run EXPLAIN on this query (if needed)
-        if ($this->explainQuery && preg_match('/^\s*('.implode('|', $this->explainTypes).') /i', $query)) {
+        if ($this->explainQuery && $pdo && preg_match('/^\s*('.implode('|', $this->explainTypes).') /i', $query)) {
             $statement = $pdo->prepare('EXPLAIN ' . $query);
             $statement->execute($bindings);
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
@@ -128,7 +133,11 @@ class QueryCollector extends PDOCollector
 
                 // Mimic bindValue and only quote non-integer and non-float data types
                 if (!is_int($binding) && !is_float($binding)) {
-                    $binding = $pdo->quote($binding);
+                    if ($pdo) {
+                        $binding = $pdo->quote($binding);
+                    } else {
+                        $binding = $this->emulateQuote($binding);
+                    }
                 }
 
                 $query = preg_replace($regex, $binding, $query, 1);
@@ -158,6 +167,20 @@ class QueryCollector extends PDOCollector
         if ($this->timeCollector !== null) {
             $this->timeCollector->addMeasure($query, $startTime, $endTime);
         }
+    }
+
+    /**
+     * Mimic mysql_real_escape_string
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function emulateQuote($value)
+    {
+        $search = ["\\",  "\x00", "\n",  "\r",  "'",  '"', "\x1a"];
+        $replace = ["\\\\","\\0","\\n", "\\r", "\'", '\"', "\\Z"];
+
+        return "'" . str_replace($search, $replace, $value) . "'";
     }
 
     /**
