@@ -73,6 +73,10 @@
                 }
 
                 var table = $('<table><tr><th colspan="2">Metadata</th></tr></table>').addClass(csscls('params')).appendTo(li);
+				
+				if (stmt.bindings && !stmt.bindings.hasOwnProperty('length')) {
+				    stmt.bindings = Object.values(stmt.bindings);
+				}
 
                 if (stmt.bindings && stmt.bindings.length) {
                     table.append(function () {

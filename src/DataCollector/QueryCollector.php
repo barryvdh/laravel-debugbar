@@ -134,7 +134,7 @@ class QueryCollector extends PDOCollector
                 // Mimic bindValue and only quote non-integer and non-float data types
                 if (!is_int($binding) && !is_float($binding)) {
                     if ($pdo) {
-                        $binding = $pdo->quote($binding);
+                        $binding = $pdo->quote($binding) ?:  "'" . str_replace("'", "''", $binding) . "'";
                     } else {
                         $binding = $this->emulateQuote($binding);
                     }
