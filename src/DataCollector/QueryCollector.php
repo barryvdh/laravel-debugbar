@@ -18,6 +18,7 @@ class QueryCollector extends PDOCollector
     protected $explainQuery = false;
     protected $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
     protected $showHints = false;
+    protected $showCopyButton = false;
     protected $reflection = [];
     protected $backtraceExcludePaths = [
         '/vendor/laravel/framework/src/Illuminate/Database',
@@ -52,6 +53,16 @@ class QueryCollector extends PDOCollector
     public function setShowHints($enabled = true)
     {
         $this->showHints = $enabled;
+    }
+
+    /**
+     * Show or hide copy button next to the queries
+     *
+     * @param boolean $enabled
+     */
+    public function setShowCopyButton($enabled = true)
+    {
+        $this->showCopyButton = $enabled;
     }
 
     /**
@@ -162,6 +173,7 @@ class QueryCollector extends PDOCollector
             'explain' => $explainResults,
             'connection' => $connection->getDatabaseName(),
             'hints' => $this->showHints ? $hints : null,
+            'show_copy' => $this->showCopyButton,
         ];
 
         if ($this->timeCollector !== null) {
@@ -425,6 +437,7 @@ class QueryCollector extends PDOCollector
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
             'hints' => null,
+            'show_copy' => false,
         ];
     }
 
@@ -454,6 +467,7 @@ class QueryCollector extends PDOCollector
                 'params' => [],
                 'bindings' => $query['bindings'],
                 'hints' => $query['hints'],
+                'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
                 'duration' => $query['time'],
                 'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
