@@ -875,6 +875,8 @@ class LaravelDebugbar extends DebugBar
 
         $renderedContent = $renderer->renderHead() . $renderer->render();
 
+        $this->injectDarkModeClasses($renderedContent);
+
         $pos = strripos($content, '</body>');
         if (false !== $pos) {
             $content = substr($content, 0, $pos) . $renderedContent . substr($content, $pos);
@@ -1088,6 +1090,24 @@ class LaravelDebugbar extends DebugBar
             }
 
             $response->headers->set('Server-Timing', $headers, false);
+        }
+    }
+
+    /**
+     * Append javascript that would add appropriate dark mode classes to debugbar elements according to config.
+     *
+     * @param string $content
+     */
+    protected function injectDarkModeClasses(string &$content)
+    {
+        $theme = config('debugbar.theme', 'auto');
+        if ($theme === 'auto' || $theme === 'dark') {
+            $darkModeClass = $theme === 'auto' ? 'dark-auto' : 'dark';
+
+            $content .= "<script type=\"text/javascript\">
+                {$this->getJavascriptRenderer()->getVariableName()}.\$el.addClass('{$darkModeClass}');
+                {$this->getJavascriptRenderer()->getVariableName()}.openHandler.\$el.addClass('{$darkModeClass}');
+            </script>\n";
         }
     }
 }

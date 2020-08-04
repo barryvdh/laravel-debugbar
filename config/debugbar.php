@@ -202,4 +202,14 @@ return [
      | To override default domain, specify it as a non-empty value.
      */
     'route_domain' => null,
+
+    /*
+     |--------------------------------------------------------------------------
+     | DebugBar theme
+     |--------------------------------------------------------------------------
+     |
+     | Switches between light and dark theme. If set to auto it will respect system preferences
+     | Possible values: auto, light, dark
+     */
+    'theme' => 'auto',
 ];
