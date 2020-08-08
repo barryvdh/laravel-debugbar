@@ -21,6 +21,17 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
         $this->jsFiles['laravel-sql'] = __DIR__ . '/Resources/sqlqueries/widget.js';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
+
+        $theme = config('debugbar.theme', 'auto');
+        switch ($theme) {
+            case 'dark':
+                $this->cssFiles['laravel-dark'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
+                break;
+            case 'auto':
+                $this->cssFiles['laravel-dark-0'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-start.css';
+                $this->cssFiles['laravel-dark-1'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
+                $this->cssFiles['laravel-dark-2'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-end.css';
+        }
     }
 
     /**
