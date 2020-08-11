@@ -216,3 +216,61 @@ div.phpdebugbar a.phpdebugbar-open-btn {
 div.phpdebugbar a.phpdebugbar-close-btn {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAABUElEQVQ4T52SMUsDMRTH3xUPChHCxeko3YrUqeFGEexym3boJ9DBufhJpLODfoIbTrcuFcSxxMki3Uq5yZRAAweRVp70HdfWQZolb3i/l/x/iQd7Lm9PDjbA2Wz24HmerFarbSGEwaFaa57n+XC1WqlarXZNBxUgQsaYK+ccCCHeGWPn2GStfdFat3zfB875I8EFOBqNPpbLZRObsQnh9YktHIarUqmMoyg6wboApZTtfr9/zxhrEIw7QdbaSa/Xu1FKDTdAADiQUp6VYcpTgl4B4HsbhCRJjsIwfPN9/7hs2zn3mWXZabfb/dqRg/ZIBF2PmigzCiPbRcbpdKrQXjkTguXMKKxer8uNqw4Gg6cgCC7WT/ArAuty5vl8/hzH8eV2xmaapnec88baHooAEmaMmXQ6nVsAGO/IAQB8x0MAUGQPbSMPAAuC/gL//XV/ALsvnQ+MsaHgAAAAAElFTkSuQmCC) no-repeat 9px 6px;
 }
+
+
+/* Dracula Theme v1.2.5
+ *
+ * https://github.com/dracula/highlightjs
+ *
+ * Copyright 2016-present, All rights reserved
+ *
+ * Code licensed under the MIT license
+ *
+ * @author Denis Ciccale <dciccale@gmail.com>
+ * @author Zeno Rocha <hi@zenorocha.com>
+ */
+
+div.phpdebugbar .hljs-built_in,
+div.phpdebugbar .hljs-selector-tag,
+div.phpdebugbar .hljs-section,
+div.phpdebugbar .hljs-link {
+    color: #8be9fd;
+}
+
+div.phpdebugbar .hljs-keyword {
+    color: #ff79c6;
+}
+
+div.phpdebugbar .hljs,
+div.phpdebugbar .hljs-subst {
+    color: #f8f8f2;
+}
+
+div.phpdebugbar .hljs-title {
+    color: #50fa7b;
+}
+
+div.phpdebugbar .hljs-string,
+div.phpdebugbar .hljs-meta,
+div.phpdebugbar .hljs-name,
+div.phpdebugbar .hljs-type,
+div.phpdebugbar .hljs-attr,
+div.phpdebugbar .hljs-symbol,
+div.phpdebugbar .hljs-bullet,
+div.phpdebugbar .hljs-addition,
+div.phpdebugbar .hljs-variable,
+div.phpdebugbar .hljs-template-tag,
+div.phpdebugbar .hljs-template-variable {
+    color: #f1fa8c;
+}
+
+div.phpdebugbar .hljs-comment,
+div.phpdebugbar .hljs-quote,
+div.phpdebugbar .hljs-deletion {
+    color: #6272a4;
+}
+
+div.phpdebugbar .hljs-literal,
+div.phpdebugbar .hljs-number {
+    color: #bd93f9;
+}
