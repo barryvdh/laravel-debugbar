@@ -198,6 +198,16 @@ div.phpdebugbar input[type='password'] {
     color: var(--color-gray-300);
 }
 
+div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-filename,
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-database,
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-duration,
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-memory,
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-row-count,
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-copy-clipboard,
+div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-stmt-id {
+    color: var(--color-gray-500);
+}
+
 div.phpdebugbar a.phpdebugbar-minimize-btn {
     background: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201792%201792%22%20id%3D%22chevron-down%22%3E%3Cpath%20d%3D%22M1683%20808l-742%20741q-19%2019-45%2019t-45-19l-742-741q-19-19-19-45.5t19-45.5l166-165q19-19%2045-19t45%2019l531%20531%20531-531q19-19%2045-19t45%2019l166%20165q19%2019%2019%2045.5t-19%2045.5z%22%20style%3D%22fill%3A%20%23EDF2F7%22%2F%3E%3C%2Fsvg%3E) no-repeat 6px 6px / 14px 14px;
 }
