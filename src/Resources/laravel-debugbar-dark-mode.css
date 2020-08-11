@@ -172,17 +172,6 @@ div.phpdebugbar div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-type 
     color: var(--color-gray-600) !important;
 }
 
-div.phpdebugbar .hljs-keyword,
-div.phpdebugbar .css .rule .hljs-keyword,
-div.phpdebugbar .hljs-winutils,
-div.phpdebugbar .javascript .hljs-title,
-div.phpdebugbar .nginx .hljs-title,
-div.phpdebugbar .hljs-subst,
-div.phpdebugbar .hljs-request,
-div.phpdebugbar .hljs-status {
-    color: var(--color-gray-400);
-}
-
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
     border-color: var(--color-gray-600) !important;
 }
