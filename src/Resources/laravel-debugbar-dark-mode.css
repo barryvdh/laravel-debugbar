@@ -134,6 +134,10 @@ div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-i
     background-color: #6f6200;
 }
 
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
+    color: #7B7B7B;
+}
+
 div.phpdebugbar-openhandler {
     border-top-color: #fa5661;
 }
