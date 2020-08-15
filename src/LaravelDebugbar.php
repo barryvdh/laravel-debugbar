@@ -873,18 +873,39 @@ class LaravelDebugbar extends DebugBar
             $renderer->setOpenHandlerUrl($openHandlerUrl);
         }
 
-        $renderedContent = $renderer->renderHead() . $renderer->render();
+        $head = $renderer->renderHead();
+        $widget = $renderer->render();
 
+        // Try to put the js/css directly before the </head>
+        $pos = strripos($content, '</head>');
+        if (false !== $pos) {
+            $content = substr($content, 0, $pos) . $head . substr($content, $pos);
+        } else {
+            // Append the head before the widget
+            $widget = $head . $widget;
+        }
+
+        // Try to put the widget at the end, directly before the </body>
         $pos = strripos($content, '</body>');
         if (false !== $pos) {
-            $content = substr($content, 0, $pos) . $renderedContent . substr($content, $pos);
+            $content = substr($content, 0, $pos) . $widget . substr($content, $pos);
         } else {
-            $content = $content . $renderedContent;
+            $content = $content . $widget;
+        }
+
+        $original = null;
+        if ($response instanceof \Illuminate\Http\Response && $response->getOriginalContent()) {
+            $original = $response->getOriginalContent();
         }
 
         // Update the new content and reset the content length
         $response->setContent($content);
         $response->headers->remove('Content-Length');
+
+        // Restore original response (eg. the View or Ajax data)
+        if ($original) {
+            $response->original = $original;
+        }
     }
 
     /**
