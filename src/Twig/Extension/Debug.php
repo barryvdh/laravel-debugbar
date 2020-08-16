@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar\Twig\Extension;
+<?php
+
+namespace Barryvdh\Debugbar\Twig\Extension;
 
 use Illuminate\Foundation\Application;
 use Twig_Environment;
@@ -44,7 +46,9 @@ class Debug extends Twig_Extension
     {
         return [
             new Twig_SimpleFunction(
-                'debug', [$this, 'debug'], ['needs_context' => true, 'needs_environment' => true]
+                'debug',
+                [$this, 'debug'],
+                ['needs_context' => true, 'needs_environment' => true]
             ),
         ];
     }

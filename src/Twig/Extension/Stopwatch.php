@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar\Twig\Extension;
+<?php
+
+namespace Barryvdh\Debugbar\Twig\Extension;
 
 use Barryvdh\Debugbar\Twig\TokenParser\StopwatchTokenParser;
 use Illuminate\Foundation\Application;

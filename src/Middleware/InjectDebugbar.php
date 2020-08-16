@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar\Middleware;
+<?php
+
+namespace Barryvdh\Debugbar\Middleware;
 
 use Error;
 use Closure;
@@ -74,7 +76,6 @@ class InjectDebugbar
         $this->debugbar->modifyResponse($request, $response);
 
         return $response;
-
     }
 
     /**

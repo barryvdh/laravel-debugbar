@@ -7,7 +7,7 @@ $routeConfig = [
     'middleware' => [\Barryvdh\Debugbar\Middleware\DebugbarEnabled::class],
 ];
 
-app('router')->group($routeConfig, function($router) {
+app('router')->group($routeConfig, function ($router) {
     $router->get('open', [
         'uses' => 'OpenHandlerController@handle',
         'as' => 'debugbar.openhandler',

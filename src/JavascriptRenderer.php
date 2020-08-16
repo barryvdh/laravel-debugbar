@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar;
+<?php
+
+namespace Barryvdh\Debugbar;
 
 use DebugBar\DebugBar;
 use DebugBar\JavascriptRenderer as BaseJavascriptRenderer;
@@ -42,7 +44,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function setUrlGenerator($url)
     {
-
     }
 
     /**

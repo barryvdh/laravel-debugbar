@@ -126,7 +126,7 @@ class QueryCollector extends PDOCollector
         $bindings = $connection->prepareBindings($bindings);
 
         // Run EXPLAIN on this query (if needed)
-        if ($this->explainQuery && $pdo && preg_match('/^\s*('.implode('|', $this->explainTypes).') /i', $query)) {
+        if ($this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query)) {
             $statement = $pdo->prepare('EXPLAIN ' . $query);
             $statement->execute($bindings);
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
@@ -210,6 +210,7 @@ class QueryCollector extends PDOCollector
      */
     protected function performQueryAnalysis($query)
     {
+        // @codingStandardsIgnoreStart
         $hints = [];
         if (preg_match('/^\\s*SELECT\\s*`?[a-zA-Z0-9]*`?\\.?\\*/i', $query)) {
             $hints[] = 'Use <code>SELECT *</code> only if you need all columns from table';
@@ -229,10 +230,12 @@ class QueryCollector extends PDOCollector
             $hints[] = '<code>LIMIT</code> without <code>ORDER BY</code> causes non-deterministic results, depending on the query execution plan';
         }
         if (preg_match('/LIKE\\s[\'"](%.*?)[\'"]/i', $query, $matches)) {
-            $hints[] = 'An argument has a leading wildcard character: <code>' . $matches[1]. '</code>.
+            $hints[] = 'An argument has a leading wildcard character: <code>' . $matches[1] . '</code>.
                 The predicate with this argument is not sargable and cannot use an index if one exists.';
         }
         return $hints;
+
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -275,7 +278,8 @@ class QueryCollector extends PDOCollector
             return $frame;
         }
 
-        if (isset($trace['class']) &&
+        if (
+            isset($trace['class']) &&
             isset($trace['file']) &&
             !$this->fileIsInExcludedPath($trace['file'])
         ) {
@@ -369,7 +373,7 @@ class QueryCollector extends PDOCollector
             $this->reflection['viewfinderViews'] = $property;
         }
 
-        foreach ($property->getValue($finder) as $name => $path){
+        foreach ($property->getValue($finder) as $name => $path) {
             if (sha1($path) == $hash || md5($path) == $hash) {
                 return $name;
             }
@@ -476,9 +480,9 @@ class QueryCollector extends PDOCollector
             ];
 
             //Add the results from the explain as new rows
-            foreach($query['explain'] as $explain){
+            foreach ($query['explain'] as $explain) {
                 $statements[] = [
-                    'sql' => ' - EXPLAIN #' . $explain->id . ': `' . $explain->table . '` (' . $explain->select_type . ')',
+                    'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
                     'type' => 'explain',
                     'params' => $explain,
                     'row_count' => $explain->rows,

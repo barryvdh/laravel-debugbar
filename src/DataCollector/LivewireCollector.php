@@ -23,12 +23,12 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     public function __construct(Request $request)
     {
         // Listen to Livewire views
-        Livewire::listen('view:render', function(View $view) use ($request) {
+        Livewire::listen('view:render', function (View $view) use ($request) {
             /** @var \Livewire\Component $component */
             $component = $view->getData()['_instance'];
 
             // Create an unique name for each compoent
-            $key = $component->getName() . ' #' .$component->id;
+            $key = $component->getName() . ' #' . $component->id;
 
             $data = [
                 'data' => $component->getPublicPropertiesDefinedBySubClass(),
