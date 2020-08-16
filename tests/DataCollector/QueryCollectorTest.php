@@ -14,7 +14,7 @@ class QueryCollectorTest extends TestCase
     {
         $this->loadLaravelMigrations();
 
-        $this->debugbar()->boot();
+        debugbar()->boot();
 
         /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
         $collector  = $this->debugbar()->getCollector('queries');

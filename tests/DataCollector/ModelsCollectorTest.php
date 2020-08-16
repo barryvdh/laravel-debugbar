@@ -16,7 +16,7 @@ class ModelsCollectorTest extends TestCase
     {
         $this->loadLaravelMigrations();
 
-        $this->debugbar()->boot();
+        debugbar()->boot();
 
         /** @var \Barryvdh\Debugbar\DataCollector\ModelsCollector $collector */
         $collector = $this->debugbar()->getCollector('models');
