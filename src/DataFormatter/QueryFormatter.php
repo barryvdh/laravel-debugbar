@@ -15,7 +15,10 @@ class QueryFormatter extends DataFormatter
      */
     public function formatSql($sql)
     {
-        return trim(preg_replace("/\s*\n\s*/", "\n", $sql));
+		$sql = preg_replace("/\?(?=(?:[^'\\\']*'[^'\\']*')*[^'\\\']*$)(?:\?)/", '?', $sql);
+		$sql = trim(preg_replace("/\s*\n\s*/", "\n", $sql));
+
+		return $sql;
     }
 
     /**
