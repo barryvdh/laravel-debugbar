@@ -272,7 +272,7 @@ class LaravelDebugbar extends DebugBar
                         }
                     );
                 } else {
-                    $this->addCollector(new MonologCollector($this->app['log']->getMonolog()));
+                    $this->addCollector(new MonologCollector($this->getMonologLogger()));
                 }
             } catch (\Exception $e) {
                 $this->addThrowable(
@@ -1118,5 +1118,25 @@ class LaravelDebugbar extends DebugBar
 
             $response->headers->set('Server-Timing', $headers, false);
         }
+    }
+
+    /**
+     * @return \Monolog\Logger
+     * @throws Exception
+     */
+    private function getMonologLogger()
+    {
+        // The logging was refactored in Laravel 5.6
+        if ($this->checkVersion('5.6')) {
+            $logger = $this->app['log']->getLogger();
+        } else {
+            $logger = $this->app['log']->getMonolog();
+        }
+
+        if (get_class($logger) !== 'Monolog\Logger') {
+            throw new Exception('Logger is not a Monolog\Logger instance');
+        }
+
+        return $logger;
     }
 }
