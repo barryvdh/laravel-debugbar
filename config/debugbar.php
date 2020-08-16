@@ -17,7 +17,7 @@ return [
     'enabled' => env('DEBUGBAR_ENABLED', null),
     'except' => [
         'telescope*',
-        'horizon*'
+        'horizon*',
     ],
 
     /*
@@ -37,7 +37,7 @@ return [
         'driver'     => 'file', // redis, file, pdo, custom
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
-        'provider'   => '' // Instance of StorageInterface for custom driver
+        'provider'   => '', // Instance of StorageInterface for custom driver
     ],
 
     /*
@@ -152,19 +152,19 @@ return [
             'hints'             => false,    // Show hints for common mistakes
         ],
         'mail' => [
-            'full_log' => false
+            'full_log' => false,
         ],
         'views' => [
             'data' => false,    //Note: Can slow down the application, because the data can be quite large..
         ],
         'route' => [
-            'label' => true  // show complete route on bar
+            'label' => true,  // show complete route on bar
         ],
         'logs' => [
-            'file' => null
+            'file' => null,
         ],
         'cache' => [
-            'values' => true // collect cache values
+            'values' => true, // collect cache values
         ],
     ],
 
