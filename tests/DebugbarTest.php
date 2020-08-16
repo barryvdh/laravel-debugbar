@@ -47,5 +47,4 @@ class DebugbarTest extends TestCase
         $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
     }
-
 }
