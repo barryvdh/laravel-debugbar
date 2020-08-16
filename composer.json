@@ -19,7 +19,7 @@
         "symfony/finder": "^3|^4|^5"
     },
     "require-dev": {
-        "orchestra/testbench": "^3.5|^4.0|^5.0",
+        "orchestra/testbench": "^3.5.11|^4.0|^5.0",
         "phpunit/phpunit": "^6.0|^7.0|^8.5|^9.0",
         "squizlabs/php_codesniffer": "^3.5"
     },
