@@ -346,7 +346,11 @@ class LaravelDebugbar extends DebugBar
                             $connection = $db->connection($connectionName);
                         }
 
-                        $queryCollector->addQuery((string) $query, $bindings, $time, $connection);
+                        //allow collecting only queries slower than a specified amount of milliseconds
+                        $threshold = $this->app['config']->get('debugbar.options.db.slow_threshold', false);
+                        if (!$threshold || $time > $threshold) {
+                            $queryCollector->addQuery((string)$query, $bindings, $time, $connection);
+                        }
                     }
                 );
             } catch (\Exception $e) {
