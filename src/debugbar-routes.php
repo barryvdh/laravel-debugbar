@@ -2,12 +2,12 @@
 
 $routeConfig = [
     'namespace' => 'Barryvdh\Debugbar\Controllers',
-    'prefix' => $this->app['config']->get('debugbar.route_prefix'),
-    'domain' => $this->app['config']->get('debugbar.route_domain'),
+    'prefix' => app('config')->get('debugbar.route_prefix'),
+    'domain' => app('config')->get('debugbar.route_domain'),
     'middleware' => [\Barryvdh\Debugbar\Middleware\DebugbarEnabled::class],
 ];
 
-$this->app['router']->group($routeConfig, function($router) {
+app('router')->group($routeConfig, function($router) {
     $router->get('open', [
         'uses' => 'OpenHandlerController@handle',
         'as' => 'debugbar.openhandler',
