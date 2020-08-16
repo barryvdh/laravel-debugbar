@@ -2,8 +2,9 @@
 
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
+use Barryvdh\Debugbar\Tests\Models\Person;
+use Barryvdh\Debugbar\Tests\Models\User;
 use Barryvdh\Debugbar\Tests\TestCase;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,8 +12,7 @@ class ModelsCollectorTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_collects_retrieved_models()
+    public function testItCollectsRetrievedModels()
     {
         $this->loadLaravelMigrations();
 
@@ -52,14 +52,4 @@ class ModelsCollectorTest extends TestCase
             $collector->collect()
         );
     }
-}
-
-class User extends Model
-{
-    protected $table = 'users';
-    protected $guarded = [];
-}
-
-class Person extends User
-{
 }

@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar\Middleware;
+<?php
+
+namespace Barryvdh\Debugbar\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -37,6 +39,5 @@ class DebugbarEnabled
         }
 
         return $next($request);
-
     }
 }

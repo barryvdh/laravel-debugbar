@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar;
+<?php
+
+namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
@@ -27,7 +29,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
         
-        $this->loadRoutesFrom(realpath(__DIR__.'/debugbar-routes.php'));
+        $this->loadRoutesFrom(realpath(__DIR__ . '/debugbar-routes.php'));
 
         $this->app->alias(
             DataFormatter::class,
@@ -37,19 +39,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->singleton(LaravelDebugbar::class, function () {
                 $debugbar = new LaravelDebugbar($this->app);
 
-                if ($this->app->bound(SessionManager::class)) {
-                    $sessionManager = $this->app->make(SessionManager::class);
-                    $httpDriver = new SymfonyHttpDriver($sessionManager);
-                    $debugbar->setHttpDriver($httpDriver);
-                }
+            if ($this->app->bound(SessionManager::class)) {
+                $sessionManager = $this->app->make(SessionManager::class);
+                $httpDriver = new SymfonyHttpDriver($sessionManager);
+                $debugbar->setHttpDriver($httpDriver);
+            }
 
                 return $debugbar;
-            }
-        );
+        });
 
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
 
-        $this->app->singleton('command.debugbar.clear',
+        $this->app->singleton(
+            'command.debugbar.clear',
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
             }

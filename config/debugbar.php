@@ -147,7 +147,7 @@ return [
             'timeline'          => false,  // Add the queries to the timeline
             'explain' => [                 // Show EXPLAIN output on queries
                 'enabled' => false,
-                'types' => ['SELECT'],     // // workaround ['SELECT'] only. https://github.com/barryvdh/laravel-debugbar/issues/888 ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
+                'types' => ['SELECT'],     // Deprecated setting, is always only SELECT
             ],
             'hints'             => false,    // Show hints for common mistakes
             'show_copy'         => false,    // Show copy button next to the query

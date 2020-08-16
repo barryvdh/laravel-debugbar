@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
 
     var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
 
@@ -14,39 +14,39 @@
 
         className: csscls('timeline cache'),
 
-        onForgetClick: function(e, el) {
+        onForgetClick: function (e, el) {
             e.stopPropagation();
 
             $.ajax({
                 url: $(el).attr("data-url"),
                 type: 'DELETE',
-                success: function(result) {
+                success: function (result) {
                     $(el).fadeOut(200);
                 }
             });
         },
 
-        render: function() {
+        render: function () {
             LaravelCacheWidget.__super__.render.apply(this);
 
-            this.bindAttr('data', function(data) {
+            this.bindAttr('data', function (data) {
 
                 if (data.measures) {
                     var self = this;
-                    var lines = this.$el.find('.'+csscls('measure'));
+                    var lines = this.$el.find('.' + csscls('measure'));
 
                     for (var i = 0; i < data.measures.length; i++) {
                         var measure = data.measures[i];
                         var m = lines[i];
 
                         if (measure.params && !$.isEmptyObject(measure.params)) {
-
                             if (measure.params.delete && measure.params.key) {
                                 $('<a />')
                                     .addClass(csscls('forget'))
                                     .text('forget')
                                     .attr('data-url', measure.params.delete)
-                                    .one('click', function(e) { self.onForgetClick(e, this); })
+                                    .one('click', function (e) {
+                                        self.onForgetClick(e, this); })
                                     .appendTo(m);
                             }
                         }
