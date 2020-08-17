@@ -81,14 +81,4 @@ class TestCase extends Orchestra
             }
         ]);
     }
-
-    /**
-     * Get the Laravel Debugbar instance.
-     *
-     * @return \Barryvdh\Debugbar\LaravelDebugbar
-     */
-    public function debugbar()
-    {
-        return $this->debugbar ?? $this->debugbar = $this->app->debugbar;
-    }
 }
