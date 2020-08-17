@@ -1,0 +1,37 @@
+name: Fix Codestyle
+
+on: [push, pull_request]
+
+jobs:
+  fix-style:
+    name: Fix Code Style
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      COMPOSER_NO_INTERACTION: 1
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        coverage: none
+        tools: composer:v2
+
+    - name: Install dependencies
+      run: |
+        composer update --prefer-dist --no-suggest --no-progress
+
+    - run: composer fix-style
+      continue-on-error: true
+
+    # Revert modifications so they don't get commited 💥
+    - run: git checkout -- composer.json
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: composer fix-style
+        commit_author: laravel-debugbar <laravel-debugbar@users.noreply.github.com>
