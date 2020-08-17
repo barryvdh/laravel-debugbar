@@ -52,7 +52,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     public function renderHead()
     {
         $cssRoute = route('debugbar.assets.css', [
-            'v' => $this->getModifiedTime('css')
+            'v' => $this->getModifiedTime('css'),
+            'theme' => config('debugbar.theme', 'auto'),
         ]);
 
         $jsRoute = route('debugbar.assets.js', [
