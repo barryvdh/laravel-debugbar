@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Fix Codestyle
 
 on: [push, pull_request]
 
