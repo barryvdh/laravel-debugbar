@@ -4,6 +4,7 @@ namespace Barryvdh\Debugbar\Tests;
 
 use Barryvdh\Debugbar\Facade;
 use Barryvdh\Debugbar\ServiceProvider;
+use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -35,17 +36,49 @@ class TestCase extends Orchestra
         return ['Debugbar' => Facade::class];
     }
 
-    public function getEnvironmentSetUp($app)
+    /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application $app
+     *
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
     {
+        /** @var Router $router */
+        $router = $app['router'];
+
+        $this->addWebRoutes($router);
+        $this->addApiRoutes($router);
     }
 
     /**
-     * Get the Laravel Debugbar instance.
-     *
-     * @return \Barryvdh\Debugbar\LaravelDebugbar
+     * @param Router $router
      */
-    public function debugbar()
+    protected function addWebRoutes(Router $router)
     {
-        return $this->debugbar ?? $this->debugbar = $this->app->debugbar;
+        $router->get('web/plain', [
+            'uses' => function () {
+                return 'PONG';
+            }
+        ]);
+
+        $router->get('web/html', [
+            'uses' => function () {
+                return '<html><head></head><body>Pong</body></html>';
+            }
+        ]);
+    }
+
+    /**
+     * @param Router $router
+     */
+    protected function addApiRoutes(Router $router)
+    {
+        $router->get('api/ping', [
+            'uses' => function () {
+                return response()->json(['status' => 'pong']);
+            }
+        ]);
     }
 }

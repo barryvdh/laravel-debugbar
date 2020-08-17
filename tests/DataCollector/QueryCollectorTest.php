@@ -14,10 +14,10 @@ class QueryCollectorTest extends TestCase
     {
         $this->loadLaravelMigrations();
 
-        $this->debugbar()->boot();
+        debugbar()->boot();
 
         /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
-        $collector  = $this->debugbar()->getCollector('queries');
+        $collector  = debugbar()->getCollector('queries');
         $collector->addQuery(
             "SELECT ('[1, 2, 3]'::jsonb ?? ?) as a, ('[4, 5, 6]'::jsonb ??| ?) as b, 'hello world ? example ??' as c",
             [3, '{4}'],
