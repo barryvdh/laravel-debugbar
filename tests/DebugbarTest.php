@@ -26,8 +26,7 @@ class DebugbarTest extends TestCase
                 $refProperty = $refObject->getProperty('enabled');
                 $refProperty->setAccessible(true);
                 $refProperty->setValue($debugbar, true);
-            }
-        );
+        });
     }
 
     public function testItInjectsOnPlainText()
