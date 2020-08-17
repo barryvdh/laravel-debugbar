@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar\Tests;
 
+use Barryvdh\Debugbar\LaravelDebugbar;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
@@ -17,11 +18,16 @@ class DebugbarTest extends TestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        // Simulate local setup
-        $_ENV['APP_RUNNING_IN_CONSOLE'] = 0;
-        $app['env'] = 'local';
-
         parent::getEnvironmentSetUp($app);
+
+        // Force the Debugbar to Enable on test/cli applications
+        $app->resolving(LaravelDebugbar::class, function ($debugbar) {
+                $refObject = new \ReflectionObject($debugbar);
+                $refProperty = $refObject->getProperty('enabled');
+                $refProperty->setAccessible(true);
+                $refProperty->setValue($debugbar, true);
+            }
+        );
     }
 
     public function testItInjectsOnPlainText()
