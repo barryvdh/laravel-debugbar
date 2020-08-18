@@ -4,10 +4,6 @@ namespace Barryvdh\Debugbar\Tests;
 
 use Barryvdh\Debugbar\Facade;
 use Barryvdh\Debugbar\ServiceProvider;
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\File;
 
 class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
 {

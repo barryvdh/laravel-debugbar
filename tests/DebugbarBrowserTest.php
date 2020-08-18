@@ -2,10 +2,7 @@
 
 namespace Barryvdh\Debugbar\Tests;
 
-use Barryvdh\Debugbar\LaravelDebugbar;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Str;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
@@ -29,7 +26,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
 
-        \Orchestra\Testbench\Dusk\Options::withUI();
+        \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
 
     /**
