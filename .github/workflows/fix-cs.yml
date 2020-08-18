@@ -1,6 +1,9 @@
 name: Fix Codestyle
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   fix-style:
