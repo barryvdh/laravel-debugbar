@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "maximebf/debugbar": "^1.16.3",
         "illuminate/routing": "^5.5|^6|^7",
         "illuminate/session": "^5.5|^6|^7",
@@ -20,6 +20,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^3.5.11|^4.0|^5.0",
+        "orchestra/testbench-dusk": "^3.5.11|^4.0|^5.0",
+        "orchestra/dusk-updater": "^1",
         "phpunit/phpunit": "^6.0|^7.0|^8.5|^9.0",
         "squizlabs/php_codesniffer": "^3.5"
     },

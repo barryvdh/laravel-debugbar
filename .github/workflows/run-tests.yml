@@ -12,11 +12,8 @@ jobs:
     strategy:
       matrix:
         php: [7.4, 7.3, 7.2]
-        laravel: [7.*, 6.*, 5.5.*]
+        laravel: [6.*, 7.*]
         dependency-version: [prefer-lowest, prefer-stable]
-        exclude:
-          - laravel: 5.5.*
-            php: 7.4
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -33,8 +30,18 @@ jobs:
         
     - name: Install dependencies
       run: |
-        composer require "laravel/framework:${{ matrix.laravel }}" --no-update --no-progress
-        composer update --${{ matrix.dependency-version }} --prefer-dist --no-suggest --no-progress
+        composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+        composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
+
+    - name: Update Dusk Chromedriver
+      run: vendor/bin/dusk-updater detect --auto-update
 
     - name: Execute Unit Tests
       run: composer test
+
+    - name: Upload Failed Screenshots
+      uses: actions/upload-artifact@v2-preview
+      if: failure()
+      with:
+        name: screenshots
+        path: tests/Browser/screenshots/*

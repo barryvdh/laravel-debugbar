@@ -9,8 +9,6 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    /** @var \Barryvdh\Debugbar\LaravelDebugbar */
-    private $debugbar;
 
     /**
      * Get package providers.
