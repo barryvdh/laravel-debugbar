@@ -38,7 +38,7 @@ jobs:
             dependency-version: prefer-stable
           - laravel: 5.5.*
             testbench: 3.5.*
-            php: 7.0
+            php: 7.1
             dependency-version: prefer-stable
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
