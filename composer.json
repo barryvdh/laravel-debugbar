@@ -12,9 +12,9 @@
     "require": {
         "php": ">=7.2",
         "maximebf/debugbar": "^1.16.3",
-        "illuminate/routing": "^6|^7",
-        "illuminate/session": "^6|^7",
-        "illuminate/support": "^6|^7",
+        "illuminate/routing": "^6|^7|^8",
+        "illuminate/session": "^6|^7|^8",
+        "illuminate/support": "^6|^7|^8",
         "symfony/debug": "^4.3|^5",
         "symfony/finder": "^4.3|^5"
     },
