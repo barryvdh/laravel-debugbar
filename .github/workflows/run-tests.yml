@@ -1,6 +1,14 @@
 name: Unit Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "*"
+  schedule:
+  - cron: '0 0 * * *'
 
 jobs:
   php-tests:
