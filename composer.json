@@ -19,9 +19,7 @@
         "symfony/finder": "^4.3|^5"
     },
     "require-dev": {
-        "orchestra/testbench": "^4.0|^5.0",
-        "orchestra/testbench-dusk": "^4.0|^5.0",
-        "orchestra/dusk-updater": "^1",
+        "orchestra/testbench-dusk": "^4|^5|^6",
         "phpunit/phpunit": "^8.5|^9.0",
         "squizlabs/php_codesniffer": "^3.5"
     },

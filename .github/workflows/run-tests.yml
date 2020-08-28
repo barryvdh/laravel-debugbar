@@ -12,8 +12,11 @@ jobs:
     strategy:
       matrix:
         php: [7.4, 7.3, 7.2]
-        laravel: [6.*, 7.*]
+        laravel: [8.*, 6.*, 7.*]
         dependency-version: [prefer-lowest, prefer-stable]
+        exclude:
+          - laravel: 8.*
+            php: 7.2
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
