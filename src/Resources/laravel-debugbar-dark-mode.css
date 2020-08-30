@@ -100,6 +100,12 @@ div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-operator {
     color: var(--color-gray-100);
 }
 
+div.phpdebugbar pre.sf-dump .sf-dump-public,
+div.phpdebugbar pre.sf-dump .sf-dump-protected,
+div.phpdebugbar pre.sf-dump .sf-dump-private {
+    color: var(--color-gray-100) !important;
+}
+
 div.phpdebugbar div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before,
 div.phpdebugbar-openhandler a {
     color: var(--color-gray-500);
