@@ -240,6 +240,20 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        if (!$this->isLumen() && $this->shouldCollect('routes')) {
+            try {
+                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\RoutesCollector'));
+            } catch (\Exception $e) {
+                $this->addThrowable(
+                    new Exception(
+                        'Cannot add RoutesCollector to Laravel Debugbar: ' . $e->getMessage(),
+                        $e->getCode(),
+                        $e
+                    )
+                );
+            }
+        }
+
         if (!$this->isLumen() && $this->shouldCollect('log', true)) {
             try {
                 if ($this->hasCollector('messages')) {
