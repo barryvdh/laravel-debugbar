@@ -1,0 +1,99 @@
+name: Integration Tests
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - "*"
+    schedule:
+        - cron: '0 0 * * *'
+
+jobs:
+    php-lumen-integration-tests:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        env:
+            COMPOSER_NO_INTERACTION: 1
+        strategy:
+            matrix:
+                php: [7.4, 7.3, 7.2]
+                lumen: [7.*, 6.*]
+        name: P${{ matrix.php }} - Lumen${{ matrix.lumen }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              with:
+                  path: src
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install dependencies
+              run: |
+                  composer create-project --prefer-dist laravel/lumen:${{ matrix.lumen }} --no-progress sample
+                  cd sample
+                  composer update  --prefer-stable --prefer-dist --no-progress
+            - name: Add package from source
+              run: |
+                  cd sample
+                  sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
+                  composer require --dev "barryvdh/laravel-debugbar:*"
+            - name: Insert service provider
+              run: sed -e 's|// \$app->register(App\\\Providers\\\EventServiceProvider::class);|&\n$app->register(\\Barryvdh\\Debugbar\\LumenServiceProvider::class);|' -i sample/bootstrap/app.php
+
+            - name: Execute clear run
+              run: |
+                  cd sample
+                  php artisan debugbar:clear
+            - name: Check file count in logs
+              run: |
+                if [ `ls -1q "sample/storage/logs/" | wc -l` -gt 0 ];then exit 1;fi
+    php-laravel-integration-tests:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        env:
+            COMPOSER_NO_INTERACTION: 1
+        strategy:
+            matrix:
+                php: [7.4, 7.3, 7.2]
+                laravel: [8.*, 7.*, 6.*]
+                exclude:
+                  - laravel: 8.*
+                    php: 7.2
+        name: P${{ matrix.php }} - Laravel${{ matrix.laravel }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+              with:
+                  path: src
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install dependencies
+              run: |
+                  composer create-project --prefer-dist laravel/laravel:${{ matrix.laravel }} --no-progress sample
+                  cd sample
+                  composer update --prefer-stable --prefer-dist --no-progress
+            - name: Add package from source
+              run: |
+                  cd sample
+                  sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
+                  composer require --dev "barryvdh/laravel-debugbar:*"
+            - name: Execute generate run
+              run: |
+                  cd sample
+                  php artisan debugbar:clear
+            - name: Check file count in logs
+              run: |
+                if [ `ls -1q "sample/storage/logs/" | wc -l` -gt 0 ];then exit 1;fi
