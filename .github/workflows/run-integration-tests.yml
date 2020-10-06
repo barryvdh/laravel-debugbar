@@ -45,7 +45,7 @@ jobs:
                   sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
                   composer require --dev "barryvdh/laravel-debugbar:*"
             - name: Insert service provider
-              run: sed -e 's|// \$app->register(App\\\Providers\\\EventServiceProvider::class);|&\n$app->register(\Barryvdh\Debugbar\LumenServiceProvider::class);|' -i sample/bootstrap/app.php
+              run: sed -e 's|// \$app->register(App\\\Providers\\\EventServiceProvider::class);|&\n$app->register(\\\Barryvdh\\\Debugbar\\\LumenServiceProvider::class);|' -i sample/bootstrap/app.php
 
             - name: Execute clear run
               run: |
