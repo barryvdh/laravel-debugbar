@@ -89,7 +89,7 @@ jobs:
               run: |
                   cd sample
                   sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
-                  composer require --dev "barryvdh/debugbar:*"
+                  composer require --dev "barryvdh/laravel-debugbar:*"
             - name: Execute generate run
               run: |
                   cd sample
