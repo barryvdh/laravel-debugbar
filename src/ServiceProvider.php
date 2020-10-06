@@ -58,7 +58,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->commands(['command.debugbar.clear']);
+        $this->commands(['command.debugbar.clear', 'command.route.list']);
 
         Collection::macro('debug', function () {
             debug($this);
@@ -77,6 +77,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
         $this->registerMiddleware(InjectDebugbar::class);
+
+        $this->app->extend('command.route.list', function () {
+            return new Console\RouteListCommand($this->getRouter());
+        });
     }
 
     /**
@@ -127,6 +131,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function provides()
     {
-        return ['debugbar', 'command.debugbar.clear', DataFormatterInterface::class, LaravelDebugbar::class];
+        return ['debugbar', 'command.debugbar.clear', 'command.route.list', DataFormatterInterface::class, LaravelDebugbar::class];
     }
 }
