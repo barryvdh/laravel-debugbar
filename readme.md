@@ -84,7 +84,7 @@ For Lumen, register a different Provider in `bootstrap/app.php`:
 
 ```php
 if (env('APP_DEBUG')) {
- $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+    $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
 }
 ```
 
