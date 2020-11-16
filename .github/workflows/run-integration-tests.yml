@@ -19,7 +19,10 @@ jobs:
         strategy:
             matrix:
                 php: [7.4, 7.3, 7.2]
-                lumen: [7.*, 6.*]
+                lumen: [8.*, 7.*, 6.*]
+                exclude:
+                  - lumen: 8.*
+                    php: 7.2
         name: P${{ matrix.php }} - Lumen${{ matrix.lumen }}
         steps:
             - name: Checkout code
