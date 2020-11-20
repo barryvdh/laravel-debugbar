@@ -21,6 +21,8 @@ jobs:
                 php: [8.0, 7.4, 7.3, 7.2]
                 lumen: [8.*, 7.*, 6.*]
                 exclude:
+                  - lumen: 8.*
+                    php: 7.2
                   - lumen: 7.*
                     php: 8.0
                   - lumen: 6.*
