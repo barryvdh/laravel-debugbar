@@ -29,7 +29,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
-        
+
         $this->loadRoutesFrom(realpath(__DIR__ . '/debugbar-routes.php'));
 
         $this->app->alias(

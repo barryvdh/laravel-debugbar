@@ -27,12 +27,12 @@ class LogsCollector extends MessagesCollector
     {
         // default daily rotating logs (Laravel 5.0)
         $path = storage_path() . '/logs/laravel-' . date('Y-m-d') . '.log';
-        
+
         // single file logs
         if (!file_exists($path)) {
             $path = storage_path() . '/logs/laravel.log';
         }
-        
+
         return $path;
     }
 
