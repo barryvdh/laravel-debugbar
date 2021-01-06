@@ -39,7 +39,7 @@ class SocketStorage implements StorageInterface
             'data' => $data,
         ]);
 
-        $encodedPayload = strlen($encodedPayload).'#'.$encodedPayload;
+        $encodedPayload = strlen($encodedPayload) . '#' . $encodedPayload;
 
         set_error_handler([self::class, 'nullErrorHandler']);
         try {
