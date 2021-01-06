@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\Storage;
 
 use DebugBar\Storage\StorageInterface;
 
-class AppStorage implements StorageInterface
+class SocketStorage implements StorageInterface
 {
 
     protected $hostname;
