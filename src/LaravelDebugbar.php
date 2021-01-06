@@ -15,6 +15,7 @@ use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
+use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
@@ -1098,6 +1099,11 @@ class LaravelDebugbar extends DebugBar
                 case 'custom':
                     $class = $config->get('debugbar.storage.provider');
                     $storage = $this->app->make($class);
+                    break;
+                case 'app':
+                    $hostname = $config->get('debugbar.storage.hostname', '127.0.0.1');
+                    $port = $config->get('debugbar.storage.port', 2304);
+                    $storage = new SocketStorage($hostname, $port);
                     break;
                 case 'file':
                 default:
