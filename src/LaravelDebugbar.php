@@ -1100,7 +1100,7 @@ class LaravelDebugbar extends DebugBar
                     $class = $config->get('debugbar.storage.provider');
                     $storage = $this->app->make($class);
                     break;
-                case 'app':
+                case 'socket':
                     $hostname = $config->get('debugbar.storage.hostname', '127.0.0.1');
                     $port = $config->get('debugbar.storage.port', 2304);
                     $storage = new SocketStorage($hostname, $port);
