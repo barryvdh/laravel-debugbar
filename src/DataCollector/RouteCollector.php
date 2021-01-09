@@ -95,7 +95,20 @@ class RouteCollector extends DataCollector implements Renderable
      */
     protected function getMiddleware($route)
     {
-        return implode(', ', $route->middleware());
+        return implode(', ', array_filter(array_map(function ($middleware) {
+            switch (gettype($middleware)) {
+                case 'string':
+                    return $middleware;
+                case 'object':
+                    if (get_class($middleware) === 'Closure') {
+                        $closure = (new \ReflectionFunction($middleware));
+                        return sprintf('"closure at file %s line %s to %s"', $closure->getFileName(), $closure->getStartLine(), $closure->getEndLine());
+                    }
+            }
+            return null;
+        }, $route->middleware()), function ($middleware) {
+            return gettype($middleware) === 'string';
+        }));
     }
 
     /**
