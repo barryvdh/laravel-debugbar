@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Http\Request;
@@ -95,7 +96,9 @@ class RouteCollector extends DataCollector implements Renderable
      */
     protected function getMiddleware($route)
     {
-        return implode(', ', $route->middleware());
+        return implode(', ', array_map(function ($middleware) {
+            return $middleware instanceof Closure ? 'Closure' : $middleware;
+        }, $route->middleware()));
     }
 
     /**
