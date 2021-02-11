@@ -783,9 +783,15 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
-        } elseif ($app['config']->get('debugbar.inject', true)) {
+        } else {
             try {
-                $this->injectDebugbar($response);
+                if ($app['config']->get('debugbar.inject', true)) {
+                    // Inject
+                    $this->injectDebugbar($response);
+                } else {
+                    // Just collect + store data, don't inject it.
+                    $this->collect();
+                }
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
