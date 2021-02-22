@@ -76,7 +76,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
-        $this->registerMiddleware(InjectDebugbar::class);
+        if (!$this->app->runningInConsole()) {
+            $this->registerMiddleware(InjectDebugbar::class);
+        }
     }
 
     /**
