@@ -119,6 +119,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             if (
                 Str::is('*_KEY', $key) || Str::is('*_PASSWORD', $key)
                     || Str::is('*_SECRET', $key) || Str::is('*_PW', $key)
+                    || Str::is('*_TOKEN', $key) || Str::is('*_PASS', $key)
             ) {
                 $data['request_server'][$key] = '******';
             }
