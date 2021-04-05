@@ -37,11 +37,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             DataFormatterInterface::class
         );
 
-        $this->app->singleton(LaravelDebugbar::class, function () {
-                $debugbar = new LaravelDebugbar($this->app);
+        $this->app->singleton(LaravelDebugbar::class, function ($app) {
+                $debugbar = new LaravelDebugbar($app);
 
-            if ($this->app->bound(SessionManager::class)) {
-                $sessionManager = $this->app->make(SessionManager::class);
+            if ($app->bound(SessionManager::class)) {
+                $sessionManager = $app->make(SessionManager::class);
                 $httpDriver = new SymfonyHttpDriver($sessionManager);
                 $debugbar->setHttpDriver($httpDriver);
             }
