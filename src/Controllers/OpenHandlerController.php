@@ -4,15 +4,16 @@ namespace Barryvdh\Debugbar\Controllers;
 
 use Barryvdh\Debugbar\Support\Clockwork\Converter;
 use DebugBar\OpenHandler;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class OpenHandlerController extends BaseController
 {
 
-    public function handle()
+    public function handle(Request $request)
     {
         $openHandler = new OpenHandler($this->debugbar);
-        $data = $openHandler->handle(null, false, false);
+        $data = $openHandler->handle($request->input(), false, false);
 
         return new Response(
             $data,
