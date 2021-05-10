@@ -37,6 +37,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Str;
+use Illuminate\View\Engines\EngineResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -533,6 +534,30 @@ class LaravelDebugbar extends DebugBar
                     )
                 );
             }
+        }
+
+        if ($this->shouldCollect('time', true) && $this->shouldCollect('view', true)) {
+            $this->app->extend('view.engine.resolver', function (EngineResolver $resolver): EngineResolver {
+                return new class($resolver, $this) extends EngineResolver {
+
+                    private $laravelDebugbar;
+
+                    public function __construct(EngineResolver $resolver, LaravelDebugbar $laravelDebugbar)
+                    {
+                        foreach ($resolver->resolvers as $engine => $resolver) {
+                            $this->register($engine, $resolver);
+                        }
+                        $this->laravelDebugbar = $laravelDebugbar;
+                    }
+
+                    public function register($engine, \Closure $resolver)
+                    {
+                        parent::register($engine, function () use ($resolver) {
+                            return new DebugbarViewEngine($resolver(), $this->laravelDebugbar);
+                        });
+                    }
+                };
+            });
         }
 
         $renderer = $this->getJavascriptRenderer();
