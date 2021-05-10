@@ -10,6 +10,8 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
+use Illuminate\View\Engines\EngineResolver;
+use Barryvdh\Debugbar\Facade as DebugBar;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -55,6 +57,36 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'command.debugbar.clear',
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
+            }
+        );
+
+        $this->app->extend(
+            'view.engine.resolver',
+            function (EngineResolver $resolver): EngineResolver {
+                $debugbarConfig = $this->app['config']->get('debugbar', []);
+                if (empty($debugbarConfig['enabled']) ||
+                    empty($debugbarConfig['collectors']['time']) ||
+                    empty($debugbarConfig['collectors']['views'])) {
+                    /* Do not swap the engine to save performance */
+                    return $resolver;
+                }
+                return new class($resolver) extends EngineResolver {
+
+                    public function __construct(EngineResolver $resolver)
+                    {
+                        foreach ($resolver->resolvers as $engine => $resolver) {
+                            $this->register($engine, $resolver);
+                        }
+                    }
+
+                    public function register($engine, \Closure $resolver)
+                    {
+                        parent::register($engine, function () use ($resolver) {
+                            /* Inject the root facade to avoid calling it on every view generation */
+                            return new DebugbarViewEngine($resolver(), DebugBar::getFacadeRoot());
+                        });
+                    }
+                };
             }
         );
 
