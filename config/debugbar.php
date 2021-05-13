@@ -67,6 +67,9 @@ return [
      | you can use this option to disable sending the data through the headers.
      |
      | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
+     |
+     | Note for your request to be identified as ajax requests they must either send the header
+     | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
      */
 
     'capture_ajax' => true,
