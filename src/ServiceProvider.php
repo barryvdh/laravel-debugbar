@@ -14,13 +14,6 @@ use Illuminate\Support\Collection;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Register the service provider.
      *
      * @return void
@@ -118,15 +111,5 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['debugbar', 'command.debugbar.clear', DataFormatterInterface::class, LaravelDebugbar::class];
     }
 }
