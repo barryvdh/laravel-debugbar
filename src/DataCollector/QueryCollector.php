@@ -21,6 +21,7 @@ class QueryCollector extends PDOCollector
     protected $showCopyButton = false;
     protected $reflection = [];
     protected $backtraceExcludePaths = [
+        '/vendor/laravel/framework/src/Illuminate/Support/HigherOrderTapProxy',
         '/vendor/laravel/framework/src/Illuminate/Database',
         '/vendor/laravel/framework/src/Illuminate/Events',
         '/vendor/barryvdh/laravel-debugbar',

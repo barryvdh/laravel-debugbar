@@ -34,10 +34,12 @@ return [
      */
     'storage' => [
         'enabled'    => true,
-        'driver'     => 'file', // redis, file, pdo, custom
+        'driver'     => 'file', // redis, file, pdo, socket, custom
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
         'provider'   => '', // Instance of StorageInterface for custom driver
+        'hostname'   => '127.0.0.1', // Hostname to use with the "socket" driver
+        'port'       => 2304, // Port to use with the "socket" driver
     ],
 
     /*
@@ -65,6 +67,9 @@ return [
      | you can use this option to disable sending the data through the headers.
      |
      | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
+     |
+     | Note for your request to be identified as ajax requests they must either send the header
+     | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
      */
 
     'capture_ajax' => true,
@@ -212,7 +217,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
-    'theme' => 'auto',
+    'theme' => env('DEBUGBAR_THEME', 'auto'),
 
     /*
      |--------------------------------------------------------------------------
