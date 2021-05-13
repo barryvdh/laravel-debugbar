@@ -15,7 +15,13 @@ class OpenHandlerController extends BaseController
         $openHandler = new OpenHandler($this->debugbar);
         $data = $openHandler->handle($request->input(), false, false);
 
-        return response()->json($data);
+        return new Response(
+            $data,
+            200,
+            [
+                'Content-Type' => 'application/json'
+            ]
+        );
     }
 
     /**
