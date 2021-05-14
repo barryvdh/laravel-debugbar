@@ -7,6 +7,7 @@ use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
@@ -62,28 +63,34 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->extend(
             'view.engine.resolver',
-            function (EngineResolver $resolver): EngineResolver {
-                $debugbarConfig = $this->app['config']->get('debugbar', []);
-                if (empty($debugbarConfig['enabled']) ||
-                    empty($debugbarConfig['collectors']['time']) ||
-                    empty($debugbarConfig['collectors']['views'])) {
+            function (EngineResolver $resolver, Application $application): EngineResolver {
+                $laravelDebugbar = $application->make(LaravelDebugbar::class);
+
+                $shouldTrackViewTime = $laravelDebugbar->isEnabled() &&
+                    $laravelDebugbar->shouldCollect('time', true) &&
+                    $laravelDebugbar->shouldCollect('views', true);
+
+                if (! $shouldTrackViewTime) {
                     /* Do not swap the engine to save performance */
                     return $resolver;
                 }
-                return new class($resolver) extends EngineResolver {
 
-                    public function __construct(EngineResolver $resolver)
+                return new class($resolver, $laravelDebugbar) extends EngineResolver {
+
+                    private $laravelDebugbar;
+
+                    public function __construct(EngineResolver $resolver, LaravelDebugbar $laravelDebugbar)
                     {
                         foreach ($resolver->resolvers as $engine => $resolver) {
                             $this->register($engine, $resolver);
                         }
+                        $this->laravelDebugbar = $laravelDebugbar;
                     }
 
                     public function register($engine, \Closure $resolver)
                     {
                         parent::register($engine, function () use ($resolver) {
-                            /* Inject the root facade to avoid calling it on every view generation */
-                            return new DebugbarViewEngine($resolver(), DebugBar::getFacadeRoot());
+                            return new DebugbarViewEngine($resolver(), $this->laravelDebugbar);
                         });
                     }
                 };
