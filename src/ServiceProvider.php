@@ -7,9 +7,12 @@ use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
+use Illuminate\View\Engines\EngineResolver;
+use Barryvdh\Debugbar\Facade as DebugBar;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -48,6 +51,43 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'command.debugbar.clear',
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
+            }
+        );
+
+        $this->app->extend(
+            'view.engine.resolver',
+            function (EngineResolver $resolver, Application $application): EngineResolver {
+                $laravelDebugbar = $application->make(LaravelDebugbar::class);
+
+                $shouldTrackViewTime = $laravelDebugbar->isEnabled() &&
+                    $laravelDebugbar->shouldCollect('time', true) &&
+                    $laravelDebugbar->shouldCollect('views', true) && 
+                    $application['config']->get('debugbar.options.views.timeline', false);
+
+                if (! $shouldTrackViewTime) {
+                    /* Do not swap the engine to save performance */
+                    return $resolver;
+                }
+
+                return new class($resolver, $laravelDebugbar) extends EngineResolver {
+
+                    private $laravelDebugbar;
+
+                    public function __construct(EngineResolver $resolver, LaravelDebugbar $laravelDebugbar)
+                    {
+                        foreach ($resolver->resolvers as $engine => $resolver) {
+                            $this->register($engine, $resolver);
+                        }
+                        $this->laravelDebugbar = $laravelDebugbar;
+                    }
+
+                    public function register($engine, \Closure $resolver)
+                    {
+                        parent::register($engine, function () use ($resolver) {
+                            return new DebugbarViewEngine($resolver(), $this->laravelDebugbar);
+                        });
+                    }
+                };
             }
         );
 
