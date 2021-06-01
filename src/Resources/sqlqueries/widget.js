@@ -65,6 +65,14 @@
                 } else {
                     $('<code />').addClass(csscls('sql')).html(PhpDebugBar.Widgets.highlight(stmt.sql, 'sql')).appendTo(li);
                 }
+                if (stmt.width_percent) {
+                    $('<div></div>').addClass(csscls('bg-measure')).append(
+                        $('<div></div>').addClass(csscls('value')).css({
+                            left: stmt.start_percent + '%',
+                            width: Math.max(stmt.width_percent, 0.01) + '%',
+                        })
+                    ).appendTo(li);
+                }
                 if (stmt.duration_str) {
                     $('<span title="Duration" />').addClass(csscls('duration')).text(stmt.duration_str).appendTo(li);
                 }

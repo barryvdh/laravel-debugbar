@@ -207,7 +207,7 @@ class QueryCollector extends PDOCollector
      * @version $Id$
      * @access public
      * @param string $query
-     * @return string
+     * @return string[]
      */
     protected function performQueryAnalysis($query)
     {
@@ -489,6 +489,19 @@ class QueryCollector extends PDOCollector
                     'row_count' => $explain->rows,
                     'stmt_id' => $explain->id,
                 ];
+            }
+        }
+
+        if ($totalTime > 0) {
+            // For showing background measure on Queries tab
+            $start_percent = 0;
+            foreach ($statements as $i => $statement) {
+                $width_percent = $statement['duration'] / $totalTime * 100;
+                $statements[$i] = array_merge($statement, [
+                    'start_percent' => round($start_percent, 3),
+                    'width_percent' => round($width_percent, 3),
+                ]);
+                $start_percent += $width_percent;
             }
         }
 
