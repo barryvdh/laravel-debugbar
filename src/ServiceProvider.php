@@ -61,7 +61,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
                 $shouldTrackViewTime = $laravelDebugbar->isEnabled() &&
                     $laravelDebugbar->shouldCollect('time', true) &&
-                    $laravelDebugbar->shouldCollect('views', true) && 
+                    $laravelDebugbar->shouldCollect('views', true) &&
                     $application['config']->get('debugbar.options.views.timeline', false);
 
                 if (! $shouldTrackViewTime) {
@@ -69,7 +69,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                     return $resolver;
                 }
 
-                return new class($resolver, $laravelDebugbar) extends EngineResolver {
+                return new class ($resolver, $laravelDebugbar) extends EngineResolver {
 
                     private $laravelDebugbar;
 
