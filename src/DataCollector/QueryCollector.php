@@ -4,6 +4,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use Illuminate\Support\Str;
 
 /**
  * Collects data about SQL statements executed with PDO
@@ -178,7 +179,7 @@ class QueryCollector extends PDOCollector
         ];
 
         if ($this->timeCollector !== null) {
-            $this->timeCollector->addMeasure($query, $startTime, $endTime);
+            $this->timeCollector->addMeasure(Str::limit($query, 100), $startTime, $endTime);
         }
     }
 
