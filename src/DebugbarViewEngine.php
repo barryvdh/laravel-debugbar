@@ -35,7 +35,9 @@ class DebugbarViewEngine implements Engine
      */
     public function get($path, array $data = [])
     {
-        return $this->laravelDebugbar->measure($path, function () use ($path, $data) {
+        $shortPath = ltrim(str_replace(base_path(), '', realpath($path)), '/');
+
+        return $this->laravelDebugbar->measure($shortPath, function () use ($path, $data) {
             return $this->engine->get($path, $data);
         });
     }
