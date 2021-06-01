@@ -777,3 +777,19 @@ div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id:before,
 div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
     margin-right: 6px!important;
 }
+
+.phpdebugbar-widgets-list-item .phpdebugbar-widgets-bg-measure {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
+    position: absolute;
+    height: 100%;
+    opacity: 0.2;
+    background: red;
+}
