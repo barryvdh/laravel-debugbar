@@ -68,7 +68,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
                 $shouldTrackViewTime = $laravelDebugbar->isEnabled() &&
                     $laravelDebugbar->shouldCollect('time', true) &&
-                    $laravelDebugbar->shouldCollect('views', true);
+                    $laravelDebugbar->shouldCollect('views', true) && 
+                    $application['config']->get('debugbar.options.views.timeline', false);
 
                 if (! $shouldTrackViewTime) {
                     /* Do not swap the engine to save performance */
