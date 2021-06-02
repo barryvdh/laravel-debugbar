@@ -498,11 +498,10 @@ class QueryCollector extends PDOCollector
             $start_percent = 0;
 
             foreach ($statements as $i => $statement) {
-                
                 if (! isset($statement['duration'])) {
                     continue;
                 }
-                
+
                 $width_percent = $statement['duration'] / $totalTime * 100;
 
                 $statements[$i] = array_merge($statement, [
