@@ -42,7 +42,6 @@ class QueryFormatter extends DataFormatter
             if (is_object($binding)) {
                 $binding =  json_encode($binding);
             }
-
         }
 
         return $bindings;

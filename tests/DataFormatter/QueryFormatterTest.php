@@ -22,7 +22,7 @@ class QueryFormatterTest extends TestCase
             ],
         ];
 
-        $queryFormatter = new QueryFormatter;
+        $queryFormatter = new QueryFormatter();
 
         $output = $queryFormatter->checkBindings($bindings);
 
@@ -31,7 +31,7 @@ class QueryFormatterTest extends TestCase
 
     public function testItFormatsObjectBindings()
     {
-        $object = new \StdClass;
+        $object = new \StdClass();
         $object->attribute1 = 'test';
 
         $bindings = [
@@ -39,11 +39,10 @@ class QueryFormatterTest extends TestCase
             $object
         ];
 
-        $queryFormatter = new QueryFormatter;
+        $queryFormatter = new QueryFormatter();
 
         $output = $queryFormatter->checkBindings($bindings);
 
         $this->assertSame($output, ['some string', '{"attribute1":"test"}']);
     }
-
 }
