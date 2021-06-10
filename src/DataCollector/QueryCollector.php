@@ -493,23 +493,25 @@ class QueryCollector extends PDOCollector
             }
         }
 
-        if ($totalTime > 0) {
-            // For showing background measure on Queries tab
-            $start_percent = 0;
+        if ($this->app['config']->get('debugbar.options.db.query_background')) {
+            if ($totalTime > 0) {
+                // For showing background measure on Queries tab
+                $start_percent = 0;
 
-            foreach ($statements as $i => $statement) {
-                if (! isset($statement['duration'])) {
-                    continue;
+                foreach ($statements as $i => $statement) {
+                    if (!isset($statement['duration'])) {
+                        continue;
+                    }
+
+                    $width_percent = $statement['duration'] / $totalTime * 100;
+
+                    $statements[$i] = array_merge($statement, [
+                        'start_percent' => round($start_percent, 3),
+                        'width_percent' => round($width_percent, 3),
+                    ]);
+
+                    $start_percent += $width_percent;
                 }
-
-                $width_percent = $statement['duration'] / $totalTime * 100;
-
-                $statements[$i] = array_merge($statement, [
-                    'start_percent' => round($start_percent, 3),
-                    'width_percent' => round($width_percent, 3),
-                ]);
-
-                $start_percent += $width_percent;
             }
         }
 
