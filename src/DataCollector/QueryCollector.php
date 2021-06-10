@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
+    protected $app;
     protected $queries = [];
     protected $renderSqlWithParams = false;
     protected $findSource = false;
@@ -31,9 +32,10 @@ class QueryCollector extends PDOCollector
     /**
      * @param TimeDataCollector $timeCollector
      */
-    public function __construct(TimeDataCollector $timeCollector = null)
+    public function __construct(TimeDataCollector $timeCollector = null, $app)
     {
         $this->timeCollector = $timeCollector;
+        $this->app = $app;
     }
 
     /**

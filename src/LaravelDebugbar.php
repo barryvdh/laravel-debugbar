@@ -298,7 +298,7 @@ class LaravelDebugbar extends DebugBar
             } else {
                 $timeCollector = null;
             }
-            $queryCollector = new QueryCollector($timeCollector);
+            $queryCollector = new QueryCollector($timeCollector, $this->app);
 
             $queryCollector->setDataFormatter(new QueryFormatter());
 
