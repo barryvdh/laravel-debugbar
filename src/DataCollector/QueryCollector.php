@@ -12,11 +12,11 @@ use Illuminate\Support\Str;
 class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
-    protected $app;
     protected $queries = [];
     protected $renderSqlWithParams = false;
     protected $findSource = false;
     protected $middleware = [];
+    protected $durationBackground = true;
     protected $explainQuery = false;
     protected $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
     protected $showHints = false;
@@ -32,10 +32,9 @@ class QueryCollector extends PDOCollector
     /**
      * @param TimeDataCollector $timeCollector
      */
-    public function __construct(TimeDataCollector $timeCollector = null, $app)
+    public function __construct(TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
-        $this->app = $app;
     }
 
     /**
@@ -89,6 +88,16 @@ class QueryCollector extends PDOCollector
     public function mergeBacktraceExcludePaths(array $excludePaths)
     {
         $this->backtraceExcludePaths = array_merge($this->backtraceExcludePaths, $excludePaths);
+    }
+
+    /**
+     * Enable/disable the shaded duration background on queries
+     *
+     * @param  bool $enabled
+     */
+    public function setDurationBackground($enabled)
+    {
+        $this->durationBackground = $enabled;
     }
 
     /**
@@ -495,7 +504,7 @@ class QueryCollector extends PDOCollector
             }
         }
 
-        if ($this->app['config']->get('debugbar.options.db.query_background')) {
+        if ($this->durationBackground) {
             if ($totalTime > 0) {
                 // For showing background measure on Queries tab
                 $start_percent = 0;

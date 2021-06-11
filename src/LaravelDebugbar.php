@@ -298,7 +298,7 @@ class LaravelDebugbar extends DebugBar
             } else {
                 $timeCollector = null;
             }
-            $queryCollector = new QueryCollector($timeCollector, $this->app);
+            $queryCollector = new QueryCollector($timeCollector);
 
             $queryCollector->setDataFormatter(new QueryFormatter());
 
@@ -315,6 +315,8 @@ class LaravelDebugbar extends DebugBar
                 $excludePaths = $this->app['config']->get('debugbar.options.db.backtrace_exclude_paths');
                 $queryCollector->mergeBacktraceExcludePaths($excludePaths);
             }
+
+            $queryCollector->setDurationBackground($this->app['config']->get('debugbar.options.db.duration_background'));
 
             if ($this->app['config']->get('debugbar.options.db.explain.enabled')) {
                 $types = $this->app['config']->get('debugbar.options.db.explain.types');
