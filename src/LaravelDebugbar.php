@@ -316,6 +316,8 @@ class LaravelDebugbar extends DebugBar
                 $queryCollector->mergeBacktraceExcludePaths($excludePaths);
             }
 
+            $queryCollector->setDurationBackground($this->app['config']->get('debugbar.options.db.duration_background'));
+
             if ($this->app['config']->get('debugbar.options.db.explain.enabled')) {
                 $types = $this->app['config']->get('debugbar.options.db.explain.types');
                 $queryCollector->setExplainSource(true, $types);
