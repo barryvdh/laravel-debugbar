@@ -164,7 +164,7 @@ class QueryCollector extends PDOCollector
                     }
                 }
 
-                $query = preg_replace($regex, $binding, $query, 1);
+                $query = preg_replace($regex, addcslashes($binding, '$'), $query, 1);
             }
         }
 
