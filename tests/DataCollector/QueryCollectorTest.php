@@ -37,4 +37,25 @@ SQL
             });
         });
     }
+
+    public function testDollarBindingsArePresentedCorrectly()
+    {
+        debugbar()->boot();
+
+        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        $collector = debugbar()->getCollector('queries');
+        $collector->addQuery(
+            "SELECT a FROM b WHERE c = ? AND d = ? AND e = ?",
+            ['$10', '$2y$10_DUMMY_BCRYPT_HASH', '$_$$_$$$_$2_$3'],
+            0,
+            $this->app['db']->connection()
+        );
+
+        tap(Arr::first($collector->collect()['statements']), function (array $statement) {
+            $this->assertEquals(
+                "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'", 
+                $statement['sql']
+            );
+        });
+    }
 }
