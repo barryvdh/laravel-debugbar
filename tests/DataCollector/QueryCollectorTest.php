@@ -53,7 +53,7 @@ SQL
 
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
             $this->assertEquals(
-                "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'", 
+                "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
                 $statement['sql']
             );
         });
