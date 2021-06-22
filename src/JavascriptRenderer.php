@@ -63,13 +63,13 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $cssRoute = preg_replace('/\Ahttps?:/', '', $cssRoute);
         $jsRoute  = preg_replace('/\Ahttps?:/', '', $jsRoute);
 
-        $nonce = $this->getNonceAttribute();
+        $nonce = isset($this->cspNonce) ? $this->getNonceAttribute() : '';
 
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>";
         $html .= "<script type='text/javascript' src='{$jsRoute}'></script>";
 
         if ($this->isJqueryNoConflictEnabled()) {
-            $html .= '<script type="text/javascript" ' . $nonce . '>jQuery.noConflict(true);</script>' . "\n";
+            $html .= '<script type="text/javascript"' . $nonce . '>jQuery.noConflict(true);</script>' . "\n";
         }
 
         $html .= $this->getInlineHtml();
