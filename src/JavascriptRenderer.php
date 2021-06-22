@@ -14,11 +14,10 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     // Use XHR handler by default, instead of jQuery
     protected $ajaxHandlerBindToJquery = false;
     protected $ajaxHandlerBindToXHR = true;
-    protected $cspNonce;
 
-    public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null, $cspNonce = null)
+    public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
-        parent::__construct($debugBar, $baseUrl, $basePath, $cspNonce);
+        parent::__construct($debugBar, $baseUrl, $basePath);
 
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
         $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
