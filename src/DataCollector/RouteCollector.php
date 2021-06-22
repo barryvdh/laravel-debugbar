@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Http\Request;
@@ -49,22 +50,26 @@ class RouteCollector extends DataCollector implements Renderable
             return [];
         }
         $uri = head($route->methods()) . ' ' . $route->uri();
-		$action = $route->getAction();
+        $action = $route->getAction();
 
         $result = [
-    	   'uri' => $uri ?: '-',
+           'uri' => $uri ?: '-',
         ];
 
         $result = array_merge($result, $action);
 
 
-        if (isset($action['controller']) && is_string($action['controller']) && strpos($action['controller'], '@') !== false) {
-			list($controller, $method) = explode('@', $action['controller']);
-			if(class_exists($controller) && method_exists($controller, $method)) {
-			    $reflector = new \ReflectionMethod($controller, $method);
-			}
+        if (
+            isset($action['controller'])
+            && is_string($action['controller'])
+            && strpos($action['controller'], '@') !== false
+        ) {
+            list($controller, $method) = explode('@', $action['controller']);
+            if (class_exists($controller) && method_exists($controller, $method)) {
+                $reflector = new \ReflectionMethod($controller, $method);
+            }
             unset($result['uses']);
-		} elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
+        } elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
             $reflector = new \ReflectionFunction($action['uses']);
             $result['uses'] = $this->formatVar($result['uses']);
         }
@@ -74,9 +79,9 @@ class RouteCollector extends DataCollector implements Renderable
             $result['file'] = $filename . ':' . $reflector->getStartLine() . '-' . $reflector->getEndLine();
         }
 
-		if ($middleware = $this->getMiddleware($route)) {
-		    $result['middleware'] = $middleware;
-		}
+        if ($middleware = $this->getMiddleware($route)) {
+            $result['middleware'] = $middleware;
+        }
 
 
 
@@ -91,7 +96,9 @@ class RouteCollector extends DataCollector implements Renderable
      */
     protected function getMiddleware($route)
     {
-        return implode(', ', $route->middleware());
+        return implode(', ', array_map(function ($middleware) {
+            return $middleware instanceof Closure ? 'Closure' : $middleware;
+        }, $route->middleware()));
     }
 
     /**

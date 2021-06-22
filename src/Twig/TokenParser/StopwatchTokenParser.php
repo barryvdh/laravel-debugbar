@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar\Twig\TokenParser;
+<?php
+
+namespace Barryvdh\Debugbar\Twig\TokenParser;
 
 use Barryvdh\Debugbar\Twig\Node\StopwatchNode;
 

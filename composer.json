@@ -10,13 +10,19 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "maximebf/debugbar": "^1.15.1",
-        "illuminate/routing": "^5.5|^6|^7",
-        "illuminate/session": "^5.5|^6|^7",
-        "illuminate/support": "^5.5|^6|^7",
-        "symfony/debug": "^3|^4|^5",
-        "symfony/finder": "^3|^4|^5"
+        "php": ">=7.2",
+        "maximebf/debugbar": "^1.16.3",
+        "illuminate/routing": "^6|^7|^8",
+        "illuminate/session": "^6|^7|^8",
+        "illuminate/support": "^6|^7|^8",
+        "symfony/debug": "^4.3|^5",
+        "symfony/finder": "^4.3|^5"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.3.3",
+        "orchestra/testbench-dusk": "^4|^5|^6",
+        "phpunit/phpunit": "^8.5|^9.0",
+        "squizlabs/php_codesniffer": "^3.5"
     },
     "autoload": {
         "psr-4": {
@@ -26,11 +32,16 @@
             "src/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Barryvdh\\Debugbar\\Tests\\": "tests"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "3.2-dev"
+            "dev-master": "3.5-dev"
         },
         "laravel": {
             "providers": [
@@ -41,7 +52,9 @@
             }
         }
     },
-    "require-dev": {
-        "laravel/framework": "5.5.x"
+    "scripts": {
+        "check-style": "phpcs -p --standard=PSR12 config/ src/ tests/",
+        "fix-style": "phpcbf -p --standard=PSR12 config/ src/ tests/",
+        "test": "phpunit"
     }
 }
