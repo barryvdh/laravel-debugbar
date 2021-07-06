@@ -493,6 +493,10 @@ div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text {
     text-align: center;
 }
 
+ul.phpdebugbar-widgets-list {
+    counter-reset: phpdebugbar-widgets-list-counter;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     padding: 7px 10px;
     border: none;
@@ -508,6 +512,12 @@ ul.phpdebugbar-widgets-timeline li:hover {
 .phpdebugbar-widgets-sqlqueries ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     display: flex;
     flex-wrap: wrap;
+    counter-increment: phpdebugbar-widgets-list-counter;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:before {
+    content: counter(phpdebugbar-widgets-list-counter) ".";
+    margin-right: 10px;
 }
 
 .phpdebugbar-widgets-templates ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
