@@ -454,6 +454,7 @@ class QueryCollector extends PDOCollector
             'source' => $source,
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
+            'driver' => $connection->getConfig('driver'),
             'hints' => null,
             'show_copy' => false,
         ];
