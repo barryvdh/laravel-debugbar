@@ -1,6 +1,6 @@
 <?php
 
-namespace Barryvdh\Debugbar;
+namespace Barryvdh\Debugbar\Facades;
 
 use DebugBar\DataCollector\DataCollectorInterface;
 
@@ -19,11 +19,15 @@ use DebugBar\DataCollector\DataCollectorInterface;
  * @method static void notice(mixed $message)
  * @method static void warning(mixed $message)
  *
- * @deprecated Renamed to \Barryvdh\Debugbar\Facades\Debugbar
- * @see \Barryvdh\Debugbar\Facades\Debugbar
- *
  * @see \Barryvdh\Debugbar\LaravelDebugbar
  */
-class Facade extends \Barryvdh\Debugbar\Facades\Debugbar
+class Debugbar extends \Illuminate\Support\Facades\Facade
 {
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getFacadeAccessor()
+    {
+        return LaravelDebugbar::class;
+    }
 }

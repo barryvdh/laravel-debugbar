@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\Tests;
 
-use Barryvdh\Debugbar\Facade;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\Debugbar\ServiceProvider;
 
 class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
@@ -31,6 +31,6 @@ class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
      */
     protected function getPackageAliases($app)
     {
-        return ['Debugbar' => Facade::class];
+        return ['Debugbar' => Debugbar::class];
     }
 }

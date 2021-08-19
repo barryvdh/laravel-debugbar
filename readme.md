@@ -38,7 +38,7 @@ And the default collectors:
  - MemoryCollector
  - ExceptionsCollector
 
-It also provides a Facade interface for easy logging Messages, Exceptions and Time
+It also provides a facade interface (`Debugbar`) for easy logging Messages, Exceptions and Time
 
 ## Installation
 
@@ -65,7 +65,7 @@ Barryvdh\Debugbar\ServiceProvider::class,
 If you want to use the facade to log messages, add this to your facades in app.php:
 
 ```php
-'Debugbar' => Barryvdh\Debugbar\Facade::class,
+'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
 ```
 
 The profiler is enabled by default, if you have APP_DEBUG=true. You can override that in the config (`debugbar.enabled`) or by setting `DEBUGBAR_ENABLED` in your `.env`. See more options in `config/debugbar.php`
