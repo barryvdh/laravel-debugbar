@@ -78,6 +78,16 @@ You can also only display the js or css vendors, by setting it to 'js' or 'css'.
 php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 ```
 
+### Laravel with Octane:
+
+Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
+
+```php
+    'flush' => [
+        \Barryvdh\Debugbar\LaravelDebugbar::class,
+    ],
+```
+
 ### Lumen:
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
