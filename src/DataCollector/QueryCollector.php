@@ -185,6 +185,7 @@ class QueryCollector extends PDOCollector
             'source' => $source,
             'explain' => $explainResults,
             'connection' => $connection->getDatabaseName(),
+            'driver' => $connection->getConfig('driver'),
             'hints' => $this->showHints ? $hints : null,
             'show_copy' => $this->showCopyButton,
         ];
@@ -453,6 +454,7 @@ class QueryCollector extends PDOCollector
             'source' => $source,
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
+            'driver' => $connection->getConfig('driver'),
             'hints' => null,
             'show_copy' => false,
         ];
@@ -493,14 +495,27 @@ class QueryCollector extends PDOCollector
             ];
 
             // Add the results from the explain as new rows
-            foreach ($query['explain'] as $explain) {
-                $statements[] = [
-                    'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
-                    'type' => 'explain',
-                    'params' => $explain,
-                    'row_count' => $explain->rows,
-                    'stmt_id' => $explain->id,
-                ];
+            if ($query['driver'] === 'pgsql') {
+                $explainer = trim(implode("\n", array_map(function ($explain) {
+                    return $explain->{'QUERY PLAN'};
+                }, $query['explain'])));
+
+                if ($explainer) {
+                    $statements[] = [
+                        'sql' => " - EXPLAIN: {$explainer}",
+                        'type' => 'explain',
+                    ];
+                }
+            } else {
+                foreach ($query['explain'] as $explain) {
+                    $statements[] = [
+                        'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
+                        'type' => 'explain',
+                        'params' => $explain,
+                        'row_count' => $explain->rows,
+                        'stmt_id' => $explain->id,
+                    ];
+                }
             }
         }
 
