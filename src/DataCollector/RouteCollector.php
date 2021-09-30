@@ -98,7 +98,7 @@ class RouteCollector extends DataCollector implements Renderable
     {
         return implode(', ', array_map(function ($middleware) {
             return $middleware instanceof Closure ? 'Closure' : $middleware;
-        }, $route->gatherMiddleware()));
+        },  $route->gatherMiddleware()));
     }
 
     /**
