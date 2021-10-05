@@ -13,6 +13,8 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class InjectDebugbar
 {
+    public const HTTP_NO_CONTENT = 204;
+
     /**
      * The App container
      *
@@ -56,7 +58,7 @@ class InjectDebugbar
      */
     public function handle($request, Closure $next)
     {
-        if (!$this->debugbar->isEnabled() || $this->inExceptArray($request)) {
+        if (!$this->debugbar->isEnabled() || $this->inExceptArray($request) || $this->shouldIgnore($next($request))) {
             return $next($request);
         }
 
@@ -76,6 +78,17 @@ class InjectDebugbar
         $this->debugbar->modifyResponse($request, $response);
 
         return $response;
+    }
+
+    /**
+     * Determine whether to ignore the request
+     *
+     * @param \Illuminate\Http\Response $response
+     * @return bool
+     */
+    protected function shouldIgnore($response)
+    {
+        return $response->getStatusCode() === self::HTTP_NO_CONTENT;
     }
 
     /**
