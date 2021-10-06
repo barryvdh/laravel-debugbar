@@ -353,6 +353,20 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar input {
     height: 15px;
 }
 
+div.phpdebugbar-widgets-messages li .phpdebugbar-widgets-label-separator,
+div.phpdebugbar-widgets-messages li .phpdebugbar-widgets-label-called-from {
+    float: right;
+    color: #666;
+    margin-bottom: 1px;
+    padding-left: 5px;
+    text-transform: lowercase;
+}
+
+div.phpdebugbar-widgets-messages li .phpdebugbar-widgets-label-called-from {
+    border-bottom: 1px dotted #666;
+    cursor: help;
+}
+
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-label,
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-collector {
     padding: 1px 0px 0px 10px;
@@ -404,6 +418,10 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="warning"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="warning"] {
     background-color: #f99400;
+}
+
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter-file {
+    background-color: #b56500;
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter:hover {
