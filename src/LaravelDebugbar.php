@@ -9,6 +9,7 @@ use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
+use Barryvdh\Debugbar\DataCollector\MessagesCollector;
 use Barryvdh\Debugbar\DataCollector\ModelsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
@@ -24,7 +25,6 @@ use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
-use DebugBar\DataCollector\MessagesCollector;
 use Barryvdh\Debugbar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
@@ -1049,7 +1049,7 @@ class LaravelDebugbar extends DebugBar
     public function addMessage($message, $label = 'info')
     {
         if ($this->hasCollector('messages')) {
-            /** @var \DebugBar\DataCollector\MessagesCollector $collector */
+            /** @var \Barryvdh\DebugBar\DataCollector\MessagesCollector $collector */
             $collector = $this->getCollector('messages');
             $collector->addMessage($message, $label);
         }
