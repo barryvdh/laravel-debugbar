@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\Tests;
 
-use Barryvdh\Debugbar\Facade;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\Debugbar\ServiceProvider;
 use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -31,7 +31,7 @@ class TestCase extends Orchestra
      */
     protected function getPackageAliases($app)
     {
-        return ['Debugbar' => Facade::class];
+        return ['Debugbar' => Debugbar::class];
     }
 
     /**
