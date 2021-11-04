@@ -18,6 +18,7 @@ use DebugBar\DataCollector\DataCollectorInterface;
  * @method static void log(mixed $message)
  * @method static void notice(mixed $message)
  * @method static void warning(mixed $message)
+ * @method static mixed measure(string $label, \Closure $closure)
  *
  * @see \Barryvdh\Debugbar\LaravelDebugbar
  */
