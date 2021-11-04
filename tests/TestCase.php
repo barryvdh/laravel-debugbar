@@ -83,6 +83,6 @@ class TestCase extends Orchestra
 
     protected function addViewPaths()
     {
-        config(['view.paths' => array_merge(config('view.paths'), [__DIR__.'/resources/views'])]);
+        config(['view.paths' => array_merge(config('view.paths'), [__DIR__ . '/resources/views'])]);
     }
 }
