@@ -48,6 +48,7 @@ class TestCase extends Orchestra
 
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
+        $this->addViewPaths();
     }
 
     /**
@@ -78,5 +79,10 @@ class TestCase extends Orchestra
                 return response()->json(['status' => 'pong']);
             }
         ]);
+    }
+
+    protected function addViewPaths()
+    {
+        config(['view.paths' => array_merge(config('view.paths'), [__DIR__.'/resources/views'])]);
     }
 }
