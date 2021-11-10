@@ -109,7 +109,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider implements Def
     {
         return [
             LaravelDebugbar::class,
-            'command.debugbar.clear'
+            'command.debugbar.clear',
+            'view.engine.resolver'
         ];
     }
 
