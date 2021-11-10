@@ -101,6 +101,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider implements Def
     }
 
     /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            LaravelDebugbar::class,
+            'command.debugbar.clear'
+        ];
+    }
+
+    /**
      * Bootstrap the application events.
      *
      * @return void
