@@ -10,6 +10,13 @@ class ViewCollectorTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        ini_set('xdebug.file_link_format', 'vscode://file/%f:%l');
+    }
+
     public function testIdeLinksAreAbsolutePaths()
     {
         debugbar()->boot();
