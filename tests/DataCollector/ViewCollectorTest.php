@@ -12,13 +12,6 @@ class ViewCollectorTest extends TestCase
 
     public function testIdeLinksAreAbsolutePaths()
     {
-        if (!ini_get('xdebug.file_link_format')) {
-            $this->markTestSkipped(
-                'The Xdebug extension is not available.'
-            );
-            return;
-        }
-
         debugbar()->boot();
 
         /** @var \Barryvdh\Debugbar\DataCollector\ViewCollector $collector */
