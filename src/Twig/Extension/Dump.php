@@ -1,4 +1,6 @@
-<?php namespace Barryvdh\Debugbar\Twig\Extension;
+<?php
+
+namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\DataFormatter\DataFormatterInterface;
 use Twig_Environment;
@@ -40,7 +42,9 @@ class Dump extends Twig_Extension
     {
         return [
             new Twig_SimpleFunction(
-                'dump', [$this, 'dump'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
+                'dump',
+                [$this, 'dump'],
+                ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
             ),
         ];
     }
@@ -79,6 +83,6 @@ class Dump extends Twig_Extension
             }
         }
 
-        return '<pre>'.$output.'</pre>';
+        return '<pre>' . $output . '</pre>';
     }
 }

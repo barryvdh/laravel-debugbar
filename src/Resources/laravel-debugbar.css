@@ -1,4 +1,3 @@
-
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
 .Whoops.container {
     z-index: 5999999;
@@ -383,7 +382,7 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
     text-shadow: 1px 1px #585858;
     transition: background-color .25s linear 0s, color .25s linear 0s;
     color: #FFF;
-    
+
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -473,7 +472,7 @@ div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text {
     white-space: nowrap;
     padding: 2px 18px;
     text-shadow: none;
-    
+
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -777,4 +776,20 @@ div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard:befor
 div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id:before,
 div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
     margin-right: 6px!important;
+}
+
+.phpdebugbar-widgets-list-item .phpdebugbar-widgets-bg-measure {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
+    position: absolute;
+    height: 100%;
+    opacity: 0.2;
+    background: red;
 }

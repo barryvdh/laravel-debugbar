@@ -55,7 +55,7 @@ class ViewCollector extends TwigCollector
     {
         $name = $view->getName();
         $path = $view->getPath();
-        
+
         if (!is_object($path)) {
             if ($path) {
                 $path = ltrim(str_replace(base_path(), '', realpath($path)), '/');
@@ -88,8 +88,8 @@ class ViewCollector extends TwigCollector
             'type' => $type,
         ];
 
-        if ( $this->getXdebugLink($path)) {
-            $template['xdebug_link'] = $this->getXdebugLink($path);
+        if ($this->getXdebugLink($path)) {
+            $template['xdebug_link'] = $this->getXdebugLink(realpath($view->getPath()));
         }
 
         $this->templates[] = $template;

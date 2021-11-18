@@ -34,7 +34,8 @@ class FilesCollector extends DataCollector implements Renderable
         foreach ($files as $file) {
             // Skip the files from Debugbar, they are only loaded for Debugging and confuse the output.
             // Of course some files are stil always loaded (ServiceProvider, Facade etc)
-            if (strpos($file, 'vendor/maximebf/debugbar/src') !== false || strpos(
+            if (
+                strpos($file, 'vendor/maximebf/debugbar/src') !== false || strpos(
                     $file,
                     'vendor/barryvdh/laravel-debugbar/src'
                 ) !== false

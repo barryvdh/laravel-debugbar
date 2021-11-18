@@ -67,9 +67,11 @@ class FilesystemStorage implements StorageInterface
      */
     protected function garbageCollect()
     {
-        foreach (Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
-            $this->dirname
-        ) as $file) {
+        foreach (
+            Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
+                $this->dirname
+            ) as $file
+        ) {
             $this->files->delete($file->getRealPath());
         }
     }

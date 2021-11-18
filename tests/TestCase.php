@@ -2,14 +2,13 @@
 
 namespace Barryvdh\Debugbar\Tests;
 
-use Barryvdh\Debugbar\Facade;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\Debugbar\ServiceProvider;
+use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    /** @var \Barryvdh\Debugbar\LaravelDebugbar */
-    private $debugbar;
 
     /**
      * Get package providers.
@@ -32,20 +31,58 @@ class TestCase extends Orchestra
      */
     protected function getPackageAliases($app)
     {
-        return ['Debugbar' => Facade::class];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
+        return ['Debugbar' => Debugbar::class];
     }
 
     /**
-     * Get the Laravel Debugbar instance.
+     * Define environment setup.
      *
-     * @return \Barryvdh\Debugbar\LaravelDebugbar
+     * @param  \Illuminate\Foundation\Application $app
+     *
+     * @return void
      */
-    public function debugbar()
+    protected function getEnvironmentSetUp($app)
     {
-        return $this->debugbar ?? $this->debugbar = $this->app->debugbar;
+        /** @var Router $router */
+        $router = $app['router'];
+
+        $this->addWebRoutes($router);
+        $this->addApiRoutes($router);
+        $this->addViewPaths();
+    }
+
+    /**
+     * @param Router $router
+     */
+    protected function addWebRoutes(Router $router)
+    {
+        $router->get('web/plain', [
+            'uses' => function () {
+                return 'PONG';
+            }
+        ]);
+
+        $router->get('web/html', [
+            'uses' => function () {
+                return '<html><head></head><body>Pong</body></html>';
+            }
+        ]);
+    }
+
+    /**
+     * @param Router $router
+     */
+    protected function addApiRoutes(Router $router)
+    {
+        $router->get('api/ping', [
+            'uses' => function () {
+                return response()->json(['status' => 'pong']);
+            }
+        ]);
+    }
+
+    protected function addViewPaths()
+    {
+        config(['view.paths' => array_merge(config('view.paths'), [__DIR__ . '/resources/views'])]);
     }
 }
