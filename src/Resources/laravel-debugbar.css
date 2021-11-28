@@ -11,7 +11,7 @@ div.phpdebugbar {
     z-index: 6000000;
 }
 
-div.phpdebugbar *  {
+div.phpdebugbar * {
     direction: ltr;
     text-align: left;
 }
