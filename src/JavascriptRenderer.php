@@ -147,7 +147,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             return $uris;
         }
 
-	$uri = $uri ?? '';
+        $uri = $uri ?? '';
 
         if (substr($uri ?? '', 0, 1) === '/' || preg_match('/^([a-zA-Z]+:\/\/|[a-zA-Z]:\/|[a-zA-Z]:\\\)/', $uri ?? '')) {
             return $uri;
