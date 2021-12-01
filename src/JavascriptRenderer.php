@@ -64,10 +64,10 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $jsRoute  = preg_replace('/\Ahttps?:/', '', $jsRoute);
 
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>";
-        $html .= "<script type='text/javascript' src='{$jsRoute}'></script>";
+        $html .= "<script src='{$jsRoute}'></script>";
 
         if ($this->isJqueryNoConflictEnabled()) {
-            $html .= '<script type="text/javascript">jQuery.noConflict(true);</script>' . "\n";
+            $html .= '<script>jQuery.noConflict(true);</script>' . "\n";
         }
 
         $html .= $this->getInlineHtml();
