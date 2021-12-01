@@ -75,7 +75,7 @@ You can also only display the js or css vendors, by setting it to 'js' or 'css'.
 #### Copy the package config to your local config with the publish command:
 
 ```shell
-php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+php artisan vendor:publish --provider='Barryvdh\Debugbar\ServiceProvider'
 ```
 
 ### Laravel with Octane:
