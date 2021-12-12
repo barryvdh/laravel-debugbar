@@ -28,6 +28,6 @@ class Debugbar extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        return LaravelDebugbar::class;
+        return \Barryvdh\Debugbar\LaravelDebugbar::class;
     }
 }
