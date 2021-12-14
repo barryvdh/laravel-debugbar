@@ -70,7 +70,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 }
 
                 return new class ($resolver, $laravelDebugbar) extends EngineResolver {
-
                     private $laravelDebugbar;
 
                     public function __construct(EngineResolver $resolver, LaravelDebugbar $laravelDebugbar)

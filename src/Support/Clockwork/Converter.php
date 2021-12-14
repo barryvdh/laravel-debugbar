@@ -4,7 +4,6 @@ namespace Barryvdh\Debugbar\Support\Clockwork;
 
 class Converter
 {
-
     /**
      * Convert the phpdebugbar data to Clockwork format.
      *
