@@ -162,6 +162,7 @@ class QueryCollector extends PDOCollector
                         try {
                             $binding = $pdo->quote($binding);
                         } catch (\Exception $e) {
+                            $binding = $this->emulateQuote($binding);
                         }
                     } else {
                         $binding = $this->emulateQuote($binding);
