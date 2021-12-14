@@ -23,9 +23,10 @@ class QueryCollector extends PDOCollector
     protected $showCopyButton = false;
     protected $reflection = [];
     protected $backtraceExcludePaths = [
-        '/vendor/laravel/framework/src/Illuminate/Support/HigherOrderTapProxy',
+        '/vendor/laravel/framework/src/Illuminate/Support',
         '/vendor/laravel/framework/src/Illuminate/Database',
         '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/october/rain',
         '/vendor/barryvdh/laravel-debugbar',
     ];
 
@@ -158,8 +159,6 @@ class QueryCollector extends PDOCollector
                 // Mimic bindValue and only quote non-integer and non-float data types
                 if (!is_int($binding) && !is_float($binding)) {
                     if ($pdo) {
-                        // Emulate quote bindings when the PDO driver doesn't
-                        // support quoting.
                         try {
                             $binding = $pdo->quote($binding);
                         } catch (\Exception $e) {
@@ -191,6 +190,7 @@ class QueryCollector extends PDOCollector
             'source' => $source,
             'explain' => $explainResults,
             'connection' => $connection->getDatabaseName(),
+            'driver' => $connection->getConfig('driver'),
             'hints' => $this->showHints ? $hints : null,
             'show_copy' => $this->showCopyButton,
         ];
@@ -459,6 +459,7 @@ class QueryCollector extends PDOCollector
             'source' => $source,
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
+            'driver' => $connection->getConfig('driver'),
             'hints' => null,
             'show_copy' => false,
         ];
@@ -499,14 +500,27 @@ class QueryCollector extends PDOCollector
             ];
 
             // Add the results from the explain as new rows
-            foreach ($query['explain'] as $explain) {
-                $statements[] = [
-                    'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
-                    'type' => 'explain',
-                    'params' => $explain,
-                    'row_count' => $explain->rows,
-                    'stmt_id' => $explain->id,
-                ];
+            if ($query['driver'] === 'pgsql') {
+                $explainer = trim(implode("\n", array_map(function ($explain) {
+                    return $explain->{'QUERY PLAN'};
+                }, $query['explain'])));
+
+                if ($explainer) {
+                    $statements[] = [
+                        'sql' => " - EXPLAIN: {$explainer}",
+                        'type' => 'explain',
+                    ];
+                }
+            } else {
+                foreach ($query['explain'] as $explain) {
+                    $statements[] = [
+                        'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
+                        'type' => 'explain',
+                        'params' => $explain,
+                        'row_count' => $explain->rows,
+                        'stmt_id' => $explain->id,
+                    ];
+                }
             }
         }
 

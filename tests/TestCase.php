@@ -2,14 +2,13 @@
 
 namespace Barryvdh\Debugbar\Tests;
 
-use Barryvdh\Debugbar\Facade;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\Debugbar\ServiceProvider;
 use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-
     /**
      * Get package providers.
      *
@@ -31,7 +30,7 @@ class TestCase extends Orchestra
      */
     protected function getPackageAliases($app)
     {
-        return ['Debugbar' => Facade::class];
+        return ['Debugbar' => Debugbar::class];
     }
 
     /**
@@ -48,6 +47,7 @@ class TestCase extends Orchestra
 
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
+        $this->addViewPaths();
     }
 
     /**
@@ -78,5 +78,10 @@ class TestCase extends Orchestra
                 return response()->json(['status' => 'pong']);
             }
         ]);
+    }
+
+    protected function addViewPaths()
+    {
+        config(['view.paths' => array_merge(config('view.paths'), [__DIR__ . '/resources/views'])]);
     }
 }

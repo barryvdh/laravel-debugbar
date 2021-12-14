@@ -89,7 +89,7 @@ class ViewCollector extends TwigCollector
         ];
 
         if ($this->getXdebugLink($path)) {
-            $template['xdebug_link'] = $this->getXdebugLink($path);
+            $template['xdebug_link'] = $this->getXdebugLink(realpath($view->getPath()));
         }
 
         $this->templates[] = $template;

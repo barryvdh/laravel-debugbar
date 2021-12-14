@@ -11,6 +11,11 @@ div.phpdebugbar {
     z-index: 6000000;
 }
 
+div.phpdebugbar * {
+    direction: ltr;
+    text-align: left;
+}
+
 div.phpdebugbar-openhandler-overlay {
     z-index: 6000001;
     cursor: pointer;

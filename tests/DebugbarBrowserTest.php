@@ -6,7 +6,6 @@ use Illuminate\Routing\Router;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
-
     /**
      * Define environment setup.
      *
