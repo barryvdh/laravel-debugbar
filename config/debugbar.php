@@ -49,7 +49,8 @@ return [
     |
     | Choose your preferred editor to use when clicking file name.
     |
-    | Supported: "phpstorm", "vscode", "vscode-insiders", "vscodium", "textmate", "emacs",
+    | Supported: "phpstorm", "vscode", "vscode-insiders", "vscode-remote",
+    |            "vscode-insiders-remote", "vscodium", "textmate", "emacs",
     |            "sublime", "atom", "nova", "macvim", "idea", "netbeans",
     |            "xdebug", "espresso"
     |

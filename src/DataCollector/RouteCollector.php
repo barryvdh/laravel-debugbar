@@ -39,6 +39,8 @@ class RouteCollector extends DataCollector implements Renderable
         'idea' => 'idea://open?file=%file&line=%line',
         'vscode' => 'vscode://file/%file:%line',
         'vscode-insiders' => 'vscode-insiders://file/%file:%line',
+        'vscode-remote' => 'vscode://vscode-remote/%file:%line',
+        'vscode-insiders-remote' => 'vscode-insiders://vscode-remote/%file:%line',
         'vscodium' => 'vscodium://file/%file:%line',
         'nova' => 'nova://core/open/file?filename=%file&line=%line',
         'xdebug' => 'xdebug://%file@%line',
