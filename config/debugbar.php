@@ -199,6 +199,7 @@ return [
             ],
             'hints'             => false,    // Show hints for common mistakes
             'show_copy'         => false,    // Show copy button next to the query
+            'traces_count'      => 5,        // How many relevant traces to load
         ],
         'mail' => [
             'full_log' => false,
