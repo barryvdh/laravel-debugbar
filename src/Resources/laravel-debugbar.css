@@ -552,6 +552,7 @@ ul.phpdebugbar-widgets-timeline li:hover {
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
     flex: 1;
     margin-right: 5px;
+    max-width: 100%;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
