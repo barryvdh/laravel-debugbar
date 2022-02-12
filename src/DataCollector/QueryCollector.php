@@ -478,7 +478,6 @@ class QueryCollector extends PDOCollector
      */
     public function collect()
     {
-
         $totalTime = 0;
         $queries = $this->queries;
 
