@@ -189,7 +189,7 @@ class QueryCollector extends PDOCollector
             'time' => $time,
             'source' => $source,
             'explain' => $explainResults,
-            'connection' => $connection->getDatabaseName(),
+            'connection' => '[' . $connection->getName() . '] ' . $connection->getDatabaseName(),
             'driver' => $connection->getConfig('driver'),
             'hints' => $this->showHints ? $hints : null,
             'show_copy' => $this->showCopyButton,
@@ -478,6 +478,7 @@ class QueryCollector extends PDOCollector
      */
     public function collect()
     {
+
         $totalTime = 0;
         $queries = $this->queries;
 
