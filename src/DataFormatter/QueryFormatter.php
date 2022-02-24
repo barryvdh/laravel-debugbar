@@ -55,9 +55,7 @@ class QueryFormatter extends DataFormatter
     public function escapeBindings($bindings)
     {
         foreach ($bindings as &$binding) {
-            if (is_string($binding) === true) {
-                $binding = htmlentities($binding, ENT_QUOTES, 'UTF-8', false);
-            }
+            $binding = htmlentities((string) $binding, ENT_QUOTES, 'UTF-8', false);
         }
 
         return $bindings;
