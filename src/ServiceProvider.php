@@ -35,7 +35,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider implements Def
         );
 
         $this->app->singleton(LaravelDebugbar::class, function ($app) {
-                $debugbar = new LaravelDebugbar($app);
+            $debugbar = new LaravelDebugbar($app);
 
             if ($app->bound(SessionManager::class)) {
                 $sessionManager = $app->make(SessionManager::class);
@@ -43,7 +43,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider implements Def
                 $debugbar->setHttpDriver($httpDriver);
             }
 
-                return $debugbar;
+            return $debugbar;
         });
 
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
@@ -71,7 +71,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider implements Def
                 }
 
                 return new class ($resolver, $laravelDebugbar) extends EngineResolver {
-
                     private $laravelDebugbar;
 
                     public function __construct(EngineResolver $resolver, LaravelDebugbar $laravelDebugbar)

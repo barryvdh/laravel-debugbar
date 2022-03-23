@@ -130,6 +130,7 @@ div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-i
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-row-count,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-copy-clipboard,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-stmt-id,
+div.phpdebugbar .phpdebugbar-widgets-callgraph pre,
 div.phpdebugbar .phpdebugbar-text-muted,
 div.phpdebugbar-openhandler .phpdebugbar-text-muted
 {

@@ -9,7 +9,6 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-
     /**
      * Get package providers.
      *

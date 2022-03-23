@@ -6,7 +6,6 @@ use DebugBar\DataFormatter\DataFormatter;
 
 class QueryFormatter extends DataFormatter
 {
-
     /**
      * Removes extra spaces at the beginning and end of the SQL query and its lines.
      *
@@ -56,7 +55,7 @@ class QueryFormatter extends DataFormatter
     public function escapeBindings($bindings)
     {
         foreach ($bindings as &$binding) {
-            $binding = htmlentities($binding, ENT_QUOTES, 'UTF-8', false);
+            $binding = htmlentities((string) $binding, ENT_QUOTES, 'UTF-8', false);
         }
 
         return $bindings;
