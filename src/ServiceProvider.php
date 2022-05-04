@@ -26,8 +26,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
 
-        $this->loadRoutesFrom(realpath(__DIR__ . '/debugbar-routes.php'));
-
         $this->app->alias(
             DataFormatter::class,
             DataFormatterInterface::class
@@ -90,8 +88,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->commands(['command.debugbar.clear']);
-
         Collection::macro('debug', function () {
             debug($this);
             return $this;
@@ -108,7 +104,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
+        $this->loadRoutesFrom(realpath(__DIR__ . '/debugbar-routes.php'));
+
         $this->registerMiddleware(InjectDebugbar::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands(['command.debugbar.clear']);
+        }
     }
 
     /**
