@@ -51,14 +51,14 @@ class Debug extends DebugBase
     public function getFunctions()
     {
         // Maintain compatibility with Twig 2 and 3.
-        $function = 'Twig_SimpleFunction';
+        $simpleFunction = 'Twig_SimpleFunction';
 
-        if (!class_exists($function)) {
-            $function = '\Twig\TwigFunction';
+        if (!class_exists($simpleFunction)) {
+            $simpleFunction = '\Twig\TwigFunction';
         }
 
         return [
-            new $function(
+            new $simpleFunction(
                 'debug',
                 [$this, 'debug'],
                 ['needs_context' => true, 'needs_environment' => true]
