@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\DataFormatter\DataFormatterInterface;
 
-if (class_exists('Twig_Extension')) {
+if (class_exists('\Twig_Extension')) {
     class DumpBase extends \Twig_Extension {}
 } else {
     class DumpBase extends \Twig\Extension\AbstractExtension {}

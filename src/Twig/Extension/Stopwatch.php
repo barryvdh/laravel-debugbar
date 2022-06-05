@@ -5,7 +5,7 @@ namespace Barryvdh\Debugbar\Twig\Extension;
 use Barryvdh\Debugbar\Twig\TokenParser\StopwatchTokenParser;
 use Illuminate\Foundation\Application;
 
-if (class_exists('Twig_Extension')) {
+if (class_exists('\Twig_Extension')) {
     class StopwatchBase extends \Twig_Extension {}
 } else {
     class StopwatchBase extends \Twig\Extension\AbstractExtension {}
