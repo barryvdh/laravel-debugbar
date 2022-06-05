@@ -3,7 +3,6 @@
 namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\DataFormatter\DataFormatterInterface;
-use Twig\Profiler\Dumper\BaseDumper;
 
 if (class_exists('Twig_Extension')) {
     class DumpBase extends \Twig_Extension {}
