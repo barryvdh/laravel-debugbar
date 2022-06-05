@@ -4,8 +4,8 @@ namespace Barryvdh\Debugbar\Twig\TokenParser;
 
 use Barryvdh\Debugbar\Twig\Node\StopwatchNode;
 
-if (class_exists('Twig_TokenParser')) {
-    class StopwatchTokenParserBase extends Twig_TokenParser {}
+if (class_exists('\Twig_TokenParser')) {
+    abstract class StopwatchTokenParserBase extends \Twig_TokenParser {}
 } else {
     abstract class StopwatchTokenParserBase extends \Twig\TokenParser\AbstractTokenParser {}
 }
