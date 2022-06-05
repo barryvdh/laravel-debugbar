@@ -4,12 +4,18 @@ namespace Barryvdh\Debugbar\Twig\TokenParser;
 
 use Barryvdh\Debugbar\Twig\Node\StopwatchNode;
 
+if (class_exists('Twig_TokenParser')) {
+    class StopwatchTokenParserBase extends Twig_TokenParser {}
+} else {
+    abstract class StopwatchTokenParserBase extends \Twig\TokenParser\AbstractTokenParser {}
+}
+
 /**
  * Token Parser for the stopwatch tag. Based on Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class StopwatchTokenParser extends \Twig_TokenParser
+class StopwatchTokenParser extends StopwatchTokenParserBase
 {
     protected $debugbarAvailable;
 
@@ -18,7 +24,10 @@ class StopwatchTokenParser extends \Twig_TokenParser
         $this->debugbarAvailable = $debugbarAvailable;
     }
 
-    public function parse(\Twig_Token $token)
+    /**
+     * @param \Twig\Token $token
+     */
+    public function parse($token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();

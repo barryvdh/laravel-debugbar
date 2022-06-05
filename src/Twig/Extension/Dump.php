@@ -3,14 +3,18 @@
 namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\DataFormatter\DataFormatterInterface;
-use Twig_Environment;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Profiler\Dumper\BaseDumper;
+
+if (class_exists('Twig_Extension')) {
+    class DumpBase extends \Twig_Extension {}
+} else {
+    class DumpBase extends \Twig\Extension\AbstractExtension {}
+}
 
 /**
  * Dump variables using the DataFormatter
  */
-class Dump extends Twig_Extension
+class DumpBase extends BaseDase
 {
     /**
      * @var \DebugBar\DataFormatter\DataFormatter
@@ -40,8 +44,15 @@ class Dump extends Twig_Extension
      */
     public function getFunctions()
     {
+        // Maintain compatibility with Twig 2 and 3.
+        $function = '\Twig_SimpleFunction';
+
+        if (!class_exists($function)) {
+            $function = '\Twig\TwigFunction';
+        }
+
         return [
-            new Twig_SimpleFunction(
+            new $function(
                 'dump',
                 [$this, 'dump'],
                 ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]
@@ -53,12 +64,12 @@ class Dump extends Twig_Extension
      * Based on Twig_Extension_Debug / twig_var_dump
      * (c) 2011 Fabien Potencier
      *
-     * @param Twig_Environment $env
+     * @param \Twig_Environment|\Twig\Environment $env
      * @param $context
      *
      * @return string
      */
-    public function dump(Twig_Environment $env, $context)
+    public function dump($env, $context)
     {
         $output = '';
 

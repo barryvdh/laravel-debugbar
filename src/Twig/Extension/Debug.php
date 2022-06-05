@@ -7,10 +7,16 @@ use Twig_Environment;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
+if (class_exists('Twig_Extension')) {
+    class DebugBase extends Twig_Extension {}
+} else {
+    class DebugBase extends \Twig\Extension\AbstractExtension {}
+}
+
 /**
  * Access Laravels auth class in your Twig templates.
  */
-class Debug extends Twig_Extension
+class Debug extends DebugBase
 {
     /**
      * @var \Barryvdh\Debugbar\LaravelDebugbar
@@ -44,8 +50,15 @@ class Debug extends Twig_Extension
      */
     public function getFunctions()
     {
+        // Maintain compatibility with Twig 2 and 3.
+        $function = 'Twig_SimpleFunction';
+
+        if (!class_exists($function)) {
+            $function = 'Twig\TwigFunction';
+        }
+
         return [
-            new Twig_SimpleFunction(
+            new $function(
                 'debug',
                 [$this, 'debug'],
                 ['needs_context' => true, 'needs_environment' => true]
@@ -57,10 +70,10 @@ class Debug extends Twig_Extension
      * Based on Twig_Extension_Debug / twig_var_dump
      * (c) 2011 Fabien Potencier
      *
-     * @param Twig_Environment $env
+     * @param \Twig_Environment|\Twig\Environment $env
      * @param $context
      */
-    public function debug(Twig_Environment $env, $context)
+    public function debug($env, $context)
     {
         if (!$env->isDebug() || !$this->debugbar) {
             return;
