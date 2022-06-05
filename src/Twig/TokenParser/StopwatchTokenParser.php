@@ -37,16 +37,16 @@ class StopwatchTokenParser extends StopwatchTokenParserBase
 
         // Maintain compatibility with Twig 2 and 3.
         if (class_exists("\Twig_Token")) {
-            $type = \Twig_Token::BLOCK_END_TYPE;
+            $blockEndType = \Twig_Token::BLOCK_END_TYPE;
         } else {
-            $type = \Twig\Token::BLOCK_END_TYPE;
+            $blockEndType = \Twig\Token::BLOCK_END_TYPE;
         }
 
-        $stream->expect($type);
+        $stream->expect($blockEndType);
 
         // {% endstopwatch %}
         $body = $this->parser->subparse([$this, 'decideStopwatchEnd'], true);
-        $stream->expect($type);
+        $stream->expect($blockEndType);
 
         if ($this->debugbarAvailable) {
             return new StopwatchNode(
