@@ -54,7 +54,7 @@ class Debug extends DebugBase
         $function = 'Twig_SimpleFunction';
 
         if (!class_exists($function)) {
-            $function = 'Twig\TwigFunction';
+            $function = '\Twig\TwigFunction';
         }
 
         return [
