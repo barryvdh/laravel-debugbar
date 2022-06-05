@@ -25,7 +25,7 @@ class StopwatchTokenParser extends StopwatchTokenParserBase
     }
 
     /**
-     * @param \Twig\Token $token
+     * @param \Twig_Token|\Twig\Token $token
      */
     public function parse($token)
     {
@@ -59,7 +59,10 @@ class StopwatchTokenParser extends StopwatchTokenParserBase
         return 'stopwatch';
     }
 
-    public function decideStopwatchEnd(\Twig_Token $token)
+    /**
+     * @param \Twig_Token|\Twig\Token $token
+     */
+    public function decideStopwatchEnd($token)
     {
         return $token->test('endstopwatch');
     }
