@@ -5,7 +5,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\Bridge\Twig\TwigCollector;
 use Illuminate\View\View;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class ViewCollector extends TwigCollector
 {
