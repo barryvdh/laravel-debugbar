@@ -21,7 +21,6 @@ class ViewCollector extends TwigCollector
     {
         $this->setDataFormatter(new SimpleFormatter());
         $this->collect_data = $collectData;
-        $this->name = 'views';
         $this->templates = [];
     }
 
