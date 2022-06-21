@@ -74,6 +74,12 @@ class ViewCollector extends TwigCollector
             $path = '';
         }
 
+        foreach ($this->exclude_paths as $excludePath) {
+            if (str_contains($path, $excludePath)) {
+                return;
+            }
+        }
+
         if (!$this->collect_data) {
             $params = array_keys($view->getData());
         } else {
