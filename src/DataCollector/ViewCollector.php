@@ -75,7 +75,7 @@ class ViewCollector extends TwigCollector
         }
 
         foreach ($this->exclude_paths as $excludePath) {
-            if (str_contains($path, $excludePath)) {
+            if (strpos($path, $excludePath) !== false) {
                 return;
             }
         }
