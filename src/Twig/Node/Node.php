@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\Twig\Node;
 
-// Twig 2 compatibility
+// Maintain compatibility with Twig 2 and 3.
 if (class_exists('\Twig_Node')) {
     abstract class Node extends \Twig_Node {}
 } else {

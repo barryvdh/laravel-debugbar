@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\Twig\TokenParser;
 
-// Twig 2 compatibility
+// Maintain compatibility with Twig 2 and 3.
 if (class_exists('\Twig_TokenParser')) {
     abstract class TokenParser extends \Twig_TokenParser {}
 } else {

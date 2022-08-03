@@ -42,11 +42,18 @@ class StopwatchTokenParser extends TokenParser
         $body = $this->parser->subparse([$this, 'decideStopwatchEnd'], true);
         $stream->expect($blockEndType);
 
+        // Maintain compatibility with Twig 2 and 3.
+        if (class_exists("\Twig_Node_Expression_AssignName")) {
+            $assignNameExpression = new \Twig_Node_Expression_AssignName($this->parser->getVarName(), $token->getLine());
+        } else {
+            $assignNameExpression = new \Twig\Node\Expression\AssignNameExpression($this->parser->getVarName(), $token->getLine());
+        }
+
         if ($this->debugbarAvailable) {
             return new StopwatchNode(
                 $name,
                 $body,
-                new \Twig_Node_Expression_AssignName($this->parser->getVarName(), $token->getLine()),
+                $assignNameExpression,
                 $lineno,
                 $this->getTag()
             );

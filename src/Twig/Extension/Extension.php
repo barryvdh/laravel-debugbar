@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\Twig\Extension;
 
-// Twig 2 compatibility
+// Maintain compatibility with Twig 2 and 3.
 if (class_exists('\Twig_Extension')) {
     abstract class Extension extends \Twig_Extension {}
 } else {
