@@ -7,16 +7,10 @@ use Twig_Environment;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
-if (class_exists('\Twig_Extension')) {
-    class DebugBase extends \Twig_Extension {}
-} else {
-    class DebugBase extends \Twig\Extension\AbstractExtension {}
-}
-
 /**
  * Access Laravels auth class in your Twig templates.
  */
-class Debug extends DebugBase
+class Debug extends Extension
 {
     /**
      * @var \Barryvdh\Debugbar\LaravelDebugbar

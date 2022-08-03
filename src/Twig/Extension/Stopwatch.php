@@ -5,17 +5,11 @@ namespace Barryvdh\Debugbar\Twig\Extension;
 use Barryvdh\Debugbar\Twig\TokenParser\StopwatchTokenParser;
 use Illuminate\Foundation\Application;
 
-if (class_exists('\Twig_Extension')) {
-    class StopwatchBase extends \Twig_Extension {}
-} else {
-    class StopwatchBase extends \Twig\Extension\AbstractExtension {}
-}
-
 /**
  * Access Laravels auth class in your Twig templates.
  * Based on Symfony\Bridge\Twig\Extension\StopwatchExtension
  */
-class Stopwatch extends StopwatchBase
+class Stopwatch extends Extension
 {
     /**
      * @var \Barryvdh\Debugbar\LaravelDebugbar

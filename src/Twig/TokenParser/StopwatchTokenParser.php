@@ -4,18 +4,12 @@ namespace Barryvdh\Debugbar\Twig\TokenParser;
 
 use Barryvdh\Debugbar\Twig\Node\StopwatchNode;
 
-if (class_exists('\Twig_TokenParser')) {
-    abstract class StopwatchTokenParserBase extends \Twig_TokenParser {}
-} else {
-    abstract class StopwatchTokenParserBase extends \Twig\TokenParser\AbstractTokenParser {}
-}
-
 /**
  * Token Parser for the stopwatch tag. Based on Symfony\Bridge\Twig\TokenParser\StopwatchTokenParser;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class StopwatchTokenParser extends StopwatchTokenParserBase
+class StopwatchTokenParser extends TokenParser
 {
     protected $debugbarAvailable;
 

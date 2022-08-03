@@ -7,7 +7,7 @@ namespace Barryvdh\Debugbar\Twig\Node;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class StopwatchNode extends \Twig_Node
+class StopwatchNode extends Node
 {
     public function __construct(
         \Twig_NodeInterface $name,
