@@ -7,20 +7,37 @@ namespace Barryvdh\Debugbar\Twig\Node;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class StopwatchNode extends \Twig_Node
+class StopwatchNode extends Node
 {
+    /**
+     * @param \Twig_NodeInterface|\Twig\Node\Node $name
+     * @param $body
+     * @param \Twig_Node_Expression_AssignName|\Twig\Node\Expression\AssignNameExpression $var
+     * @param $lineno
+     * @param $tag
+     */
     public function __construct(
-        \Twig_NodeInterface $name,
+        $name,
         $body,
-        \Twig_Node_Expression_AssignName $var,
+        $var,
         $lineno = 0,
         $tag = null
     ) {
         parent::__construct(['body' => $body, 'name' => $name, 'var' => $var], [], $lineno, $tag);
     }
 
-    public function compile(\Twig_Compiler $compiler)
+    /**
+     * @param \Twig_Compiler|\Twig\Compiler $env
+     * @return void
+     */
+    public function compile($compiler)
     {
+        // Maintain compatibility with Twig 2 and 3.
+        $extension = \Barryvdh\Debugbar\Twig\Extension\Stopwatch::class;
+        if (class_exists('\Twig_Node')) {
+            $extension = 'stopwatch';
+        }
+
         $compiler
             ->addDebugInfo($this)
             ->write('')
@@ -28,11 +45,11 @@ class StopwatchNode extends \Twig_Node
             ->raw(' = ')
             ->subcompile($this->getNode('name'))
             ->write(";\n")
-            ->write("\$this->env->getExtension('stopwatch')->getDebugbar()->startMeasure(")
+            ->write(sprintf("\$this->env->getExtension('%s')->getDebugbar()->startMeasure(", $extension))
             ->subcompile($this->getNode('var'))
             ->raw(");\n")
             ->subcompile($this->getNode('body'))
-            ->write("\$this->env->getExtension('stopwatch')->getDebugbar()->stopMeasure(")
+            ->write(sprintf("\$this->env->getExtension('%s')->getDebugbar()->stopMeasure(", $extension))
             ->subcompile($this->getNode('var'))
             ->raw(");\n");
     }
