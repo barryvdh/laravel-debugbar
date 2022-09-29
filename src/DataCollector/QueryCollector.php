@@ -309,7 +309,7 @@ class QueryCollector extends PDOCollector
             } elseif (strpos($file, storage_path()) !== false) {
                 $hash = pathinfo($file, PATHINFO_FILENAME);
 
-                if (! $frame->name = $this->findViewFromHash($hash)) {
+                if (! $frame->name = $this->findViewContent($file)) {
                     $frame->name = $hash;
                 }
 
@@ -397,6 +397,23 @@ class QueryCollector extends PDOCollector
                 return $name;
             }
         }
+    }
+
+    /**
+     * Find the template name inside the Blade template.
+     *
+     * @param  string $file
+     * @return null|string
+     */
+    protected function findViewContent($file)
+    {
+        preg_match('/\/\*\*PATH\s(.*)\sENDPATH/', file_get_contents($file), $matches);
+
+        if (isset($matches[1])) {
+            return $matches[1];
+        }
+
+        return null;
     }
 
     /**
