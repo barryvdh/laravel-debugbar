@@ -26,11 +26,11 @@ class QueryCollectorTest extends TestCase
         );
 
         tap($collector->collect(), function (array $collection) {
-            $this->assertEquals(1, $collection['nb_statements']);
+            $this->assertSame(1, $collection['nb_statements']);
 
             tap(Arr::first($collection['statements']), function (array $statement) {
                 $this->assertEquals([3, '{4}'], $statement['bindings']);
-                $this->assertEquals(<<<SQL
+                $this->assertSame(<<<SQL
 SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ? example ??' as c
 SQL
                     , $statement['sql']);
@@ -52,7 +52,7 @@ SQL
         );
 
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
-            $this->assertEquals(
+            $this->assertSame(
                 "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
                 $statement['sql']
             );

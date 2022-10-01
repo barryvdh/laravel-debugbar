@@ -34,7 +34,7 @@ class DebugbarTest extends TestCase
         $crawler = $this->call('GET', 'web/plain');
 
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertSame(200, $crawler->getStatusCode());
     }
 
     public function testItInjectsOnHtml()
@@ -42,7 +42,7 @@ class DebugbarTest extends TestCase
         $crawler = $this->call('GET', 'web/html');
 
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertSame(200, $crawler->getStatusCode());
     }
 
     public function testItDoesntInjectOnJson()
@@ -50,6 +50,6 @@ class DebugbarTest extends TestCase
         $crawler = $this->call('GET', 'api/ping');
 
         $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertSame(200, $crawler->getStatusCode());
     }
 }

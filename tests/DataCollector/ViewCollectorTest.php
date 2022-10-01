@@ -28,7 +28,7 @@ class ViewCollectorTest extends TestCase
         );
 
         tap(Arr::first($collector->collect()['templates']), function (array $template) {
-            $this->assertEquals(
+            $this->assertSame(
                 'vscode://file/' . realpath(__DIR__ . '/../resources/views/dashboard.blade.php') . ':1',
                 $template['xdebug_link']['url']
             );
