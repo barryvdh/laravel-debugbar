@@ -1,9 +1,12 @@
-name: Fix Codestyle
+name: Fix Code Style
 
 on:
   push:
     branches:
       - master
+
+permissions:
+  contents: write
 
 jobs:
   fix-style:
@@ -20,7 +23,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.4
+        php-version: 8.1
         coverage: none
         tools: composer:v2
 
@@ -31,7 +34,7 @@ jobs:
     - run: composer fix-style
       continue-on-error: true
 
-    # Revert modifications so they don't get commited 💥
+    # Revert modifications so they don't get committed 💥
     - run: git checkout -- composer.json
 
     - uses: stefanzweifel/git-auto-commit-action@v4
