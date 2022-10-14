@@ -34,6 +34,7 @@ use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
+use Throwable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Str;
@@ -635,7 +636,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Adds an exception to be profiled in the debug bar
      *
-     * @param Exception $e
+     * @param Throwable $e
      */
     public function addThrowable($e)
     {
