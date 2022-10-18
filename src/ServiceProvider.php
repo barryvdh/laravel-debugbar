@@ -157,7 +157,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Register the Debugbar Middleware
+     * Ensures view "composing" events get fired.
      */
     protected function ensureViewComposingEvents()
     {
