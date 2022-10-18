@@ -106,6 +106,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadRoutesFrom(realpath(__DIR__ . '/debugbar-routes.php'));
 
+        $this->ensureViewComposingEvents();
+
         $this->registerMiddleware(InjectDebugbar::class);
 
         if ($this->app->runningInConsole()) {
@@ -152,5 +154,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
+    }
+
+    /**
+     * Register the Debugbar Middleware
+     */
+    protected function ensureViewComposingEvents()
+    {
+        $this->app['view']->composer('*', function () {
+            // ..
+        });
     }
 }
