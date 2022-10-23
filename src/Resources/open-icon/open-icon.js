@@ -1,15 +1,7 @@
 (function ($) {
     $(function () {
-        var header = $('div.phpdebugbar-header');
         $('div.phpdebugbar-header').click(function () {
-            var maximizeBtn = $('a.phpdebugbar-maximize-btn:visible');
-            var minimizeBtn = $('a.phpdebugbar-minimize-btn:visible');
-
-            if (maximizeBtn.length > 0) {
-                maximizeBtn.click();
-            } else {
-                minimizeBtn.click();
-            }
+            $('a.phpdebugbar-close-btn').click();
         });
 
         $('div.phpdebugbar-header > .phpdebugbar-header-left').click(function (e) {
