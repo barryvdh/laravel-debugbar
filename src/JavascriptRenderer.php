@@ -23,6 +23,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
         $this->jsFiles['laravel-sql'] = __DIR__ . '/Resources/sqlqueries/widget.js';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
+        $this->jsFiles['laravel-open-icon'] = __DIR__ . '/Resources/open-icon/open-icon.js';
 
         $theme = config('debugbar.theme', 'auto');
         switch ($theme) {
