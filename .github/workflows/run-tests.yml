@@ -19,19 +19,23 @@ jobs:
 
     strategy:
       matrix:
-        php: [8.1, 8.0, 7.4, 7.3, 7.2]
-        laravel: [9.*, 8.*, 7.*]
+        php: [8.2, 8.1, 8.0, 7.4, 7.3, 7.2]
+        laravel: [^9, ^8, ^7]
         dependency-version: [prefer-lowest, prefer-stable]
         exclude:
-          - laravel: 8.*
+          - laravel: ^7*
+            php: 8.1
+          - laravel: ^7
+            php: 8.2
+          - laravel: ^8
             php: 7.2
-          - laravel: 9.*
+          - laravel: ^9
             php: 7.2
-          - laravel: 9.*
+          - laravel: ^9
             php: 7.3
-          - laravel: 9.*
+          - laravel: ^9
             php: 7.4
-          - laravel: 7.*
+          - laravel: ^7
             php: 8.1
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
@@ -50,7 +54,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+        composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:>=2.62.1" --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
     - name: Update Dusk Chromedriver
