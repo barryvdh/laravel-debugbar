@@ -24,6 +24,8 @@ div.phpdebugbar-openhandler,
 div.phpdebugbar div.phpdebugbar-header > div > *,
 div.phpdebugbar ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label,
 div.phpdebugbar ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-collector,
+div.phpdebugbar ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item,
+div.phpdebugbar ul.phpdebugbar-widgets-list li span.phpdebugbar-widgets-label,
 div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-keyword,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
