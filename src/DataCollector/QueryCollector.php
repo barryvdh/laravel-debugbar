@@ -134,7 +134,7 @@ class QueryCollector extends PDOCollector
         $pdo = null;
         try {
             $pdo = $connection->getPdo();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
         $bindings = $connection->prepareBindings($bindings);
