@@ -133,7 +133,7 @@ class QueryCollector extends PDOCollector
 
         $pdo = null;
         try {
-            $pdo = $connection->getPdo();
+            $pdo = preg_match('/^\s*(SELECT) /i', $query) ? $connection->getReadPdo() : $connection->getPdo();
         } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
