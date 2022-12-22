@@ -4,7 +4,7 @@ namespace Barryvdh\Debugbar\DataFormatter;
 
 use DebugBar\DataFormatter\DataFormatter;
 
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class QueryFormatter extends DataFormatter
 {
     /**
