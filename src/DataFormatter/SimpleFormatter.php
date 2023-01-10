@@ -9,6 +9,7 @@ use DebugBar\DataFormatter\DataFormatter;
  *
  * @see https://github.com/symfony/symfony/blob/v3.4.4/src/Symfony/Component/HttpKernel/DataCollector/Util/ValueExporter.php
  */
+#[\AllowDynamicProperties]
 class SimpleFormatter extends DataFormatter
 {
     /**
