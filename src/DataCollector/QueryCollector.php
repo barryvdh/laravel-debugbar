@@ -177,7 +177,7 @@ class QueryCollector extends PDOCollector
 
         if ($this->findSource) {
             try {
-                $source = array_slice($this->findSource(), 0, 5);
+                $source = array_slice($this->findSource(), 0, config('debugbar.options.db.traces_count'));
             } catch (\Exception $e) {
             }
         }
