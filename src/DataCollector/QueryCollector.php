@@ -545,7 +545,7 @@ class QueryCollector extends PDOCollector
                     'params' => [
                         'Virtual Machine Instructions' => $vmi,
                     ]
-                ];                
+                ];
             } else {
                 foreach ($query['explain'] as $explain) {
                     $statements[] = [
