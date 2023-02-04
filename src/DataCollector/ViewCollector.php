@@ -9,6 +9,7 @@ use InvalidArgumentException;
 
 class ViewCollector extends TwigCollector
 {
+    protected $name;
     protected $templates = [];
     protected $collect_data;
     protected $exclude_paths;
