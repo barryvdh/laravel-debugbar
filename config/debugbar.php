@@ -198,7 +198,8 @@ return [
                 'types' => ['SELECT'],     // Deprecated setting, is always only SELECT
             ],
             'hints'             => false,    // Show hints for common mistakes
-            'show_copy'         => false,    // Show copy button next to the query
+            'show_copy'         => false,    // Show copy button next to the query,
+            'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
         ],
         'mail' => [
             'full_log' => false,
