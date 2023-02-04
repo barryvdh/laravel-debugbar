@@ -51,6 +51,7 @@ jobs:
               run: |
                   composer create-project --prefer-dist laravel/lumen:${{ matrix.lumen }} --no-progress sample
                   cd sample
+                  composer config minimum-stability dev
                   composer update  --prefer-stable --prefer-dist --no-progress
             - name: Add package from source
               run: |
@@ -105,6 +106,7 @@ jobs:
               run: |
                   composer create-project --prefer-dist laravel/laravel:${{ matrix.laravel }} --no-progress sample
                   cd sample
+                  composer config minimum-stability dev
                   composer update --prefer-stable --prefer-dist --no-progress
             - name: Add package from source
               run: |
