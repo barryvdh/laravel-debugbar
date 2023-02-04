@@ -19,7 +19,7 @@ jobs:
         strategy:
             matrix:
                 php: [8.2, 8.1, 8.0]
-                lumen: [10.*, 9.*]
+                lumen: [9.*]
                 exclude:
                   - lumen: 10.*
                     php: 8.0
@@ -69,7 +69,7 @@ jobs:
                 laravel: [10.*, 9.*]
                 exclude:
                   - laravel: 10.*
-                    php: 8.1
+                    php: 8.0
         name: P${{ matrix.php }} - Laravel${{ matrix.laravel }}
         steps:
             - name: Checkout code
