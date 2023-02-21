@@ -103,6 +103,9 @@ class LaravelDebugbar extends DebugBar
         $this->app = $app;
         $this->version = $app->version();
         $this->is_lumen = Str::contains($this->version, 'Lumen');
+        if ($this->is_lumen) {
+            $this->version = Str::betweenFirst($app->version(), '(', ')');
+        }
     }
 
     /**
