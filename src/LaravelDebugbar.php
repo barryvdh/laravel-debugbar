@@ -897,9 +897,12 @@ class LaravelDebugbar extends DebugBar
      */
     public function injectDebugbar(Response $response)
     {
+        $config = $this->app['config'];
         $content = $response->getContent();
 
         $renderer = $this->getJavascriptRenderer();
+        $autoShow = $config->get('debugbar.ajax_handler_auto_show', true);
+        $renderer->setAjaxHandlerAutoShow($autoShow);
         if ($this->getStorage()) {
             $openHandlerUrl = route('debugbar.openhandler');
             $renderer->setOpenHandlerUrl($openHandlerUrl);
