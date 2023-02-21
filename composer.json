@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "maximebf/debugbar": "^1.17.2",
+        "maximebf/debugbar": "^1.18.2",
         "illuminate/routing": "^9|^10",
         "illuminate/session": "^9|^10",
         "illuminate/support": "^9|^10",
