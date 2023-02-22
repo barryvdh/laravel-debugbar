@@ -235,6 +235,7 @@ div.phpdebugbar-openhandler .phpdebugbar-openhandler-header {
 }
 
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
+    display: flex;
     cursor: pointer;
 }
 
