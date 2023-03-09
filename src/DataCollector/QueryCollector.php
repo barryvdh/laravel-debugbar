@@ -499,7 +499,7 @@ class QueryCollector extends PDOCollector
                 'connection' => $query['connection'],
             ];
 
-            // Add the results from the explain as new rows
+            // Add the results from the EXPLAIN as new rows
             if ($query['driver'] === 'pgsql') {
                 $explainer = trim(implode("\n", array_map(function ($explain) {
                     return $explain->{'QUERY PLAN'};
