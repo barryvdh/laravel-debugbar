@@ -4,7 +4,6 @@ namespace Barryvdh\Debugbar;
 
 use DebugBar\DebugBar;
 use DebugBar\JavascriptRenderer as BaseJavascriptRenderer;
-use Illuminate\Routing\UrlGenerator;
 
 /**
  * {@inheritdoc}

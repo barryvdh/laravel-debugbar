@@ -6,7 +6,6 @@ use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class EventCollector extends TimeDataCollector
 {
