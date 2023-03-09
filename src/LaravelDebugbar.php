@@ -166,7 +166,9 @@ class LaravelDebugbar extends DebugBar
         }
 
         if ($this->shouldCollect('memory', true)) {
-            $this->addCollector(new MemoryCollector());
+            $memoryCollector = new MemoryCollector();
+            $memoryCollector->setPrecision($app['config']->get('debugbar.options.memory.precision', 0));
+            $this->addCollector($memoryCollector);
         }
 
         if ($this->shouldCollect('exceptions', true)) {
