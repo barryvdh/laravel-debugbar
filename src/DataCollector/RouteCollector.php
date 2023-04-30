@@ -36,6 +36,7 @@ class RouteCollector extends DataCollector implements Renderable
         'emacs' => 'emacs://open?url=file://%file&line=%line',
         'macvim' => 'mvim://open/?url=file://%file&line=%line',
         'phpstorm' => 'phpstorm://open?file=%file&line=%line',
+        'phpstorm-remote' => 'http://localhost:63342/api/file/%file:%line',
         'idea' => 'idea://open?file=%file&line=%line',
         'vscode' => 'vscode://file/%file:%line',
         'vscode-insiders' => 'vscode-insiders://file/%file:%line',
