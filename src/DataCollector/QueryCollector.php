@@ -393,7 +393,7 @@ class QueryCollector extends PDOCollector
         }
 
         foreach ($property->getValue($finder) as $name => $path) {
-            if (sha1($path) == $hash || md5($path) == $hash) {
+            if (hash('xxh128', 'v2' . $path) == $hash || sha1('v2' . $path) == $hash) {
                 return $name;
             }
         }
