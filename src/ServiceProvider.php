@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar;
 
-use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
+use Barryvdh\Debugbar\Commands\ClearCommand;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
@@ -12,7 +12,6 @@ use Illuminate\Routing\Router;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
 use Illuminate\View\Engines\EngineResolver;
-use Barryvdh\Debugbar\Facade as DebugBar;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -47,9 +46,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->singleton(
             'command.debugbar.clear',
-            function ($app) {
-                return new Console\ClearCommand($app['debugbar']);
-            }
+            fn ($app) => new ClearCommand($app['debugbar'])
         );
 
         $this->app->extend(
