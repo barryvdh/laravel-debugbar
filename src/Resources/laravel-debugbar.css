@@ -805,3 +805,8 @@ div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
     opacity: 0.2;
     background: red;
 }
+
+div.phpdebugbar #phpdebugbar-show-duplicates {
+    font-weight: bold;
+    text-shadow: 1px 1px #FFF;
+}

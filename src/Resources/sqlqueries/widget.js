@@ -261,8 +261,8 @@
                     t.append(", " + (data.nb_statements - duplicate) + " unique");
 
                     // add toggler for displaying only duplicated queries
-                    var duplicatedText = "Show only duplicated";
-                    var allText = "Show All";
+                    var duplicatedText = "Show only duplicated queries.";
+                    var allText = "Show all queries.";
                     var id = "phpdebugbar-show-duplicates";
                     t.append(". <a id='" + id + "'>" + duplicatedText + "</a>");
 
