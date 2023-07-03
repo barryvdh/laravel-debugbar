@@ -112,18 +112,17 @@ class ViewCollector extends TwigCollector
     {
         $name = $view->getName();
         $path = $view->getPath();
+        $type = '';
 
-        if (!is_object($path)) {
-            if ($path) {
-                $path = ltrim(str_replace(base_path(), '', realpath($path)), '/');
-            }
+        if ($path && is_string($path)) {
+            $path = ltrim(str_replace(base_path(), '', realpath($path)), '/');
 
             if (substr($path, -10) == '.blade.php') {
                 $type = 'blade';
             } else {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
             }
-        } else {
+        } elseif (is_object($path)) {
             $type = get_class($view);
             $path = '';
         }
