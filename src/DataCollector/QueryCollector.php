@@ -392,8 +392,10 @@ class QueryCollector extends PDOCollector
             $this->reflection['viewfinderViews'] = $property;
         }
 
+        $xxh128Exists = in_array('xxh128', hash_algos());
+
         foreach ($property->getValue($finder) as $name => $path) {
-            if (hash('xxh128', 'v2' . $path) == $hash || sha1('v2' . $path) == $hash) {
+            if (($xxh128Exists && hash('xxh128', 'v2' . $path) == $hash) || sha1('v2' . $path) == $hash) {
                 return $name;
             }
         }
