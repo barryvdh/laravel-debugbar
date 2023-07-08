@@ -561,6 +561,10 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     max-width: 100%;
 }
 
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql .hljs-keyword {
+    text-transform: uppercase;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
     margin-left: auto;
     margin-right: 5px;
