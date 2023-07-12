@@ -561,20 +561,14 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     max-width: 100%;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql .hljs-operator {
-    text-transform: uppercase;
-}
-
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql .hljs-operator > * {
-  text-transform: lowercase;
-}
-
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql .hljs-operator > .hljs-keyword {
+ul.phpdebugbar-widgets-list li .phpdebugbar-widgets-sql .hljs-operator,
+ul.phpdebugbar-widgets-list li .phpdebugbar-widgets-sql .hljs-operator > .hljs-keyword,
+ul.phpdebugbar-widgets-list li .phpdebugbar-widgets-sql .hljs-operator > .hljs-aggregate {
   text-transform: uppercase;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql .hljs-operator > div {
-    text-transform: lowercase;
+ul.phpdebugbar-widgets-list li .phpdebugbar-widgets-sql .hljs-operator > *:not(.hljs-keyword):not(.hljs-aggregate) {
+  text-transform: lowercase;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
