@@ -96,6 +96,8 @@ class LaravelDebugbar extends DebugBar
      */
     protected $is_lumen = false;
 
+    protected array $editorTemplateArgs = [];
+
     /**
      * @param Application $app
      */
@@ -138,6 +140,8 @@ class LaravelDebugbar extends DebugBar
 
         /** @var Application $app */
         $app = $this->app;
+
+        $this->editorTemplateArgs = [$this->app['config']->get('debugbar.editor'), $this->getRemoteServerReplacements()];
 
         // Set custom error handler
         if ($app['config']->get('debugbar.error_handler', false)) {
@@ -584,6 +588,10 @@ class LaravelDebugbar extends DebugBar
 
         if (method_exists($collector, 'useHtmlVarDumper')) {
             $collector->useHtmlVarDumper();
+        }
+        if (method_exists($collector, 'setEditorLinkTemplate')) {
+            $collector->setEditorLinkTemplate($this->editorTemplateArgs[0]);
+            $collector->addXdebugReplacements($this->editorTemplateArgs[1]);
         }
 
         return $this;
@@ -1165,6 +1173,17 @@ class LaravelDebugbar extends DebugBar
 
             $response->headers->set('Server-Timing', $headers, false);
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getRemoteServerReplacements()
+    {
+        $localPath = $this->app['config']->get('debugbar.local_sites_path', '');
+        $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path', ''))) ?: [base_path()];
+
+        return array_fill_keys($remotePaths, $localPath);
     }
 
     /**
