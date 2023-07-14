@@ -62,7 +62,7 @@ class ViewCollector extends TwigCollector
         return [
             'views' => [
                 'icon' => 'leaf',
-                'widget' => 'PhpDebugBar.Widgets.LaravelViewTemplatesWidget',
+                'widget' => 'PhpDebugBar.Widgets.TemplatesWidget',
                 'map' => 'views',
                 'default' => '[]'
             ],
