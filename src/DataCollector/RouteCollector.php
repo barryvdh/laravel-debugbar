@@ -104,6 +104,15 @@ class RouteCollector extends DataCollector implements Renderable
 
             if ($href = $this->getEditorHref($reflector->getFileName(), $reflector->getStartLine())) {
                 $result['file'] = sprintf('<a href="%s">%s:%s-%s</a>', $href, $filename, $reflector->getStartLine(), $reflector->getEndLine());
+            } elseif ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
+                $result['file'] = sprintf(
+                    '<a href="%s" onclick="%s">%s:%s-%s</a>',
+                    $link['url'],
+                    $link['ajax'] ? 'event.preventDefault();$.ajax(this.href);' : '',
+                    $filename,
+                    $reflector->getStartLine(),
+                    $reflector->getEndLine()
+                );
             } else {
                 $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
             }
