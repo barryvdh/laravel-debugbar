@@ -51,8 +51,8 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
 
         Livewire::listen('render', function (Component $component) use ($request) {
             // Create an unique name for each compoent
-            $key = $component->getName() . ' #' . $component->getId();
             $component_id = !property_exists($component, 'id') ? $component->getId() : $component->id;
+            $key = $component->getName() . ' #' . $component_id;
 
             $data = [
                 'data' => $component->all(),
