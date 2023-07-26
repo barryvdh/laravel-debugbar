@@ -27,15 +27,16 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
         Livewire::listen('view:render', function (View $view) use ($request) {
             /** @var \Livewire\Component $component */
             $component = $view->getData()['_instance'];
+            $component_id = !property_exists($component, 'id') ? $component->getId() : $component->id;
 
             // Create an unique name for each compoent
-            $key = $component->getName() . ' #' . $component->id;
+            $key = $component->getName() . ' #' . $component_id;
 
             $data = [
                 'data' => $component->getPublicPropertiesDefinedBySubClass(),
             ];
 
-            if ($request->request->get('id') == $component->id) {
+            if ($request->request->get('id') == $component_id) {
                 $data['oldData'] = $request->request->get('data');
                 $data['actionQueue'] = $request->request->get('actionQueue');
             }
@@ -43,27 +44,28 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['name'] = $component->getName();
             $data['view'] = $view->name();
             $data['component'] = get_class($component);
-            $data['id'] = $component->id;
+            $data['id'] = $component_id;
 
             $this->data[$key] = $this->formatVar($data);
         });
 
         Livewire::listen('render', function (Component $component) use ($request) {
             // Create an unique name for each compoent
-            $key = $component->getName() . ' #' . $component->getId();
+            $component_id = !property_exists($component, 'id') ? $component->getId() : $component->id;
+            $key = $component->getName() . ' #' . $component_id;
 
             $data = [
                 'data' => $component->all(),
             ];
 
-            if ($request->request->get('id') == $component->getId()) {
+            if ($request->request->get('id') == $component_id) {
                 $data['oldData'] = $request->request->get('data');
                 $data['actionQueue'] = $request->request->get('actionQueue');
             }
 
             $data['name'] = $component->getName();
             $data['component'] = get_class($component);
-            $data['id'] = $component->getId();
+            $data['id'] = $component_id;
 
             $this->data[$key] = $this->formatVar($data);
         });
