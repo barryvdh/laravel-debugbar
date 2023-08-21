@@ -334,6 +334,9 @@ ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-collector {
     top: 0px;
     color: #000;
     font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
 }
 
 ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-value span.phpdebugbar-widgets-label {
