@@ -45,8 +45,8 @@ jobs:
         composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:>=2.62.1" --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
-    #- name: Update Dusk Chromedriver
-    #  run: vendor/bin/dusk-updater update 114
+    - name: Update Dusk Chromedriver
+      run: vendor/bin/dusk-updater update 114 --auto-update
 
     - name: Execute Unit Tests
       run: composer test
