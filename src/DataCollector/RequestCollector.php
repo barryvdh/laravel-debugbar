@@ -125,8 +125,16 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             }
         }
 
-        if (isset($data['request_headers']['php-auth-pw'])) {
-            $data['request_headers']['php-auth-pw'] = '******';
+        if (isset($data['request_request']['password'])) {
+            $data['request_request']['password'] = '******';
+        }
+
+        if (isset($data['request_headers']['authorization'][0])) {
+            $data['request_headers']['authorization'][0] = substr($data['request_headers']['authorization'][0], 0, 12) . '******';
+        }
+
+        if (isset($data['request_headers']['php-auth-pw'][0])) {
+            $data['request_headers']['php-auth-pw'][0] = '******';
         }
 
         if (isset($data['request_server']['PHP_AUTH_PW'])) {
