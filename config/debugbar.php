@@ -31,9 +31,13 @@ return [
      | By default, file storage (in the storage folder) is used. Redis and PDO
      | can also be used. For PDO, run the package migrations first.
      |
+     | Warning: Enabling storage.open will allow everyone to access previous request, 
+     | do not enable open storage in publicly available environments!  
+     | Specify a callback if you want to limit based on IP or authentication.
      */
     'storage' => [
         'enabled'    => true,
+        'open'       => env('DEBUGBAR_OPEN_STORAGE', false), // Can be bool or callback. 
         'driver'     => 'file', // redis, file, pdo, socket, custom
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
