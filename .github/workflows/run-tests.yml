@@ -45,8 +45,13 @@ jobs:
         composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:>=2.62.1" --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
-    - name: Update Dusk Chromedriver
-      run: vendor/bin/dusk-updater update 116.0.5845.96 --auto-update
+    - name: Install Latest Chrome
+      run: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          
+    - name: Upgrade Chrome Driver
+      run: php artisan dusk:chrome-driver
 
     - name: Execute Unit Tests
       run: composer test
