@@ -46,7 +46,7 @@ jobs:
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
     - name: Update Dusk Chromedriver
-      run: vendor/bin/dusk-updater 114 --auto-update
+      run: vendor/bin/dusk-updater update 114
 
     - name: Execute Unit Tests
       run: composer test
