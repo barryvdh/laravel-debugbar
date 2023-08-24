@@ -108,9 +108,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->registerMiddleware(InjectDebugbar::class);
 
-        if ($this->app->runningInConsole()) {
-            $this->commands(['command.debugbar.clear']);
-        }
+        $this->commands(['command.debugbar.clear']);
     }
 
     /**
