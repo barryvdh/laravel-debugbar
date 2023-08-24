@@ -195,7 +195,7 @@ div.phpdebugbar div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-par
 
 div.phpdebugbar code,
 div.phpdebugbar pre {
-    color: #FFF;
+    color: #f1fa8c;
 }
 
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > a,
@@ -262,7 +262,8 @@ div.phpdebugbar .hljs-subst {
     color: #f8f8f2;
 }
 
-div.phpdebugbar .hljs-title {
+div.phpdebugbar .hljs-title,
+div.phpdebugbar .hljs-meta-keyword {
     color: #50fa7b;
 }
 
@@ -284,6 +285,10 @@ div.phpdebugbar .hljs-comment,
 div.phpdebugbar .hljs-quote,
 div.phpdebugbar .hljs-deletion {
     color: #6272a4;
+}
+
+div.phpdebugbar .hljs-strong {
+    font-weight: bold;
 }
 
 div.phpdebugbar .hljs-literal,
