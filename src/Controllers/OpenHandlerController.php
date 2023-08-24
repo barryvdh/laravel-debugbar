@@ -39,7 +39,7 @@ class OpenHandlerController extends BaseController
                     'id' => null,
                     'ip' => $request->getClientIp(),
                     'method' => 'ERROR',
-                    'uri' => '!! To enable public access to previous requests, set debugbar.storage.open, or DEBUGBAR_OPEN_STORAGE to true in you config !!',
+                    'uri' => '!! To enable public access to previous requests, set debugbar.storage.open to true in your config, or enable DEBUGBAR_OPEN_STORAGE if you did not publish the config. !!',
                     'utime' => microtime(true),
                 ]
             ];
@@ -64,7 +64,7 @@ class OpenHandlerController extends BaseController
     public function clockwork(Request $request, $id)
     {
         if (!$this->isStorageOpen($request)) {
-            throw new DebugBarException(" o enable public access to previous requests, set debugbar.storage.open, or DEBUGBAR_OPEN_STORAGE to true in you config");
+            throw new DebugBarException("To enable public access to previous requests, set debugbar.storage.open to true in your config, or enable DEBUGBAR_OPEN_STORAGE if you did not publish the config.");
         }
 
         $request = [
