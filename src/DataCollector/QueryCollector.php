@@ -433,7 +433,14 @@ class QueryCollector extends PDOCollector
         if (file_exists($path)) {
             $path = realpath($path);
         }
-        return str_replace(base_path(), '', $path);
+
+        $basepath = base_path();
+
+        if (! str_starts_with($path, $basepath)) {
+            return $path;
+        }
+
+        return substr($path, strlen($basepath));
     }
 
     /**
