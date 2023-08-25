@@ -29,7 +29,7 @@ class OpenHandlerController extends BaseController
 
     public function handle(Request $request)
     {
-        if ($this->isStorageOpen($request)) {
+        if ($request->input('op') === 'get' || $this->isStorageOpen($request)) {
             $openHandler = new OpenHandler($this->debugbar);
             $data = $openHandler->handle($request->input(), false, false);
         } else {
@@ -63,10 +63,6 @@ class OpenHandlerController extends BaseController
      */
     public function clockwork(Request $request, $id)
     {
-        if (!$this->isStorageOpen($request)) {
-            throw new DebugBarException("To enable public access to previous requests, set debugbar.storage.open to true in your config, or enable DEBUGBAR_OPEN_STORAGE if you did not publish the config.");
-        }
-
         $request = [
             'op' => 'get',
             'id' => $id,
