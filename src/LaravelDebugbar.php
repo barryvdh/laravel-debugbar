@@ -1034,7 +1034,7 @@ class LaravelDebugbar extends DebugBar
      *
      * @param string $method
      * @param array $args
-     * @return mixed|void
+     * @return $this
      */
     public function __call($method, $args)
     {
@@ -1044,6 +1044,8 @@ class LaravelDebugbar extends DebugBar
                 $this->addMessage($arg, $method);
             }
         }
+
+        return $this;
     }
 
     /**
