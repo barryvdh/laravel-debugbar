@@ -45,15 +45,15 @@ use Symfony\Component\HttpFoundation\Response;
  * Debug bar subclass which adds all without Request and with LaravelCollector.
  * Rest is added in Service Provider
  *
- * @method void emergency(...$message)
- * @method void alert(...$message)
- * @method void critical(...$message)
- * @method void error(...$message)
- * @method void warning(...$message)
- * @method void notice(...$message)
- * @method void info(...$message)
- * @method void debug(...$message)
- * @method void log(...$message)
+ * @method LaravelDebugbar emergency(...$message)
+ * @method LaravelDebugbar alert(...$message)
+ * @method LaravelDebugbar critical(...$message)
+ * @method LaravelDebugbar error(...$message)
+ * @method LaravelDebugbar warning(...$message)
+ * @method LaravelDebugbar notice(...$message)
+ * @method LaravelDebugbar info(...$message)
+ * @method LaravelDebugbar debug(...$message)
+ * @method LaravelDebugbar log(...$message)
  */
 class LaravelDebugbar extends DebugBar
 {
