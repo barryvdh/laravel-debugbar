@@ -206,6 +206,7 @@ return [
             'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
         ],
         'mail' => [
+            'timeline' => false,  // Add mails to the timeline
             'full_log' => false,
         ],
         'views' => [
