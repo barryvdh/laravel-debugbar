@@ -24,8 +24,8 @@ class OpenHandlerController extends BaseController
             return call_user_func($open, [$request]);
         }
 
-        if (is_string($open) && class_exists($open) && method_exists($open, 'resolve')) {
-            return $open::resolve($request);
+        if (is_string($open) && class_exists($open)) {
+            return method_exists($open, 'resolve') ? $open::resolve($request) : false;
         }
 
         return $open;
