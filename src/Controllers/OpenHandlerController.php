@@ -28,7 +28,7 @@ class OpenHandlerController extends BaseController
             return method_exists($open, 'resolve') ? $open::resolve($request) : false;
         }
 
-        return $open;
+        return is_bool($open) ? $open : false;
     }
 
     public function handle(Request $request)
