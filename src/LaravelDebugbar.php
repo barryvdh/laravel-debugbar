@@ -424,6 +424,18 @@ class LaravelDebugbar extends DebugBar
                         $queryCollector->collectTransactionEvent('Rollback Transaction', $params[0]);
                     }
                 );
+
+                $db->getEventDispatcher()->listen(
+                    function (\Illuminate\Database\Events\ConnectionEstablished $event) use ($queryCollector) {
+                        $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
+
+                        if (app('config')->get('debugbar.options.db.memory_usage')) {
+                            $event->connection->beforeExecuting(function () use ($queryCollector){
+                                $queryCollector->startMemoryUsage();
+                            });
+                        }
+                    }
+                );
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
