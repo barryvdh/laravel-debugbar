@@ -340,30 +340,15 @@ class LaravelDebugbar extends DebugBar
 
             try {
                 $db->listen(
-                    function (
-                        $query,
-                        $bindings = null,
-                        $time = null,
-                        $connectionName = null
-                    ) use (
-                        $db,
-                        $queryCollector
-                    ) {
+                    function (\Illuminate\Database\Events\QueryExecuted $query) use ($db, $queryCollector) {
                         if (!app(static::class)->shouldCollect('db', true)) {
                             return; // Issue 776 : We've turned off collecting after the listener was attached
                         }
-                        // Laravel 5.2 changed the way some core events worked. We must account for
-                        // the first argument being an "event object", where arguments are passed
-                        // via object properties, instead of individual arguments.
-                        if ($query instanceof \Illuminate\Database\Events\QueryExecuted) {
-                            $bindings = $query->bindings;
-                            $time = $query->time;
-                            $connection = $query->connection;
-
-                            $query = $query->sql;
-                        } else {
-                            $connection = $db->connection($connectionName);
-                        }
+                        
+                        $bindings = $query->bindings;
+                        $time = $query->time;
+                        $connection = $query->connection;
+                        $query = $query->sql;
 
                         //allow collecting only queries slower than a specified amount of milliseconds
                         $threshold = app('config')->get('debugbar.options.db.slow_threshold', false);
