@@ -39,7 +39,7 @@ class DebugbarViewEngine implements Engine
 
         return $this->laravelDebugbar->measure($shortPath, function () use ($path, $data) {
             return $this->engine->get($path, $data);
-        });
+        }, 'views');
     }
 
     /**

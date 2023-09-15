@@ -157,12 +157,12 @@ class LaravelDebugbar extends DebugBar
             if (! $this->isLumen() && $startTime) {
                 $this->app->booted(
                     function () use ($debugbar, $startTime) {
-                        $debugbar['time']->addMeasure('Booting', $startTime, microtime(true));
+                        $debugbar->addMeasure('Booting', $startTime, microtime(true), [], 'time');
                     }
                 );
             }
 
-            $debugbar->startMeasure('application', 'Application');
+            $debugbar->startMeasure('application', 'Application', 'time');
         }
 
         if ($this->shouldCollect('memory', true)) {
@@ -583,13 +583,14 @@ class LaravelDebugbar extends DebugBar
      *
      * @param string $name Internal name, used to stop the measure
      * @param string $label Public name
+     * @param string|null $collector
      */
-    public function startMeasure($name, $label = null)
+    public function startMeasure($name, $label = null, $collector = null)
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
-            $collector = $this->getCollector('time');
-            $collector->startMeasure($name, $label);
+            /** @var \DebugBar\DataCollector\TimeDataCollector */
+            $time = $this->getCollector('time');
+            $time->startMeasure($name, $label, $collector);
         }
     }
 
@@ -942,13 +943,15 @@ class LaravelDebugbar extends DebugBar
      * @param string $label
      * @param float $start
      * @param float $end
+     * @param array|null $params
+     * @param string|null $collector
      */
-    public function addMeasure($label, $start, $end)
+    public function addMeasure($label, $start, $end, $params = [], $collector = null)
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
-            $collector = $this->getCollector('time');
-            $collector->addMeasure($label, $start, $end);
+            /** @var \DebugBar\DataCollector\TimeDataCollector */
+            $time = $this->getCollector('time');
+            $time->addMeasure($label, $start, $end, $params, $collector);
         }
     }
 
@@ -957,14 +960,15 @@ class LaravelDebugbar extends DebugBar
      *
      * @param string $label
      * @param \Closure $closure
+     * @param string|null $collector
      * @return mixed
      */
-    public function measure($label, \Closure $closure)
+    public function measure($label, \Closure $closure, $collector = null)
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
-            $collector = $this->getCollector('time');
-            $result = $collector->measure($label, $closure);
+            /** @var \DebugBar\DataCollector\TimeDataCollector  */
+            $time = $this->getCollector('time');
+            $result = $time->measure($label, $closure, $collector);
         } else {
             $result = $closure();
         }
