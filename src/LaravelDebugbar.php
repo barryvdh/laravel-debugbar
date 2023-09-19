@@ -18,8 +18,7 @@ use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use DebugBar\Bridge\MonologCollector;
-use DebugBar\Bridge\SwiftMailer\SwiftLogCollector;
-use DebugBar\Bridge\SwiftMailer\SwiftMailCollector;
+use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
@@ -36,10 +35,15 @@ use DebugBar\Storage\RedisStorage;
 use Exception;
 use Throwable;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mime\RawMessage;
 
 /**
  * Debug bar subclass which adds all without Request and with LaravelCollector.
@@ -440,16 +444,42 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && $this->checkVersion('9.0', '<')) {
+        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && isset($this->app['events'])) {
             try {
-                $mailer = $this->app['mailer']->getSwiftMailer();
-                $this->addCollector(new SwiftMailCollector($mailer));
-                if (
-                    $this->app['config']->get('debugbar.options.mail.full_log') && $this->hasCollector(
-                        'messages'
-                    )
-                ) {
-                    $this['messages']->aggregate(new SwiftLogCollector($mailer));
+                $mailCollector = new SymfonyMailCollector();
+                $this->addCollector($mailCollector);
+                $this->app['events']->listen(function (MessageSent $event) use ($mailCollector) {
+                    $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
+                });
+
+                if ($this->app['config']->get('debugbar.options.mail.full_log')) {
+                    $mailCollector->showMessageDetail();
+                }
+
+                if ($debugbar->hasCollector('time') && $this->app['config']->get('debugbar.options.mail.timeline')) {
+                    $transport = $this->app['mailer']->getSymfonyTransport();
+                    $this->app['mailer']->setSymfonyTransport(new class($transport, $this) extends AbstractTransport{
+                        private $originalTransport;
+                        private $laravelDebugbar;
+
+                        public function __construct($transport, $laravelDebugbar)
+                        {
+                            $this->originalTransport = $transport;
+                            $this->laravelDebugbar = $laravelDebugbar;
+                        }
+                        public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage
+                        {
+                            return $this->laravelDebugbar['time']->measure(
+                                'mail: '. Str::limit($message->getSubject(), 100),
+                                function () use ($message, $envelope) {
+                                    return $this->originalTransport->send($message, $envelope);
+                                },
+                                'mail'
+                            );
+                        }
+                        protected function doSend(SentMessage $message): void {}
+                        public function __toString(): string{ $this->originalTransport->__toString(); }
+                    });
                 }
             } catch (\Exception $e) {
                 $this->addThrowable(
