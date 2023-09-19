@@ -188,6 +188,9 @@ return [
      */
 
     'options' => [
+        'time' => [
+            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
+        ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
         ],

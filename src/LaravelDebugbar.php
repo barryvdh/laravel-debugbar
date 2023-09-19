@@ -158,6 +158,10 @@ class LaravelDebugbar extends DebugBar
             $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
             $this->addCollector(new TimeDataCollector($startTime));
 
+            if ($app['config']->get('debugbar.options.time.memory_usage')) {
+                $debugbar['time']->showMemoryUsage();
+            }
+
             if (! $this->isLumen() && $startTime) {
                 $this->app->booted(
                     function () use ($debugbar, $startTime) {
