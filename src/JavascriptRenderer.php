@@ -74,7 +74,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         $inlineHtml = $this->getInlineHtml();
         if ($nonce != '') {
-            $inlineHtml = preg_replace("/<script>/", "<script{$nonce}>", $inlineHtml);
+            $inlineHtml = preg_replace("/<(script|style)>/", "<$1{$nonce}>", $inlineHtml);
         }
         $html .= $inlineHtml;
 
