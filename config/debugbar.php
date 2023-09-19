@@ -188,6 +188,9 @@ return [
      */
 
     'options' => [
+        'memory' => [
+            'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+        ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
         ],
