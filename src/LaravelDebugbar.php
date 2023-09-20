@@ -746,9 +746,19 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('config', false)) {
             try {
-                $configCollector = new ConfigCollector();
-                $configCollector->setData($app['config']->all());
-                $this->addCollector($configCollector);
+                $this->addCollector(new ConfigCollector());
+
+                if (! $this->editorTemplateArgs[0]) {
+                    $this['config']->setData($app['config']->all());
+                } else {
+                    $config = [];
+                    $basePath = base_path('config');
+                    foreach ($app['config']->all() as $file => $data) {
+                        $link = $this['config']->getXdebugLink($basePath . '/' .$file . '.php');
+                        $config[$file . ($link ? '<a href="' . $link['url']. '" class="phpdebugbar-widgets-editor-link"></a>' : '')] = $data;
+                    }
+                    $this['config']->setData($config);
+                }
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(

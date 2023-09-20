@@ -817,6 +817,19 @@ div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
     background: red;
 }
 
+.phpdebugbar-widgets-kvlist .phpdebugbar-widgets-editor-link {
+    margin-left: 8px;
+    color: #888;
+}
+
+.phpdebugbar-widgets-kvlist .phpdebugbar-widgets-editor-link:before {
+    content: "\f08e";
+    font-family: PhpDebugbarFontAwesome;
+    margin-left: 4px;
+    margin-right: 4px;
+    font-size: 12px;
+}
+
 @media (prefers-color-scheme: dark) {
     div.phpdebugbar .phpdebugbar-indicator span.phpdebugbar-tooltip,
     div.phpdebugbar div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text,
