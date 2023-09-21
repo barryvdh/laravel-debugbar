@@ -5,7 +5,6 @@ namespace Barryvdh\Debugbar\Support\Clockwork;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  *

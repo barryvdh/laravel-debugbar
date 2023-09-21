@@ -3,7 +3,6 @@
 namespace Barryvdh\Debugbar\Storage;
 
 use DebugBar\Storage\StorageInterface;
-use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**

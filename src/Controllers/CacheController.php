@@ -2,8 +2,6 @@
 
 namespace Barryvdh\Debugbar\Controllers;
 
-use Illuminate\Http\Response;
-
 class CacheController extends BaseController
 {
     /**

@@ -7,7 +7,6 @@ use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Illuminate\Support\Str;
 
 /**

@@ -3,8 +3,6 @@
 namespace Barryvdh\Debugbar;
 
 use DebugBar\HttpDriverInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * HTTP driver for Symfony Request/Session
