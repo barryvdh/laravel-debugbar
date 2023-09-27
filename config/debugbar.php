@@ -189,6 +189,7 @@ return [
 
     'options' => [
         'memory' => [
+            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
             'with_baseline' => false,  // Set boot memory usage as memory peak baseline
         ],
         'auth' => [
