@@ -54,7 +54,7 @@ return [
     | Choose your preferred editor to use when clicking file name.
     |
     | Supported: "phpstorm", "vscode", "vscode-insiders", "vscode-remote",
-    |            "vscode-insiders-remote", "vscodium", "textmate", "emacs",
+    |            "vscode-insiders-remote", "vscodium", "cursor", "textmate", "emacs",
     |            "sublime", "atom", "nova", "macvim", "idea", "netbeans",
     |            "xdebug", "espresso"
     |

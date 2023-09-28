@@ -31,6 +31,7 @@ class ViewCollector extends TwigCollector
         'vscode-remote' => 'vscode://vscode-remote/%file:%line',
         'vscode-insiders-remote' => 'vscode-insiders://vscode-remote/%file:%line',
         'vscodium' => 'vscodium://file/%file:%line',
+        'cursor' => 'cursor://file/%file:%line',
         'nova' => 'nova://core/open/file?filename=%file&line=%line',
         'xdebug' => 'xdebug://%file@%line',
         'atom' => 'atom://core/open/file?filename=%file&line=%line',
