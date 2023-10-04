@@ -18,7 +18,7 @@ jobs:
             COMPOSER_NO_INTERACTION: 1
         strategy:
             matrix:
-                php: [8.2, 8.1, 8.0]
+                php: [8.3, 8.2, 8.1, 8.0]
                 lumen: [9.*]
                 exclude:
                   - lumen: 10.*
@@ -65,7 +65,7 @@ jobs:
             COMPOSER_NO_INTERACTION: 1
         strategy:
             matrix:
-                php: [8.2, 8.1, 8.0]
+                php: [8.3, 8.2, 8.1, 8.0]
                 laravel: [10.*, 9.*]
                 exclude:
                   - laravel: 10.*
