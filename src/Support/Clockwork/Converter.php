@@ -122,6 +122,23 @@ class Converter
             }
         }
 
+        if (isset($data['event'])) {
+            foreach ($data['event']['measures'] as $event) {
+                $event['data'] = [];
+                $event['listeners'] = [];
+                foreach ($event['params'] ?? [] as $key => $param) {
+                    $event[is_numeric($key) ? 'data' : 'listeners'] = $param;
+                }
+                $output['events'][] = [
+                    'event' => ['event' => $event['label']],
+                    'data' => $event['data'],
+                    'time' => $event['start'],
+                    'duration' => $event['duration'] * 1000,
+                    'listeners' => $event['listeners'],
+                ];
+            }
+        }
+
         if (isset($data['symfonymailer_mails'])) {
             foreach ($data['symfonymailer_mails']['mails'] as $mail) {
                 $output['emailsData'][] = [
