@@ -147,6 +147,7 @@ class ViewCollector extends TwigCollector
             'name' => $path ? sprintf('%s (%s)', $name, $path) : $name,
             'param_count' => count($params),
             'params' => $params,
+            'start' => microtime(true),
             'type' => $type,
             'editorLink' => $this->getEditorHref($view->getPath(), 0),
         ];
