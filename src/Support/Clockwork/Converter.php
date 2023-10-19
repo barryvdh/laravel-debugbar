@@ -39,6 +39,10 @@ class Converter
             $output = array_merge($output, $data['clockwork']);
         }
 
+        if (isset($data['memory'])) {
+            $output['memoryUsage'] = $data['memory']['peak_usage'];
+        }
+
         if (isset($data['time'])) {
             $time = $data['time'];
             $output['time'] = $time['start'];
