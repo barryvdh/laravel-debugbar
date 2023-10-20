@@ -161,6 +161,9 @@ class QueryCollector extends PDOCollector
                     if ($pdo) {
                         try {
                             $binding = $pdo->quote((string) $binding);
+
+                            // Double escape backslashes because preg_replace evaluate backslashes
+                            $binding = addcslashes($binding, "\\");
                         } catch (\Exception $e) {
                             $binding = $this->emulateQuote($binding);
                         }
