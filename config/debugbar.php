@@ -176,6 +176,7 @@ return [
         'cache'           => false, // Display cache events
         'models'          => true,  // Display models
         'livewire'        => true,  // Display Livewire (when available)
+        'jobs'            => false, // Display dispatched jobs
     ],
 
     /*

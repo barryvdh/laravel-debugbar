@@ -348,7 +348,7 @@ class LaravelDebugbar extends DebugBar
                         if (!app(static::class)->shouldCollect('db', true)) {
                             return; // Issue 776 : We've turned off collecting after the listener was attached
                         }
-                        
+
                         $bindings = $query->bindings;
                         $time = $query->time;
                         $connection = $query->connection;
@@ -554,6 +554,15 @@ class LaravelDebugbar extends DebugBar
                         $e
                     )
                 );
+            }
+        }
+
+        if ($this->shouldCollect('jobs', false)) {
+            try {
+                $jobsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\JobsCollector');
+                $this->addCollector($jobsCollector);
+            } catch (\Exception $e) {
+                // No Jobs collector
             }
         }
 
