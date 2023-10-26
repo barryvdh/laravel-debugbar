@@ -117,7 +117,7 @@ return [
      | Note for your request to be identified as ajax requests they must either send the header
      | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
      | 
-     | By defauult `ajax_handler_auto_show` is set to true be default, changing this to false will disable the auto show once a 
+     | By default `ajax_handler_auto_show` is set to true be default, changing this to false will disable the auto show once a 
      | new ajax request is detected.
      */
 
