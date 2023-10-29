@@ -117,8 +117,8 @@ return [
      | Note for your request to be identified as ajax requests they must either send the header
      | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
      | 
-     | By default `ajax_handler_auto_show` is set to true be default, changing `ajax_handler_auto_show` to false will disable 
-     | the auto show when a new ajax request is detected.
+     | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
+     | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
      */
 
     'capture_ajax' => true,
