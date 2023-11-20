@@ -40,8 +40,8 @@ class ViewCollector extends TwigCollector
     ];
 
     /**
-     * @param bool $collectData Collects view data when tru
-     * @param bool $withParams Exclude list of parameters from views
+     * @param bool $collectData Collects view data when true
+     * @param bool $withParams Include view parameters when true
      * @param string[] $excludePaths Paths to exclude from collection
      */
     public function __construct($collectData = true, $withParams = true, $excludePaths = [])
