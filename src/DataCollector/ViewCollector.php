@@ -12,6 +12,7 @@ class ViewCollector extends TwigCollector
     protected $name;
     protected $templates = [];
     protected $collect_data;
+    protected $exclude_params;
     protected $exclude_paths;
 
     /**
@@ -39,17 +40,17 @@ class ViewCollector extends TwigCollector
     ];
 
     /**
-     * Create a ViewCollector
-     *
      * @param bool $collectData Collects view data when tru
+     * @param bool $excludeParams Exclude list of parameters from views
      * @param string[] $excludePaths Paths to exclude from collection
      */
-    public function __construct($collectData = true, $excludePaths = [])
+    public function __construct($collectData = true, $excludeParams = false, $excludePaths = [])
     {
         $this->setDataFormatter(new SimpleFormatter());
         $this->collect_data = $collectData;
-        $this->templates = [];
+        $this->exclude_params = $excludeParams;
         $this->exclude_paths = $excludePaths;
+        $this->templates = [];
     }
 
     public function getName()
@@ -133,7 +134,9 @@ class ViewCollector extends TwigCollector
             }
         }
 
-        if (!$this->collect_data) {
+        if ($this->exclude_params) {
+            $params = [];
+        } elseif (!$this->collect_data) {
             $params = array_keys($view->getData());
         } else {
             $data = [];
