@@ -800,6 +800,7 @@ class LaravelDebugbar extends DebugBar
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
+            !$app['config']->get('debugbar.inject', true) ||
             ($response->headers->has('Content-Type') &&
                 strpos($response->headers->get('Content-Type'), 'html') === false) ||
             $request->getRequestFormat() !== 'html' ||
@@ -812,7 +813,7 @@ class LaravelDebugbar extends DebugBar
             } catch (\Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
-        } elseif ($app['config']->get('debugbar.inject', true)) {
+        } else {
             try {
                 $this->injectDebugbar($response);
             } catch (\Exception $e) {
