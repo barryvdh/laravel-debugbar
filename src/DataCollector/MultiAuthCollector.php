@@ -113,11 +113,13 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         // The default auth identifer is the ID number, which isn't all that
-        // useful. Try username and email.
+        // useful. Try name, username and email.
         $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->getKey();
         if (is_numeric($identifier) || Str::isUuid($identifier) || Str::isUlid($identifier)) {
             try {
-                if (isset($user->username)) {
+                if (isset($user->name)) {
+                    $identifier = $user->name;
+                } elseif (isset($user->username)) {
                     $identifier = $user->username;
                 } elseif (isset($user->email)) {
                     $identifier = $user->email;
