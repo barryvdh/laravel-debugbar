@@ -41,7 +41,7 @@ class ViewCollector extends TwigCollector
     /**
      * Create a ViewCollector
      *
-     * @param bool $collectData Collects view data when tru
+     * @param bool $collectData Collects view data when true
      * @param string[] $excludePaths Paths to exclude from collection
      */
     public function __construct($collectData = true, $excludePaths = [])
@@ -112,47 +112,61 @@ class ViewCollector extends TwigCollector
     {
         $name = $view->getName();
         $path = $view->getPath();
+        $data = $view->getData();
+        $shortPath = '';
         $type = '';
 
-        if ($path && is_string($path)) {
-            $path = ltrim(str_replace(base_path(), '', realpath($path)), '/');
+        if (class_exists('\Inertia\Inertia') && isset($data['page'])) {
+            $data = $data['page'];
+            $name = $data['component'];
 
-            if (substr($path, -10) == '.blade.php') {
-                $type = 'blade';
+            if (!@file_exists($path = resource_path('js/Pages/' . $name . '.js'))) {
+                if (!@file_exists($path = resource_path('js/Pages/' . $name . '.vue'))) {
+                    if (!@file_exists($path = resource_path('js/Pages/' . $name . '.svelte'))) {
+                        $path = $view->getPath();
+                    }
+                }
             } else {
-                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $type = 'react';
             }
+        }
+
+        if ($path && is_string($path)) {
+            $path = realpath($path);
+            $shortPath = ltrim(str_replace(base_path(), '', $path), '/');
         } elseif (is_object($path)) {
             $type = get_class($view);
             $path = '';
         }
 
+        if ($path && !$type) {
+            if (substr($path, -10) == '.blade.php') {
+                $type = 'blade';
+            } else {
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+            }
+        }
+
         foreach ($this->exclude_paths as $excludePath) {
-            if (strpos($path, $excludePath) !== false) {
+            if (strpos($shortPath, $excludePath) !== false) {
                 return;
             }
         }
 
-        if (!$this->collect_data) {
-            $params = array_keys($view->getData());
-        } else {
-            $data = [];
-            foreach ($view->getData() as $key => $value) {
-                $data[$key] = $this->getDataFormatter()->formatVar($value);
-            }
-            $params = $data;
-        }
+        $params = !$this->collect_data ? array_keys($data) : array_map(
+            fn ($value) => $this->getDataFormatter()->formatVar($value), $data
+        );
 
         $template = [
-            'name' => $path ? sprintf('%s (%s)', $name, $path) : $name,
+            'name' => $shortPath ? sprintf('%s (%s)', $name, $shortPath) : $name,
             'param_count' => count($params),
             'params' => $params,
             'type' => $type,
-            'editorLink' => $this->getEditorHref($view->getPath(), 0),
+            'editorLink' => $this->getEditorHref($path, 1),
         ];
 
-        if ($this->getXdebugLink($path)) {
-            $template['xdebug_link'] = $this->getXdebugLink(realpath($view->getPath()));
+        if ($this->getXdebugLinkTemplate()) {
+            $template['xdebug_link'] = $this->getXdebugLink($path);
         }
 
         $this->templates[] = $template;
