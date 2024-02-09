@@ -226,6 +226,12 @@ return [
         'route' => [
             'label' => true,  // show complete route on bar
         ],
+        'session' => [
+            'hiddens' => [], // hides sensitive values using array paths
+        ],
+        'symfony_request' => [
+            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
+        ],
         'logs' => [
             'file' => null,
         ],

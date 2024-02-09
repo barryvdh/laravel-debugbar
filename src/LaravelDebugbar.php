@@ -736,6 +736,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
         if ($this->app->bound(SessionManager::class)) {
 
             /** @var \Illuminate\Session\SessionManager $sessionManager */
@@ -745,7 +746,7 @@ class LaravelDebugbar extends DebugBar
 
             if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
                 try {
-                    $this->addCollector(new SessionCollector($sessionManager));
+                    $this->addCollector(new SessionCollector($sessionManager, $sessionHiddens));
                 } catch (\Exception $e) {
                     $this->addThrowable(
                         new Exception(
@@ -760,10 +761,14 @@ class LaravelDebugbar extends DebugBar
             $sessionManager = null;
         }
 
+        $requestHiddens = array_merge(
+            $app['config']->get('debugbar.options.symfony_request.hiddens', []),
+            array_map(fn ($key) => 'session_attributes.' . $key, $sessionHiddens)
+        );
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
                 $reqId = $this->getCurrentRequestId();
-                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId));
+                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId, $requestHiddens));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
@@ -777,7 +782,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
-                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
+                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager, $requestHiddens));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
