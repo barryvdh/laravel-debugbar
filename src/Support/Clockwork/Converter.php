@@ -111,6 +111,14 @@ class Converter
             $output['databaseDuration'] = $queries['accumulated_duration'] * 1000;
         }
 
+        if (isset($data['models'])) {
+            $output['modelsActions'] = [];
+            $output['modelsCreated'] = [];
+            $output['modelsUpdated'] = [];
+            $output['modelsDeleted'] = [];
+            $output['modelsRetrieved'] = $data['models']['data'];
+        }
+
         if (isset($data['views'])) {
             foreach ($data['views']['templates'] as $view) {
                 $output['viewsData'][] = [
