@@ -104,6 +104,7 @@ class Converter
                     'query' => $statement['sql'],
                     'bindings' => $statement['params'],
                     'duration' => $statement['duration'] * 1000,
+                    'time' => $statement['start'] ?? null,
                     'connection' => $statement['connection']
                 ];
             }
@@ -125,7 +126,7 @@ class Converter
                     'description' => 'Rendering a view',
                     'duration' => 0,
                     'end' => 0,
-                    'start' => 0,
+                    'start' => $view['start'] ?? 0,
                     'data' => [
                         'name' => $view['name'],
                         'data' => $view['params'],

@@ -1183,7 +1183,7 @@ class LaravelDebugbar extends DebugBar
     {
         $prefix = $this->app['config']->get('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
-        $response->headers->set('X-Clockwork-Version', 1, true);
+        $response->headers->set('X-Clockwork-Version', 9, true);
         $response->headers->set('X-Clockwork-Path', $prefix . '/clockwork/', true);
     }
 

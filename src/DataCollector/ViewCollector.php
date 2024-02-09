@@ -107,6 +107,7 @@ class ViewCollector extends TwigCollector
             'name' => $shortPath ? sprintf('%s (%s)', $name, $shortPath) : $name,
             'param_count' => count($params),
             'params' => $params,
+            'start' => microtime(true),
             'type' => $type,
             'editorLink' => $this->getEditorHref($path, 1),
         ];
