@@ -116,10 +116,14 @@ return [
      |
      | Note for your request to be identified as ajax requests they must either send the header
      | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
+     |
+     | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
+     | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
      */
 
     'capture_ajax' => true,
     'add_ajax_timing' => false,
+    'ajax_handler_auto_show' => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -176,6 +180,7 @@ return [
         'cache'           => false, // Display cache events
         'models'          => true,  // Display models
         'livewire'        => true,  // Display Livewire (when available)
+        'jobs'            => false, // Display dispatched jobs
     ],
 
     /*
@@ -188,6 +193,10 @@ return [
      */
 
     'options' => [
+        'memory' => [
+            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
+            'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+        ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
         ],
@@ -206,6 +215,7 @@ return [
             'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
         ],
         'mail' => [
+            'timeline' => false,  // Add mails to the timeline
             'full_log' => false,
         ],
         'views' => [
