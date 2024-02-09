@@ -495,7 +495,7 @@ class LaravelDebugbar extends DebugBar
                         }
                         public function __toString(): string
                         {
-                            $this->originalTransport->__toString();
+                            return $this->originalTransport->__toString();
                         }
                     });
                 }
