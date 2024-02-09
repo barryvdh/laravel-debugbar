@@ -432,7 +432,7 @@ class LaravelDebugbar extends DebugBar
                         $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
 
                         if (app('config')->get('debugbar.options.db.memory_usage')) {
-                            $event->connection->beforeExecuting(function () use ($queryCollector){
+                            $event->connection->beforeExecuting(function () use ($queryCollector) {
                                 $queryCollector->startMemoryUsage();
                             });
                         }

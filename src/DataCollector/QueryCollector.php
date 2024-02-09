@@ -118,7 +118,8 @@ class QueryCollector extends PDOCollector
 //        }
     }
 
-    public function startMemoryUsage() {
+    public function startMemoryUsage()
+    {
         $this->lastMemoryUsage = memory_get_usage(false);
     }
 
