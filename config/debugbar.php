@@ -193,6 +193,9 @@ return [
      */
 
     'options' => [
+        'time' => [
+            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
+        ],
         'memory' => [
             'reset_peak' => false,     // run memory_reset_peak_usage before collecting
             'with_baseline' => false,  // Set boot memory usage as memory peak baseline
