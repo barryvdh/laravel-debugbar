@@ -219,7 +219,8 @@ class LaravelDebugbar extends DebugBar
             try {
                 $collectData = $this->app['config']->get('debugbar.options.views.data', true);
                 $excludePaths = $this->app['config']->get('debugbar.options.views.exclude_paths', []);
-                $this->addCollector(new ViewCollector($collectData, $excludePaths));
+                $group = $this->app['config']->get('debugbar.options.views.group', true);
+                $this->addCollector(new ViewCollector($collectData, $excludePaths, $group));
                 $this->app['events']->listen(
                     'composing:*',
                     function ($view, $data = []) use ($debugbar) {
