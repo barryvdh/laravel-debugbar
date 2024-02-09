@@ -177,7 +177,7 @@ class QueryCollector extends PDOCollector
 
         if ($this->findSource) {
             try {
-                $source = array_slice($this->findSource(), 0, 5);
+                $source = $this->findSource();
             } catch (\Exception $e) {
             }
         }
@@ -272,7 +272,7 @@ class QueryCollector extends PDOCollector
             $sources[] = $this->parseTrace($index, $trace);
         }
 
-        return array_filter($sources);
+        return array_slice(array_filter($sources), 0, 5);
     }
 
     /**
