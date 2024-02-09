@@ -26,6 +26,7 @@ class QueryCollector extends PDOCollector
         '/vendor/laravel/framework/src/Illuminate/Support',
         '/vendor/laravel/framework/src/Illuminate/Database',
         '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/laravel/framework/src/Illuminate/Collections',
         '/vendor/october/rain',
         '/vendor/barryvdh/laravel-debugbar',
     ];
