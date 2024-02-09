@@ -578,6 +578,14 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     margin-right: 5px;
 }
 
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id a {
+    color: #888;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id a:hover {
+    color: #aaa;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params {
     background-color: #fdfdfd;
     margin: 10px 0px;

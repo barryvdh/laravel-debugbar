@@ -4,14 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePhpdebugbarStorageTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('phpdebugbar', function (Blueprint $table) {
                 $table->string('id');
@@ -30,13 +28,12 @@ class CreatePhpdebugbarStorageTable extends Migration
                 $table->index('meta_method');
         });
     }
+
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
         Schema::drop('phpdebugbar');
     }
-}
+};

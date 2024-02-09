@@ -40,7 +40,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "3.8-dev"
+            "dev-master": "3.9-dev"
         },
         "laravel": {
             "providers": [

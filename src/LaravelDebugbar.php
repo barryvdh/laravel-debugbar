@@ -96,6 +96,8 @@ class LaravelDebugbar extends DebugBar
      */
     protected $is_lumen = false;
 
+    protected array $editorTemplateArgs = [];
+
     /**
      * @param Application $app
      */
@@ -139,6 +141,8 @@ class LaravelDebugbar extends DebugBar
         /** @var Application $app */
         $app = $this->app;
 
+        $this->editorTemplateArgs = [$this->app['config']->get('debugbar.editor'), $this->getRemoteServerReplacements()];
+
         // Set custom error handler
         if ($app['config']->get('debugbar.error_handler', false)) {
             set_error_handler([$this, 'handleError']);
@@ -171,6 +175,12 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('memory', true)) {
             $this->addCollector(new MemoryCollector());
+            if (function_exists('memory_reset_peak_usage') && $app['config']->get('debugbar.options.memory.reset_peak')) {
+                memory_reset_peak_usage();
+            }
+            if ($app['config']->get('debugbar.options.memory.with_baseline')) {
+                $debugbar['memory']->resetMemoryBaseline();
+            }
         }
 
         if ($this->shouldCollect('exceptions', true)) {
@@ -562,6 +572,15 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        if ($this->shouldCollect('jobs', false)) {
+            try {
+                $jobsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\JobsCollector');
+                $this->addCollector($jobsCollector);
+            } catch (\Exception $e) {
+                // No Jobs collector
+            }
+        }
+
         $renderer = $this->getJavascriptRenderer();
         $renderer->setIncludeVendors($this->app['config']->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToFetch($app['config']->get('debugbar.capture_ajax', true));
@@ -589,6 +608,10 @@ class LaravelDebugbar extends DebugBar
 
         if (method_exists($collector, 'useHtmlVarDumper')) {
             $collector->useHtmlVarDumper();
+        }
+        if (method_exists($collector, 'setEditorLinkTemplate')) {
+            $collector->setEditorLinkTemplate($this->editorTemplateArgs[0]);
+            $collector->addXdebugReplacements($this->editorTemplateArgs[1]);
         }
 
         return $this;
@@ -721,6 +744,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
         if ($this->app->bound(SessionManager::class)) {
 
             /** @var \Illuminate\Session\SessionManager $sessionManager */
@@ -730,7 +754,7 @@ class LaravelDebugbar extends DebugBar
 
             if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
                 try {
-                    $this->addCollector(new SessionCollector($sessionManager));
+                    $this->addCollector(new SessionCollector($sessionManager, $sessionHiddens));
                 } catch (\Exception $e) {
                     $this->addThrowable(
                         new Exception(
@@ -745,10 +769,14 @@ class LaravelDebugbar extends DebugBar
             $sessionManager = null;
         }
 
+        $requestHiddens = array_merge(
+            $app['config']->get('debugbar.options.symfony_request.hiddens', []),
+            array_map(fn ($key) => 'session_attributes.' . $key, $sessionHiddens)
+        );
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
                 $reqId = $this->getCurrentRequestId();
-                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId));
+                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId, $requestHiddens));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
@@ -762,7 +790,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
-                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
+                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager, $requestHiddens));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
@@ -932,7 +960,7 @@ class LaravelDebugbar extends DebugBar
         $widget = $renderer->render();
 
         // Try to put the js/css directly before the </head>
-        $pos = strripos($content, '</head>');
+        $pos = stripos($content, '</head>');
         if (false !== $pos) {
             $content = substr($content, 0, $pos) . $head . substr($content, $pos);
         } else {
@@ -1170,6 +1198,17 @@ class LaravelDebugbar extends DebugBar
 
             $response->headers->set('Server-Timing', $headers, false);
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getRemoteServerReplacements()
+    {
+        $localPath = $this->app['config']->get('debugbar.local_sites_path', '');
+        $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path', ''))) ?: [base_path()];
+
+        return array_fill_keys($remotePaths, $localPath);
     }
 
     /**
