@@ -84,7 +84,7 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    function find(array $filters = array(), $max = 20, $offset = 0)
+    function find(array $filters = [], $max = 20, $offset = 0)
     {
         //
     }

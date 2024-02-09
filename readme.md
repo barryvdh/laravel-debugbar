@@ -30,7 +30,7 @@ This package includes some custom collectors:
 
 Bootstraps the following collectors for Laravel:
  - LogCollector: Show all Log messages
- - SwiftMailCollector and SwiftLogCollector for Mail
+ - SymfonyMailCollector for Mail
 
 And the default collectors:
  - PhpInfoCollector
