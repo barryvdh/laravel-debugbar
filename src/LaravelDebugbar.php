@@ -205,9 +205,8 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('events', false) && isset($this->app['events'])) {
             try {
                 $startTime = $this->app['request']->server('REQUEST_TIME_FLOAT');
-                $eventCollector = new EventCollector($startTime);
-                $this->addCollector($eventCollector);
-                $this->app['events']->subscribe($eventCollector);
+                $this->addCollector(new EventCollector($startTime));
+                $this->app['events']->subscribe($debugbar['event']);
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
