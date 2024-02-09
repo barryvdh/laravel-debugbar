@@ -193,6 +193,9 @@ return [
      */
 
     'options' => [
+        'time' => [
+            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
+        ],
         'memory' => [
             'reset_peak' => false,     // run memory_reset_peak_usage before collecting
             'with_baseline' => false,  // Set boot memory usage as memory peak baseline
@@ -213,6 +216,7 @@ return [
             'hints'             => false,    // Show hints for common mistakes
             'show_copy'         => false,    // Show copy button next to the query,
             'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
+            'memory_usage'      => false,   // Show queries memory usage
         ],
         'mail' => [
             'timeline' => false,  // Add mails to the timeline
@@ -228,6 +232,12 @@ return [
         ],
         'route' => [
             'label' => true,  // show complete route on bar
+        ],
+        'session' => [
+            'hiddens' => [], // hides sensitive values using array paths
+        ],
+        'symfony_request' => [
+            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
         ],
         'logs' => [
             'file' => null,

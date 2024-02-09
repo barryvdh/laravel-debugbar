@@ -83,7 +83,17 @@
                     $('<span title="Row count" />').addClass(csscls('row-count')).text(stmt.row_count).appendTo(li);
                 }
                 if (typeof(stmt.stmt_id) != 'undefined' && stmt.stmt_id) {
-                    $('<span title="Prepared statement ID" />').addClass(csscls('stmt-id')).text(stmt.stmt_id).appendTo(li);
+                    $('<span title="Prepared statement ID" />').addClass(csscls('stmt-id'))
+                        .append(! stmt.xdebug_link ? $('<i/>').text(stmt.stmt_id).html() : $('<a />')
+                            .attr('href', stmt.xdebug_link.url).text(stmt.stmt_id)
+                            .on('click', function (event) {
+                                event.stopPropagation();
+                                if (stmt.xdebug_link.ajax) {
+                                    event.preventDefault();
+                                    $.ajax(stmt.xdebug_link.url);
+                                }
+                            })
+                        ).appendTo(li);
                 }
                 if (stmt.connection) {
                     $('<span title="Connection" />').addClass(csscls('database')).text(stmt.connection).appendTo(li);
@@ -221,6 +231,10 @@
             this.$list.$el.appendTo(this.$el);
 
             this.bindAttr('data', function (data) {
+                // the collector maybe is empty
+                if (data.length <= 0 || !data.statements) {
+                    return false;
+                }
                 this.$list.set('data', data.statements);
                 this.$status.empty();
                 var stmt;

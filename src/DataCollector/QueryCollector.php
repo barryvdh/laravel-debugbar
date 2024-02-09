@@ -13,6 +13,7 @@ class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
     protected $queries = [];
+    protected $lastMemoryUsage;
     protected $renderSqlWithParams = false;
     protected $findSource = false;
     protected $middleware = [];
@@ -26,6 +27,7 @@ class QueryCollector extends PDOCollector
         '/vendor/laravel/framework/src/Illuminate/Support',
         '/vendor/laravel/framework/src/Illuminate/Database',
         '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/laravel/framework/src/Illuminate/Collections',
         '/vendor/october/rain',
         '/vendor/barryvdh/laravel-debugbar',
     ];
@@ -116,6 +118,11 @@ class QueryCollector extends PDOCollector
 //        }
     }
 
+    public function startMemoryUsage()
+    {
+        $this->lastMemoryUsage = memory_get_usage(false);
+    }
+
     /**
      *
      * @param string $query
@@ -177,7 +184,7 @@ class QueryCollector extends PDOCollector
 
         if ($this->findSource) {
             try {
-                $source = array_slice($this->findSource(), 0, 5);
+                $source = $this->findSource();
             } catch (\Exception $e) {
             }
         }
@@ -186,7 +193,9 @@ class QueryCollector extends PDOCollector
             'query' => $query,
             'type' => 'query',
             'bindings' => $this->getDataFormatter()->escapeBindings($bindings),
+            'start' => $startTime,
             'time' => $time,
+            'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
             'explain' => $explainResults,
             'connection' => $connection->getDatabaseName(),
@@ -196,7 +205,7 @@ class QueryCollector extends PDOCollector
         ];
 
         if ($this->timeCollector !== null) {
-            $this->timeCollector->addMeasure(Str::limit($query, 100), $startTime, $endTime);
+            $this->timeCollector->addMeasure(Str::limit($query, 100), $startTime, $endTime, [], 'db');
         }
     }
 
@@ -236,8 +245,8 @@ class QueryCollector extends PDOCollector
         }
         if (preg_match('/ORDER BY RAND()/i', $query)) {
             $hints[] = '<code>ORDER BY RAND()</code> is slow, try to avoid if you can.
-                You can <a href="http://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work" target="_blank">read this</a>
-                or <a href="http://stackoverflow.com/questions/1244555/how-can-i-optimize-mysqls-order-by-rand-function" target="_blank">this</a>';
+                You can <a href="https://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work" target="_blank">read this</a>
+                or <a href="https://stackoverflow.com/questions/1244555/how-can-i-optimize-mysqls-order-by-rand-function" target="_blank">this</a>';
         }
         if (strpos($query, '!=') !== false) {
             $hints[] = 'The <code>!=</code> operator is not standard. Use the <code>&lt;&gt;</code> operator to test for inequality instead.';
@@ -272,7 +281,7 @@ class QueryCollector extends PDOCollector
             $sources[] = $this->parseTrace($index, $trace);
         }
 
-        return array_filter($sources);
+        return array_slice(array_filter($sources), 0, 5);
     }
 
     /**
@@ -288,6 +297,7 @@ class QueryCollector extends PDOCollector
             'index' => $index,
             'namespace' => null,
             'name' => null,
+            'file' => null,
             'line' => isset($trace['line']) ? $trace['line'] : '?',
         ];
 
@@ -302,33 +312,36 @@ class QueryCollector extends PDOCollector
             isset($trace['file']) &&
             !$this->fileIsInExcludedPath($trace['file'])
         ) {
-            $file = $trace['file'];
+            $frame->file = $trace['file'];
 
             if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
-                list($file, $frame->line) = $this->getTwigInfo($trace);
-            } elseif (strpos($file, storage_path()) !== false) {
-                $hash = pathinfo($file, PATHINFO_FILENAME);
+                list($frame->file, $frame->line) = $this->getTwigInfo($trace);
+            } elseif (strpos($frame->file, storage_path()) !== false) {
+                $hash = pathinfo($frame->file, PATHINFO_FILENAME);
 
-                if (! $frame->name = $this->findViewFromHash($hash)) {
+                if ($frame->name = $this->findViewFromHash($hash)) {
+                    $frame->file = $frame->name[1];
+                    $frame->name = $frame->name[0];
+                } else {
                     $frame->name = $hash;
                 }
 
                 $frame->namespace = 'view';
 
                 return $frame;
-            } elseif (strpos($file, 'Middleware') !== false) {
-                $frame->name = $this->findMiddlewareFromFile($file);
+            } elseif (strpos($frame->file, 'Middleware') !== false) {
+                $frame->name = $this->findMiddlewareFromFile($frame->file);
 
                 if ($frame->name) {
                     $frame->namespace = 'middleware';
                 } else {
-                    $frame->name = $this->normalizeFilename($file);
+                    $frame->name = $this->normalizeFilePath($frame->file);
                 }
 
                 return $frame;
             }
 
-            $frame->name = $this->normalizeFilename($file);
+            $frame->name = $this->normalizeFilePath($frame->file);
 
             return $frame;
         }
@@ -377,7 +390,7 @@ class QueryCollector extends PDOCollector
      * Find the template name from the hash.
      *
      * @param  string $hash
-     * @return null|string
+     * @return null|array
      */
     protected function findViewFromHash($hash)
     {
@@ -396,7 +409,7 @@ class QueryCollector extends PDOCollector
 
         foreach ($property->getValue($finder) as $name => $path) {
             if (($xxh128Exists && hash('xxh128', 'v2' . $path) == $hash) || sha1('v2' . $path) == $hash) {
-                return $name;
+                return [$name, $path];
             }
         }
     }
@@ -423,27 +436,6 @@ class QueryCollector extends PDOCollector
     }
 
     /**
-     * Shorten the path by removing the relative links and base dir
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function normalizeFilename($path)
-    {
-        if (file_exists($path)) {
-            $path = realpath($path);
-        }
-
-        $basepath = base_path();
-
-        if (! str_starts_with($path, $basepath)) {
-            return $path;
-        }
-
-        return substr($path, strlen($basepath));
-    }
-
-    /**
      * Collect a database transaction event.
      * @param  string $event
      * @param \Illuminate\Database\Connection $connection
@@ -464,7 +456,9 @@ class QueryCollector extends PDOCollector
             'query' => $event,
             'type' => 'transaction',
             'bindings' => [],
+            'start' => microtime(true),
             'time' => 0,
+            'memory' => 0,
             'source' => $source,
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
@@ -488,11 +482,14 @@ class QueryCollector extends PDOCollector
     public function collect()
     {
         $totalTime = 0;
+        $totalMemory = 0;
         $queries = $this->queries;
 
         $statements = [];
         foreach ($queries as $query) {
+            $source = reset($query['source']);
             $totalTime += $query['time'];
+            $totalMemory += $query['memory'];
 
             $statements[] = [
                 'sql' => $this->getDataFormatter()->formatSql($query['query']),
@@ -502,9 +499,13 @@ class QueryCollector extends PDOCollector
                 'hints' => $query['hints'],
                 'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
+                'start' => $query['start'] ?? null,
                 'duration' => $query['time'],
                 'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
-                'stmt_id' => $this->getDataFormatter()->formatSource(reset($query['source'])),
+                'memory' => $query['memory'],
+                'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
+                'stmt_id' => $this->getDataFormatter()->formatSource($source),
+                'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $query['connection'],
             ];
 
@@ -599,6 +600,8 @@ class QueryCollector extends PDOCollector
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
+            'memory_usage' => $totalMemory,
+            'memory_usage_str' => $totalMemory ? $this->getDataFormatter()->formatBytes($totalMemory) : null,
             'statements' => $statements
         ];
         return $data;
