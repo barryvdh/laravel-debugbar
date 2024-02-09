@@ -109,7 +109,6 @@ class ViewCollector extends TwigCollector
             'params' => $params,
             'start' => microtime(true),
             'type' => $type,
-            'editorLink' => $this->getEditorHref($path, 1),
         ];
 
         if ($this->getXdebugLinkTemplate()) {
