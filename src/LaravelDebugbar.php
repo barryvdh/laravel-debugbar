@@ -175,6 +175,12 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('memory', true)) {
             $this->addCollector(new MemoryCollector());
+            if (function_exists('memory_reset_peak_usage') && $app['config']->get('debugbar.options.memory.reset_peak')) {
+                memory_reset_peak_usage();
+            }
+            if ($app['config']->get('debugbar.options.memory.with_baseline')) {
+                $debugbar['memory']->resetMemoryBaseline();
+            }
         }
 
         if ($this->shouldCollect('exceptions', true)) {
@@ -352,7 +358,7 @@ class LaravelDebugbar extends DebugBar
                         if (!app(static::class)->shouldCollect('db', true)) {
                             return; // Issue 776 : We've turned off collecting after the listener was attached
                         }
-                        
+
                         $bindings = $query->bindings;
                         $time = $query->time;
                         $connection = $query->connection;
@@ -462,7 +468,7 @@ class LaravelDebugbar extends DebugBar
 
                 if ($debugbar->hasCollector('time') && $this->app['config']->get('debugbar.options.mail.timeline')) {
                     $transport = $this->app['mailer']->getSymfonyTransport();
-                    $this->app['mailer']->setSymfonyTransport(new class($transport, $this) extends AbstractTransport{
+                    $this->app['mailer']->setSymfonyTransport(new class ($transport, $this) extends AbstractTransport{
                         private $originalTransport;
                         private $laravelDebugbar;
 
@@ -474,15 +480,20 @@ class LaravelDebugbar extends DebugBar
                         public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage
                         {
                             return $this->laravelDebugbar['time']->measure(
-                                'mail: '. Str::limit($message->getSubject(), 100),
+                                'mail: ' . Str::limit($message->getSubject(), 100),
                                 function () use ($message, $envelope) {
                                     return $this->originalTransport->send($message, $envelope);
                                 },
                                 'mail'
                             );
                         }
-                        protected function doSend(SentMessage $message): void {}
-                        public function __toString(): string{ $this->originalTransport->__toString(); }
+                        protected function doSend(SentMessage $message): void
+                        {
+                        }
+                        public function __toString(): string
+                        {
+                            $this->originalTransport->__toString();
+                        }
                     });
                 }
             } catch (\Exception $e) {
@@ -558,6 +569,15 @@ class LaravelDebugbar extends DebugBar
                         $e
                     )
                 );
+            }
+        }
+
+        if ($this->shouldCollect('jobs', false)) {
+            try {
+                $jobsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\JobsCollector');
+                $this->addCollector($jobsCollector);
+            } catch (\Exception $e) {
+                // No Jobs collector
             }
         }
 
@@ -724,6 +744,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
         if ($this->app->bound(SessionManager::class)) {
 
             /** @var \Illuminate\Session\SessionManager $sessionManager */
@@ -733,7 +754,7 @@ class LaravelDebugbar extends DebugBar
 
             if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
                 try {
-                    $this->addCollector(new SessionCollector($sessionManager));
+                    $this->addCollector(new SessionCollector($sessionManager, $sessionHiddens));
                 } catch (\Exception $e) {
                     $this->addThrowable(
                         new Exception(
@@ -748,10 +769,14 @@ class LaravelDebugbar extends DebugBar
             $sessionManager = null;
         }
 
+        $requestHiddens = array_merge(
+            $app['config']->get('debugbar.options.symfony_request.hiddens', []),
+            array_map(fn ($key) => 'session_attributes.' . $key, $sessionHiddens)
+        );
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
                 $reqId = $this->getCurrentRequestId();
-                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId));
+                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId, $requestHiddens));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(
@@ -765,7 +790,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
-                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager));
+                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager, $requestHiddens));
             } catch (\Exception $e) {
                 $this->addThrowable(
                     new Exception(

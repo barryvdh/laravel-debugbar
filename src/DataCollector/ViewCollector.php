@@ -57,19 +57,39 @@ class ViewCollector extends TwigCollector
     {
         $name = $view->getName();
         $path = $view->getPath();
+        $data = $view->getData();
+        $shortPath = '';
         $type = '';
+
+        if (class_exists('\Inertia\Inertia') && isset($data['page'])) {
+            $data = $data['page'];
+            $name = $data['component'];
+
+            if (!@file_exists($path = resource_path('js/Pages/' . $name . '.js'))) {
+                if (!@file_exists($path = resource_path('js/Pages/' . $name . '.vue'))) {
+                    if (!@file_exists($path = resource_path('js/Pages/' . $name . '.svelte'))) {
+                        $path = $view->getPath();
+                    }
+                }
+            } else {
+                $type = 'react';
+            }
+        }
 
         if ($path && is_string($path)) {
             $path = $this->normalizeFilePath($path);
+            $shortPath = ltrim(str_replace(base_path(), '', $path), '/');
+        } elseif (is_object($path)) {
+            $type = get_class($view);
+            $path = '';
+        }
 
+        if ($path && !$type) {
             if (substr($path, -10) == '.blade.php') {
                 $type = 'blade';
             } else {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
             }
-        } elseif (is_object($path)) {
-            $type = get_class($view);
-            $path = '';
         }
 
         foreach ($this->exclude_paths as $excludePath) {
@@ -78,21 +98,17 @@ class ViewCollector extends TwigCollector
             }
         }
 
-        if (!$this->collect_data) {
-            $params = array_keys($view->getData());
-        } else {
-            $data = [];
-            foreach ($view->getData() as $key => $value) {
-                $data[$key] = $this->getDataFormatter()->formatVar($value);
-            }
-            $params = $data;
-        }
+        $params = !$this->collect_data ? array_keys($data) : array_map(
+            fn ($value) => $this->getDataFormatter()->formatVar($value),
+            $data
+        );
 
         $template = [
-            'name' => $path ? sprintf('%s (%s)', $name, $path) : $name,
+            'name' => $shortPath ? sprintf('%s (%s)', $name, $shortPath) : $name,
             'param_count' => count($params),
             'params' => $params,
-            'type' => $type,            
+            'type' => $type,
+            'editorLink' => $this->getEditorHref($path, 1),
         ];
 
         if ($this->getXdebugLinkTemplate()) {
