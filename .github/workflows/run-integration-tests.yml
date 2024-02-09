@@ -19,7 +19,7 @@ jobs:
         strategy:
             matrix:
                 php: [8.3, 8.2, 8.1, 8.0]
-                lumen: [9.*]
+                lumen: [10.*, 9.*]
                 exclude:
                   - lumen: 10.*
                     php: 8.0
