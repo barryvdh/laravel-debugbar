@@ -13,6 +13,7 @@ class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
     protected $queries = [];
+    protected $lastMemoryUsage;
     protected $renderSqlWithParams = false;
     protected $findSource = false;
     protected $middleware = [];
@@ -117,6 +118,10 @@ class QueryCollector extends PDOCollector
 //        }
     }
 
+    public function startMemoryUsage() {
+        $this->lastMemoryUsage = memory_get_usage(false);
+    }
+
     /**
      *
      * @param string $query
@@ -189,6 +194,7 @@ class QueryCollector extends PDOCollector
             'bindings' => $this->getDataFormatter()->escapeBindings($bindings),
             'start' => $startTime,
             'time' => $time,
+            'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
             'explain' => $explainResults,
             'connection' => $connection->getDatabaseName(),
@@ -451,6 +457,7 @@ class QueryCollector extends PDOCollector
             'bindings' => [],
             'start' => microtime(true),
             'time' => 0,
+            'memory' => 0,
             'source' => $source,
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
@@ -474,12 +481,14 @@ class QueryCollector extends PDOCollector
     public function collect()
     {
         $totalTime = 0;
+        $totalMemory = 0;
         $queries = $this->queries;
 
         $statements = [];
         foreach ($queries as $query) {
             $source = reset($query['source']);
             $totalTime += $query['time'];
+            $totalMemory += $query['memory'];
 
             $statements[] = [
                 'sql' => $this->getDataFormatter()->formatSql($query['query']),
@@ -492,6 +501,8 @@ class QueryCollector extends PDOCollector
                 'start' => $query['start'] ?? null,
                 'duration' => $query['time'],
                 'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
+                'memory' => $query['memory'],
+                'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
                 'stmt_id' => $this->getDataFormatter()->formatSource($source),
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $query['connection'],
@@ -588,6 +599,8 @@ class QueryCollector extends PDOCollector
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
+            'memory_usage' => $totalMemory,
+            'memory_usage_str' => $totalMemory ? $this->getDataFormatter()->formatBytes($totalMemory) : null,
             'statements' => $statements
         ];
         return $data;
