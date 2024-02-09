@@ -154,7 +154,8 @@ class ViewCollector extends TwigCollector
         }
 
         $params = !$this->collect_data ? array_keys($data) : array_map(
-            fn ($value) => $this->getDataFormatter()->formatVar($value), $data
+            fn ($value) => $this->getDataFormatter()->formatVar($value),
+            $data
         );
 
         $template = [

@@ -464,7 +464,7 @@ class LaravelDebugbar extends DebugBar
 
                 if ($debugbar->hasCollector('time') && $this->app['config']->get('debugbar.options.mail.timeline')) {
                     $transport = $this->app['mailer']->getSymfonyTransport();
-                    $this->app['mailer']->setSymfonyTransport(new class($transport, $this) extends AbstractTransport{
+                    $this->app['mailer']->setSymfonyTransport(new class ($transport, $this) extends AbstractTransport{
                         private $originalTransport;
                         private $laravelDebugbar;
 
@@ -476,15 +476,20 @@ class LaravelDebugbar extends DebugBar
                         public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage
                         {
                             return $this->laravelDebugbar['time']->measure(
-                                'mail: '. Str::limit($message->getSubject(), 100),
+                                'mail: ' . Str::limit($message->getSubject(), 100),
                                 function () use ($message, $envelope) {
                                     return $this->originalTransport->send($message, $envelope);
                                 },
                                 'mail'
                             );
                         }
-                        protected function doSend(SentMessage $message): void {}
-                        public function __toString(): string{ $this->originalTransport->__toString(); }
+                        protected function doSend(SentMessage $message): void
+                        {
+                        }
+                        public function __toString(): string
+                        {
+                            $this->originalTransport->__toString();
+                        }
                     });
                 }
             } catch (\Exception $e) {
