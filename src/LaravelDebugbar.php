@@ -952,7 +952,7 @@ class LaravelDebugbar extends DebugBar
         $widget = $renderer->render();
 
         // Try to put the js/css directly before the </head>
-        $pos = strripos($content, '</head>');
+        $pos = stripos($content, '</head>');
         if (false !== $pos) {
             $content = substr($content, 0, $pos) . $head . substr($content, $pos);
         } else {
