@@ -221,6 +221,10 @@
             this.$list.$el.appendTo(this.$el);
 
             this.bindAttr('data', function (data) {
+                // the collector maybe is empty
+                if (data.length <= 0 || !data.statements) {
+                    return false;
+                }
                 this.$list.set('data', data.statements);
                 this.$status.empty();
                 var stmt;
