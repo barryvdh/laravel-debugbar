@@ -223,7 +223,7 @@ return [
             'data' => false,        //true for all data, 'keys' for only names, false for no parameters.
             'group' => true,        // Group duplicate views
             'exclude_paths' => [    // Add the paths which you don't want to appear in the views
-                //
+                'vendor/filament'   // Exclude Filament components by default
             ],
         ],
         'route' => [
