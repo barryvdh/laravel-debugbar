@@ -117,8 +117,8 @@ class ViewCollector extends TwigCollector
         }
 
         $template = [
-            'name' => $shortPath ? sprintf('%s (%s)', $name, $shortPath) : $name,
-            'param_count' => count($params),
+            'name' => $name,
+            'param_count' => $this->collect_data ? count($params) : null,
             'params' => $params,
             'start' => microtime(true),
             'type' => $type,
