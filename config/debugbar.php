@@ -223,9 +223,12 @@ return [
             'full_log' => false,
         ],
         'views' => [
-            'timeline' => false,  // Add the views to the timeline (Experimental)
-            'data' => false,    //Note: Can slow down the application, because the data can be quite large..
-            'exclude_paths' => [], // Add the paths which you don't want to appear in the views
+            'timeline' => false,    // Add the views to the timeline (Experimental)
+            'data' => false,        //true for all data, 'keys' for only names, false for no parameters.
+            'group' => true,        // Group duplicate views
+            'exclude_paths' => [    // Add the paths which you don't want to appear in the views
+                'vendor/filament'   // Exclude Filament components by default
+            ],
         ],
         'route' => [
             'label' => true,  // show complete route on bar
