@@ -197,7 +197,7 @@ return [
             'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
         ],
         'messages' => [
-            'trace' => false,   // Trace the origin of the debug message
+            'trace' => true,   // Trace the origin of the debug message
         ],
         'memory' => [
             'reset_peak' => false,     // run memory_reset_peak_usage before collecting
