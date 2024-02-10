@@ -98,7 +98,7 @@ class QueryCollector extends PDOCollector
      *
      * @param  bool $enabled
      */
-    public function setDurationBackground($enabled)
+    public function setDurationBackground($enabled = true)
     {
         $this->durationBackground = $enabled;
     }
