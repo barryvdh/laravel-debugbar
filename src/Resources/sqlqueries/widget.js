@@ -82,10 +82,11 @@
                 if (typeof(stmt.row_count) != 'undefined') {
                     $('<span title="Row count" />').addClass(csscls('row-count')).text(stmt.row_count).appendTo(li);
                 }
-                if (typeof(stmt.stmt_id) != 'undefined' && stmt.stmt_id) {
-                    $('<span title="Prepared statement ID" />').addClass(csscls('stmt-id'))
-                        .append(! stmt.xdebug_link ? $('<i/>').text(stmt.stmt_id).html() : $('<a />')
-                            .attr('href', stmt.xdebug_link.url).text(stmt.stmt_id)
+                if (typeof(stmt.filename) != 'undefined' && stmt.filename) {
+                    $('<span title="Source file" />').addClass(csscls('source-file'))
+                        .append(! stmt.xdebug_link ? $('<i/>').text(stmt.filename).html() : $('<a />')
+                            .attr('href', stmt.xdebug_link.url).text(stmt.filename)
+                            .attr('title', stmt.source)
                             .on('click', function (event) {
                                 event.stopPropagation();
                                 if (stmt.xdebug_link.ajax) {
