@@ -1224,7 +1224,7 @@ class LaravelDebugbar extends DebugBar
      */
     private function getRemoteServerReplacements()
     {
-        $localPath = $this->app['config']->get('debugbar.local_sites_path', '');
+        $localPath = $this->app['config']->get('debugbar.local_sites_path') ?: base_path();
         $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path', ''))) ?: [base_path()];
 
         return array_fill_keys($remotePaths, $localPath);
