@@ -504,7 +504,8 @@ class QueryCollector extends PDOCollector
                 'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
-                'stmt_id' => $this->getDataFormatter()->formatSource($source),
+                'filename' => $this->getDataFormatter()->formatSource($source, true),
+                'source' => $this->getDataFormatter()->formatSource($source),
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $query['connection'],
             ];
