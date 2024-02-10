@@ -155,7 +155,13 @@ class LaravelDebugbar extends DebugBar
         }
 
         if ($this->shouldCollect('messages', true)) {
-            $this->addCollector(new MessagesCollector());
+            $trace = $this->app['config']->get('debugbar.options.messages.trace', true);
+            $messages = new MessagesCollector();
+            if ($trace) {
+                $messages->collectFileTrace(true);
+            }
+
+            $this->addCollector($messages);
         }
 
         if ($this->shouldCollect('time', true)) {
