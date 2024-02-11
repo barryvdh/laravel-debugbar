@@ -82,20 +82,21 @@
                 if (typeof(stmt.row_count) != 'undefined') {
                     $('<span title="Row count" />').addClass(csscls('row-count')).text(stmt.row_count).appendTo(li);
                 }
-                if (typeof(stmt.filename) != 'undefined' && stmt.filename) {
-                    $('<span title="Source file" />').addClass(csscls('source-file'))
-                        .append(! stmt.xdebug_link ? $('<i/>').text(stmt.filename).html() : $('<a />')
-                            .attr('href', stmt.xdebug_link.url).text(stmt.filename)
-                            .attr('title', stmt.source)
-                            .on('click', function (event) {
-                                event.stopPropagation();
-                                if (stmt.xdebug_link.ajax) {
-                                    event.preventDefault();
-                                    $.ajax(stmt.xdebug_link.url);
-                                }
-                            })
-                        ).appendTo(li);
+
+                if (typeof stmt.xdebug_link !== 'undefined' && stmt.xdebug_link !== null) {
+                    var header = $('<span />').addClass(csscls('filename')).text(stmt.xdebug_link.filename + ( stmt.xdebug_link.line ? "#" + stmt.xdebug_link.line : ''));
+                    if (stmt.xdebug_link) {
+                        if (stmt.xdebug_link.ajax) {
+                            $('<a title="' + stmt.xdebug_link.url + '"></a>').on('click', function () {
+                                $.ajax(stmt.xdebug_link.url);
+                            }).addClass(csscls('editor-link')).appendTo(header);
+                        } else {
+                            $('<a href="' + stmt.xdebug_link.url + '"></a>').addClass(csscls('editor-link')).appendTo(header);
+                        }
+                    }
+                    header.appendTo(li);
                 }
+
                 if (stmt.connection) {
                     $('<span title="Connection" />').addClass(csscls('database')).text(stmt.connection).appendTo(li);
                     li.attr("connection",stmt.connection);
