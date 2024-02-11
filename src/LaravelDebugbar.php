@@ -184,13 +184,17 @@ class LaravelDebugbar extends DebugBar
         }
 
         if ($this->shouldCollect('memory', true)) {
-            $this->addCollector(new MemoryCollector());
+            $memoryCollector = new MemoryCollector();
+            if (method_exists($memoryCollector, 'setPrecision')) {
+                $memoryCollector->setPrecision($app['config']->get('debugbar.options.memory.precision', 0));
+            }
             if (function_exists('memory_reset_peak_usage') && $app['config']->get('debugbar.options.memory.reset_peak')) {
                 memory_reset_peak_usage();
             }
             if ($app['config']->get('debugbar.options.memory.with_baseline')) {
-                $debugbar['memory']->resetMemoryBaseline();
+                $memoryCollector->resetMemoryBaseline();
             }
+            $this->addCollector($memoryCollector);
         }
 
         if ($this->shouldCollect('exceptions', true)) {

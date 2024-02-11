@@ -202,6 +202,7 @@ return [
         'memory' => [
             'reset_peak' => false,     // run memory_reset_peak_usage before collecting
             'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+            'precision' => 0,          // Memory rounding precision
         ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
