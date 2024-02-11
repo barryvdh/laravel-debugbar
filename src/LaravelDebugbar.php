@@ -185,7 +185,9 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('memory', true)) {
             $memoryCollector = new MemoryCollector();
-            $memoryCollector->setPrecision($app['config']->get('debugbar.options.memory.precision', 0));
+            if (method_exists($memoryCollector, 'setPrecision')) {
+                $memoryCollector->setPrecision($app['config']->get('debugbar.options.memory.precision', 0));
+            }
             if (function_exists('memory_reset_peak_usage') && $app['config']->get('debugbar.options.memory.reset_peak')) {
                 memory_reset_peak_usage();
             }
