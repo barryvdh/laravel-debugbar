@@ -202,6 +202,7 @@ return [
         'memory' => [
             'reset_peak' => false,     // run memory_reset_peak_usage before collecting
             'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+            'precision' => 0,          // Memory rounding precision
         ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
@@ -224,9 +225,6 @@ return [
         'mail' => [
             'timeline' => false,  // Add mails to the timeline
             'full_log' => false,
-        ],
-        'memory' => [
-            'precision' => 0,
         ],
         'views' => [
             'timeline' => false,    // Add the views to the timeline (Experimental)
