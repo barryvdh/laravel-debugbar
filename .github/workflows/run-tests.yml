@@ -19,9 +19,9 @@ jobs:
 
     strategy:
       matrix:
-        php: [8.2, 8.1, 8.0]
+        php: [8.3, 8.2, 8.1, 8.0]
         laravel: [^10, ^9]
-        dependency-version: [prefer-lowest, prefer-stable]
+        dependency-version: [prefer-stable]
         exclude:
           - laravel: ^10
             php: 8.0
@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -42,7 +42,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:>=2.62.1" --no-interaction --no-update
+        composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
     - name: Update Dusk Chromedriver

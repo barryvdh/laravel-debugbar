@@ -5,6 +5,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -25,6 +26,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     protected $session;
     /** @var string|null */
     protected $currentRequestId;
+    /** @var array */
+    protected $hiddens;
 
     /**
      * Create a new SymfonyRequestCollector
@@ -32,13 +35,20 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param string|null $currentRequestId
+     * @param array $hiddens
      */
-    public function __construct($request, $response, $session = null, $currentRequestId = null)
+    public function __construct($request, $response, $session = null, $currentRequestId = null, $hiddens = [])
     {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
         $this->currentRequestId = $currentRequestId;
+        $this->hiddens = array_merge($hiddens, [
+            'request_request.password',
+            'request_server.PHP_AUTH_PW',
+            'request_headers.php-auth-pw.0',
+        ]);
     }
 
     /**
@@ -108,31 +118,24 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         ];
 
         if ($this->session) {
-            $sessionAttributes = [];
-            foreach ($this->session->all() as $key => $value) {
-                $sessionAttributes[$key] = $value;
-            }
-            $data['session_attributes'] = $sessionAttributes;
+            $data['session_attributes'] = $this->session->all();
         }
 
         foreach ($data['request_server'] as $key => $value) {
-            if (
-                Str::is('*_KEY', $key) || Str::is('*_PASSWORD', $key)
-                    || Str::is('*_SECRET', $key) || Str::is('*_PW', $key)
-                    || Str::is('*_TOKEN', $key) || Str::is('*_PASS', $key)
-            ) {
+            if (Str::is(['*_KEY', '*_PASSWORD', '*_SECRET', '*_PW', '*_TOKEN', '*_PASS'], $key)) {
                 $data['request_server'][$key] = '******';
             }
         }
 
-        if (isset($data['request_headers']['php-auth-pw'])) {
-            $data['request_headers']['php-auth-pw'] = '******';
+        if (isset($data['request_headers']['authorization'][0])) {
+            $data['request_headers']['authorization'][0] = substr($data['request_headers']['authorization'][0], 0, 12) . '******';
         }
 
-        if (isset($data['request_server']['PHP_AUTH_PW'])) {
-            $data['request_server']['PHP_AUTH_PW'] = '******';
+        foreach ($this->hiddens as $key) {
+            if (Arr::has($data, $key)) {
+                Arr::set($data, $key, '******');
+            }
         }
-        ;
 
         foreach ($data as $key => $var) {
             if (!is_string($data[$key])) {

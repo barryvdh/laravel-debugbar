@@ -195,7 +195,7 @@ div.phpdebugbar div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-par
 
 div.phpdebugbar code,
 div.phpdebugbar pre {
-    color: #FFF;
+    color: #f1fa8c;
 }
 
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > a,
@@ -233,6 +233,14 @@ div.phpdebugbar a.phpdebugbar-close-btn {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAABUElEQVQ4T52SMUsDMRTH3xUPChHCxeko3YrUqeFGEexym3boJ9DBufhJpLODfoIbTrcuFcSxxMki3Uq5yZRAAweRVp70HdfWQZolb3i/l/x/iQd7Lm9PDjbA2Wz24HmerFarbSGEwaFaa57n+XC1WqlarXZNBxUgQsaYK+ccCCHeGWPn2GStfdFat3zfB875I8EFOBqNPpbLZRObsQnh9YktHIarUqmMoyg6wboApZTtfr9/zxhrEIw7QdbaSa/Xu1FKDTdAADiQUp6VYcpTgl4B4HsbhCRJjsIwfPN9/7hs2zn3mWXZabfb/dqRg/ZIBF2PmigzCiPbRcbpdKrQXjkTguXMKKxer8uNqw4Gg6cgCC7WT/ArAuty5vl8/hzH8eV2xmaapnec88baHooAEmaMmXQ6nVsAGO/IAQB8x0MAUGQPbSMPAAuC/gL//XV/ALsvnQ+MsaHgAAAAAElFTkSuQmCC) no-repeat 9px 6px;
 }
 
+div.phpdebugbar code.language-php,
+div.phpdebugbar pre.language-php {
+    color: #FFF;
+}
+
+pre.phpdebugbar-widgets-code-block ul {
+    background: none;
+}
 
 /* Dracula Theme v1.2.5
  *
@@ -262,7 +270,8 @@ div.phpdebugbar .hljs-subst {
     color: #f8f8f2;
 }
 
-div.phpdebugbar .hljs-title {
+div.phpdebugbar .hljs-title,
+div.phpdebugbar .hljs-meta-keyword {
     color: #50fa7b;
 }
 
@@ -284,6 +293,10 @@ div.phpdebugbar .hljs-comment,
 div.phpdebugbar .hljs-quote,
 div.phpdebugbar .hljs-deletion {
     color: #6272a4;
+}
+
+div.phpdebugbar .hljs-strong {
+    font-weight: bold;
 }
 
 div.phpdebugbar .hljs-literal,

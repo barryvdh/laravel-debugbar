@@ -31,9 +31,13 @@ return [
      | By default, file storage (in the storage folder) is used. Redis and PDO
      | can also be used. For PDO, run the package migrations first.
      |
+     | Warning: Enabling storage.open will allow everyone to access previous
+     | request, do not enable open storage in publicly available environments!
+     | Specify a callback if you want to limit based on IP or authentication.
      */
     'storage' => [
         'enabled'    => true,
+        'open'       => env('DEBUGBAR_OPEN_STORAGE', false), // bool/callback.
         'driver'     => 'file', // redis, file, pdo, socket, custom
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
@@ -81,8 +85,8 @@ return [
     |
     */
 
-    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH', ''),
-    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', ''),
+    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH'),
+    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
 
     /*
      |--------------------------------------------------------------------------
@@ -112,10 +116,14 @@ return [
      |
      | Note for your request to be identified as ajax requests they must either send the header
      | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
+     |
+     | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
+     | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
      */
 
     'capture_ajax' => true,
     'add_ajax_timing' => false,
+    'ajax_handler_auto_show' => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -172,6 +180,7 @@ return [
         'cache'           => false, // Display cache events
         'models'          => true,  // Display models
         'livewire'        => true,  // Display Livewire (when available)
+        'jobs'            => false, // Display dispatched jobs
     ],
 
     /*
@@ -184,6 +193,16 @@ return [
      */
 
     'options' => [
+        'time' => [
+            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
+        ],
+        'messages' => [
+            'trace' => true,   // Trace the origin of the debug message
+        ],
+        'memory' => [
+            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
+            'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+        ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
         ],
@@ -200,20 +219,31 @@ return [
             'hints'             => false,    // Show hints for common mistakes
             'show_copy'         => false,    // Show copy button next to the query,
             'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
+            'memory_usage'      => false,   // Show queries memory usage
         ],
         'mail' => [
+            'timeline' => false,  // Add mails to the timeline
             'full_log' => false,
         ],
         'memory' => [
             'precision' => 0,
         ],
         'views' => [
-            'timeline' => false,  // Add the views to the timeline (Experimental)
-            'data' => false,    //Note: Can slow down the application, because the data can be quite large..
-            'exclude_paths' => [], // Add the paths which you don't want to appear in the views
+            'timeline' => false,    // Add the views to the timeline (Experimental)
+            'data' => false,        //true for all data, 'keys' for only names, false for no parameters.
+            'group' => 50,          // Group duplicate views. Pass value to auto-group, or true/false to force
+            'exclude_paths' => [    // Add the paths which you don't want to appear in the views
+                'vendor/filament'   // Exclude Filament components by default
+            ],
         ],
         'route' => [
             'label' => true,  // show complete route on bar
+        ],
+        'session' => [
+            'hiddens' => [], // hides sensitive values using array paths
+        ],
+        'symfony_request' => [
+            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
         ],
         'logs' => [
             'file' => null,

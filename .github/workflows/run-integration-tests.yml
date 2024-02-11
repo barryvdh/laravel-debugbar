@@ -18,15 +18,15 @@ jobs:
             COMPOSER_NO_INTERACTION: 1
         strategy:
             matrix:
-                php: [8.2, 8.1, 8.0]
-                lumen: [9.*]
+                php: [8.3, 8.2, 8.1, 8.0]
+                lumen: [10.*, 9.*]
                 exclude:
                   - lumen: 10.*
                     php: 8.0
         name: P${{ matrix.php }} - Lumen${{ matrix.lumen }}
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
               with:
                   path: src
 
@@ -65,7 +65,7 @@ jobs:
             COMPOSER_NO_INTERACTION: 1
         strategy:
             matrix:
-                php: [8.2, 8.1, 8.0]
+                php: [8.3, 8.2, 8.1, 8.0]
                 laravel: [10.*, 9.*]
                 exclude:
                   - laravel: 10.*
@@ -73,7 +73,7 @@ jobs:
         name: P${{ matrix.php }} - Laravel${{ matrix.laravel }}
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
               with:
                   path: src
 

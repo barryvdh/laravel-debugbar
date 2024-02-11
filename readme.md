@@ -14,7 +14,7 @@ Read [the documentation](http://phpdebugbar.com/docs/) for more configuration op
 ![Debugbar 3.3 Screenshot](https://user-images.githubusercontent.com/973269/79428890-196cc680-7fc7-11ea-8229-189f5eac9009.png)
 
 
-Note: Use the DebugBar only in development. It can slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
+### Note: Use the DebugBar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design). It can also slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
 
 This package includes some custom collectors:
  - QueryCollector: Show all queries, including binding + timing
@@ -30,7 +30,7 @@ This package includes some custom collectors:
 
 Bootstraps the following collectors for Laravel:
  - LogCollector: Show all Log messages
- - SwiftMailCollector and SwiftLogCollector for Mail
+ - SymfonyMailCollector for Mail
 
 And the default collectors:
  - PhpInfoCollector
@@ -183,6 +183,12 @@ You can enable or disable the debugbar during run time.
 
 NB. Once enabled, the collectors are added (and could produce extra overhead), so if you want to use the debugbar in production, disable in the config and only enable when needed.
 
+## Storage
+
+Debugbar remembers previous requests, which you can view using the Browse button on the right. This will only work if you enable `debugbar.storage.open` in the config. 
+Make sure you only do this on local development, because otherwise other people will be able to view previous requests.
+In general, Debugbar should only be used locally or at least restricted by IP.
+It's possible to pass a callback, which will receive the Request object, so you can determine access to the OpenHandler storage.
 
 ## Twig Integration
 

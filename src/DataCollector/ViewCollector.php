@@ -5,7 +5,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\Bridge\Twig\TwigCollector;
 use Illuminate\View\View;
-use InvalidArgumentException;
 
 class ViewCollector extends TwigCollector
 {
@@ -13,43 +12,22 @@ class ViewCollector extends TwigCollector
     protected $templates = [];
     protected $collect_data;
     protected $exclude_paths;
-
-    /**
-     * A list of known editor strings.
-     *
-     * @var array
-     */
-    protected $editors = [
-        'sublime' => 'subl://open?url=file://%file&line=%line',
-        'textmate' => 'txmt://open?url=file://%file&line=%line',
-        'emacs' => 'emacs://open?url=file://%file&line=%line',
-        'macvim' => 'mvim://open/?url=file://%file&line=%line',
-        'phpstorm' => 'phpstorm://open?file=%file&line=%line',
-        'idea' => 'idea://open?file=%file&line=%line',
-        'vscode' => 'vscode://file/%file:%line',
-        'vscode-insiders' => 'vscode-insiders://file/%file:%line',
-        'vscode-remote' => 'vscode://vscode-remote/%file:%line',
-        'vscode-insiders-remote' => 'vscode-insiders://vscode-remote/%file:%line',
-        'vscodium' => 'vscodium://file/%file:%line',
-        'nova' => 'nova://core/open/file?filename=%file&line=%line',
-        'xdebug' => 'xdebug://%file@%line',
-        'atom' => 'atom://core/open/file?filename=%file&line=%line',
-        'espresso' => 'x-espresso://open?filepath=%file&lines=%line',
-        'netbeans' => 'netbeans://open/?f=%file:%line',
-    ];
+    protected $group;
 
     /**
      * Create a ViewCollector
      *
-     * @param bool $collectData Collects view data when tru
+     * @param bool|string $collectData Collects view data when true
      * @param string[] $excludePaths Paths to exclude from collection
-     */
-    public function __construct($collectData = true, $excludePaths = [])
+     * @param int|bool $group Group the same templates together
+     * */
+    public function __construct($collectData = true, $excludePaths = [], $group = true)
     {
         $this->setDataFormatter(new SimpleFormatter());
         $this->collect_data = $collectData;
         $this->templates = [];
         $this->exclude_paths = $excludePaths;
+        $this->group = $group;
     }
 
     public function getName()
@@ -62,7 +40,7 @@ class ViewCollector extends TwigCollector
         return [
             'views' => [
                 'icon' => 'leaf',
-                'widget' => 'PhpDebugBar.Widgets.LaravelViewTemplatesWidget',
+                'widget' => 'PhpDebugBar.Widgets.TemplatesWidget',
                 'map' => 'views',
                 'default' => '[]'
             ],
@@ -74,36 +52,6 @@ class ViewCollector extends TwigCollector
     }
 
     /**
-     * Get the editor href for a given file and line, if available.
-     *
-     * @param string $filePath
-     * @param int    $line
-     *
-     * @throws InvalidArgumentException If editor resolver does not return a string
-     *
-     * @return null|string
-     */
-    protected function getEditorHref($filePath, $line)
-    {
-        if (empty(config('debugbar.editor'))) {
-            return null;
-        }
-
-        if (empty($this->editors[config('debugbar.editor')])) {
-            throw new InvalidArgumentException(
-                'Unknown editor identifier: ' . config('debugbar.editor') . '. Known editors:' .
-                implode(', ', array_keys($this->editors))
-            );
-        }
-
-        $filePath = $this->replaceSitesPath($filePath);
-
-        $url = str_replace(['%file', '%line'], [$filePath, $line], $this->editors[config('debugbar.editor')]);
-
-        return $url;
-    }
-
-    /**
      * Add a View instance to the Collector
      *
      * @param \Illuminate\View\View $view
@@ -112,47 +60,72 @@ class ViewCollector extends TwigCollector
     {
         $name = $view->getName();
         $path = $view->getPath();
+        $data = $view->getData();
+        $shortPath = '';
+        $type = '';
 
-        if (!is_object($path)) {
-            if ($path) {
-                $path = ltrim(str_replace(base_path(), '', realpath($path)), '/');
+
+        // Prevent duplicates
+        $hash = $type . $path . $name . $this->collect_data ? implode(array_keys($view->getData())) : '';
+
+        if (class_exists('\Inertia\Inertia') && isset($data['page'])) {
+            $data = $data['page'];
+            $name = $data['component'];
+
+            if (!@file_exists($path = resource_path('js/Pages/' . $name . '.js'))) {
+                if (!@file_exists($path = resource_path('js/Pages/' . $name . '.vue'))) {
+                    if (!@file_exists($path = resource_path('js/Pages/' . $name . '.svelte'))) {
+                        $path = $view->getPath();
+                    }
+                }
+            } else {
+                $type = 'react';
             }
+        }
 
+        if ($path && is_string($path)) {
+            $path = $this->normalizeFilePath($path);
+            $shortPath = ltrim(str_replace(base_path(), '', $path), '/');
+        } elseif (is_object($path)) {
+            $type = get_class($view);
+            $path = '';
+        }
+
+        if ($path && !$type) {
             if (substr($path, -10) == '.blade.php') {
                 $type = 'blade';
             } else {
                 $type = pathinfo($path, PATHINFO_EXTENSION);
             }
-        } else {
-            $type = get_class($view);
-            $path = '';
         }
 
         foreach ($this->exclude_paths as $excludePath) {
-            if (strpos($path, $excludePath) !== false) {
+            if (str_starts_with($path, $excludePath)) {
                 return;
             }
         }
 
-        if (!$this->collect_data) {
+        if ($this->collect_data === 'keys') {
             $params = array_keys($view->getData());
+        } elseif ($this->collect_data) {
+            $params = array_map(
+                fn ($value) => $this->getDataFormatter()->formatVar($value),
+                $data
+            );
         } else {
-            $data = [];
-            foreach ($view->getData() as $key => $value) {
-                $data[$key] = $this->getDataFormatter()->formatVar($value);
-            }
-            $params = $data;
+            $params = [];
         }
 
         $template = [
-            'name' => $path ? sprintf('%s (%s)', $name, $path) : $name,
+            'name' => $shortPath ? sprintf('%s (%s)', $name, $shortPath) : $name,
             'param_count' => count($params),
             'params' => $params,
+            'start' => microtime(true),
             'type' => $type,
-            'editorLink' => $this->getEditorHref($view->getPath(), 0),
+            'hash' => $hash,
         ];
 
-        if ($this->getXdebugLink($path)) {
+        if ($this->getXdebugLinkTemplate()) {
             $template['xdebug_link'] = $this->getXdebugLink(realpath($view->getPath()));
         }
 
@@ -161,23 +134,27 @@ class ViewCollector extends TwigCollector
 
     public function collect()
     {
-        $templates = $this->templates;
+        if ($this->group === true || count($this->templates) > $this->group) {
+            $templates = [];
+            foreach ($this->templates as $template) {
+                $hash = $template['hash'];
+                if (!isset($templates[$hash])) {
+                    $template['render_count'] = 0;
+                    $template['name_original'] = $template['name'];
+                    $templates[$hash] = $template;
+                }
+
+                $templates[$hash]['render_count']++;
+                $templates[$hash]['name'] = $templates[$hash]['render_count'] . 'x ' . $templates[$hash]['name_original'];
+            }
+            $templates = array_values($templates);
+        } else {
+            $templates = $this->templates;
+        }
 
         return [
-            'nb_templates' => count($templates),
+            'nb_templates' => count($this->templates),
             'templates' => $templates,
         ];
-    }
-
-    /**
-     * Replace remote path
-     *
-     * @param string $filePath
-     *
-     * @return string
-     */
-    protected function replaceSitesPath($filePath)
-    {
-        return str_replace(config('debugbar.remote_sites_path'), config('debugbar.local_sites_path'), $filePath);
     }
 }

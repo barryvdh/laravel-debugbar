@@ -6,12 +6,12 @@ use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
+use Illuminate\Container\Container;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
-use Illuminate\View\Engines\EngineResolver;
 use Barryvdh\Debugbar\Facade as DebugBar;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -53,8 +53,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app->extend(
-            'view.engine.resolver',
-            function (EngineResolver $resolver, Application $application): EngineResolver {
+            'view',
+            function (Factory $factory, Container $application): Factory {
                 $laravelDebugbar = $application->make(LaravelDebugbar::class);
 
                 $shouldTrackViewTime = $laravelDebugbar->isEnabled() &&
@@ -64,27 +64,27 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
                 if (! $shouldTrackViewTime) {
                     /* Do not swap the engine to save performance */
-                    return $resolver;
+                    return $factory;
                 }
 
-                return new class ($resolver, $laravelDebugbar) extends EngineResolver {
-                    private $laravelDebugbar;
+                $extensions = array_reverse($factory->getExtensions());
+                $engines = array_flip($extensions);
+                $enginesResolver = $application->make('view.engine.resolver');
 
-                    public function __construct(EngineResolver $resolver, LaravelDebugbar $laravelDebugbar)
-                    {
-                        foreach ($resolver->resolvers as $engine => $resolver) {
-                            $this->register($engine, $resolver);
-                        }
-                        $this->laravelDebugbar = $laravelDebugbar;
-                    }
+                foreach ($engines as $engine => $extension) {
+                    $resolved = $enginesResolver->resolve($engine);
 
-                    public function register($engine, \Closure $resolver)
-                    {
-                        parent::register($engine, function () use ($resolver) {
-                            return new DebugbarViewEngine($resolver(), $this->laravelDebugbar);
-                        });
-                    }
-                };
+                    $factory->addExtension($extension, $engine, function () use ($resolved, $laravelDebugbar) {
+                        return new DebugbarViewEngine($resolved, $laravelDebugbar);
+                    });
+                }
+
+                // returns original order of extensions
+                foreach ($extensions as $extension => $engine) {
+                    $factory->addExtension($extension, $engine);
+                }
+
+                return $factory;
             }
         );
 
@@ -108,9 +108,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->registerMiddleware(InjectDebugbar::class);
 
-        if ($this->app->runningInConsole()) {
-            $this->commands(['command.debugbar.clear']);
-        }
+        $this->commands(['command.debugbar.clear']);
     }
 
     /**

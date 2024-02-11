@@ -12,6 +12,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
+use Livewire\Component;
 
 /**
  * Collector for Models.
@@ -43,6 +44,26 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['view'] = $view->name();
             $data['component'] = get_class($component);
             $data['id'] = $component->id;
+
+            $this->data[$key] = $this->formatVar($data);
+        });
+
+        Livewire::listen('render', function (Component $component) use ($request) {
+            // Create an unique name for each compoent
+            $key = $component->getName() . ' #' . $component->getId();
+
+            $data = [
+                'data' => $component->all(),
+            ];
+
+            if ($request->request->get('id') == $component->getId()) {
+                $data['oldData'] = $request->request->get('data');
+                $data['actionQueue'] = $request->request->get('actionQueue');
+            }
+
+            $data['name'] = $component->getName();
+            $data['component'] = get_class($component);
+            $data['id'] = $component->getId();
 
             $this->data[$key] = $this->formatVar($data);
         });
