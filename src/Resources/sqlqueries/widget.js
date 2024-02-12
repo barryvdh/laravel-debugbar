@@ -133,7 +133,7 @@
                 if ((stmt.bindings && stmt.bindings.length)
                     || (stmt.hints && stmt.hints.length)
                     || (stmt.backtrace && stmt.backtrace.length)
-                    || (stmt.params && stmt.params.length)
+                    || (stmt.params && !$.isEmptyObject(stmt.params))
                 ) {
                     var table = $('<table><tr><th colspan="2">Metadata</th></tr></table>').addClass(csscls('params')).appendTo(li);
                     li.css('cursor', 'pointer').click(function () {
