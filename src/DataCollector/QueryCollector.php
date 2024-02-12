@@ -13,6 +13,9 @@ class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
     protected $queries = [];
+    protected $queryCount = 0;
+    protected $softLimit = null;
+    protected $hardLimit = null;
     protected $lastMemoryUsage;
     protected $renderSqlWithParams = false;
     protected $findSource = false;
@@ -38,6 +41,17 @@ class QueryCollector extends PDOCollector
     public function __construct(TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
+    }
+
+    /**
+     * @param int|null $softLimit After the soft limit, no parameters/backtrace are captured
+     * @param int|null $hardLimit After the hard limit, queries are ignored
+     * @return void
+     */
+    public function setLimits(?int $softLimit, ?int $hardLimit) : void
+    {
+        $this->softLimit = $softLimit;
+        $this->hardLimit = $hardLimit;
     }
 
     /**
@@ -132,6 +146,15 @@ class QueryCollector extends PDOCollector
      */
     public function addQuery($query, $bindings, $time, $connection)
     {
+        $this->queryCount++;
+
+        if ($this->hardLimit && $this->queryCount > $this->hardLimit) {
+            return;
+        }
+
+        $limited = $this->softLimit && $this->queryCount > $this->softLimit;
+
+
         $explainResults = [];
         $time = $time / 1000;
         $endTime = microtime(true);
@@ -147,7 +170,7 @@ class QueryCollector extends PDOCollector
         $bindings = $connection->prepareBindings($bindings);
 
         // Run EXPLAIN on this query (if needed)
-        if ($this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query)) {
+        if (!$limited && $this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query)) {
             $statement = $pdo->prepare('EXPLAIN ' . $query);
             $statement->execute($bindings);
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
@@ -182,7 +205,7 @@ class QueryCollector extends PDOCollector
 
         $source = [];
 
-        if ($this->findSource) {
+        if (!$limited && $this->findSource) {
             try {
                 $source = $this->findSource();
             } catch (\Exception $e) {
@@ -192,7 +215,7 @@ class QueryCollector extends PDOCollector
         $this->queries[] = [
             'query' => $query,
             'type' => 'query',
-            'bindings' => $this->getDataFormatter()->escapeBindings($bindings),
+            'bindings' => !$limited ? $this->getDataFormatter()->escapeBindings($bindings) : null,
             'start' => $startTime,
             'time' => $time,
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
@@ -200,7 +223,7 @@ class QueryCollector extends PDOCollector
             'explain' => $explainResults,
             'connection' => $connection->getDatabaseName(),
             'driver' => $connection->getConfig('driver'),
-            'hints' => $this->showHints ? $hints : null,
+            'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
         ];
 
@@ -474,6 +497,7 @@ class QueryCollector extends PDOCollector
     public function reset()
     {
         $this->queries = [];
+        $this->queryCount = 0;
     }
 
     /**
@@ -592,12 +616,25 @@ class QueryCollector extends PDOCollector
             }
         }
 
-        $nb_statements = array_filter($queries, function ($query) {
-            return $query['type'] === 'query';
-        });
+        if ($this->softLimit && $this->hardLimit && ($this->queryCount > $this->softLimit && $this->queryCount > $this->hardLimit)) {
+            array_unshift($statements, [
+                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit.  ' are ignored. Limits can be raised in the config.',
+                'type' => 'info',
+            ]);
+        } else if ($this->hardLimit && $this->queryCount > $this->hardLimit) {
+            array_unshift($statements, [
+                'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown..',
+                'type' => 'info',
+            ]);
+        } elseif ($this->softLimit && $this->queryCount > $this->softLimit) {
+            array_unshift($statements, [
+                'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limit can be raised in the config.',
+                'type' => 'info',
+            ]);
+        }
 
         $data = [
-            'nb_statements' => count($nb_statements),
+            'nb_statements' => $this->queryCount,
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),

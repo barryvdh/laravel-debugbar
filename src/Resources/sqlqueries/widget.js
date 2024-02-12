@@ -130,7 +130,21 @@
                         .appendTo(li);
                 }
 
-                var table = $('<table><tr><th colspan="2">Metadata</th></tr></table>').addClass(csscls('params')).appendTo(li);
+                if ((stmt.bindings && stmt.bindings.length)
+                    || (stmt.hints && stmt.hints.length)
+                    || (stmt.backtrace && stmt.backtrace.length)
+                    || (stmt.params && stmt.params.length)
+                ) {
+                    var table = $('<table><tr><th colspan="2">Metadata</th></tr></table>').addClass(csscls('params')).appendTo(li);
+                    li.css('cursor', 'pointer').click(function () {
+                        if (table.is(':visible')) {
+                            table.hide();
+                        } else {
+                            table.show();
+                        }
+                    });
+                }
+
 
                 if (stmt.bindings && stmt.bindings.length) {
                     table.append(function () {
@@ -221,14 +235,6 @@
                         }
                     }
                 }
-
-                li.css('cursor', 'pointer').click(function () {
-                    if (table.is(':visible')) {
-                        table.hide();
-                    } else {
-                        table.show();
-                    }
-                });
             }});
             this.$list.$el.appendTo(this.$el);
 

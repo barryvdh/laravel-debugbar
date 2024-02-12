@@ -334,7 +334,7 @@ class LaravelDebugbar extends DebugBar
             $queryCollector = new QueryCollector($timeCollector);
 
             $queryCollector->setDataFormatter(new QueryFormatter());
-
+            $queryCollector->setLimits($this->app['config']->get('debugbar.options.db.soft_limit'), $this->app['config']->get('debugbar.options.db.hard_limit'));
             if ($this->app['config']->get('debugbar.options.db.with_params')) {
                 $queryCollector->setRenderSqlWithParams(true);
             }
