@@ -618,17 +618,25 @@ class QueryCollector extends PDOCollector
 
         if ($this->softLimit && $this->hardLimit && ($this->queryCount > $this->softLimit && $this->queryCount > $this->hardLimit)) {
             array_unshift($statements, [
-                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit.  ' are ignored. Limits can be raised in the config.',
+                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit.  ' are ignored. Limits can be raised in the config (debugbar.options.db.soft/hard_limit).',
                 'type' => 'info',
             ]);
+            $statements[] = [
+                'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.soft/hard_limit)',
+                'type' => 'info',
+            ];
         } else if ($this->hardLimit && $this->queryCount > $this->hardLimit) {
             array_unshift($statements, [
-                'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown..',
+                'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown.. Limits can be raised in the config (debugbar.options.db.hard_limit)',
                 'type' => 'info',
             ]);
+            $statements[] = [
+                'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.hard_limit)',
+                'type' => 'info',
+            ];
         } elseif ($this->softLimit && $this->queryCount > $this->softLimit) {
             array_unshift($statements, [
-                'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limit can be raised in the config.',
+                'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limit can be raised in the config. Limits can be raised in the config (debugbar.options.db.soft_limit)',
                 'type' => 'info',
             ]);
         }
