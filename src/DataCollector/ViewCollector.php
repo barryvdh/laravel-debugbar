@@ -177,6 +177,6 @@ class ViewCollector extends TwigCollector
      */
     protected function replaceSitesPath($filePath)
     {
-        return str_replace(config('debugbar.remote_sites_path'), config('debugbar.local_sites_path'), $filePath);
+        return str_replace(config('debugbar.remote_sites_path') ?: '', config('debugbar.local_sites_path') ?: '', $filePath);
     }
 }
