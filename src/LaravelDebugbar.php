@@ -635,7 +635,7 @@ class LaravelDebugbar extends DebugBar
         if (method_exists($collector, 'useHtmlVarDumper')) {
             $collector->useHtmlVarDumper();
         }
-        if (method_exists($collector, 'setEditorLinkTemplate')) {
+        if (method_exists($collector, 'setEditorLinkTemplate') && isset($this->editorTemplateArgs[0], $this->editorTemplateArgs[1])) {
             $collector->setEditorLinkTemplate($this->editorTemplateArgs[0]);
             $collector->addXdebugReplacements($this->editorTemplateArgs[1]);
         }
