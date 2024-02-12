@@ -18,6 +18,7 @@ jobs:
       COMPOSER_NO_INTERACTION: 1
 
     strategy:
+      fail-fast: false
       matrix:
         php: [8.3, 8.2, 8.1, 8.0]
         laravel: [^11, ^10, ^9]
