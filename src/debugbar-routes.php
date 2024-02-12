@@ -1,42 +1,25 @@
 <?php
 
+use Barryvdh\Debugbar\Controllers\AssetController;
+use Barryvdh\Debugbar\Controllers\CacheController;
+use Barryvdh\Debugbar\Controllers\OpenHandlerController;
+use Barryvdh\Debugbar\Controllers\TelescopeController;
+use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
+
 $routeConfig = [
-    'namespace' => 'Barryvdh\Debugbar\Controllers',
     'prefix' => app('config')->get('debugbar.route_prefix'),
     'domain' => app('config')->get('debugbar.route_domain'),
-    'middleware' => [\Barryvdh\Debugbar\Middleware\DebugbarEnabled::class],
+    'middleware' => DebugbarEnabled::class,
 ];
 
 app('router')->group($routeConfig, function ($router) {
-    $router->get('open', [
-        'uses' => 'OpenHandlerController@handle',
-        'as' => 'debugbar.openhandler',
-    ]);
-
-    $router->get('clockwork/{id}', [
-        'uses' => 'OpenHandlerController@clockwork',
-        'as' => 'debugbar.clockwork',
-    ]);
+    $router->get('open', [OpenHandlerController::class, 'handle'])->name('debugbar.openhandler');
+    $router->delete('cache/{key}/{tags?}', [CacheController::class, 'delete'])->name('debugbar.cache.delete');
+    $router->get('clockwork/{id}', [OpenHandlerController::class, 'clockwork'])->name('debugbar.clockwork');
+    $router->get('assets/stylesheets', [AssetController::class, 'css'])->name('debugbar.assets.css');
+    $router->get('assets/javascript', [AssetController::class, 'js'])->name('debugbar.assets.js');
 
     if (class_exists(\Laravel\Telescope\Telescope::class)) {
-        $router->get('telescope/{id}', [
-            'uses' => 'TelescopeController@show',
-            'as' => 'debugbar.telescope',
-        ]);
+        $router->get('telescope/{id}', [TelescopeController::class, 'show'])->name('debugbar.telescope');
     }
-
-    $router->get('assets/stylesheets', [
-        'uses' => 'AssetController@css',
-        'as' => 'debugbar.assets.css',
-    ]);
-
-    $router->get('assets/javascript', [
-        'uses' => 'AssetController@js',
-        'as' => 'debugbar.assets.js',
-    ]);
-
-    $router->delete('cache/{key}/{tags?}', [
-        'uses' => 'CacheController@delete',
-        'as' => 'debugbar.cache.delete',
-    ]);
 });
