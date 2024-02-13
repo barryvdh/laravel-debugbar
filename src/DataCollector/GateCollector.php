@@ -52,8 +52,7 @@ class GateCollector extends MessagesCollector
 
         $label = $result ? 'success' : 'error';
 
-        // Response::allowed() was added in Laravel 6.x
-        if ($result instanceof Response && method_exists($result, 'allowed')) {
+        if ($result instanceof Response) {
             $label = $result->allowed() ? 'success' : 'error';
         }
 
