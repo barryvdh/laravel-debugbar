@@ -3,6 +3,7 @@
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 
@@ -18,12 +19,12 @@ class QueryCollectorTest extends TestCase
 
         /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
         $collector  = debugbar()->getCollector('queries');
-        $collector->addQuery(
+        $collector->addQuery(new QueryExecuted(
             "SELECT ('[1, 2, 3]'::jsonb ?? ?) as a, ('[4, 5, 6]'::jsonb ??| ?) as b, 'hello world ? example ??' as c",
             [3, '{4}'],
             0,
             $this->app['db']->connection()
-        );
+        ));
 
         tap($collector->collect(), function (array $collection) {
             $this->assertEquals(1, $collection['nb_statements']);
@@ -44,12 +45,12 @@ SQL
 
         /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
         $collector = debugbar()->getCollector('queries');
-        $collector->addQuery(
+        $collector->addQuery(new QueryExecuted(
             "SELECT a FROM b WHERE c = ? AND d = ? AND e = ?",
             ['$10', '$2y$10_DUMMY_BCRYPT_HASH', '$_$$_$$$_$2_$3'],
             0,
             $this->app['db']->connection()
-        );
+        ));
 
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
             $this->assertEquals(
