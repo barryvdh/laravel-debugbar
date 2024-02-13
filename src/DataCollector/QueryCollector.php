@@ -221,7 +221,7 @@ class QueryCollector extends PDOCollector
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
             'explain' => $explainResults,
-            'connection' => $connection->getDatabaseName(),
+            'connection' => '[' . $connection->getName() . '] ' . $connection->getDatabaseName(),
             'driver' => $connection->getConfig('driver'),
             'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
