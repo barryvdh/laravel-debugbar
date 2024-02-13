@@ -46,7 +46,6 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         $this->currentRequestId = $currentRequestId;
         $this->hiddens = array_merge($hiddens, [
             'request_request.password',
-            'request_server.PHP_AUTH_PW',
             'request_headers.php-auth-pw.0',
         ]);
     }
@@ -112,19 +111,12 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             'request_query' => $request->query->all(),
             'request_request' => $request->request->all(),
             'request_headers' => $request->headers->all(),
-            'request_server' => $request->server->all(),
             'request_cookies' => $request->cookies->all(),
             'response_headers' => $responseHeaders,
         ];
 
         if ($this->session) {
             $data['session_attributes'] = $this->session->all();
-        }
-
-        foreach ($data['request_server'] as $key => $value) {
-            if (Str::is(['*_KEY', '*_PASSWORD', '*_SECRET', '*_PW', '*_TOKEN', '*_PASS'], $key)) {
-                $data['request_server'][$key] = '******';
-            }
         }
 
         if (isset($data['request_headers']['authorization'][0])) {
