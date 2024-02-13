@@ -9,7 +9,6 @@ use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
-use Barryvdh\Debugbar\DataCollector\ModelsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
@@ -24,6 +23,7 @@ use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\ObjectCountCollector;
 use Barryvdh\Debugbar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
@@ -465,8 +465,12 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('models', true)) {
             try {
-                $modelsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\ModelsCollector');
-                $this->addCollector($modelsCollector);
+                $this->addCollector(new ObjectCountCollector('models'));
+                $this->app['events']->listen('eloquent.retrieved:*', function ($event, $models) {
+                    foreach (array_filter($models) as $model) {
+                        $this['models']->countClass($model);
+                    }
+                });
             } catch (\Exception $e) {
                 // No Models collector
             }
@@ -603,8 +607,10 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('jobs', false)) {
             try {
-                $jobsCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\JobsCollector');
-                $this->addCollector($jobsCollector);
+                $this->addCollector(new ObjectCountCollector('jobs', 'briefcase'));
+                $this->app['events']->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) {
+                    $this['jobs']->countClass($event->job);
+                });
             } catch (\Exception $e) {
                 // No Jobs collector
             }

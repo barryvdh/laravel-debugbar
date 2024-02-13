@@ -18,8 +18,9 @@ class ModelsCollectorTest extends TestCase
 
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\ModelsCollector $collector */
+        /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
         $collector = debugbar()->getCollector('models');
+        $collector->setXdebugLinkTemplate('');
 
         User::create([
             'name' => 'John Doe',
@@ -34,21 +35,21 @@ class ModelsCollectorTest extends TestCase
         ]);
 
         $this->assertEquals(
-            ['data' => [], 'count' => 0],
+            ['data' => [], 'count' => 0, 'is_counter' => true],
             $collector->collect()
         );
 
         User::first();
 
         $this->assertEquals(
-            ['data' => [User::class => 1], 'count' => 1],
+            ['data' => [User::class => 1], 'count' => 1, 'is_counter' => true],
             $collector->collect()
         );
 
         Person::all();
 
         $this->assertEquals(
-            ['data' => [User::class => 1, Person::class => 2], 'count' => 3],
+            ['data' => [User::class => 1, Person::class => 2], 'count' => 3, 'is_counter' => true],
             $collector->collect()
         );
     }
