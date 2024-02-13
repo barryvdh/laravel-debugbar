@@ -68,7 +68,7 @@ class ViewCollector extends TwigCollector
         // Prevent duplicates
         $hash = $type . $path . $name . $this->collect_data ? implode(array_keys($view->getData())) : '';
 
-        if (class_exists('\Inertia\Inertia') && isset($data['page'])) {
+        if (class_exists('\Inertia\Inertia') && isset($data['page'], $data['component'])) {
             $data = $data['page'];
             $name = $data['component'];
 
