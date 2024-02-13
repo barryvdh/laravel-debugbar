@@ -139,12 +139,9 @@ class QueryCollector extends PDOCollector
 
     /**
      *
-     * @param string $query
-     * @param array $bindings
-     * @param float $time
-     * @param \Illuminate\Database\Connection $connection
+     * @param \Illuminate\Database\Events\QueryExecuted $query
      */
-    public function addQuery($query, $bindings, $time, $connection)
+    public function addQuery($query)
     {
         $this->queryCount++;
 
@@ -154,24 +151,24 @@ class QueryCollector extends PDOCollector
 
         $limited = $this->softLimit && $this->queryCount > $this->softLimit;
 
-
+        $sql = (string) $query->sql;
         $explainResults = [];
-        $time = $time / 1000;
+        $time = $query->time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
-        $hints = $this->performQueryAnalysis($query);
+        $hints = $this->performQueryAnalysis($sql);
 
         $pdo = null;
         try {
-            $pdo = $connection->getPdo();
+            $pdo = $query->connection->getPdo();
         } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
-        $bindings = $connection->prepareBindings($bindings);
+        $bindings = $query->connection->prepareBindings($query->bindings);
 
         // Run EXPLAIN on this query (if needed)
-        if (!$limited && $this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query)) {
-            $statement = $pdo->prepare('EXPLAIN ' . $query);
+        if (!$limited && $this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $sql)) {
+            $statement = $pdo->prepare('EXPLAIN ' . $sql);
             $statement->execute($bindings);
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
         }
@@ -199,7 +196,7 @@ class QueryCollector extends PDOCollector
                     }
                 }
 
-                $query = preg_replace($regex, addcslashes($binding, '$'), $query, 1);
+                $sql = preg_replace($regex, addcslashes($binding, '$'), $sql, 1);
             }
         }
 
@@ -213,7 +210,7 @@ class QueryCollector extends PDOCollector
         }
 
         $this->queries[] = [
-            'query' => $query,
+            'query' => $sql,
             'type' => 'query',
             'bindings' => !$limited ? $this->getDataFormatter()->escapeBindings($bindings) : null,
             'start' => $startTime,
@@ -221,8 +218,8 @@ class QueryCollector extends PDOCollector
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
             'explain' => $explainResults,
-            'connection' => $connection->getDatabaseName(),
-            'driver' => $connection->getConfig('driver'),
+            'connection' => $query->connection->getDatabaseName(),
+            'driver' => $query->connection->getConfig('driver'),
             'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
         ];

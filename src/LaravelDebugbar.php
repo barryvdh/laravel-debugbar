@@ -371,20 +371,15 @@ class LaravelDebugbar extends DebugBar
 
             try {
                 $db->listen(
-                    function (\Illuminate\Database\Events\QueryExecuted $query) use ($db, $queryCollector) {
+                    function (\Illuminate\Database\Events\QueryExecuted $query) {
                         if (!app(static::class)->shouldCollect('db', true)) {
                             return; // Issue 776 : We've turned off collecting after the listener was attached
                         }
 
-                        $bindings = $query->bindings;
-                        $time = $query->time;
-                        $connection = $query->connection;
-                        $query = $query->sql;
-
                         //allow collecting only queries slower than a specified amount of milliseconds
                         $threshold = app('config')->get('debugbar.options.db.slow_threshold', false);
-                        if (!$threshold || $time > $threshold) {
-                            $queryCollector->addQuery((string)$query, $bindings, $time, $connection);
+                        if (!$threshold || $query->time > $threshold) {
+                            $this['queries']->addQuery($query);
                         }
                     }
                 );
