@@ -564,18 +564,15 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     max-width: 100%;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration,
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id,
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-memory {
     margin-left: auto;
     margin-right: 5px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-database {
     margin-left: auto;
-}
-
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id {
-    margin-left: auto;
-    margin-right: 5px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id a {
