@@ -666,7 +666,7 @@ class QueryCollector extends PDOCollector
         return [
             "queries" => [
                 "icon" => "database",
-                "widget" => "PhpDebugBar.Widgets.LaravelSQLQueriesWidget",
+                "widget" => "PhpDebugBar.Widgets.SQLQueriesWidget",
                 "map" => "queries",
                 "default" => "[]"
             ],
