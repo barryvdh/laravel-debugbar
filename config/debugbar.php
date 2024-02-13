@@ -255,7 +255,7 @@ return [
      | DebugBar route middleware
      |--------------------------------------------------------------------------
      |
-     | Sometimes you want to add custom middleware to debugbar routes
+     | Additional middleware to run on the Debugbar routes
      */
     'route_middleware' => [],
 
