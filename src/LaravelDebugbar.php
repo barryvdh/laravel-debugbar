@@ -96,7 +96,9 @@ class LaravelDebugbar extends DebugBar
      */
     protected $is_lumen = false;
 
-    protected array $editorTemplateArgs = [];
+    protected ?string $editorTemplateLink = null;
+    protected array $remoteServerReplacements = [];
+
 
     /**
      * @param Application $app
@@ -141,7 +143,8 @@ class LaravelDebugbar extends DebugBar
         /** @var Application $app */
         $app = $this->app;
 
-        $this->editorTemplateArgs = [$this->app['config']->get('debugbar.editor'), $this->getRemoteServerReplacements()];
+        $this->editorTemplateLink = $this->app['config']->get('debugbar.editor') ?: null;
+        $this->remoteServerReplacements = $this->getRemoteServerReplacements();
 
         // Set custom error handler
         if ($app['config']->get('debugbar.error_handler', false)) {
@@ -635,9 +638,11 @@ class LaravelDebugbar extends DebugBar
         if (method_exists($collector, 'useHtmlVarDumper')) {
             $collector->useHtmlVarDumper();
         }
-        if (method_exists($collector, 'setEditorLinkTemplate') && isset($this->editorTemplateArgs[0], $this->editorTemplateArgs[1])) {
-            $collector->setEditorLinkTemplate($this->editorTemplateArgs[0]);
-            $collector->addXdebugReplacements($this->editorTemplateArgs[1]);
+        if (method_exists($collector, 'setEditorLinkTemplate') && $this->editorTemplateLink) {
+            $collector->setEditorLinkTemplate($this->editorTemplateLink);
+        }
+        if (method_exists($collector, 'addXdebugReplacements') && $this->remoteServerReplacements) {
+            $collector->addXdebugReplacements($this->remoteServerReplacements);
         }
 
         return $this;
