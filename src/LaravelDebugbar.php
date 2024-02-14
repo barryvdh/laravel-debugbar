@@ -298,9 +298,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('db', true) && isset($this->app['db'])) {
-            /** @var \Illuminate\Database\DatabaseManager $db */
-            $db = $this->app['db'];
+        if ($this->shouldCollect('db', true) && isset($this->app['db']) && isset($this->app['events'])) {
             /** @var \Illuminate\Events\Dispatcher $events */
             $events = $this->app['events'];
 
