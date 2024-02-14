@@ -68,9 +68,9 @@ class ViewCollector extends TwigCollector
         // Prevent duplicates
         $hash = $type . $path . $name . $this->collect_data ? implode(array_keys($view->getData())) : '';
 
-        if (class_exists('\Inertia\Inertia') && isset($data['page'], $data['component'])) {
-            $data = $data['page'];
-            $name = $data['component'];
+        if (class_exists('\Inertia\Inertia') && isset($data['page']['props'], $data['page']['component'])) {
+            $name = $data['page']['component'];
+            $data = $data['page']['props'];
 
             if (!@file_exists($path = resource_path('js/Pages/' . $name . '.js'))) {
                 if (!@file_exists($path = resource_path('js/Pages/' . $name . '.vue'))) {
@@ -106,7 +106,7 @@ class ViewCollector extends TwigCollector
         }
 
         if ($this->collect_data === 'keys') {
-            $params = array_keys($view->getData());
+            $params = array_keys($data);
         } elseif ($this->collect_data) {
             $params = array_map(
                 fn ($value) => $this->getDataFormatter()->formatVar($value),
