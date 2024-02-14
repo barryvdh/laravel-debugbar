@@ -237,8 +237,8 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector(new ViewCollector($collectData, $excludePaths, $group));
                 $this->app['events']->listen(
                     'composing:*',
-                    function ($event, $data = []) {
-                        $this['views']->addView($data[0]);
+                    function ($event, $params) {
+                        $this['views']->addView($params[0]);
                     }
                 );
             } catch (Exception $e) {
@@ -675,7 +675,7 @@ class LaravelDebugbar extends DebugBar
      * Returns a JavascriptRenderer for this instance
      *
      * @param string $baseUrl
-     * @param string $basePathng
+     * @param string $basePath
      * @return JavascriptRenderer
      */
     public function getJavascriptRenderer($baseUrl = null, $basePath = null)
@@ -1149,7 +1149,7 @@ class LaravelDebugbar extends DebugBar
             $collector = $this->getCollector('time');
 
             $headers = [];
-            foreach ($collector->collect()['measures'] as $k => $m) {
+            foreach ($collector->collect()['measures'] as $m) {
                 $headers[] = sprintf('app;desc="%s";dur=%F', str_replace(array("\n", "\r"), ' ', str_replace('"', "'", $m['label'])), $m['duration'] * 1000);
             }
 
