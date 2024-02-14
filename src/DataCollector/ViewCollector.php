@@ -92,16 +92,14 @@ class ViewCollector extends TwigCollector
             if (isset($data['props'], $data['component'])) {
                 $name = $data['component'];
                 $data = $data['props'];
-                $oldPath = $path;
 
-                if (!@file_exists($path = resource_path('js/Pages/' . $name . '.js'))) {
-                    if (!@file_exists($path = resource_path('js/Pages/' . $name . '.vue'))) {
-                        if (!@file_exists($path = resource_path('js/Pages/' . $name . '.svelte'))) {
-                            $path = $oldPath;
-                        }
+                if ($files = glob(resource_path('js/Pages/' . $name . '.*'))) {
+                    $path = $files[0];
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+
+                    if (in_array($type, ['js', 'jsx'])) {
+                        $type = 'react';
                     }
-                } else {
-                    $type = 'react';
                 }
             }
         }
