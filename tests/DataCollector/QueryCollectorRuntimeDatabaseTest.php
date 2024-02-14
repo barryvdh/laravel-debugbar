@@ -17,7 +17,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
         $app['config']->set('database.connections', []);
     }
 
-    public function testItReplacesQuestionMarksBindingsCorrectly()
+    public function testCollectsQueriesFromRuntimeConnections()
     {
         debugbar()->boot();
 
