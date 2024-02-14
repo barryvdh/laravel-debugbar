@@ -766,7 +766,7 @@ class LaravelDebugbar extends DebugBar
             $app['config']->get('debugbar.capture_ajax', true)
         ) {
             try {
-                if ($this->hasCollector('views') && class_exists('\Inertia\Inertia')) {
+                if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
                     $content = $response->getContent();
 
                     if (is_string($content)) {
