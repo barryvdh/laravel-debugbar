@@ -2,7 +2,6 @@
 
 namespace Barryvdh\Debugbar;
 
-use Barryvdh\Debugbar\DataCollector\AuthCollector;
 use Barryvdh\Debugbar\DataCollector\CacheCollector;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
@@ -253,7 +252,7 @@ class LaravelDebugbar extends DebugBar
 
         if (!$this->isLumen() && $this->shouldCollect('route')) {
             try {
-                $this->addCollector($this->app->make(RouteCollector::class));
+                $this->addCollector($app->make(RouteCollector::class));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add RouteCollector', $e);
             }
@@ -437,9 +436,9 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('livewire', true) && $this->app->bound('livewire')) {
+        if ($this->shouldCollect('livewire', true) && $app->bound('livewire')) {
             try {
-                $this->addCollector($this->app->make(LivewireCollector::class));
+                $this->addCollector($app->make(LivewireCollector::class));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add Livewire Collector', $e);
             }
@@ -520,7 +519,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('gate', false)) {
             try {
-                $this->addCollector($this->app->make(GateCollector::class));
+                $this->addCollector($app->make(GateCollector::class));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add GateCollector', $e);
             }
