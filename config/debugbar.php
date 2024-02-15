@@ -245,6 +245,9 @@ return [
         'symfony_request' => [
             'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
         ],
+        'events' => [
+            'data' => false, // collect events data, listeners
+        ],
         'logs' => [
             'file' => null,
         ],
