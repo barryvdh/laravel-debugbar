@@ -8,14 +8,18 @@ use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
+use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
+use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
+use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
+use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
@@ -27,13 +31,10 @@ use DebugBar\DataCollector\ObjectCountCollector;
 use Barryvdh\Debugbar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
-use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
-use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
-use Throwable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Session\SessionManager;
@@ -44,6 +45,7 @@ use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\RawMessage;
+use Throwable;
 
 /**
  * Debug bar subclass which adds all without Request and with LaravelCollector.
@@ -251,7 +253,7 @@ class LaravelDebugbar extends DebugBar
 
         if (!$this->isLumen() && $this->shouldCollect('route')) {
             try {
-                $this->addCollector($this->app->make('Barryvdh\Debugbar\DataCollector\RouteCollector'));
+                $this->addCollector($this->app->make(RouteCollector::class));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add RouteCollector', $e);
             }
@@ -437,8 +439,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('livewire', true) && $this->app->bound('livewire')) {
             try {
-                $livewireCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\LivewireCollector');
-                $this->addCollector($livewireCollector);
+                $this->addCollector($this->app->make(LivewireCollector::class));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add Livewire Collector', $e);
             }
@@ -519,8 +520,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('gate', false)) {
             try {
-                $gateCollector = $this->app->make('Barryvdh\Debugbar\DataCollector\GateCollector');
-                $this->addCollector($gateCollector);
+                $this->addCollector($this->app->make(GateCollector::class));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add GateCollector', $e);
             }
