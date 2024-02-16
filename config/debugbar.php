@@ -60,7 +60,7 @@ return [
     |
     */
 
-    'editor' => env('DEBUGBAR_EDITOR', 'phpstorm'),
+    'editor' => env('DEBUGBAR_EDITOR') ?: env('IGNITION_EDITOR', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -305,7 +305,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
-    'theme' => env('DEBUGBAR_THEME', 'auto'),
+    'theme' => env('DEBUGBAR_THEME') ?: env('IGNITION_THEME', 'auto'),
 
     /*
      |--------------------------------------------------------------------------
