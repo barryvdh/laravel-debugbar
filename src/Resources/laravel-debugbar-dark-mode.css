@@ -152,6 +152,21 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     color: #7B7B7B;
 }
 
+div.phpdebugbar pre.sf-dump .sf-dump-note {
+    color: #8be9fd;
+}
+
+div.phpdebugbar pre.sf-dump .sf-dump-num,
+div.phpdebugbar pre.sf-dump .sf-dump-const,
+div.phpdebugbar pre.sf-dump .sf-dump-index {
+    color: #bd93f9;
+}
+
+div.phpdebugbar pre.sf-dump .sf-dump-key,
+div.phpdebugbar pre.sf-dump .sf-dump-str {
+    color: #f1fa8c;
+}
+
 div.phpdebugbar-openhandler {
     border-top-color: #fa5661;
 }
