@@ -238,11 +238,8 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector(new ViewCollector($collectData, $excludePaths, $group));
                 $this->app['events']->listen(
                     'composing:*',
-                    function ($view, $data = []) use ($debugbar) {
-                        if ($data) {
-                            $view = $data[0]; // For Laravel >= 5.4
-                        }
-                        $debugbar['views']->addView($view);
+                    function ($event, $params) {
+                        $this['views']->addView($params[0]);
                     }
                 );
             } catch (Exception $e) {
@@ -264,19 +261,11 @@ class LaravelDebugbar extends DebugBar
                     $logger = new MessagesCollector('log');
                     $this['messages']->aggregate($logger);
                     $this->app['log']->listen(
-                        function ($level, $message = null, $context = null) use ($logger) {
-                            // Laravel 5.4 changed how the global log listeners are called. We must account for
-                            // the first argument being an "event object", where arguments are passed
-                            // via object properties, instead of individual arguments.
-                            if ($level instanceof \Illuminate\Log\Events\MessageLogged) {
-                                $message = $level->message;
-                                $context = $level->context;
-                                $level = $level->level;
-                            }
-
+                        function (\Illuminate\Log\Events\MessageLogged $log) use ($logger) {
                             try {
-                                $logMessage = (string) $message;
+                                $logMessage = (string) $log->message;
                                 if (mb_check_encoding($logMessage, 'UTF-8')) {
+                                    $context = $log->context;
                                     $logMessage .= (!empty($context) ? ' ' . json_encode($context, JSON_PRETTY_PRINT) : '');
                                 } else {
                                     $logMessage = "[INVALID UTF-8 DATA]";
@@ -285,8 +274,8 @@ class LaravelDebugbar extends DebugBar
                                 $logMessage = "[Exception: " . $e->getMessage() . "]";
                             }
                             $logger->addMessage(
-                                '[' . date('H:i:s') . '] ' . "LOG.$level: " . $logMessage,
-                                $level,
+                                '[' . date('H:i:s') . '] ' . "LOG.{$log->level}: " . $logMessage,
+                                $log->level,
                                 false
                             );
                         }
@@ -423,7 +412,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('models', true)) {
+        if ($this->shouldCollect('models', true) && isset($this->app['events'])) {
             try {
                 $this->addCollector(new ObjectCountCollector('models'));
                 $this->app['events']->listen('eloquent.retrieved:*', function ($event, $models) {
@@ -539,7 +528,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('jobs', false)) {
+        if ($this->shouldCollect('jobs', false) && isset($this->app['events'])) {
             try {
                 $this->addCollector(new ObjectCountCollector('jobs', 'briefcase'));
                 $this->app['events']->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) {
@@ -687,7 +676,7 @@ class LaravelDebugbar extends DebugBar
      * Returns a JavascriptRenderer for this instance
      *
      * @param string $baseUrl
-     * @param string $basePathng
+     * @param string $basePath
      * @return JavascriptRenderer
      */
     public function getJavascriptRenderer($baseUrl = null, $basePath = null)
@@ -1161,7 +1150,7 @@ class LaravelDebugbar extends DebugBar
             $collector = $this->getCollector('time');
 
             $headers = [];
-            foreach ($collector->collect()['measures'] as $k => $m) {
+            foreach ($collector->collect()['measures'] as $m) {
                 $headers[] = sprintf('app;desc="%s";dur=%F', str_replace(array("\n", "\r"), ' ', str_replace('"', "'", $m['label'])), $m['duration'] * 1000);
             }
 
@@ -1186,12 +1175,7 @@ class LaravelDebugbar extends DebugBar
      */
     private function getMonologLogger()
     {
-        // The logging was refactored in Laravel 5.6
-        if ($this->checkVersion('5.6')) {
-            $logger = $this->app['log']->getLogger();
-        } else {
-            $logger = $this->app['log']->getMonolog();
-        }
+        $logger = $this->app['log']->getLogger();
 
         if (get_class($logger) !== 'Monolog\Logger') {
             throw new Exception('Logger is not a Monolog\Logger instance');
