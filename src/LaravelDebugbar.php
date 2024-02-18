@@ -288,8 +288,10 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('db', true) && isset($this->app['db'])) {
-            $db = $this->app['db'];
+        if ($this->shouldCollect('db', true) && isset($this->app['db']) && isset($this->app['events'])) {
+            /** @var \Illuminate\Events\Dispatcher $events */
+            $events = $this->app['events'];
+
             if (
                 $debugbar->hasCollector('time') && $this->app['config']->get(
                     'debugbar.options.db.timeline',
@@ -336,7 +338,7 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector($queryCollector);
 
             try {
-                $db->listen(
+                $events->listen(
                     function (\Illuminate\Database\Events\QueryExecuted $query) {
                         if (!app(static::class)->shouldCollect('db', true)) {
                             return; // Issue 776 : We've turned off collecting after the listener was attached
@@ -354,49 +356,49 @@ class LaravelDebugbar extends DebugBar
             }
 
             try {
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     \Illuminate\Database\Events\TransactionBeginning::class,
                     function ($transaction) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Begin Transaction', $transaction->connection);
                     }
                 );
 
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     \Illuminate\Database\Events\TransactionCommitted::class,
                     function ($transaction) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Commit Transaction', $transaction->connection);
                     }
                 );
 
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     \Illuminate\Database\Events\TransactionRolledBack::class,
                     function ($transaction) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Rollback Transaction', $transaction->connection);
                     }
                 );
 
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     'connection.*.beganTransaction',
                     function ($event, $params) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Begin Transaction', $params[0]);
                     }
                 );
 
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     'connection.*.committed',
                     function ($event, $params) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Commit Transaction', $params[0]);
                     }
                 );
 
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     'connection.*.rollingBack',
                     function ($event, $params) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Rollback Transaction', $params[0]);
                     }
                 );
 
-                $db->getEventDispatcher()->listen(
+                $events->listen(
                     function (\Illuminate\Database\Events\ConnectionEstablished $event) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
 
