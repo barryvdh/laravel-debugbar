@@ -31,7 +31,7 @@ class GateCollector extends MessagesCollector
      * {@inheritDoc}
      */
     protected function customizeMessageHtml($messageHtml, $message)
-    {   
+    {
         $pos = strpos((string) $messageHtml, 'array:4');
         if ($pos !== false) {
             $messageHtml = substr_replace($messageHtml, $message['ability'], $pos, 7);
