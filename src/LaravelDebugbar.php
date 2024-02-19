@@ -144,6 +144,9 @@ class LaravelDebugbar extends DebugBar
         /** @var Application $app */
         $app = $this->app;
 
+        /** @var \Illuminate\Events\Dispatcher|null $events */
+        $events = isset($app['events']) ? $app['events'] : null;
+
         $this->editorTemplateLink = $this->app['config']->get('debugbar.editor') ?: null;
         $this->remoteServerReplacements = $this->getRemoteServerReplacements();
 
@@ -220,24 +223,24 @@ class LaravelDebugbar extends DebugBar
             $this->addCollector(new RequestDataCollector());
         }
 
-        if ($this->shouldCollect('events', false) && isset($this->app['events'])) {
+        if ($this->shouldCollect('events', false) && $events) {
             try {
                 $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
                 $collectData = $app['config']->get('debugbar.options.events.data', false);
                 $this->addCollector(new EventCollector($startTime, $collectData));
-                $this->app['events']->subscribe($debugbar['event']);
+                $events->subscribe($this['event']);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add EventCollector', $e);
             }
         }
 
-        if ($this->shouldCollect('views', true) && isset($this->app['events'])) {
+        if ($this->shouldCollect('views', true) && $events) {
             try {
                 $collectData = $this->app['config']->get('debugbar.options.views.data', true);
                 $excludePaths = $this->app['config']->get('debugbar.options.views.exclude_paths', []);
                 $group = $this->app['config']->get('debugbar.options.views.group', true);
                 $this->addCollector(new ViewCollector($collectData, $excludePaths, $group));
-                $this->app['events']->listen(
+                $events->listen(
                     'composing:*',
                     function ($event, $params) {
                         $this['views']->addView($params[0]);
@@ -289,10 +292,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('db', true) && isset($this->app['db']) && isset($this->app['events'])) {
-            /** @var \Illuminate\Events\Dispatcher $events */
-            $events = $this->app['events'];
-
+        if ($this->shouldCollect('db', true) && isset($this->app['db']) && $events) {
             if (
                 $debugbar->hasCollector('time') && $this->app['config']->get(
                     'debugbar.options.db.timeline',
@@ -415,10 +415,10 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('models', true) && isset($this->app['events'])) {
+        if ($this->shouldCollect('models', true) && $events) {
             try {
                 $this->addCollector(new ObjectCountCollector('models'));
-                $this->app['events']->listen('eloquent.retrieved:*', function ($event, $models) {
+                $events->listen('eloquent.retrieved:*', function ($event, $models) {
                     foreach (array_filter($models) as $model) {
                         $this['models']->countClass($model);
                     }
@@ -436,11 +436,11 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && isset($this->app['events'])) {
+        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && $events) {
             try {
                 $mailCollector = new SymfonyMailCollector();
                 $this->addCollector($mailCollector);
-                $this->app['events']->listen(function (MessageSent $event) use ($mailCollector) {
+                $events->listen(function (MessageSent $event) use ($mailCollector) {
                     $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
                 });
 
@@ -517,22 +517,22 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if ($this->shouldCollect('cache', false) && isset($this->app['events'])) {
+        if ($this->shouldCollect('cache', false) && $events) {
             try {
                 $collectValues = $this->app['config']->get('debugbar.options.cache.values', true);
                 $startTime = $this->app['request']->server('REQUEST_TIME_FLOAT');
                 $cacheCollector = new CacheCollector($startTime, $collectValues);
                 $this->addCollector($cacheCollector);
-                $this->app['events']->subscribe($cacheCollector);
+                $events->subscribe($cacheCollector);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add CacheCollector', $e);
             }
         }
 
-        if ($this->shouldCollect('jobs', false) && isset($this->app['events'])) {
+        if ($this->shouldCollect('jobs', false) && $events) {
             try {
                 $this->addCollector(new ObjectCountCollector('jobs', 'briefcase'));
-                $this->app['events']->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) {
+                $events->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) {
                     $this['jobs']->countClass($event->job);
                 });
             } catch (Exception $e) {
