@@ -294,9 +294,8 @@ class LaravelDebugbar extends DebugBar
         }
 
         if ($this->shouldCollect('db', true) && isset($app['db']) && $events) {
-            if (
-                $debugbar->hasCollector('time') && $config->get('debugbar.options.db.timeline', false)) {
-                $timeCollector = $debugbar->getCollector('time');
+            if ($this->hasCollector('time') && $config->get('debugbar.options.db.timeline', false)) {
+                $timeCollector = $this['time'];
             } else {
                 $timeCollector = null;
             }
@@ -310,9 +309,9 @@ class LaravelDebugbar extends DebugBar
                 $queryCollector->setRenderSqlWithParams(true);
             }
 
-            if ($config->get('debugbar.options.db.backtrace')) {
+            if ($dbBacktrace = $config->get('debugbar.options.db.backtrace')) {
                 $middleware = ! $this->is_lumen ? $app['router']->getMiddleware() : [];
-                $queryCollector->setFindSource(true, $middleware);
+                $queryCollector->setFindSource($dbBacktrace, $middleware);
             }
 
             if ($excludePaths = $config->get('debugbar.options.db.backtrace_exclude_paths')) {

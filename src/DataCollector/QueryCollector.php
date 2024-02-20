@@ -88,12 +88,12 @@ class QueryCollector extends PDOCollector
     /**
      * Enable/disable finding the source
      *
-     * @param bool $value
+     * @param bool|int $value
      * @param array $middleware
      */
     public function setFindSource($value, array $middleware)
     {
-        $this->findSource = (bool) $value;
+        $this->findSource = $value;
         $this->middleware = $middleware;
     }
 
@@ -301,7 +301,7 @@ class QueryCollector extends PDOCollector
             $sources[] = $this->parseTrace($index, $trace);
         }
 
-        return array_slice(array_filter($sources), 0, 5);
+        return array_slice(array_filter($sources), 0, is_int($this->findSource) ? $this->findSource : 5);
     }
 
     /**
