@@ -59,4 +59,30 @@ SQL
             );
         });
     }
+
+    public function testFindingCorrectPathForView()
+    {
+        debugbar()->boot();
+
+        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        $collector = debugbar()->getCollector('queries');
+
+        view('query')
+            ->with('db', $this->app['db']->connection())
+            ->with('collector', $collector)
+            ->render();
+
+        tap(Arr::first($collector->collect()['statements']), function (array $statement) {
+            $this->assertEquals(
+                "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
+                $statement['sql']
+            );
+
+            $this->assertTrue(@file_exists($statement['backtrace'][1]->file));
+            $this->assertEquals(
+                realpath(__DIR__ . '/../resources/views/query.blade.php'),
+                realpath($statement['backtrace'][1]->file)
+            );
+        });
+    }
 }
