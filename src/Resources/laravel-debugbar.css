@@ -2,6 +2,10 @@
 .Whoops.container {
     z-index: 5999999;
 }
+div.phpdebugbar,
+div.phpdebugbar-openhandler {
+    --color-red-vivid: #eb4432;
+}
 
 div.phpdebugbar {
     font-size: 13px;
@@ -24,7 +28,7 @@ div.phpdebugbar-openhandler-overlay {
 
 div.phpdebugbar-openhandler {
     border: 1px solid #aaa;
-    border-top: 3px solid #fa5661;
+    border-top: 3px solid var(--color-red-vivid);
     width: 80%;
     height: 70%;
     padding: 10px;
@@ -161,7 +165,7 @@ div.phpdebugbar-resize-handle {
     cursor: ns-resize;
     border-top: none;
     border-bottom: 0px;
-    background-color: #fa5661;
+    background-color: var(--color-red-vivid);
 }
 
 .phpdebugbar.phpdebugbar-minimized div.phpdebugbar-resize-handle {
@@ -411,7 +415,7 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="error"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="error"] {
-    background-color: #fa5661;
+    background-color: var(--color-red-vivid);
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="warning"],
@@ -446,7 +450,7 @@ a.phpdebugbar-maximize-btn {
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {
-    background: #fa5661;
+    background: var(--color-red-vivid);
     background-image: none;
     color: #fff !important;
     text-shadow: 1px 1px #bf3039;
@@ -454,7 +458,7 @@ a.phpdebugbar-tab.phpdebugbar-active {
 
 a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
     background-color: white;
-    color: #fa5661;
+    color: var(--color-red-vivid);
     text-shadow: 1px 1px #ebebeb;
 }
 
@@ -462,7 +466,7 @@ a.phpdebugbar-tab span.phpdebugbar-badge {
     vertical-align: 0px;
     padding: 2px 8px 3px 8px;
     text-align: center;
-    background: #fa5661;
+    background: var(--color-red-vivid);
     font-size: 11px;
     font-family: monospace;
     color: #fff;
@@ -643,7 +647,7 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error:before {
-    color: #fa5661;
+    color: var(--color-red-vivid);
     font-size: 15px;
 }
 
@@ -728,7 +732,7 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     float: right;
     font-size: 12px;
     padding: 0 4px;
-    background: #fa5661;
+    background: var(--color-red-vivid);
     margin: 0 2px;
     border-radius: 4px;
     color: #fff;
