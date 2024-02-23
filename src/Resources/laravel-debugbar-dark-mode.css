@@ -168,7 +168,7 @@ div.phpdebugbar pre.sf-dump .sf-dump-str {
 }
 
 div.phpdebugbar-openhandler {
-    border-top-color: #fa5661;
+    border-top-color: var(--color-red-vivid);
 }
 
 div.phpdebugbar div.phpdebugbar-header .phpdebugbar-tab {
