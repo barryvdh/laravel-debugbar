@@ -63,6 +63,10 @@ class JobsCollectorTest extends TestCase
         {
             public function up()
             {
+                if (Schema::hasTable('jobs')) {
+                    return;
+                }
+
                 Schema::create('jobs', function (Blueprint $table) {
                     $table->bigIncrements('id');
                     $table->string('queue')->index();
