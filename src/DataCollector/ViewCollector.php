@@ -125,7 +125,7 @@ class ViewCollector extends TwigCollector
             'hash' => $hash,
         ];
 
-        if ($this->getXdebugLinkTemplate()) {
+        if ($view->getPath() && $this->getXdebugLinkTemplate()) {
             $template['xdebug_link'] = $this->getXdebugLink(realpath($view->getPath()));
         }
 
