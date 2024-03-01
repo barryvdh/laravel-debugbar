@@ -772,7 +772,7 @@ class LaravelDebugbar extends DebugBar
                     if (is_string($content)) {
                         $content = json_decode($content, true);
                     }
-                    
+
                     if (is_array($content)) {
                         $this['views']->addInertiaAjaxView($content);
                     }
