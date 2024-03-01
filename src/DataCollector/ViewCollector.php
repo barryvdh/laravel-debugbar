@@ -58,48 +58,55 @@ class ViewCollector extends TwigCollector
      */
     public function addView(View $view)
     {
-        list($name, $type, $data, $path) = $this->getInertiaView($view->getName(), $view->getData(), $view->getPath());
+        $name = $view->getName();
+        $type = null;
+        $data = $view->getData();
+        $path = $view->getPath();
+
+        if (class_exists('\Inertia\Inertia')) {
+            list($name, $type, $data, $path) = $this->getInertiaView($name, $data, $path);
+        }
 
         if (is_object($path)) {
             $type = get_class($view);
-            $path = '';
+            $path = null;
         }
 
-        if ($path && !$type) {
-            if (substr($path, -10) == '.blade.php') {
-                $type = 'blade';
-            } else {
-                $type = pathinfo($path, PATHINFO_EXTENSION);
+        if ($path) {
+            if (!$type) {
+                if (substr($path, -10) == '.blade.php') {
+                    $type = 'blade';
+                } else {
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                }
             }
-        }
 
-        foreach ($this->exclude_paths as $excludePath) {
-            if (str_starts_with($path, $excludePath)) {
-                return;
+            foreach ($this->exclude_paths as $excludePath) {
+                if (str_starts_with($path, $excludePath)) {
+                    return;
+                }
             }
         }
 
         $this->addTemplate($name, $data, $type, $path);
     }
 
-    private function getInertiaView(string $name, array $data, $path)
+    private function getInertiaView(string $name, array $data, ?string $path)
     {
-        if (class_exists('\Inertia\Inertia')) {
-            if (isset($data['page']) && is_array($data['page'])) {
-                $data = $data['page'];
-            }
+        if (isset($data['page']) && is_array($data['page'])) {
+            $data = $data['page'];
+        }
 
-            if (isset($data['props'], $data['component'])) {
-                $name = $data['component'];
-                $data = $data['props'];
+        if (isset($data['props'], $data['component'])) {
+            $name = $data['component'];
+            $data = $data['props'];
 
-                if ($files = glob(resource_path('js/Pages/' . $name . '.*'))) {
-                    $path = $files[0];
-                    $type = pathinfo($path, PATHINFO_EXTENSION);
+            if ($files = glob(resource_path('js/Pages/' . $name . '.*'))) {
+                $path = $files[0];
+                $type = pathinfo($path, PATHINFO_EXTENSION);
 
-                    if (in_array($type, ['js', 'jsx'])) {
-                        $type = 'react';
-                    }
+                if (in_array($type, ['js', 'jsx'])) {
+                    $type = 'react';
                 }
             }
         }
@@ -110,7 +117,7 @@ class ViewCollector extends TwigCollector
     public function addInertiaAjaxView(array $data)
     {
         list($name, $type, $data, $path) = $this->getInertiaView('', $data, '');
-        
+
         if (! $name) {
             return;
         }
@@ -118,7 +125,7 @@ class ViewCollector extends TwigCollector
         $this->addTemplate($name, $data, $type, $path);
     }
 
-    private function addTemplate(string $name, array $data, string $type, string $path)
+    private function addTemplate(string $name, array $data, ?string $type, ?string $path)
     {
         // Prevent duplicates
         $hash = $type . $path . $name . ($this->collect_data ? implode(array_keys($data)) : '');
