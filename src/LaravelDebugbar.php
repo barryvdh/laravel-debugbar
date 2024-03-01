@@ -766,6 +766,20 @@ class LaravelDebugbar extends DebugBar
             $app['config']->get('debugbar.capture_ajax', true)
         ) {
             try {
+                if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
+                    $content = $response->getContent();
+
+                    if (is_string($content)) {
+                        $content = json_decode($content, true);
+                    }
+                    
+                    if (is_array($content)) {
+                        $this['views']->addInertiaAjaxView($content);
+                    }
+                }
+            } catch (Exception $e) {
+            }
+            try {
                 $this->sendDataInHeaders(true);
 
                 if ($app['config']->get('debugbar.add_ajax_timing', false)) {
