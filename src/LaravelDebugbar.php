@@ -84,7 +84,7 @@ class LaravelDebugbar extends DebugBar
     protected $booted = false;
 
     /**
-     * True when enabled, false disabled an null for still unknown
+     * True when enabled, false disabled on null for still unknown
      *
      * @var bool
      */
@@ -953,7 +953,7 @@ class LaravelDebugbar extends DebugBar
         $response->setContent($content);
         $response->headers->remove('Content-Length');
 
-        // Restore original response (eg. the View or Ajax data)
+        // Restore original response (e.g. the View or Ajax data)
         if ($original) {
             $response->original = $original;
         }
