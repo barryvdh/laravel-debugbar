@@ -59,8 +59,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             'v' => $this->getModifiedTime('js')
         ]);
 
-        $cssRoute = preg_replace('/\Ahttps?:/', '', $cssRoute);
-        $jsRoute  = preg_replace('/\Ahttps?:/', '', $jsRoute);
+        $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', $cssRoute);
+        $jsRoute  = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', $jsRoute);
 
         $nonce = $this->getNonceAttribute();
 
