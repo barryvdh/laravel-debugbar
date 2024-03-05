@@ -3,6 +3,7 @@
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
+use Illuminate\Support\Arr;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -14,18 +15,11 @@ class LogsCollector extends MessagesCollector
     {
         parent::__construct($name);
 
-        $path = $path ?: $this->getLogsFile();
-        $this->getStorageLogs($path);
-    }
-
-    /**
-     * Get the path to the logs file
-     *
-     * @return string
-     */
-    public function getLogsFile()
-    {
-        return storage_path() . '/logs/laravel.log';
+        $paths = Arr::wrap($path ?: storage_path('logs/laravel.log'));
+        
+        foreach ($paths as $path) {
+            $this->getStorageLogs($path);
+        }
     }
 
     /**
@@ -46,7 +40,12 @@ class LogsCollector extends MessagesCollector
         $file = implode("", $this->tailFile($path, $this->lines));
 
         foreach ($this->getLogs($file) as $log) {
-            $this->addMessage($log['header'] . $log['stack'], $log['level'], false);
+            $this->messages[] = [
+                'message' => $log['header'] . $log['stack'],
+                'label' => $log['level'],
+                'time' => substr($log['header'], 1, 19),
+                'is_string' => false,
+            ];
         }
     }
 
@@ -115,9 +114,15 @@ class LogsCollector extends MessagesCollector
             }
         }
 
-        $log = array_reverse($log);
-
         return $log;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMessages()
+    {
+        return array_reverse(parent::getMessages());
     }
 
     /**
