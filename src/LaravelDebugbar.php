@@ -11,13 +11,13 @@ use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
-use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
+use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
-use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
+use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
@@ -481,7 +481,13 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('logs', false)) {
             try {
                 $file = $config->get('debugbar.options.logs.file');
-                $this->addCollector(new LogsCollector($file));
+                if (is_string($file)) {
+                    $this->addCollector(new LogsCollector($file));
+                } else if (is_array($file)) {
+                    foreach ($file as $name => $path) {
+                        $this->addCollector(new LogsCollector($path, $name));
+                    }
+                }
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add LogsCollector', $e);
             }
