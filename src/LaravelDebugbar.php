@@ -839,6 +839,7 @@ class LaravelDebugbar extends DebugBar
             && !$this->isJsonRequest($request, $response)
             && $response->getContent() !== false
             && in_array($request->getRequestFormat(), [null, 'html'], true)
+            && !$this->isJsonResponse($response)
         ) {
             try {
                 $this->injectDebugbar($response);
@@ -907,6 +908,32 @@ class LaravelDebugbar extends DebugBar
         $content = $response->getContent();
         if ($content !== false && in_array($content[0], ['{', '['], true)) {
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  \Symfony\Component\HttpFoundation\Response $response
+     * @return bool
+     */
+    protected function isJsonResponse(Response $response)
+    {
+        if ($response->headers->get('Content-Type') == 'application/json') {
+            return true;
+        }
+
+        try {
+            $content = $response->getContent();
+
+            if (is_string($content)) {
+                $content = json_decode($content, true);
+            }
+
+            if (is_array($content)) {
+                return true;
+            }
+        } catch (Exception $e) {
         }
 
         return false;
