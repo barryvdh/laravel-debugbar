@@ -762,8 +762,8 @@ class LaravelDebugbar extends DebugBar
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
-            $this->isJsonRequest($request) &&
-            $app['config']->get('debugbar.capture_ajax', true)
+            $app['config']->get('debugbar.capture_ajax', true) &&
+            ($this->isJsonRequest($request) || $this->isJsonResponse($response))
         ) {
             try {
                 if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
@@ -790,11 +790,11 @@ class LaravelDebugbar extends DebugBar
             }
         } elseif (
             !$app['config']->get('debugbar.inject', true) ||
-            ($response->headers->has('Content-Type') &&
-                strpos($response->headers->get('Content-Type'), 'html') === false) ||
+            strpos((string) $response->headers->get('Content-Type'), 'html') === false ||
             $request->getRequestFormat() !== 'html' ||
             $response->getContent() === false ||
-            $this->isJsonRequest($request)
+            $this->isJsonRequest($request) ||
+            $this->isJsonResponse($response)
         ) {
             try {
                 // Just collect + store data, don't inject it.
@@ -860,6 +860,32 @@ class LaravelDebugbar extends DebugBar
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
         return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
+    }
+
+    /**
+     * @param  \Symfony\Component\HttpFoundation\Response $response
+     * @return bool
+     */
+    protected function isJsonResponse(Response $response)
+    {
+        if ($response->headers->get('Content-Type') == 'application/json') {
+            return true;
+        }
+
+        try {
+            $content = $response->getContent();
+
+            if (is_string($content)) {
+                $content = json_decode($content, true);
+            }
+
+            if (is_array($content)) {
+                return true;
+            }
+        } catch (Exception $e) {
+        }
+
+        return false;
     }
 
     /**
