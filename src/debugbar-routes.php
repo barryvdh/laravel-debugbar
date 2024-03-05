@@ -35,7 +35,7 @@ app('router')->group($routeConfig, function ($router) {
         'as' => 'debugbar.assets.js',
     ]);
 
-    $router->delete('cache/{key}/{tags?}', [
+    $router->get('cache/{key}/{tags?}', [
         'uses' => 'CacheController@delete',
         'as' => 'debugbar.cache.delete',
     ]);

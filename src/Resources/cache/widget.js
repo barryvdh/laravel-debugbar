@@ -19,7 +19,6 @@
 
             $.ajax({
                 url: $(el).attr("data-url"),
-                type: 'DELETE',
                 success: function (result) {
                     $(el).fadeOut(200);
                 }
