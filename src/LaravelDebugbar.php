@@ -923,17 +923,19 @@ class LaravelDebugbar extends DebugBar
             return true;
         }
 
-        try {
-            $content = $response->getContent();
+        $content = $response->getContent();
 
-            if (is_string($content)) {
-                $content = json_decode($content, true);
+        if (is_string($content)) {            
+            if (function_exists('json_validate')) {
+                return json_validate($content);
             }
 
-            if (is_array($content)) {
-                return true;
-            }
-        } catch (Exception $e) {
+            // PHP <= 8.2 check
+            json_decode($content, true);
+
+            return json_last_error() === JSON_ERROR_NONE;
+        } elseif (is_array($content)) {
+            return true;
         }
 
         return false;
