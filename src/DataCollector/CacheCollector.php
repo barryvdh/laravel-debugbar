@@ -38,6 +38,16 @@ class CacheCollector extends TimeDataCollector
         $label = $this->classMap[$class];
 
         if (isset($params['value'])) {
+            if (is_string($params['value'])) {
+                $params['size'] = strlen($params['value']);
+            } else {
+                $params['size'] = strlen(serialize($params['value']));
+            }
+
+            if (isset($params['size'])) {
+                $params['size'] = $this->getDataFormatter()->formatBytes($params['size'] * 8);
+            }
+
             if ($this->collectValues) {
                 $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($event->value));
             } else {
