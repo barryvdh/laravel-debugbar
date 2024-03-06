@@ -38,12 +38,14 @@ class LogsCollector extends MessagesCollector
 
         //Load the latest lines, guessing about 15x the number of log entries (for stack traces etc)
         $file = implode("", $this->tailFile($path, $this->lines));
+        $basename = basename($path);
 
         foreach ($this->getLogs($file) as $log) {
             $this->messages[] = [
                 'message' => $log['header'] . $log['stack'],
                 'label' => $log['level'],
                 'time' => substr($log['header'], 1, 19),
+                'collector' => $basename,
                 'is_string' => false,
             ];
         }
