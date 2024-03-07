@@ -89,11 +89,6 @@ class MultiAuthCollector extends DataCollector implements Renderable
             return $guard->hasUser();
         }
 
-        // For Laravel 5.5
-        if (method_exists($guard, 'alreadyAuthenticated')) {
-            return $guard->alreadyAuthenticated();
-        }
-
         return false;
     }
 
