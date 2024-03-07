@@ -25,7 +25,7 @@ class CacheCollector extends TimeDataCollector
 
     public function __construct($requestStartTime, $collectValues)
     {
-        parent::__construct();
+        parent::__construct($requestStartTime);
 
         $this->collectValues = $collectValues;
     }
@@ -70,7 +70,7 @@ class CacheCollector extends TimeDataCollector
 
     public function subscribe(Dispatcher $dispatcher)
     {
-        foreach ($this->classMap as $eventClass => $type) {
+        foreach (array_keys($this->classMap) as $eventClass) {
             $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
         }
     }
