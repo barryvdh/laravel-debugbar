@@ -53,14 +53,11 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $cssRoute = route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
             'theme' => config('debugbar.theme', 'auto'),
-        ]);
+        ], false);
 
         $jsRoute = route('debugbar.assets.js', [
             'v' => $this->getModifiedTime('js')
-        ]);
-
-        $cssRoute = preg_replace('/\Ahttps?:/', '', $cssRoute);
-        $jsRoute  = preg_replace('/\Ahttps?:/', '', $jsRoute);
+        ], false);
 
         $nonce = $this->getNonceAttribute();
 
