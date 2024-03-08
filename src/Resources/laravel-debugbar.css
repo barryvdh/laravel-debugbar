@@ -672,6 +672,11 @@ div.phpdebugbar-widgets-messages .phpdebugbar-widgets-value.phpdebugbar-widgets-
     color: #FF9800;
 }
 
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-deprecation:before {
+    content: "\f1f6";
+    color: #FF9800;
+}
+
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item pre.sf-dump {
     display: inline-block !important;
     position: relative;
