@@ -531,62 +531,64 @@ class QueryCollector extends PDOCollector
                 'connection' => $query['connection'],
             ];
 
-            // Add the results from the EXPLAIN as new rows
-            if ($query['driver'] === 'pgsql') {
-                $explainer = trim(implode("\n", array_map(function ($explain) {
-                    return $explain->{'QUERY PLAN'};
-                }, $query['explain'])));
+            if ($query['explain']) {
+                // Add the results from the EXPLAIN as new rows
+                if ($query['driver'] === 'pgsql') {
+                    $explainer = trim(implode("\n", array_map(function ($explain) {
+                        return $explain->{'QUERY PLAN'};
+                    }, $query['explain'])));
 
-                if ($explainer) {
+                    if ($explainer) {
+                        $statements[] = [
+                            'sql' => " - EXPLAIN: {$explainer}",
+                            'type' => 'explain',
+                        ];
+                    }
+                } elseif ($query['driver'] === 'sqlite') {
+                    $vmi = '<table style="margin:-5px -11px !important;width: 100% !important">';
+                    $vmi .= "<thead><tr>
+                        <td>Address</td>
+                        <td>Opcode</td>
+                        <td>P1</td>
+                        <td>P2</td>
+                        <td>P3</td>
+                        <td>P4</td>
+                        <td>P5</td>
+                        <td>Comment</td>
+                        </tr></thead>";
+
+                    foreach ($query['explain'] as $explain) {
+                        $vmi .= "<tr>
+                            <td>{$explain->addr}</td>
+                            <td>{$explain->opcode}</td>
+                            <td>{$explain->p1}</td>
+                            <td>{$explain->p2}</td>
+                            <td>{$explain->p3}</td>
+                            <td>{$explain->p4}</td>
+                            <td>{$explain->p5}</td>
+                            <td>{$explain->comment}</td>
+                            </tr>";
+                    }
+
+                    $vmi .= '</table>';
+
                     $statements[] = [
-                        'sql' => " - EXPLAIN: {$explainer}",
+                        'sql' => " - EXPLAIN:",
                         'type' => 'explain',
+                        'params' => [
+                            'Virtual Machine Instructions' => $vmi,
+                        ]
                     ];
-                }
-            } elseif ($query['driver'] === 'sqlite') {
-                $vmi  = '<table style="margin:-5px -11px !important;width: 100% !important">';
-                $vmi .= "<thead><tr>
-                    <td>Address</td>
-                    <td>Opcode</td>
-                    <td>P1</td>
-                    <td>P2</td>
-                    <td>P3</td>
-                    <td>P4</td>
-                    <td>P5</td>
-                    <td>Comment</td>
-                    </tr></thead>";
-
-                foreach ($query['explain'] as $explain) {
-                    $vmi .= "<tr>
-                        <td>{$explain->addr}</td>
-                        <td>{$explain->opcode}</td>
-                        <td>{$explain->p1}</td>
-                        <td>{$explain->p2}</td>
-                        <td>{$explain->p3}</td>
-                        <td>{$explain->p4}</td>
-                        <td>{$explain->p5}</td>
-                        <td>{$explain->comment}</td>
-                        </tr>";
-                }
-
-                $vmi .= '</table>';
-
-                $statements[] = [
-                    'sql' => " - EXPLAIN:",
-                    'type' => 'explain',
-                    'params' => [
-                        'Virtual Machine Instructions' => $vmi,
-                    ]
-                ];
-            } else {
-                foreach ($query['explain'] as $explain) {
-                    $statements[] = [
-                        'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
-                        'type' => 'explain',
-                        'params' => $explain,
-                        'row_count' => $explain->rows,
-                        'stmt_id' => $explain->id,
-                    ];
+                } else {
+                    foreach ($query['explain'] as $explain) {
+                        $statements[] = [
+                            'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
+                            'type' => 'explain',
+                            'params' => $explain,
+                            'row_count' => $explain->rows,
+                            'stmt_id' => $explain->id,
+                        ];
+                    }
                 }
             }
         }
