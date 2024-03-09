@@ -47,7 +47,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
         tap($collector->collect(), function (array $collection) {
             $this->assertEquals(1, $collection['nb_statements']);
 
-            self::assertSame('SELECT 1', $collection['statements'][2]['sql']);
+            self::assertSame('SELECT 1', $collection['statements'][1]['sql']);
         });
     }
 
@@ -78,7 +78,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
         tap($collector->collect(), function (array $collection) {
             $this->assertEquals(1, $collection['nb_statements']);
 
-            self::assertSame('SELECT 1', $collection['statements'][2]['sql']);
+            self::assertSame('SELECT 1', $collection['statements'][1]['sql']);
         });
     }
 }
