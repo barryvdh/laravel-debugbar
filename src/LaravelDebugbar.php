@@ -427,13 +427,14 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && $events) {
             try {
-                $this->addCollector(new SymfonyMailCollector());
-                $events->listen(function (MessageSent $event) {
-                    $this['mail']->addSymfonyMessage($event->sent->getSymfonySentMessage());
+                $mailCollector = new SymfonyMailCollector();
+                $this->addCollector($mailCollector);
+                $events->listen(function (MessageSent $event) use ($mailCollector) {
+                    $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
                 });
 
                 if ($config->get('debugbar.options.mail.full_log')) {
-                    $this['mail']->showMessageDetail();
+                    $mailCollector->showMessageDetail();
                 }
 
                 if ($this->hasCollector('time') && $config->get('debugbar.options.mail.timeline')) {
