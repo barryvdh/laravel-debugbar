@@ -11,7 +11,7 @@ It bootstraps some Collectors to work with Laravel and implements a couple custo
 It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
 Read [the documentation](http://phpdebugbar.com/docs/) for more configuration options.
 
-![Debugbar Dark Mode screenshot](https://github.com/barryvdh/laravel-debugbar/assets/973269/a9e3d2c6-c9b3-4c48-abd4-c109f4c91e13)
+![Debugbar Dark Mode screenshot](https://github.com/barryvdh/laravel-debugbar/assets/973269/6600837a-8b2d-4acb-ab0c-158c9ca5439c)
 
 
 ### Note: Use the DebugBar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design). It can also slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
