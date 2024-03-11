@@ -436,6 +436,9 @@ class LaravelDebugbar extends DebugBar
                 if ($config->get('debugbar.options.mail.full_log')) {
                     $mailCollector->showMessageDetail();
                 }
+                if ($config->get('debugbar.options.mail.show_body')) {
+                    $mailCollector->showMessageBody();
+                }
 
                 if ($this->hasCollector('time') && $config->get('debugbar.options.mail.timeline')) {
                     $transport = $app['mailer']->getSymfonyTransport();
