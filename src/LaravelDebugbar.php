@@ -429,11 +429,11 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->addCollector(new SymfonyMailCollector());
                 $events->listen(function (MessageSent $event) {
-                    $this['mail']->addSymfonyMessage($event->sent->getSymfonySentMessage());
+                    $this['symfonymailer_mails']->addSymfonyMessage($event->sent->getSymfonySentMessage());
                 });
 
                 if ($config->get('debugbar.options.mail.full_log')) {
-                    $this['mail']->showMessageDetail();
+                    $this['symfonymailer_mails']->showMessageDetail();
                 }
 
                 if ($this->hasCollector('time') && $config->get('debugbar.options.mail.timeline')) {
