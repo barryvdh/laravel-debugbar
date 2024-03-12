@@ -433,10 +433,7 @@ class LaravelDebugbar extends DebugBar
                     $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
                 });
 
-                if ($config->get('debugbar.options.mail.full_log')) {
-                    $mailCollector->showMessageDetail();
-                }
-                if ($config->get('debugbar.options.mail.show_body')) {
+                if ($config->get('debugbar.options.mail.show_body') || $config->get('debugbar.options.mail.full_log')) {
                     $mailCollector->showMessageBody();
                 }
 

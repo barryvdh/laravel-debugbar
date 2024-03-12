@@ -226,8 +226,7 @@ return [
         ],
         'mail' => [
             'timeline' => false,  // Add mails to the timeline
-            'show_body' => false,
-            'full_log' => false,
+            'show_body' => true,
         ],
         'views' => [
             'timeline' => false,    // Add the views to the timeline (Experimental)
