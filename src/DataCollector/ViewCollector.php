@@ -81,8 +81,9 @@ class ViewCollector extends TwigCollector
                 }
             }
 
+            $shortPath = $this->normalizeFilePath($path);
             foreach ($this->exclude_paths as $excludePath) {
-                if (str_starts_with($path, $excludePath)) {
+                if (str_starts_with($shortPath, $excludePath)) {
                     return;
                 }
             }
