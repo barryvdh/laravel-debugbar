@@ -492,6 +492,9 @@ class LaravelDebugbar extends DebugBar
                 $this['auth']->setShowName(
                     $config->get('debugbar.options.auth.show_name')
                 );
+                $this['auth']->setShowGuardsData(
+                    $config->get('debugbar.options.auth.show_guards', true)
+                );
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add AuthCollector', $e);
             }
