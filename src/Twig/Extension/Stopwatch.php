@@ -2,14 +2,14 @@
 
 namespace Barryvdh\Debugbar\Twig\Extension;
 
-use Barryvdh\Debugbar\Twig\TokenParser\StopwatchTokenParser;
+use DebugBar\Bridge\Twig\MeasureTwigExtension;
 use Illuminate\Foundation\Application;
 
 /**
- * Access Laravels auth class in your Twig templates.
+ * Access debugbar time measures in your Twig templates.
  * Based on Symfony\Bridge\Twig\Extension\StopwatchExtension
  */
-class Stopwatch extends Extension
+class Stopwatch extends MeasureTwigExtension
 {
     /**
      * @var \Barryvdh\Debugbar\LaravelDebugbar
@@ -17,17 +17,22 @@ class Stopwatch extends Extension
     protected $debugbar;
 
     /**
-     * Create a new auth extension.
+     * Create a new time measure extension.
      *
      * @param \Illuminate\Foundation\Application $app
      */
     public function __construct(Application $app)
     {
+        $timeCollector = null;
         if ($app->bound('debugbar')) {
             $this->debugbar = $app['debugbar'];
-        } else {
-            $this->debugbar = null;
+            
+            if ($app['debugbar']->hasCollector('time')) {
+                $timeCollector = $app['debugbar']['time'];
+            }
         }
+        
+        parent::__construct($timeCollector, 'stopwatch');
     }
 
     /**
@@ -35,19 +40,7 @@ class Stopwatch extends Extension
      */
     public function getName()
     {
-        return 'stopwatch';
-    }
-
-    public function getTokenParsers()
-    {
-        return [
-            /*
-             * {% stopwatch foo %}
-             * Some stuff which will be recorded on the timeline
-             * {% endstopwatch %}
-             */
-            new StopwatchTokenParser($this->debugbar !== null),
-        ];
+        return static::class;
     }
 
     public function getDebugbar()
