@@ -916,6 +916,10 @@ class LaravelDebugbar extends DebugBar
         $renderer = $this->getJavascriptRenderer();
         $autoShow = $config->get('debugbar.ajax_handler_auto_show', true);
         $renderer->setAjaxHandlerAutoShow($autoShow);
+
+        $enableTab = $config->get('debugbar.ajax_handler_enable_tab', true);
+        $renderer->setAjaxHandlerEnableTab($enableTab);
+
         if ($this->getStorage()) {
             $openHandlerUrl = route('debugbar.openhandler');
             $renderer->setOpenHandlerUrl($openHandlerUrl);
