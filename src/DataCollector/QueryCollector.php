@@ -34,6 +34,7 @@ class QueryCollector extends PDOCollector
         '/vendor/october/rain',
         '/vendor/barryvdh/laravel-debugbar',
     ];
+    protected static $customFrameParsers = [];
 
     /**
      * @param TimeDataCollector $timeCollector
@@ -41,6 +42,14 @@ class QueryCollector extends PDOCollector
     public function __construct(TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
+    }
+
+    /**
+     * Add a custom frame parser for a specific object type.
+     */
+    public static function addCustomFrameParser(string $objectType, callable $customFrameParser): void
+    {
+        static::$customFrameParsers[$objectType] = $customFrameParser;
     }
 
     /**
@@ -333,6 +342,15 @@ class QueryCollector extends PDOCollector
             !$this->fileIsInExcludedPath($trace['file'])
         ) {
             $frame->file = $trace['file'];
+
+            foreach (static::$customFrameParsers as $objectType => $customFrameParser) {
+                if (isset($trace['object']) && is_a($trace['object'], $objectType)) {
+                    $frame->line = '?';
+                    $frame = $customFrameParser($frame, $trace);
+                    $frame->name = $this->normalizeFilePath($frame->file);
+                    return $frame;
+                }
+            }
 
             if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
                 list($frame->file, $frame->line) = $this->getTwigInfo($trace);
