@@ -318,7 +318,7 @@ class QueryCollector extends PDOCollector
             'namespace' => null,
             'name' => null,
             'file' => null,
-            'line' => isset($trace['line']) ? $trace['line'] : '?',
+            'line' => $trace['line'] ?? '1',
         ];
 
         if (isset($trace['function']) && $trace['function'] == 'substituteBindings') {
