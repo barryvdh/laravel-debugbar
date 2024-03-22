@@ -334,7 +334,7 @@ class QueryCollector extends PDOCollector
         ) {
             $frame->file = $trace['file'];
 
-            if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
+            if (isset($trace['object']) && is_a($trace['object'], '\Twig\Template')) {
                 list($frame->file, $frame->line) = $this->getTwigInfo($trace);
             } elseif (strpos($frame->file, storage_path()) !== false) {
                 $hash = pathinfo($frame->file, PATHINFO_FILENAME);
