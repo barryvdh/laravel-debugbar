@@ -39,6 +39,10 @@ class Converter
             $output = array_merge($output, $data['clockwork']);
         }
 
+        if (isset($data['memory'])) {
+            $output['memoryUsage'] = $data['memory']['peak_usage'];
+        }
+
         if (isset($data['time'])) {
             $time = $data['time'];
             $output['time'] = $time['start'];
@@ -100,11 +104,20 @@ class Converter
                     'query' => $statement['sql'],
                     'bindings' => $statement['params'],
                     'duration' => $statement['duration'] * 1000,
+                    'time' => $statement['start'] ?? null,
                     'connection' => $statement['connection']
                 ];
             }
 
             $output['databaseDuration'] = $queries['accumulated_duration'] * 1000;
+        }
+
+        if (isset($data['models'])) {
+            $output['modelsActions'] = [];
+            $output['modelsCreated'] = [];
+            $output['modelsUpdated'] = [];
+            $output['modelsDeleted'] = [];
+            $output['modelsRetrieved'] = $data['models']['data'];
         }
 
         if (isset($data['views'])) {
@@ -113,11 +126,28 @@ class Converter
                     'description' => 'Rendering a view',
                     'duration' => 0,
                     'end' => 0,
-                    'start' => 0,
+                    'start' => $view['start'] ?? 0,
                     'data' => [
                         'name' => $view['name'],
                         'data' => $view['params'],
                     ],
+                ];
+            }
+        }
+
+        if (isset($data['event'])) {
+            foreach ($data['event']['measures'] as $event) {
+                $event['data'] = [];
+                $event['listeners'] = [];
+                foreach ($event['params'] ?? [] as $key => $param) {
+                    $event[is_numeric($key) ? 'data' : 'listeners'] = $param;
+                }
+                $output['events'][] = [
+                    'event' => ['event' => $event['label']],
+                    'data' => $event['data'],
+                    'time' => $event['start'],
+                    'duration' => $event['duration'] * 1000,
+                    'listeners' => $event['listeners'],
                 ];
             }
         }

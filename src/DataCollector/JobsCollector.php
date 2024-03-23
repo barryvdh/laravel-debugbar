@@ -7,6 +7,9 @@ use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Events\Dispatcher;
 
+/**
+ * @deprecated in favor of \DebugBar\DataCollector\ObjectCountCollector
+ */
 class JobsCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
     public $jobs = [];
@@ -18,9 +21,9 @@ class JobsCollector extends DataCollector implements DataCollectorInterface, Ren
     public function __construct(Dispatcher $events)
     {
         $events->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) {
-                $class = get_class($event->job);
-                $this->jobs[$class] = ($this->jobs[$class] ?? 0) + 1;
-                $this->count++;
+            $class = get_class($event->job);
+            $this->jobs[$class] = ($this->jobs[$class] ?? 0) + 1;
+            $this->count++;
         });
     }
 

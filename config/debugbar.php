@@ -60,7 +60,7 @@ return [
     |
     */
 
-    'editor' => env('DEBUGBAR_EDITOR', 'phpstorm'),
+    'editor' => env('DEBUGBAR_EDITOR') ?: env('IGNITION_EDITOR', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -85,8 +85,8 @@ return [
     |
     */
 
-    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH', ''),
-    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', ''),
+    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH'),
+    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
 
     /*
      |--------------------------------------------------------------------------
@@ -116,10 +116,14 @@ return [
      |
      | Note for your request to be identified as ajax requests they must either send the header
      | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
+     |
+     | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
+     | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
      */
 
     'capture_ajax' => true,
     'add_ajax_timing' => false,
+    'ajax_handler_auto_show' => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -189,6 +193,17 @@ return [
      */
 
     'options' => [
+        'time' => [
+            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
+        ],
+        'messages' => [
+            'trace' => true,   // Trace the origin of the debug message
+        ],
+        'memory' => [
+            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
+            'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+            'precision' => 0,          // Memory rounding precision
+        ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
         ],
@@ -205,18 +220,33 @@ return [
             'hints'             => false,    // Show hints for common mistakes
             'show_copy'         => false,    // Show copy button next to the query,
             'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
+            'memory_usage'      => false,   // Show queries memory usage
+            'soft_limit'       => 100,      // After the soft limit, no parameters/backtrace are captured
+            'hard_limit'       => 500,      // After the hard limit, queries are ignored
         ],
         'mail' => [
             'timeline' => false,  // Add mails to the timeline
-            'full_log' => false,
+            'show_body' => true,
         ],
         'views' => [
-            'timeline' => false,  // Add the views to the timeline (Experimental)
-            'data' => false,    //Note: Can slow down the application, because the data can be quite large..
-            'exclude_paths' => [], // Add the paths which you don't want to appear in the views
+            'timeline' => false,    // Add the views to the timeline (Experimental)
+            'data' => false,        //true for all data, 'keys' for only names, false for no parameters.
+            'group' => 50,          // Group duplicate views. Pass value to auto-group, or true/false to force
+            'exclude_paths' => [    // Add the paths which you don't want to appear in the views
+                'vendor/filament'   // Exclude Filament components by default
+            ],
         ],
         'route' => [
             'label' => true,  // show complete route on bar
+        ],
+        'session' => [
+            'hiddens' => [], // hides sensitive values using array paths
+        ],
+        'symfony_request' => [
+            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
+        ],
+        'events' => [
+            'data' => false, // collect events data, listeners
         ],
         'logs' => [
             'file' => null,
@@ -253,6 +283,15 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | DebugBar route middleware
+     |--------------------------------------------------------------------------
+     |
+     | Additional middleware to run on the Debugbar routes
+     */
+    'route_middleware' => [],
+
+    /*
+     |--------------------------------------------------------------------------
      | DebugBar route domain
      |--------------------------------------------------------------------------
      |
@@ -269,7 +308,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
-    'theme' => env('DEBUGBAR_THEME', 'auto'),
+    'theme' => env('DEBUGBAR_THEME', 'dark'),
 
     /*
      |--------------------------------------------------------------------------

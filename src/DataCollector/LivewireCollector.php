@@ -28,7 +28,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             /** @var \Livewire\Component $component */
             $component = $view->getData()['_instance'];
 
-            // Create an unique name for each compoent
+            // Create a unique name for each component
             $key = $component->getName() . ' #' . $component->id;
 
             $data = [

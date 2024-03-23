@@ -18,6 +18,6 @@ class TelescopeController extends BaseController
         $entry = $storage->find($uuid);
         $result = $storage->get('request', (new EntryQueryOptions())->batchId($entry->batchId))->first();
 
-        return redirect(config('telescope.path') . '/requests/' . $result->id);
+        return redirect(config('telescope.domain') . '/' . config('telescope.path') . '/requests/' . $result->id);
     }
 }

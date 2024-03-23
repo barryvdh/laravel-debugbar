@@ -13,6 +13,10 @@ class QueryCollector extends PDOCollector
 {
     protected $timeCollector;
     protected $queries = [];
+    protected $queryCount = 0;
+    protected $softLimit = null;
+    protected $hardLimit = null;
+    protected $lastMemoryUsage;
     protected $renderSqlWithParams = false;
     protected $findSource = false;
     protected $middleware = [];
@@ -26,6 +30,7 @@ class QueryCollector extends PDOCollector
         '/vendor/laravel/framework/src/Illuminate/Support',
         '/vendor/laravel/framework/src/Illuminate/Database',
         '/vendor/laravel/framework/src/Illuminate/Events',
+        '/vendor/laravel/framework/src/Illuminate/Collections',
         '/vendor/october/rain',
         '/vendor/barryvdh/laravel-debugbar',
     ];
@@ -36,6 +41,17 @@ class QueryCollector extends PDOCollector
     public function __construct(TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
+    }
+
+    /**
+     * @param int|null $softLimit After the soft limit, no parameters/backtrace are captured
+     * @param int|null $hardLimit After the hard limit, queries are ignored
+     * @return void
+     */
+    public function setLimits(?int $softLimit, ?int $hardLimit): void
+    {
+        $this->softLimit = $softLimit;
+        $this->hardLimit = $hardLimit;
     }
 
     /**
@@ -72,12 +88,12 @@ class QueryCollector extends PDOCollector
     /**
      * Enable/disable finding the source
      *
-     * @param bool $value
+     * @param bool|int $value
      * @param array $middleware
      */
     public function setFindSource($value, array $middleware)
     {
-        $this->findSource = (bool) $value;
+        $this->findSource = $value;
         $this->middleware = $middleware;
     }
 
@@ -96,7 +112,7 @@ class QueryCollector extends PDOCollector
      *
      * @param  bool $enabled
      */
-    public function setDurationBackground($enabled)
+    public function setDurationBackground($enabled = true)
     {
         $this->durationBackground = $enabled;
     }
@@ -116,32 +132,43 @@ class QueryCollector extends PDOCollector
 //        }
     }
 
+    public function startMemoryUsage()
+    {
+        $this->lastMemoryUsage = memory_get_usage(false);
+    }
+
     /**
      *
-     * @param string $query
-     * @param array $bindings
-     * @param float $time
-     * @param \Illuminate\Database\Connection $connection
+     * @param \Illuminate\Database\Events\QueryExecuted $query
      */
-    public function addQuery($query, $bindings, $time, $connection)
+    public function addQuery($query)
     {
+        $this->queryCount++;
+
+        if ($this->hardLimit && $this->queryCount > $this->hardLimit) {
+            return;
+        }
+
+        $limited = $this->softLimit && $this->queryCount > $this->softLimit;
+
+        $sql = (string) $query->sql;
         $explainResults = [];
-        $time = $time / 1000;
+        $time = $query->time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
-        $hints = $this->performQueryAnalysis($query);
+        $hints = $this->performQueryAnalysis($sql);
 
         $pdo = null;
         try {
-            $pdo = $connection->getPdo();
+            $pdo = $query->connection->getPdo();
         } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
-        $bindings = $connection->prepareBindings($bindings);
+        $bindings = $query->connection->prepareBindings($query->bindings);
 
         // Run EXPLAIN on this query (if needed)
-        if ($this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query)) {
-            $statement = $pdo->prepare('EXPLAIN ' . $query);
+        if (!$limited && $this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $sql)) {
+            $statement = $pdo->prepare('EXPLAIN ' . $sql);
             $statement->execute($bindings);
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
         }
@@ -169,34 +196,36 @@ class QueryCollector extends PDOCollector
                     }
                 }
 
-                $query = preg_replace($regex, addcslashes($binding, '$'), $query, 1);
+                $sql = preg_replace($regex, addcslashes($binding, '$'), $sql, 1);
             }
         }
 
         $source = [];
 
-        if ($this->findSource) {
+        if (!$limited && $this->findSource) {
             try {
-                $source = array_slice($this->findSource(), 0, 5);
+                $source = $this->findSource();
             } catch (\Exception $e) {
             }
         }
 
         $this->queries[] = [
-            'query' => $query,
+            'query' => $sql,
             'type' => 'query',
-            'bindings' => $this->getDataFormatter()->escapeBindings($bindings),
+            'bindings' => !$limited ? $this->getDataFormatter()->escapeBindings($bindings) : null,
+            'start' => $startTime,
             'time' => $time,
+            'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
             'explain' => $explainResults,
-            'connection' => $connection->getDatabaseName(),
-            'driver' => $connection->getConfig('driver'),
-            'hints' => $this->showHints ? $hints : null,
+            'connection' => $query->connection->getDatabaseName(),
+            'driver' => $query->connection->getConfig('driver'),
+            'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
         ];
 
         if ($this->timeCollector !== null) {
-            $this->timeCollector->addMeasure(Str::limit($query, 100), $startTime, $endTime);
+            $this->timeCollector->addMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'db');
         }
     }
 
@@ -236,8 +265,8 @@ class QueryCollector extends PDOCollector
         }
         if (preg_match('/ORDER BY RAND()/i', $query)) {
             $hints[] = '<code>ORDER BY RAND()</code> is slow, try to avoid if you can.
-                You can <a href="http://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work" target="_blank">read this</a>
-                or <a href="http://stackoverflow.com/questions/1244555/how-can-i-optimize-mysqls-order-by-rand-function" target="_blank">this</a>';
+                You can <a href="https://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work" target="_blank">read this</a>
+                or <a href="https://stackoverflow.com/questions/1244555/how-can-i-optimize-mysqls-order-by-rand-function" target="_blank">this</a>';
         }
         if (strpos($query, '!=') !== false) {
             $hints[] = 'The <code>!=</code> operator is not standard. Use the <code>&lt;&gt;</code> operator to test for inequality instead.';
@@ -272,7 +301,7 @@ class QueryCollector extends PDOCollector
             $sources[] = $this->parseTrace($index, $trace);
         }
 
-        return array_filter($sources);
+        return array_slice(array_filter($sources), 0, is_int($this->findSource) ? $this->findSource : 5);
     }
 
     /**
@@ -288,6 +317,7 @@ class QueryCollector extends PDOCollector
             'index' => $index,
             'namespace' => null,
             'name' => null,
+            'file' => null,
             'line' => isset($trace['line']) ? $trace['line'] : '?',
         ];
 
@@ -302,33 +332,36 @@ class QueryCollector extends PDOCollector
             isset($trace['file']) &&
             !$this->fileIsInExcludedPath($trace['file'])
         ) {
-            $file = $trace['file'];
+            $frame->file = $trace['file'];
 
             if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
-                list($file, $frame->line) = $this->getTwigInfo($trace);
-            } elseif (strpos($file, storage_path()) !== false) {
-                $hash = pathinfo($file, PATHINFO_FILENAME);
+                list($frame->file, $frame->line) = $this->getTwigInfo($trace);
+            } elseif (strpos($frame->file, storage_path()) !== false) {
+                $hash = pathinfo($frame->file, PATHINFO_FILENAME);
 
-                if (! $frame->name = $this->findViewFromHash($hash)) {
+                if ($frame->name = $this->findViewFromHash($hash)) {
+                    $frame->file = $frame->name[1];
+                    $frame->name = $frame->name[0];
+                } else {
                     $frame->name = $hash;
                 }
 
                 $frame->namespace = 'view';
 
                 return $frame;
-            } elseif (strpos($file, 'Middleware') !== false) {
-                $frame->name = $this->findMiddlewareFromFile($file);
+            } elseif (strpos($frame->file, 'Middleware') !== false) {
+                $frame->name = $this->findMiddlewareFromFile($frame->file);
 
                 if ($frame->name) {
                     $frame->namespace = 'middleware';
                 } else {
-                    $frame->name = $this->normalizeFilename($file);
+                    $frame->name = $this->normalizeFilePath($frame->file);
                 }
 
                 return $frame;
             }
 
-            $frame->name = $this->normalizeFilename($file);
+            $frame->name = $this->normalizeFilePath($frame->file);
 
             return $frame;
         }
@@ -377,7 +410,7 @@ class QueryCollector extends PDOCollector
      * Find the template name from the hash.
      *
      * @param  string $hash
-     * @return null|string
+     * @return null|array
      */
     protected function findViewFromHash($hash)
     {
@@ -396,7 +429,7 @@ class QueryCollector extends PDOCollector
 
         foreach ($property->getValue($finder) as $name => $path) {
             if (($xxh128Exists && hash('xxh128', 'v2' . $path) == $hash) || sha1('v2' . $path) == $hash) {
-                return $name;
+                return [$name, $path];
             }
         }
     }
@@ -423,27 +456,6 @@ class QueryCollector extends PDOCollector
     }
 
     /**
-     * Shorten the path by removing the relative links and base dir
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function normalizeFilename($path)
-    {
-        if (file_exists($path)) {
-            $path = realpath($path);
-        }
-
-        $basepath = base_path();
-
-        if (! str_starts_with($path, $basepath)) {
-            return $path;
-        }
-
-        return substr($path, strlen($basepath));
-    }
-
-    /**
      * Collect a database transaction event.
      * @param  string $event
      * @param \Illuminate\Database\Connection $connection
@@ -464,7 +476,9 @@ class QueryCollector extends PDOCollector
             'query' => $event,
             'type' => 'transaction',
             'bindings' => [],
+            'start' => microtime(true),
             'time' => 0,
+            'memory' => 0,
             'source' => $source,
             'explain' => [],
             'connection' => $connection->getDatabaseName(),
@@ -480,6 +494,7 @@ class QueryCollector extends PDOCollector
     public function reset()
     {
         $this->queries = [];
+        $this->queryCount = 0;
     }
 
     /**
@@ -488,11 +503,14 @@ class QueryCollector extends PDOCollector
     public function collect()
     {
         $totalTime = 0;
+        $totalMemory = 0;
         $queries = $this->queries;
 
         $statements = [];
         foreach ($queries as $query) {
+            $source = reset($query['source']);
             $totalTime += $query['time'];
+            $totalMemory += $query['memory'];
 
             $statements[] = [
                 'sql' => $this->getDataFormatter()->formatSql($query['query']),
@@ -502,68 +520,75 @@ class QueryCollector extends PDOCollector
                 'hints' => $query['hints'],
                 'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
+                'start' => $query['start'] ?? null,
                 'duration' => $query['time'],
                 'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
-                'stmt_id' => $this->getDataFormatter()->formatSource(reset($query['source'])),
+                'memory' => $query['memory'],
+                'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
+                'filename' => $this->getDataFormatter()->formatSource($source, true),
+                'source' => $this->getDataFormatter()->formatSource($source),
+                'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $query['connection'],
             ];
 
-            // Add the results from the explain as new rows
-            if ($query['driver'] === 'pgsql') {
-                $explainer = trim(implode("\n", array_map(function ($explain) {
-                    return $explain->{'QUERY PLAN'};
-                }, $query['explain'])));
+            if ($query['explain']) {
+                // Add the results from the EXPLAIN as new rows
+                if ($query['driver'] === 'pgsql') {
+                    $explainer = trim(implode("\n", array_map(function ($explain) {
+                        return $explain->{'QUERY PLAN'};
+                    }, $query['explain'])));
 
-                if ($explainer) {
+                    if ($explainer) {
+                        $statements[] = [
+                            'sql' => " - EXPLAIN: {$explainer}",
+                            'type' => 'explain',
+                        ];
+                    }
+                } elseif ($query['driver'] === 'sqlite') {
+                    $vmi = '<table style="margin:-5px -11px !important;width: 100% !important">';
+                    $vmi .= "<thead><tr>
+                        <td>Address</td>
+                        <td>Opcode</td>
+                        <td>P1</td>
+                        <td>P2</td>
+                        <td>P3</td>
+                        <td>P4</td>
+                        <td>P5</td>
+                        <td>Comment</td>
+                        </tr></thead>";
+
+                    foreach ($query['explain'] as $explain) {
+                        $vmi .= "<tr>
+                            <td>{$explain->addr}</td>
+                            <td>{$explain->opcode}</td>
+                            <td>{$explain->p1}</td>
+                            <td>{$explain->p2}</td>
+                            <td>{$explain->p3}</td>
+                            <td>{$explain->p4}</td>
+                            <td>{$explain->p5}</td>
+                            <td>{$explain->comment}</td>
+                            </tr>";
+                    }
+
+                    $vmi .= '</table>';
+
                     $statements[] = [
-                        'sql' => " - EXPLAIN: {$explainer}",
+                        'sql' => " - EXPLAIN:",
                         'type' => 'explain',
+                        'params' => [
+                            'Virtual Machine Instructions' => $vmi,
+                        ]
                     ];
-                }
-            } elseif ($query['driver'] === 'sqlite') {
-                $vmi  = '<table style="margin:-5px -11px !important;width: 100% !important">';
-                $vmi .= "<thead><tr>
-                    <td>Address</td>
-                    <td>Opcode</td>
-                    <td>P1</td>
-                    <td>P2</td>
-                    <td>P3</td>
-                    <td>P4</td>
-                    <td>P5</td>
-                    <td>Comment</td>
-                    </tr></thead>";
-
-                foreach ($query['explain'] as $explain) {
-                    $vmi .= "<tr>
-                        <td>{$explain->addr}</td>
-                        <td>{$explain->opcode}</td>
-                        <td>{$explain->p1}</td>
-                        <td>{$explain->p2}</td>
-                        <td>{$explain->p3}</td>
-                        <td>{$explain->p4}</td>
-                        <td>{$explain->p5}</td>
-                        <td>{$explain->comment}</td>
-                        </tr>";
-                }
-
-                $vmi .= '</table>';
-
-                $statements[] = [
-                    'sql' => " - EXPLAIN:",
-                    'type' => 'explain',
-                    'params' => [
-                        'Virtual Machine Instructions' => $vmi,
-                    ]
-                ];
-            } else {
-                foreach ($query['explain'] as $explain) {
-                    $statements[] = [
-                        'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
-                        'type' => 'explain',
-                        'params' => $explain,
-                        'row_count' => $explain->rows,
-                        'stmt_id' => $explain->id,
-                    ];
+                } else {
+                    foreach ($query['explain'] as $explain) {
+                        $statements[] = [
+                            'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
+                            'type' => 'explain',
+                            'params' => $explain,
+                            'row_count' => $explain->rows,
+                            'stmt_id' => $explain->id,
+                        ];
+                    }
                 }
             }
         }
@@ -590,15 +615,38 @@ class QueryCollector extends PDOCollector
             }
         }
 
-        $nb_statements = array_filter($queries, function ($query) {
-            return $query['type'] === 'query';
-        });
+        if ($this->softLimit && $this->hardLimit && ($this->queryCount > $this->softLimit && $this->queryCount > $this->hardLimit)) {
+            array_unshift($statements, [
+                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit .  ' are ignored. Limits can be raised in the config (debugbar.options.db.soft/hard_limit).',
+                'type' => 'info',
+            ]);
+            $statements[] = [
+                'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.soft/hard_limit)',
+                'type' => 'info',
+            ];
+        } elseif ($this->hardLimit && $this->queryCount > $this->hardLimit) {
+            array_unshift($statements, [
+                'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown.. Limits can be raised in the config (debugbar.options.db.hard_limit)',
+                'type' => 'info',
+            ]);
+            $statements[] = [
+                'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.hard_limit)',
+                'type' => 'info',
+            ];
+        } elseif ($this->softLimit && $this->queryCount > $this->softLimit) {
+            array_unshift($statements, [
+                'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limit can be raised in the config. Limits can be raised in the config (debugbar.options.db.soft_limit)',
+                'type' => 'info',
+            ]);
+        }
 
         $data = [
-            'nb_statements' => count($nb_statements),
+            'nb_statements' => $this->queryCount,
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
+            'memory_usage' => $totalMemory,
+            'memory_usage_str' => $totalMemory ? $this->getDataFormatter()->formatBytes($totalMemory) : null,
             'statements' => $statements
         ];
         return $data;
@@ -620,7 +668,7 @@ class QueryCollector extends PDOCollector
         return [
             "queries" => [
                 "icon" => "database",
-                "widget" => "PhpDebugBar.Widgets.LaravelSQLQueriesWidget",
+                "widget" => "PhpDebugBar.Widgets.SQLQueriesWidget",
                 "map" => "queries",
                 "default" => "[]"
             ],

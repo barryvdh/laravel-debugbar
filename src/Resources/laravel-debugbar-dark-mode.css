@@ -9,9 +9,9 @@ div.phpdebugbar-openhandler {
     --color-gray-500: #A0AEC0;
     --color-gray-600: #718096;
     --color-gray-700: #4A5568;
-    --color-gray-800: #2D3748;
-    --color-gray-900: #1A202C;
-    --color-red-vivid: #FF0040;
+    --color-gray-800: #252a37;
+    --color-gray-900: #18181b;
+    --color-red-vivid: #eb4432;
 }
 
 div.phpdebugbar,
@@ -139,6 +139,11 @@ div.phpdebugbar-openhandler .phpdebugbar-text-muted
     color: var(--color-gray-600);
 }
 
+li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename,
+li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename a.phpdebugbar-widgets-editor-link
+{
+    color: #ddd;
+}
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
     background-color: #6f6200;
 }
@@ -147,8 +152,23 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     color: #7B7B7B;
 }
 
+div.phpdebugbar pre.sf-dump .sf-dump-note {
+    color: #8be9fd;
+}
+
+div.phpdebugbar pre.sf-dump .sf-dump-num,
+div.phpdebugbar pre.sf-dump .sf-dump-const,
+div.phpdebugbar pre.sf-dump .sf-dump-index {
+    color: #bd93f9;
+}
+
+div.phpdebugbar pre.sf-dump .sf-dump-key,
+div.phpdebugbar pre.sf-dump .sf-dump-str {
+    color: #f1fa8c;
+}
+
 div.phpdebugbar-openhandler {
-    border-top-color: #fa5661;
+    border-top-color: var(--color-red-vivid);
 }
 
 div.phpdebugbar div.phpdebugbar-header .phpdebugbar-tab {
@@ -233,6 +253,14 @@ div.phpdebugbar a.phpdebugbar-close-btn {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAABUElEQVQ4T52SMUsDMRTH3xUPChHCxeko3YrUqeFGEexym3boJ9DBufhJpLODfoIbTrcuFcSxxMki3Uq5yZRAAweRVp70HdfWQZolb3i/l/x/iQd7Lm9PDjbA2Wz24HmerFarbSGEwaFaa57n+XC1WqlarXZNBxUgQsaYK+ccCCHeGWPn2GStfdFat3zfB875I8EFOBqNPpbLZRObsQnh9YktHIarUqmMoyg6wboApZTtfr9/zxhrEIw7QdbaSa/Xu1FKDTdAADiQUp6VYcpTgl4B4HsbhCRJjsIwfPN9/7hs2zn3mWXZabfb/dqRg/ZIBF2PmigzCiPbRcbpdKrQXjkTguXMKKxer8uNqw4Gg6cgCC7WT/ArAuty5vl8/hzH8eV2xmaapnec88baHooAEmaMmXQ6nVsAGO/IAQB8x0MAUGQPbSMPAAuC/gL//XV/ALsvnQ+MsaHgAAAAAElFTkSuQmCC) no-repeat 9px 6px;
 }
 
+div.phpdebugbar code.language-php,
+div.phpdebugbar pre.language-php {
+    color: #FFF;
+}
+
+pre.phpdebugbar-widgets-code-block ul {
+    background: none;
+}
 
 /* Dracula Theme v1.2.5
  *

@@ -89,11 +89,6 @@ class MultiAuthCollector extends DataCollector implements Renderable
             return $guard->hasUser();
         }
 
-        // For Laravel 5.5
-        if (method_exists($guard, 'alreadyAuthenticated')) {
-            return $guard->alreadyAuthenticated();
-        }
-
         return false;
     }
 
@@ -113,14 +108,16 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         // The default auth identifer is the ID number, which isn't all that
-        // useful. Try username and email.
-        $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
-        if (is_numeric($identifier)) {
+        // useful. Try username, email and name.
+        $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->getKey();
+        if (is_numeric($identifier) || Str::isUuid($identifier) || Str::isUlid($identifier)) {
             try {
                 if (isset($user->username)) {
                     $identifier = $user->username;
                 } elseif (isset($user->email)) {
                     $identifier = $user->email;
+                } elseif (isset($user->name)) {
+                    $identifier = Str::limit($user->name, 24);
                 }
             } catch (\Throwable $e) {
             }
