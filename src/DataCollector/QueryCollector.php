@@ -512,6 +512,10 @@ class QueryCollector extends PDOCollector
             $totalTime += $query['time'];
             $totalMemory += $query['memory'];
 
+            if (str_ends_with($query['connection'], '.sqlite')) {
+                $query['connection'] = $this->normalizeFilePath($query['connection']);
+            }
+
             $statements[] = [
                 'sql' => $this->getDataFormatter()->formatSql($query['query']),
                 'type' => $query['type'],
