@@ -379,6 +379,11 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     color: #333;
 }
 
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-collector {
+    text-transform: none;
+    color: #888;
+}
+
 .phpdebugbar-widgets-toolbar i.phpdebugbar-fa.phpdebugbar-fa-search {
     position: relative;
     top: -1px;
