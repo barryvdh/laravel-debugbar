@@ -16,10 +16,10 @@ class LogsCollector extends MessagesCollector
         parent::__construct($name);
 
         $paths = Arr::wrap($path ?: [
-            storage_path('logs/laravel.log'),            
+            storage_path('logs/laravel.log'),
             storage_path('logs/laravel-' . date('Y-m-d') . '.log'), // for daily driver
         ]);
-        
+
         foreach ($paths as $path) {
             $this->getStorageLogs($path);
         }
