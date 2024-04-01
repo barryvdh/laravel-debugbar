@@ -4,12 +4,15 @@ namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\DebugTwigExtension;
 use Illuminate\Foundation\Application;
+use Twig\Environment;
 
 /**
  * Access debugbar debug in your Twig templates.
  */
 class Debug extends DebugTwigExtension
 {
+    protected $app;
+
     /**
      * Create a new debug extension.
      *
@@ -17,11 +20,16 @@ class Debug extends DebugTwigExtension
      */
     public function __construct(Application $app)
     {
-        $messagesCollector = null;
-        if ($app->bound('debugbar') && $app['debugbar']->hasCollector('messages')) {
-            $messagesCollector = $app['debugbar']['messages'];
+        $this->app = $app;
+        parent::__construct(null);
+    }
+
+    public function debug(Environment $env, $context)
+    {
+        if ($this->app->bound('debugbar') && $this->app['debugbar']->hasCollector('messages')) {
+            $this->messagesCollector = $this->app['debugbar']['messages'];
         }
 
-        parent::__construct($messagesCollector);
+        return parent::debug($env, $context);
     }
 }
