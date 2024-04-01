@@ -772,7 +772,6 @@ div.phpdebugbar-mini-design a.phpdebugbar-tab {
 
 div.phpdebugbar-header-right > a {
     height: 20px;
-    width: 20px;
     background-position: center;
 }
 
@@ -785,6 +784,10 @@ div.phpdebugbar-panel {
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     padding: 10px;
+}
+
+div.phpdebugbar-panel[data-collector="__datasets"] {
+    padding: 0 10px;
 }
 
 div.phpdebugbar-panel table {

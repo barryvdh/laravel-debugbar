@@ -15,6 +15,7 @@ div.phpdebugbar-openhandler {
 }
 
 div.phpdebugbar,
+div.phpdebugbar-widgets-dataset-history .phpdebugbar-widgets-dataset-actions,
 div.phpdebugbar-openhandler {
     background: var(--color-gray-800);
 }
@@ -57,6 +58,7 @@ div.phpdebugbar div.phpdebugbar-header > div > select,
 div.phpdebugbar ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form input,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select,
+div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select,
 div.phpdebugbar input[type='text'],
 div.phpdebugbar input[type='password'] {
     background-color: var(--color-gray-800);
@@ -322,4 +324,9 @@ div.phpdebugbar .hljs-strong {
 div.phpdebugbar .hljs-literal,
 div.phpdebugbar .hljs-number {
     color: #bd93f9;
+}
+
+.phpdebugbar-widgets-dataset-history table tr.phpdebugbar-widgets-active {
+    background-color: var(--color-gray-700);
+    color: white;
 }
