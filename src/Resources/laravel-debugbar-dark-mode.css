@@ -30,7 +30,10 @@ div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-keyword,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
     color: var(--color-gray-200);
+    text-shadow: 1px 1px #000;
 }
+
+
 
 div.phpdebugbar-openhandler,
 div.phpdebugbar div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar,
@@ -125,7 +128,6 @@ div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-i
     color: var(--color-red-vivid);
 }
 
-div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-database,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-duration,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-memory,
@@ -145,7 +147,7 @@ li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename a.phpdebugbar
     color: #ddd;
 }
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
-    background-color: #6f6200;
+    background-color: #473e00;
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
@@ -209,8 +211,17 @@ div.phpdebugbar div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-type 
     color: var(--color-gray-600) !important;
 }
 
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params tr:nth-child(odd) td {
+    background: var(--color-gray-900) !important;
+}
+
+dt.phpdebugbar-widgets-key {
+    padding-left: 10px !important;
+}
+
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
     border-color: var(--color-gray-600) !important;
+
 }
 
 div.phpdebugbar code,
