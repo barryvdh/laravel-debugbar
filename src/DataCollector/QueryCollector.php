@@ -318,7 +318,7 @@ class QueryCollector extends PDOCollector
             'namespace' => null,
             'name' => null,
             'file' => null,
-            'line' => isset($trace['line']) ? $trace['line'] : '?',
+            'line' => $trace['line'] ?? '1',
         ];
 
         if (isset($trace['function']) && $trace['function'] == 'substituteBindings') {
@@ -334,7 +334,7 @@ class QueryCollector extends PDOCollector
         ) {
             $frame->file = $trace['file'];
 
-            if (isset($trace['object']) && is_a($trace['object'], 'Twig_Template')) {
+            if (isset($trace['object']) && is_a($trace['object'], '\Twig\Template')) {
                 list($frame->file, $frame->line) = $this->getTwigInfo($trace);
             } elseif (strpos($frame->file, storage_path()) !== false) {
                 $hash = pathinfo($frame->file, PATHINFO_FILENAME);
@@ -511,6 +511,10 @@ class QueryCollector extends PDOCollector
             $source = reset($query['source']);
             $totalTime += $query['time'];
             $totalMemory += $query['memory'];
+
+            if (str_ends_with($query['connection'], '.sqlite')) {
+                $query['connection'] = $this->normalizeFilePath($query['connection']);
+            }
 
             $statements[] = [
                 'sql' => $this->getDataFormatter()->formatSql($query['query']),

@@ -50,14 +50,14 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function renderHead()
     {
-        $cssRoute = route('debugbar.assets.css', [
+        $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
             'theme' => config('debugbar.theme', 'auto'),
-        ], false);
+        ]));
 
-        $jsRoute = route('debugbar.assets.js', [
+        $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [
             'v' => $this->getModifiedTime('js')
-        ], false);
+        ]));
 
         $nonce = $this->getNonceAttribute();
 

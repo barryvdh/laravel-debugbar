@@ -3,10 +3,12 @@
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
-use DebugBar\Bridge\Twig\TwigCollector;
+use DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\Renderable;
 use Illuminate\View\View;
 
-class ViewCollector extends TwigCollector
+class ViewCollector extends DataCollector implements Renderable, AssetProvider
 {
     protected $name;
     protected $templates = [];
@@ -48,6 +50,17 @@ class ViewCollector extends TwigCollector
                 'map' => 'views.nb_templates',
                 'default' => 0
             ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssets()
+    {
+        return [
+            'css' => 'widgets/templates/widget.css',
+            'js' => 'widgets/templates/widget.js',
         ];
     }
 

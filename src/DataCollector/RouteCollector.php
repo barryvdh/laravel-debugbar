@@ -57,21 +57,38 @@ class RouteCollector extends DataCollector implements Renderable
         ];
 
         $result = array_merge($result, $action);
+        $uses = $action['uses'] ?? null;
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
 
+        if (request()->hasHeader('X-Livewire')) {
+            try {
+                $component = request('components')[0];
+                $name = json_decode($component['snapshot'], true)['memo']['name'];
+                $method = $component['calls'][0]['method'];
+                $class = app(\Livewire\Mechanisms\ComponentRegistry::class)->getClass($name);
+                if (class_exists($class) && method_exists($class, $method)) {
+                    $controller = $class . '@' . $method;
+                    $result['controller'] = ltrim($controller, '\\');
+                }
+            } catch (\Throwable $e) {
+                //
+            }
+        }
 
-        if (
-            isset($action['controller'])
-            && is_string($action['controller'])
-            && strpos($action['controller'], '@') !== false
-        ) {
-            list($controller, $method) = explode('@', $action['controller']);
+        if (str_contains($controller, '@')) {
+            list($controller, $method) = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }
             unset($result['uses']);
-        } elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
-            $reflector = new \ReflectionFunction($action['uses']);
-            $result['uses'] = $this->formatVar($result['uses']);
+        } elseif ($uses instanceof \Closure) {
+            $reflector = new \ReflectionFunction($uses);
+            $result['uses'] = $this->formatVar($uses);
+        } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
+            if (class_exists($controller) && method_exists($controller, 'render')) {
+                $reflector = new \ReflectionMethod($controller, 'render');
+                $result['controller'] = $controller . '@render';
+            }
         }
 
         if (isset($reflector)) {
