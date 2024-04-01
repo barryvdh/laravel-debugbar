@@ -3,6 +3,7 @@
 namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\MeasureTwigExtension;
+use DebugBar\Bridge\Twig\MeasureTwigTokenParser;
 use Illuminate\Foundation\Application;
 
 /**
@@ -23,28 +24,46 @@ class Stopwatch extends MeasureTwigExtension
      */
     public function __construct(Application $app)
     {
-        $timeCollector = null;
         if ($app->bound('debugbar')) {
             $this->debugbar = $app['debugbar'];
-            
-            if ($app['debugbar']->hasCollector('time')) {
-                $timeCollector = $app['debugbar']['time'];
-            }
         }
-        
-        parent::__construct($timeCollector, 'stopwatch');
+
+        parent::__construct(null, 'stopwatch');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return static::class;
-    }
 
     public function getDebugbar()
     {
         return $this->debugbar;
+    }
+
+    public function getTokenParsers()
+    {
+        return [
+            /*
+             * {% measure foo %}
+             * Some stuff which will be recorded on the timeline
+             * {% endmeasure %}
+             */
+            new MeasureTwigTokenParser(!is_null($this->debugbar), $this->tagName, $this->getName()),
+        ];
+    }
+
+    public function startMeasure(...$arg)
+    {
+        if (!$this->debugbar || !$this->debugbar->hasCollector('time')) {
+            return;
+        }
+
+        $this->debugbar->getCollector('time')->startMeasure(...$arg);
+    }
+
+    public function stopMeasure(...$arg)
+    {
+        if (!$this->debugbar || !$this->debugbar->hasCollector('time')) {
+            return;
+        }
+
+        $this->debugbar->getCollector('time')->stopMeasure(...$arg);
     }
 }
