@@ -208,6 +208,7 @@ return [
         ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
+            'show_guards' => true, // Show the guards that are used
         ],
         'db' => [
             'with_params'       => true,   // Render SQL with the parameters substituted
