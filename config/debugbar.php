@@ -34,10 +34,11 @@ return [
      | Warning: Enabling storage.open will allow everyone to access previous
      | request, do not enable open storage in publicly available environments!
      | Specify a callback if you want to limit based on IP or authentication.
+     | Leaving it to null will allow localhost only.
      */
     'storage' => [
         'enabled'    => true,
-        'open'       => env('DEBUGBAR_OPEN_STORAGE', false), // bool/callback.
+        'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
         'driver'     => 'file', // redis, file, pdo, socket, custom
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
@@ -124,6 +125,7 @@ return [
     'capture_ajax' => true,
     'add_ajax_timing' => false,
     'ajax_handler_auto_show' => true,
+    'ajax_handler_enable_tab' => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -206,6 +208,7 @@ return [
         ],
         'auth' => [
             'show_name' => true,   // Also show the users name/email in the debugbar
+            'show_guards' => true, // Show the guards that are used
         ],
         'db' => [
             'with_params'       => true,   // Render SQL with the parameters substituted
@@ -308,7 +311,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
-    'theme' => env('DEBUGBAR_THEME', 'dark'),
+    'theme' => env('DEBUGBAR_THEME', 'auto'),
 
     /*
      |--------------------------------------------------------------------------

@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "maximebf/debugbar": "~1.21.0",
+        "maximebf/debugbar": "~1.22.0",
         "illuminate/routing": "^9|^10|^11",
         "illuminate/session": "^9|^10|^11",
         "illuminate/support": "^9|^10|^11",
@@ -40,7 +40,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "3.10-dev"
+            "dev-master": "3.13-dev"
         },
         "laravel": {
             "providers": [
