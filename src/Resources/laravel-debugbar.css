@@ -786,6 +786,10 @@ div.phpdebugbar-panel {
     padding: 10px;
 }
 
+div.phpdebugbar-panel[data-collector="__datasets"] {
+    padding: 0 10px;
+}
+
 div.phpdebugbar-panel table {
     margin: 10px 0px!important;
     width: 100%!important;
