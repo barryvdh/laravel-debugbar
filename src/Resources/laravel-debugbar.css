@@ -975,6 +975,10 @@ ul.phpdebugbar-widgets-table-list li:last-child {
     margin-bottom: 0;
 }
 
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params tr:nth-child(odd) td {
+    background: #f5f5f5 !important;
+}
+
 @media (prefers-color-scheme: dark) {
     div.phpdebugbar .phpdebugbar-indicator span.phpdebugbar-tooltip,
     div.phpdebugbar div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text,
