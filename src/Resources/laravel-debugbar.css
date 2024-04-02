@@ -607,10 +607,6 @@ ul.phpdebugbar-widgets-timeline li:hover {
     line-height: 17px;
 }
 
-.phpdebugbar-widgets-list .phpdebugbar-widgets-list-item:first-child {
-    height: 22px !important;
-}
-
 .phpdebugbar-widgets-sql.phpdebugbar-widgets-name {
     font-weight: bold;
 }
