@@ -219,7 +219,6 @@ ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params tr:nth-child(od
 
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
     border-color: var(--color-gray-600) !important;
-
 }
 
 div.phpdebugbar code,
@@ -360,4 +359,8 @@ div.phpdebugbar .hljs-number {
 .phpdebugbar-widgets-dataset-history table th,
 .phpdebugbar-widgets-dataset-history table td {
     border-color: var(--color-gray-600);
+}
+
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
+    border-color: var(--color-gray-700);
 }

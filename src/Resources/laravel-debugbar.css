@@ -376,7 +376,8 @@ ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params {
 }
 
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
-    border: none !important;
+    border-left: none ;
+    border-right: none;
 }
 
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td:first-child {
@@ -975,8 +976,9 @@ ul.phpdebugbar-widgets-table-list li:last-child {
     margin-bottom: 0;
 }
 
-ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params tr:nth-child(odd) td {
-    background: #f5f5f5 !important;
+
+pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
+    line-height: 20px;
 }
 
 @media (prefers-color-scheme: dark) {
