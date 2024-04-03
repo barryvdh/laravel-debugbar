@@ -889,48 +889,6 @@ dd.phpdebugbar-widgets-value  pre.sf-dump {
     padding-bottom: 0;
 }
 
-div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename {
-    margin: 6px 0 !important;
-}
-
-div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item pre.phpdebugbar-widgets-file {
-    line-height: 20px;
-    margin: 0 !important;
-}
-
-div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-type {
-    top: 10px !important;
-    right: 10px !important;
-}
-
-.phpdebugbar-openhandler {
-    padding: 0 !important;
-}
-
-div.phpdebugbar-openhandler table {
-    margin: 0 !important;
-}
-
-.phpdebugbar-widgets-dataset-history .phpdebugbar-widgets-dataset-actions {
-    background: transparent !important;
-}
-
-div.phpdebugbar-panel .phpdebugbar-widgets-dataset-history table {
-    margin: -8px 0 0 0 !important;
-}
-
-div.phpdebugbar-panel .phpdebugbar-widgets-dataset-history table th:nth-child(2) {
-    cursor: pointer;
-}
-
-div.phpdebugbar-panel .phpdebugbar-widgets-dataset-history table td:first-child {
-    padding-left: 8px;
-}
-
-.phpdebugbar-widgets-dataset-history .phpdebugbar-widgets-dataset-actions select {
-    margin: 0 10px !important;
-}
-
 ul.phpdebugbar-widgets-table-list {
     padding: 4px 0;
 }
