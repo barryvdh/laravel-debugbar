@@ -313,10 +313,6 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
     background: transparent;
 }
 
-dl.phpdebugbar-widgets-kvlist dt {
-    width: calc(25%-10px);
-}
-
 dl.phpdebugbar-widgets-kvlist dd {
     margin-left: 25%;
 }
@@ -366,12 +362,14 @@ ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td:first-child 
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
-    width: calc(100%);
+    width: calc(100% - 20px);
+    margin-left: 10px;
     padding: 4px 0px 4px;
     height: 20px;
     border-top: 1px solid #ddd;
     border-bottom: 0px;
     background-color: #e8e8e8;
+    border-radius: 5px 5px 0px 0px;
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter, div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded {
@@ -549,6 +547,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     border: none;
     font-family: inherit;
     overflow: visible;
+    line-height: 20px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:hover,
@@ -595,10 +594,6 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     flex: 1;
     margin-right: 5px;
     max-width: 100%;
-}
-
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
-    line-height: 20px;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration,
