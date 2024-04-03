@@ -293,7 +293,7 @@ div.phpdebugbar-header .phpdebugbar-header-left {
 }
 
 div.phpdebugbar .phpdebugbar-header select {
-    margin: 6px 8px 0px 8px;
+    margin: 0px 8px 0px 8px;
     padding: 2px 3px 3px 3px;
     border-radius: 3px;
     width: auto;
@@ -778,6 +778,13 @@ a.phpdebugbar-tab i {
 
 div.phpdebugbar-mini-design a.phpdebugbar-tab {
     border-right: none;
+}
+
+div.phpdebugbar-header-right {
+    display:flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 div.phpdebugbar-header-right > a {
