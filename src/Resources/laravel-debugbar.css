@@ -274,6 +274,7 @@ div.phpdebugbar-header .phpdebugbar-tab {
     border-left: 1px solid #ddd;
     display: flex;
     align-items: center;
+    height: 100%;
 }
 
 a.phpdebugbar-tab.phpdebugbar-tab-history {
@@ -298,6 +299,7 @@ div.phpdebugbar .phpdebugbar-header select {
     border-radius: 3px;
     width: auto;
     cursor: pointer;
+    line-height: 1em;
 }
 
 dl.phpdebugbar-widgets-kvlist dt,
