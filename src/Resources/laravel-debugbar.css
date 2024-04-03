@@ -213,7 +213,7 @@ div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item pre.phpdebug
 div.phpdebugbar pre.sf-dump {
     color: #000;
     outline: none;
-    padding: 0px!important;
+    padding-left: 0px;
 }
 
 div.phpdebugbar-body {
@@ -333,7 +333,7 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
 }
 
 dl.phpdebugbar-widgets-kvlist dt {
-    width: 25%;
+    width: calc(25%-10px);
 }
 
 dl.phpdebugbar-widgets-kvlist dd {
