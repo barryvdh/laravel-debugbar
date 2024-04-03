@@ -31,10 +31,11 @@ div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-keyword,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
     color: var(--color-gray-200);
-    text-shadow: 1px 1px #000;
 }
 
-
+div.phpdebugbar ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label {
+    text-shadow: 1px 1px #000;
+}
 
 div.phpdebugbar-openhandler,
 div.phpdebugbar div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar,
