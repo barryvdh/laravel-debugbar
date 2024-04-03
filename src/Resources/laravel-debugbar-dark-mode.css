@@ -31,7 +31,10 @@ div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-keyword,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
     color: var(--color-gray-200);
+    text-shadow: 1px 1px #000;
 }
+
+
 
 div.phpdebugbar-openhandler,
 div.phpdebugbar div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar,
@@ -127,7 +130,6 @@ div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-i
     color: var(--color-red-vivid);
 }
 
-div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-database,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-duration,
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-memory,
@@ -147,7 +149,7 @@ li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename a.phpdebugbar
     color: #ddd;
 }
 div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
-    background-color: #6f6200;
+    background-color: #473e00;
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
@@ -239,6 +241,14 @@ div.phpdebugbar div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-i
     color: var(--color-gray-500);
 }
 
+div.phpdebugbar dl.phpdebugbar-widgets-kvlist > :nth-child(4n)::before {
+    background-color: var(--color-gray-900);
+}
+
+dt.phpdebugbar-widgets-key {
+    background: var(--color-gray-800);
+}
+
 a.phpdebugbar-minimize-btn {
     background:url(data:image/svg+xml,%3Csvg%20viewBox=%220%200%201792%201792%22%20fill=%22none%22%20xmlns=%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d=%22m1683%20653.5-742%20741c-12.667%2012.67-27.667%2019-45%2019s-32.333-6.33-45-19l-742-741c-12.667-12.667-19-27.833-19-45.5s6.333-32.833%2019-45.5l166-165c12.667-12.667%2027.667-19%2045-19s32.333%206.333%2045%2019l531%20531%20531-531c12.67-12.667%2027.67-19%2045-19s32.33%206.333%2045%2019l166%20165c12.67%2012.667%2019%2027.833%2019%2045.5s-6.33%2032.833-19%2045.5Z%22%20fill=%22%23EDF2F7%22%2F%3E%3C%2Fsvg%3E) no-repeat center / 14px 14px;
 }
@@ -252,7 +262,7 @@ a.phpdebugbar-close-btn {
 }
 
 a.phpdebugbar-open-btn {
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 1792 1792'%3e%3cpath fill='%23EDF2F7' d='M1646 991.796c0 16.494-8.25 34.064-24.75 52.684l-268.22 316.13c-22.89 27.14-54.95 50.16-96.2 69.05S1177.4 1458 1142.27 1458H273.728c-18.095 0-34.194-3.46-48.297-10.38-14.104-6.92-21.155-18.36-21.155-34.32 0-16.5 8.249-34.06 24.747-52.69l268.228-316.13c22.884-27.14 54.949-50.156 96.194-69.049 41.246-18.893 79.431-28.34 114.556-28.34h868.549c18.09 0 34.19 3.459 48.3 10.378 14.1 6.918 21.15 18.361 21.15 34.327Zm-273.82-274.615v127.728H708.001c-50.027 0-102.448 12.64-157.264 37.919-54.817 25.28-98.457 57.078-130.921 95.397L150.79 1294.35l-3.992 4.79c0-2.13-.133-5.46-.399-9.98-.266-4.52-.399-7.85-.399-9.98V512.817c0-48.962 17.563-91.005 52.688-126.13 35.125-35.126 77.168-52.688 126.131-52.688h255.455c48.962 0 91.005 17.562 126.13 52.688 35.126 35.125 52.688 77.168 52.688 126.13v25.546h434.278c48.96 0 91 17.563 126.13 52.688 35.12 35.125 52.68 77.168 52.68 126.13Z'/%3e%3c/svg%3e") no-repeat center / 14px 14px;
+    background: url(data:image/svg+xml,%3Csvg%20width%3D%221792%22%20height%3D%221792%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1646%20991.797c0%2016.493-8.25%2034.063-24.75%2052.683l-268.22%20316.13c-22.89%2027.14-54.95%2050.16-96.2%2069.05S1177.4%201458%201142.27%201458H273.728c-18.095%200-34.194-3.46-48.297-10.38-14.104-6.92-21.155-18.36-21.155-34.32%200-16.5%208.249-34.06%2024.747-52.69l268.228-316.13c22.884-27.14%2054.949-50.155%2096.194-69.048%2041.246-18.893%2079.431-28.34%20114.556-28.34h868.549c18.09%200%2034.19%203.458%2048.3%2010.377%2014.1%206.918%2021.15%2018.362%2021.15%2034.328Zm-273.82-274.615V844.91H708.001c-50.027%200-102.448%2012.639-157.264%2037.918-54.817%2025.28-98.457%2057.078-130.921%2095.397L150.79%201294.35l-3.992%204.79c0-2.13-.133-5.46-.399-9.98-.266-4.52-.399-7.85-.399-9.98V512.818c0-48.962%2017.563-91.005%2052.688-126.13C233.813%20351.562%20275.856%20334%20324.819%20334h255.455c48.962%200%2091.005%2017.562%20126.13%2052.688%2035.126%2035.125%2052.688%2077.168%2052.688%20126.13v25.545h434.278c48.96%200%2091%2017.564%20126.13%2052.689%2035.12%2035.125%2052.68%2077.168%2052.68%20126.13Z%22%20fill%3D%22%23EDF2F7%22/%3E%3C/svg%3E) no-repeat center / 14px 14px;
 }
 
 div.phpdebugbar code.language-php,
@@ -329,4 +339,13 @@ div.phpdebugbar .hljs-number {
 .phpdebugbar-widgets-dataset-history table tr.phpdebugbar-widgets-active {
     background-color: var(--color-gray-700);
     color: white;
+}
+
+.phpdebugbar-widgets-dataset-history table th,
+.phpdebugbar-widgets-dataset-history table td {
+    border-color: var(--color-gray-600);
+}
+
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
+    border-color: var(--color-gray-700);
 }
