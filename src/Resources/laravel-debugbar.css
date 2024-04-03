@@ -878,7 +878,6 @@ dt.phpdebugbar-widgets-key {
 
 dd.phpdebugbar-widgets-value {
     position: relative;
-
 }
 
 dd.phpdebugbar-widgets-value::before {
@@ -889,6 +888,11 @@ dd.phpdebugbar-widgets-value::before {
     top: 0;
     width: 33.33%;
     margin-left: -33.33%;
+}
+
+dd.phpdebugbar-widgets-value  pre.sf-dump {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 div.phpdebugbar div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename {
