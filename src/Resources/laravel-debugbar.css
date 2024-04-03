@@ -181,8 +181,9 @@ div.phpdebugbar code, div.phpdebugbar pre, div.phpdebugbar samp {
     background: none !important;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 1em;
-    border: 0;
-    padding: 0;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 div.phpdebugbar .hljs {
@@ -656,7 +657,6 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     color: #333;
     font-size: 15px !important;
     margin-right: 8px;
-    margin-top: -3px;
     float: left;
 }
 
