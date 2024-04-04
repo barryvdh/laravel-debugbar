@@ -795,7 +795,11 @@ div.phpdebugbar-header-right > * {
 }
 
 div.phpdebugbar-header-right > *:first-child {
-    border-right: none;
+    border-right: 0;
+}
+
+div.phpdebugbar-header-right a.phpdebugbar-tab.phpdebugbar-tab-history  {
+    border-left: 0;
 }
 
 div.phpdebugbar-panel[data-collector="__datasets"] {
