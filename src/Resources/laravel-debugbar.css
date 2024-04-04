@@ -288,7 +288,6 @@ a.phpdebugbar-tab.phpdebugbar-tab-history {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-left: 0;
 }
 
 div.phpdebugbar-header .phpdebugbar-header-left {
@@ -301,7 +300,7 @@ div.phpdebugbar-header .phpdebugbar-header-left {
 }
 
 div.phpdebugbar .phpdebugbar-header select {
-    margin: 0;
+    margin: 0 4px;
     padding: 2px 3px 3px 3px;
     border-radius: 3px;
     width: auto;
@@ -491,7 +490,7 @@ a.phpdebugbar-open-btn:hover {
 }
 
 a.phpdebugbar-close-btn, a.phpdebugbar-open-btn, a.phpdebugbar-minimize-btn , a.phpdebugbar-maximize-btn, a.phpdebugbar-tab.phpdebugbar-tab-history {
-  width: 14px;
+  min-width: 14px;
   height: 20px;
 }
 
