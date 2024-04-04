@@ -227,8 +227,13 @@ div.phpdebugbar-header {
     text-shadow: 1px 1px #FFF;
 }
 
-div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span {
+div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span,  div.phpdebugbar-header > div > span > i{
+    display: inline-block;
     transform: translateY(-0.5px) !important;
+}
+
+div.phpdebugbar-header > div > span > i.phpdebugbar-fa-code{
+    transform: translateY(-1px) !important;
 }
 
 a.phpdebugbar-restore-btn {
