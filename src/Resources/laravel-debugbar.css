@@ -785,7 +785,7 @@ div.phpdebugbar-header-right {
 }
 
 div.phpdebugbar-header-right > * {
-    border-right: 1px solid;
+    border-right: 1px solid #ddd;
 }
 
 div.phpdebugbar-header-right > *:first-child {
