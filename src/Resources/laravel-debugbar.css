@@ -228,7 +228,7 @@ div.phpdebugbar-header {
 }
 
 div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span {
-    transform: translateY(-1px) !important;
+    transform: translateY(-0.5px) !important;
 }
 
 a.phpdebugbar-restore-btn {
@@ -266,22 +266,24 @@ a.phpdebugbar-restore-btn {
 }
 
 div.phpdebugbar-header > div > * {
+    padding: 5px 8px;
     font-size: 13px;
-    padding: 5px;
+    height: 20px;
 }
 
 div.phpdebugbar-header .phpdebugbar-tab {
-    padding: 5px 8px;
     border-left: 1px solid #ddd;
     display: flex;
     align-items: center;
+    justify-content: center;
+    min-width: 16px;
 }
 
 a.phpdebugbar-tab.phpdebugbar-tab-history {
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-left: 0;
 }
 
 div.phpdebugbar-header .phpdebugbar-header-left {
@@ -477,9 +479,9 @@ a.phpdebugbar-open-btn:hover {
     /* transition: background-color .25s linear 0s, color .25s linear 0s; */
 }
 
-a.phpdebugbar-minimize-btn,
-a.phpdebugbar-maximize-btn {
-    width: 28px!important;
+a.phpdebugbar-close-btn, a.phpdebugbar-open-btn, a.phpdebugbar-minimize-btn , a.phpdebugbar-maximize-btn, a.phpdebugbar-tab.phpdebugbar-tab-history {
+  width: 14px;
+  height: 20px;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {
@@ -767,11 +769,7 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     line-height: 1.5rem;
 }
 
-a.phpdebugbar-tab i {
-    line-height: 20px;
-}
-
-div.phpdebugbar-mini-design a.phpdebugbar-tab {
+div.phpdebugbar-mini-design div.phpdebugbar-header-left a.phpdebugbar-tab {
     border-right: none;
 }
 
@@ -782,14 +780,12 @@ div.phpdebugbar-header-right {
     flex-wrap: wrap;
 }
 
-div.phpdebugbar-header-right > a {
-    height: 20px;
-    background-position: center;
+div.phpdebugbar-header-right > * {
+    border-right: 1px solid;
 }
 
-div.phpdebugbar-header-right .phpdebugbar-indicator > i.phpdebugbar-fa {
-    vertical-align: baseline;
-    margin-top: 2px;
+div.phpdebugbar-header-right > *:first-child {
+    border-right: none;
 }
 
 div.phpdebugbar-panel[data-collector="__datasets"] {
