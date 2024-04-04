@@ -314,18 +314,23 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
     background: transparent;
 }
 
+dl.phpdebugbar-widgets-kvlist dt {
+    width: 25%;
+}
+
 dl.phpdebugbar-widgets-kvlist dd {
     margin-left: 25%;
 }
 
-.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-measure {
+ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-measure {
     margin: 0 6px !important;
-}
-
-ul.phpdebugbar-widgets-timeline .phpdebugbar-widgets-measure {
     height: 28px;
     line-height: 28px;
     border: none;
+}
+
+ul.phpdebugbar-widgets-timeline li > .phpdebugbar-widgets-measure {
+    height: 20px;
 }
 
 ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
@@ -351,6 +356,7 @@ ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-value span.phpdebugbar-w
 
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params {
     font-size: 11px;
+    margin-top: 20px !important;
 }
 
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
