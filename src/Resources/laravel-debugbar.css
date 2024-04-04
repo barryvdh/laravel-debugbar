@@ -316,6 +316,10 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
     background: transparent;
 }
 
+dl.phpdebugbar-widgets-kvlist dt {
+    width: calc(25% - 10px);
+}
+
 dl.phpdebugbar-widgets-kvlist dd {
     margin-left: 25%;
 }
