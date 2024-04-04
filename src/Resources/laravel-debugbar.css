@@ -294,7 +294,7 @@ div.phpdebugbar-header .phpdebugbar-header-left {
 }
 
 div.phpdebugbar .phpdebugbar-header select {
-    margin: 0px 8px 0px 8px;
+    margin: 0;
     padding: 2px 3px 3px 3px;
     border-radius: 3px;
     width: auto;

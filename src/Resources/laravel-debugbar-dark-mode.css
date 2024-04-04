@@ -29,7 +29,8 @@ div.phpdebugbar ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item,
 div.phpdebugbar ul.phpdebugbar-widgets-list li span.phpdebugbar-widgets-label,
 div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-keyword,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header,
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
+div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a,
+div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select {
     color: var(--color-gray-200);
 }
 
@@ -44,7 +45,8 @@ div.phpdebugbar ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item tab
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > a,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form input,
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select {
+div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select,
+div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select {
     border-color: var(--color-gray-600);
 }
 
@@ -350,3 +352,4 @@ div.phpdebugbar .hljs-number {
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
     border-color: var(--color-gray-700);
 }
+
