@@ -51,7 +51,6 @@ class SymfonyHttpDriver implements HttpDriverInterface
     public function setSessionValue($name, $value)
     {
         $this->session->put($name, $value);
-        $this->saveSession();
     }
 
     /**
@@ -76,12 +75,5 @@ class SymfonyHttpDriver implements HttpDriverInterface
     public function deleteSessionValue($name)
     {
         $this->session->remove($name);
-        $this->saveSession();
-    }
-
-    protected function saveSession()
-    {
-        $this->session->reflash();
-        $this->session->save();
     }
 }
