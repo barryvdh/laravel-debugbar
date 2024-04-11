@@ -554,6 +554,9 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     border: none;
     font-family: inherit;
     overflow: visible;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
     line-height: 20px;
 }
 
