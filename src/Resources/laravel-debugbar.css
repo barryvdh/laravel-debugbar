@@ -907,6 +907,7 @@ ul.phpdebugbar-widgets-table-list li:last-child {
 
 
 pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
+    padding-top: 0;
     line-height: 20px;
 }
 
