@@ -773,7 +773,7 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     border-radius: 4px;
     color: #fff;
     text-decoration: none;
-    line-height: 1.5rem;
+    line-height: 1.25rem;
 }
 
 a.phpdebugbar-tab i {
@@ -907,6 +907,7 @@ ul.phpdebugbar-widgets-table-list li:last-child {
 
 
 pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
+    padding-top: 0;
     line-height: 20px;
 }
 
