@@ -50,7 +50,6 @@ div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select {
     border-color: var(--color-gray-600);
 }
 
-div.phpdebugbar div.phpdebugbar-header,
 div.phpdebugbar div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before,
 div.phpdebugbar-openhandler table th,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > a,
@@ -58,6 +57,14 @@ div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form input,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select {
     text-shadow: 1px 1px var(--color-gray-700);
+}
+
+div.phpdebugbar div.phpdebugbar-header {
+    text-shadow: none;
+}
+
+div.phpdebugbar-header-right > * {
+    border-right-color: var(--color-gray-800);
 }
 
 div.phpdebugbar div.phpdebugbar-header > div > select,
@@ -100,6 +107,10 @@ div.phpdebugbar-openhandler table th,
 div.phpdebugbar-openhandler table tr:nth-child(2n),
 div.phpdebugbar div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
     background-color: var(--color-gray-700);
+}
+
+div.phpdebugbar a.phpdebugbar-tab.phpdebugbar-active:hover {
+    background-color: var(--color-red-vivid);
 }
 
 div.phpdebugbar .phpdebugbar-indicator span.phpdebugbar-tooltip,
@@ -179,7 +190,7 @@ div.phpdebugbar-openhandler {
 }
 
 div.phpdebugbar div.phpdebugbar-header .phpdebugbar-tab {
-    border-left-color: var(--color-gray-800);
+    border-color: var(--color-gray-800);
 }
 
 div.phpdebugbar div.phpdebugbar-body {
@@ -188,12 +199,6 @@ div.phpdebugbar div.phpdebugbar-body {
 
 div.phpdebugbar a.phpdebugbar-restore-btn {
     border-right-color: var(--color-gray-800) !important;
-}
-
-div.phpdebugbar span.phpdebugbar-indicator,
-div.phpdebugbar a.phpdebugbar-indicator,
-div.phpdebugbar a.phpdebugbar-close-btn {
-    border-right-color: var(--color-gray-800);
 }
 
 div.phpdebugbar div.phpdebugbar-panel div.phpdebugbar-widgets-status {

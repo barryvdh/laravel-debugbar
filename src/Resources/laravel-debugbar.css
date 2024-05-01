@@ -227,7 +227,12 @@ div.phpdebugbar-header {
     text-shadow: 1px 1px #FFF;
 }
 
-div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span {
+div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span,  div.phpdebugbar-header > div > span > i{
+    display: inline-block;
+    transform: translateY(-0.5px) !important;
+}
+
+div.phpdebugbar-header > div > span > i.phpdebugbar-fa-code{
     transform: translateY(-1px) !important;
 }
 
@@ -266,19 +271,20 @@ a.phpdebugbar-restore-btn {
 }
 
 div.phpdebugbar-header > div > * {
+    padding: 5px 8px;
     font-size: 13px;
-    padding: 5px;
+    height: 20px;
 }
 
 div.phpdebugbar-header .phpdebugbar-tab {
-    padding: 5px 8px;
     border-left: 1px solid #ddd;
     display: flex;
     align-items: center;
+    justify-content: center;
+    min-width: 16px;
 }
 
 a.phpdebugbar-tab.phpdebugbar-tab-history {
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -294,7 +300,7 @@ div.phpdebugbar-header .phpdebugbar-header-left {
 }
 
 div.phpdebugbar .phpdebugbar-header select {
-    margin: 0;
+    margin: 0 4px;
     padding: 2px 3px 3px 3px;
     border-radius: 3px;
     width: auto;
@@ -315,7 +321,7 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
 }
 
 dl.phpdebugbar-widgets-kvlist dt {
-    width: 25%;
+    width: calc(25% - 10px);
 }
 
 dl.phpdebugbar-widgets-kvlist dd {
@@ -483,9 +489,9 @@ a.phpdebugbar-open-btn:hover {
     /* transition: background-color .25s linear 0s, color .25s linear 0s; */
 }
 
-a.phpdebugbar-minimize-btn,
-a.phpdebugbar-maximize-btn {
-    width: 28px!important;
+a.phpdebugbar-close-btn, a.phpdebugbar-open-btn, a.phpdebugbar-minimize-btn , a.phpdebugbar-maximize-btn, a.phpdebugbar-tab.phpdebugbar-tab-history {
+  min-width: 14px;
+  height: 20px;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {
@@ -776,11 +782,7 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     line-height: 1.25rem;
 }
 
-a.phpdebugbar-tab i {
-    line-height: 20px;
-}
-
-div.phpdebugbar-mini-design a.phpdebugbar-tab {
+div.phpdebugbar-mini-design div.phpdebugbar-header-left a.phpdebugbar-tab {
     border-right: none;
 }
 
@@ -791,14 +793,16 @@ div.phpdebugbar-header-right {
     flex-wrap: wrap;
 }
 
-div.phpdebugbar-header-right > a {
-    height: 20px;
-    background-position: center;
+div.phpdebugbar-header-right > * {
+    border-right: 1px solid #ddd;
 }
 
-div.phpdebugbar-header-right .phpdebugbar-indicator > i.phpdebugbar-fa {
-    vertical-align: baseline;
-    margin-top: 2px;
+div.phpdebugbar-header-right > *:first-child {
+    border-right: 0;
+}
+
+div.phpdebugbar-header-right a.phpdebugbar-tab.phpdebugbar-tab-history  {
+    border-left: 0;
 }
 
 div.phpdebugbar-panel[data-collector="__datasets"] {
