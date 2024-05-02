@@ -57,7 +57,7 @@ The Debugbar will be enabled when `APP_DEBUG` is `true`.
 
 ### Laravel without auto-discovery:
 
-If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
+If you don't use auto-discovery, add the ServiceProvider to the providers list. For Laravel 11 or newer, add the ServiceProvider in bootstrap/providers.php. For Laravel 10 or older, add the ServiceProvider in config/app.php.
 
 ```php
 Barryvdh\Debugbar\ServiceProvider::class,
