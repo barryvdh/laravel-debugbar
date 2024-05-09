@@ -63,7 +63,7 @@ class FilesystemStorage implements StorageInterface
     }
 
     /**
-     * Delete files older then a certain age (gc_lifetime)
+     * Delete files older than a certain age (gc_lifetime)
      */
     protected function garbageCollect()
     {

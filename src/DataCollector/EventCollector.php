@@ -16,17 +16,29 @@ class EventCollector extends TimeDataCollector
     /** @var integer */
     protected $previousTime;
 
-    public function __construct($requestStartTime = null)
+    /** @var bool */
+    protected $collectValues;
+
+    public function __construct($requestStartTime = null, $collectValues = false)
     {
         parent::__construct($requestStartTime);
         $this->previousTime = microtime(true);
+        $this->collectValues = $collectValues;
         $this->setDataFormatter(new SimpleFormatter());
     }
 
     public function onWildcardEvent($name = null, $data = [])
     {
-        $params = $this->prepareParams($data);
         $currentTime = microtime(true);
+
+        if (! $this->collectValues) {
+            $this->addMeasure($name, $this->previousTime, $currentTime);
+            $this->previousTime = $currentTime;
+
+            return;
+        }
+
+        $params = $this->prepareParams($data);
 
         // Find all listeners for the current event
         foreach ($this->events->getListeners($name) as $i => $listener) {

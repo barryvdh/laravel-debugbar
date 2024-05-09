@@ -9,6 +9,7 @@ use DebugBar\DataFormatter\DataFormatter;
  *
  * @see https://github.com/symfony/symfony/blob/v3.4.4/src/Symfony/Component/HttpKernel/DataCollector/Util/ValueExporter.php
  */
+#[\AllowDynamicProperties]
 class SimpleFormatter extends DataFormatter
 {
     /**
@@ -51,7 +52,7 @@ class SimpleFormatter extends DataFormatter
 
             $indent = str_repeat('  ', $depth);
 
-            $a = array();
+            $a = [];
             foreach ($value as $k => $v) {
                 if (is_array($v)) {
                     $deep = true;

@@ -8,12 +8,11 @@ use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Events\Dispatcher;
 
 /**
- * Collector for Models.
  * @deprecated in favor of \DebugBar\DataCollector\ObjectCountCollector
  */
-class ModelsCollector extends DataCollector implements DataCollectorInterface, Renderable
+class JobsCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    public $models = [];
+    public $jobs = [];
     public $count = 0;
 
     /**
@@ -21,20 +20,18 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
      */
     public function __construct(Dispatcher $events)
     {
-        $events->listen('eloquent.retrieved:*', function ($event, $models) {
-            foreach (array_filter($models) as $model) {
-                $class = get_class($model);
-                $this->models[$class] = ($this->models[$class] ?? 0) + 1;
-                $this->count++;
-            }
+        $events->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) {
+            $class = get_class($event->job);
+            $this->jobs[$class] = ($this->jobs[$class] ?? 0) + 1;
+            $this->count++;
         });
     }
 
     public function collect()
     {
-        ksort($this->models, SORT_NUMERIC);
+        ksort($this->jobs, SORT_NUMERIC);
 
-        return ['data' => array_reverse($this->models), 'count' => $this->count];
+        return ['data' => array_reverse($this->jobs), 'count' => $this->count];
     }
 
     /**
@@ -42,7 +39,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
      */
     public function getName()
     {
-        return 'models';
+        return 'jobs';
     }
 
     /**
@@ -51,14 +48,14 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
     public function getWidgets()
     {
         return [
-            "models" => [
-                "icon" => "cubes",
+            "jobs" => [
+                "icon" => "briefcase",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
-                "map" => "models.data",
+                "map" => "jobs.data",
                 "default" => "{}"
             ],
-            'models:badge' => [
-                'map' => 'models.count',
+            'jobs:badge' => [
+                'map' => 'jobs.count',
                 'default' => 0
             ]
         ];

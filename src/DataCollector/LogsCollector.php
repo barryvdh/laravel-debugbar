@@ -3,6 +3,7 @@
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
+use Illuminate\Support\Arr;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -14,26 +15,14 @@ class LogsCollector extends MessagesCollector
     {
         parent::__construct($name);
 
-        $path = $path ?: $this->getLogsFile();
-        $this->getStorageLogs($path);
-    }
+        $paths = Arr::wrap($path ?: [
+            storage_path('logs/laravel.log'),
+            storage_path('logs/laravel-' . date('Y-m-d') . '.log'), // for daily driver
+        ]);
 
-    /**
-     * Get the path to the logs file
-     *
-     * @return string
-     */
-    public function getLogsFile()
-    {
-        // default daily rotating logs (Laravel 5.0)
-        $path = storage_path() . '/logs/laravel-' . date('Y-m-d') . '.log';
-
-        // single file logs
-        if (!file_exists($path)) {
-            $path = storage_path() . '/logs/laravel.log';
+        foreach ($paths as $path) {
+            $this->getStorageLogs($path);
         }
-
-        return $path;
     }
 
     /**
@@ -52,9 +41,16 @@ class LogsCollector extends MessagesCollector
 
         //Load the latest lines, guessing about 15x the number of log entries (for stack traces etc)
         $file = implode("", $this->tailFile($path, $this->lines));
+        $basename = basename($path);
 
         foreach ($this->getLogs($file) as $log) {
-            $this->addMessage($log['header'] . $log['stack'], $log['level'], false);
+            $this->messages[] = [
+                'message' => $log['header'] . $log['stack'],
+                'label' => $log['level'],
+                'time' => substr($log['header'], 1, 19),
+                'collector' => $basename,
+                'is_string' => false,
+            ];
         }
     }
 
@@ -123,9 +119,15 @@ class LogsCollector extends MessagesCollector
             }
         }
 
-        $log = array_reverse($log);
-
         return $log;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMessages()
+    {
+        return array_reverse(parent::getMessages());
     }
 
     /**

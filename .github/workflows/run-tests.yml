@@ -18,31 +18,24 @@ jobs:
       COMPOSER_NO_INTERACTION: 1
 
     strategy:
+      fail-fast: false
       matrix:
-        php: [8.2, 8.1, 8.0, 7.4, 7.3, 7.2]
-        laravel: [^9, ^8, ^7]
-        dependency-version: [prefer-lowest, prefer-stable]
+        php: [8.3, 8.2, 8.1, 8.0]
+        laravel: [^11, ^10, ^9]
+        dependency-version: [prefer-stable]
         exclude:
-          - laravel: ^7*
-            php: 8.1
-          - laravel: ^7
-            php: 8.2
-          - laravel: ^8
-            php: 7.2
-          - laravel: ^9
-            php: 7.2
-          - laravel: ^9
-            php: 7.3
-          - laravel: ^9
-            php: 7.4
-          - laravel: ^7
+          - laravel: ^10
+            php: 8.0
+          - laravel: ^11
+            php: 8.0
+          - laravel: ^11
             php: 8.1
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -54,7 +47,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:>=2.62.1" --no-interaction --no-update
+        composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
     - name: Update Dusk Chromedriver

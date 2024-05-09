@@ -2,6 +2,10 @@
 .Whoops.container {
     z-index: 5999999;
 }
+div.phpdebugbar,
+div.phpdebugbar-openhandler {
+    --color-red-vivid: #eb4432;
+}
 
 div.phpdebugbar {
     font-size: 13px;
@@ -13,6 +17,7 @@ div.phpdebugbar {
 
 div.phpdebugbar * {
     direction: ltr;
+
     text-align: left;
 }
 
@@ -23,7 +28,7 @@ div.phpdebugbar-openhandler-overlay {
 
 div.phpdebugbar-openhandler {
     border: 1px solid #aaa;
-    border-top: 3px solid #fa5661;
+    border-top: 3px solid var(--color-red-vivid);
     width: 80%;
     height: 70%;
     padding: 10px;
@@ -154,13 +159,13 @@ div.phpdebugbar-openhandler table td a {
 div.phpdebugbar-resize-handle {
     display: block!important;
     height: 3px;
-    margin-top: -4px;
+    margin-top: -3px;
     width: 100%;
     background: none;
     cursor: ns-resize;
     border-top: none;
     border-bottom: 0px;
-    background-color: #fa5661;
+    background-color: var(--color-red-vivid);
 }
 
 .phpdebugbar.phpdebugbar-minimized div.phpdebugbar-resize-handle {
@@ -173,11 +178,12 @@ div.phpdebugbar-minimized {
 }
 
 div.phpdebugbar code, div.phpdebugbar pre, div.phpdebugbar samp {
-    background: none;
+    background: none !important;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 1em;
-    border: 0;
-    padding: 0;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 div.phpdebugbar .hljs {
@@ -208,7 +214,7 @@ div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item pre.phpdebug
 div.phpdebugbar pre.sf-dump {
     color: #000;
     outline: none;
-    padding: 0px!important;
+    padding-left: 0px;
 }
 
 div.phpdebugbar-body {
@@ -218,37 +224,32 @@ div.phpdebugbar-body {
 div.phpdebugbar-header {
     min-height: 30px;
     line-height: 20px;
-    padding-left: 39px;
     text-shadow: 1px 1px #FFF;
 }
 
-div.phpdebugbar-header,
-a.phpdebugbar-restore-btn,
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-header {
-    background: #f5f5f5 url(data:image/png;base64,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) no-repeat 5px 3px;
+div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span,  div.phpdebugbar-header > div > span > i{
+    display: inline-block;
+    transform: translateY(-0.5px) !important;
+}
+
+div.phpdebugbar-header > div > span > i.phpdebugbar-fa-code{
+    transform: translateY(-1px) !important;
+}
+
+a.phpdebugbar-restore-btn {
+    background: url(data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2048%2048%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M47.973%2010.859a.74.74%200%200%201%20.027.196v10.303a.735.735%200%200%201-.104.377.763.763%200%200%201-.285.275l-8.902%204.979v9.868a.75.75%200%200%201-.387.652L19.74%2047.9c-.043.023-.09.038-.135.054-.018.006-.034.016-.053.021a.801.801%200%200%201-.396%200c-.021-.006-.04-.017-.061-.024-.043-.015-.087-.029-.128-.051L.39%2037.509a.763.763%200%200%201-.285-.276.736.736%200%200%201-.104-.376V5.947c0-.067.01-.133.027-.196.006-.022.02-.042.027-.063.015-.04.028-.08.05-.117.014-.024.035-.044.053-.067.022-.03.042-.06.068-.087.022-.021.051-.037.077-.056.028-.023.053-.047.085-.065L9.677.1a.793.793%200%200%201%20.774%200l9.29%205.196h.002c.03.019.057.042.085.064.025.019.053.036.075.056.027.027.047.058.07.088.016.023.038.043.052.067.022.038.035.077.05.117.008.021.021.04.027.063a.74.74%200%200%201%20.027.197v19.305l7.742-4.33v-9.869c0-.066.01-.132.027-.195.006-.023.019-.042.027-.064.015-.04.029-.08.05-.116.014-.025.036-.045.052-.067.023-.03.043-.061.07-.087.022-.022.05-.038.075-.057.03-.022.054-.047.085-.065l9.292-5.195a.792.792%200%200%201%20.773%200l9.29%205.195c.033.02.058.043.087.064.025.02.053.036.075.057.027.027.046.058.07.088.017.022.038.042.052.067.022.036.034.077.05.116.009.022.021.041.027.064ZM46.45%2020.923v-8.567l-3.25%201.818-4.492%202.512v8.567l7.743-4.33Zm-9.29%2015.5v-8.574l-4.417%202.45-12.616%206.995v8.654l17.033-9.526ZM1.55%207.247v29.174l17.03%209.525v-8.653l-8.897-4.89-.003-.003-.003-.002c-.03-.017-.056-.041-.084-.062-.024-.018-.052-.033-.073-.054l-.002-.003c-.025-.023-.042-.053-.064-.079-.02-.025-.042-.047-.058-.073v-.003c-.018-.028-.029-.062-.041-.094-.013-.028-.03-.054-.037-.084-.01-.036-.012-.075-.016-.111-.003-.028-.011-.056-.011-.085V11.58L4.8%209.064%201.549%207.248Zm8.516-5.628-7.74%204.328%207.738%204.328%207.74-4.33-7.74-4.326h.002Zm4.026%2027.01%204.49-2.51V7.247L15.33%209.066l-4.492%202.512V30.45l3.253-1.819ZM37.935%206.727l-7.74%204.328%207.74%204.328%207.738-4.329-7.738-4.327Zm-.775%209.959-4.49-2.512-3.252-1.818v8.567l4.49%202.511%203.252%201.82v-8.568ZM19.353%2035.993l11.352-6.295%205.674-3.146-7.733-4.325-8.904%204.98-8.116%204.538%207.727%204.248Z%22%20fill%3D%22%23FF2D20%22/%3E%3C/svg%3E) no-repeat 11px center / 20px 20px !important;
 }
 
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header {
-    background-size: 20px;
-    padding: 2px 0px 3px 36px;
-    background-position: 9px 5px;
-    border-radius: 3px;
+    background: url(data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2048%2048%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M47.973%2010.859a.74.74%200%200%201%20.027.196v10.303a.735.735%200%200%201-.104.377.763.763%200%200%201-.285.275l-8.902%204.979v9.868a.75.75%200%200%201-.387.652L19.74%2047.9c-.043.023-.09.038-.135.054-.018.006-.034.016-.053.021a.801.801%200%200%201-.396%200c-.021-.006-.04-.017-.061-.024-.043-.015-.087-.029-.128-.051L.39%2037.509a.763.763%200%200%201-.285-.276.736.736%200%200%201-.104-.376V5.947c0-.067.01-.133.027-.196.006-.022.02-.042.027-.063.015-.04.028-.08.05-.117.014-.024.035-.044.053-.067.022-.03.042-.06.068-.087.022-.021.051-.037.077-.056.028-.023.053-.047.085-.065L9.677.1a.793.793%200%200%201%20.774%200l9.29%205.196h.002c.03.019.057.042.085.064.025.019.053.036.075.056.027.027.047.058.07.088.016.023.038.043.052.067.022.038.035.077.05.117.008.021.021.04.027.063a.74.74%200%200%201%20.027.197v19.305l7.742-4.33v-9.869c0-.066.01-.132.027-.195.006-.023.019-.042.027-.064.015-.04.029-.08.05-.116.014-.025.036-.045.052-.067.023-.03.043-.061.07-.087.022-.022.05-.038.075-.057.03-.022.054-.047.085-.065l9.292-5.195a.792.792%200%200%201%20.773%200l9.29%205.195c.033.02.058.043.087.064.025.02.053.036.075.057.027.027.046.058.07.088.017.022.038.042.052.067.022.036.034.077.05.116.009.022.021.041.027.064ZM46.45%2020.923v-8.567l-3.25%201.818-4.492%202.512v8.567l7.743-4.33Zm-9.29%2015.5v-8.574l-4.417%202.45-12.616%206.995v8.654l17.033-9.526ZM1.55%207.247v29.174l17.03%209.525v-8.653l-8.897-4.89-.003-.003-.003-.002c-.03-.017-.056-.041-.084-.062-.024-.018-.052-.033-.073-.054l-.002-.003c-.025-.023-.042-.053-.064-.079-.02-.025-.042-.047-.058-.073v-.003c-.018-.028-.029-.062-.041-.094-.013-.028-.03-.054-.037-.084-.01-.036-.012-.075-.016-.111-.003-.028-.011-.056-.011-.085V11.58L4.8%209.064%201.549%207.248Zm8.516-5.628-7.74%204.328%207.738%204.328%207.74-4.33-7.74-4.326h.002Zm4.026%2027.01%204.49-2.51V7.247L15.33%209.066l-4.492%202.512V30.45l3.253-1.819ZM37.935%206.727l-7.74%204.328%207.74%204.328%207.738-4.329-7.738-4.327Zm-.775%209.959-4.49-2.512-3.252-1.818v8.567l4.49%202.511%203.252%201.82v-8.568ZM19.353%2035.993l11.352-6.295%205.674-3.146-7.733-4.325-8.904%204.98-8.116%204.538%207.727%204.248Z%22%20fill%3D%22%23FF2D20%22/%3E%3C/svg%3E) no-repeat 11px center / 20px 20px !important;
+    padding: 4px 4px 6px 38px;
+    margin: 0px !important;
 }
 
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-header a {
+    display: flex;
     cursor: pointer;
 }
-
-a.phpdebugbar-close-btn {
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuM4zml1AAAADDSURBVDhPxZCxCsIwFEUzuGdwCvQD7BIIcehUXDqVfGM/wsG/iG4ifkzMlRuSPLo4eeFBue8c6Iv6b4wxW557Hs0KnWa3seqDxTiOyVqbhmF4UND4Rofdruyce3rvE6bIRSo9GOI1McbLPM/vVm4l7MAQr0kpHaQsJTDE+6zrepym6SVFdNgR69M+hBTLzWCI10gJvydvBkO8ZlmWayvhJnkzGOI1+fBTCOHWPkT7YNiBId4HizxnCKy+r81uX/otSn0A7dioI/vYX+8AAAAASUVORK5CYII=) no-repeat 9px 6px;
-    color : #555;
-    border-right: none;
-}
-
-a.phpdebugbar-open-btn {
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAOCAYAAADJ7fe0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfdCgYULwwNKp3GAAAAGHRFWHRTb2Z0d2FyZQBwYWludC5uZXQgNC4wLjOM5pdQAAAA1UlEQVQ4T2OgKpCUlOQH4vdA/B8Jv4dKEwYgDdLS0v8NDQ3/GxsbwzGIj2YoGEO1oQJkjcRgqDZUAJKwsrJ6/v//fwdiMFQbKgAZkpGR0QR0ajy60wlgRJhBXSGhpqb2CNnZhHBkZORcqBEMDFBX2BsYGGBVjAv39vZaQ41gYIC6Ygs2hbiwr6/vdqA+DqgR4CiW19bWxqoYF87Ly4uFaocAZWXlydgU4sJ2dna3ga4QgGqHAC0trY/YFOPCKSkpDVCtCAA01QaIsaYJHFgCqpVagIEBACGlF2c3r4ViAAAAAElFTkSuQmCC) no-repeat 8px 6px;
-}
-
 
 div.phpdebugbar-header,
 div.phpdebugbar-openhandler-header {
@@ -259,19 +260,34 @@ div.phpdebugbar-openhandler-header {
 a.phpdebugbar-restore-btn {
     border-right-color: #ddd!important;
     height: 20px;
-    width: 23px;
+    width: 24px;
     background-position: center;
     background-size: 21px;
+    background-color: white;
+}
+
+.phpdebugbar:not(.phpdebugbar-closed) a.phpdebugbar-restore-btn {
+    border-right: none;
 }
 
 div.phpdebugbar-header > div > * {
+    padding: 5px 8px;
     font-size: 13px;
-    padding: 5px;
+    height: 20px;
 }
 
 div.phpdebugbar-header .phpdebugbar-tab {
-    padding: 5px 8px;
     border-left: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+}
+
+a.phpdebugbar-tab.phpdebugbar-tab-history {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 div.phpdebugbar-header .phpdebugbar-header-left {
@@ -284,7 +300,7 @@ div.phpdebugbar-header .phpdebugbar-header-left {
 }
 
 div.phpdebugbar .phpdebugbar-header select {
-    margin: 4px 0px 0px 8px;
+    margin: 0 4px;
     padding: 2px 3px 3px 3px;
     border-radius: 3px;
     width: auto;
@@ -305,17 +321,22 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
 }
 
 dl.phpdebugbar-widgets-kvlist dt {
-    width: 25%;
+    width: calc(25% - 10px);
 }
 
 dl.phpdebugbar-widgets-kvlist dd {
     margin-left: 25%;
 }
 
-ul.phpdebugbar-widgets-timeline .phpdebugbar-widgets-measure {
+ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-measure {
+    margin: 0 6px !important;
     height: 28px;
     line-height: 28px;
     border: none;
+}
+
+ul.phpdebugbar-widgets-timeline li > .phpdebugbar-widgets-measure {
+    height: 20px;
 }
 
 ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
@@ -329,6 +350,9 @@ ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-collector {
     top: 0px;
     color: #000;
     font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
 }
 
 ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-value span.phpdebugbar-widgets-label {
@@ -338,16 +362,31 @@ ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-value span.phpdebugbar-w
 
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params {
     font-size: 11px;
+    margin-top: 20px !important;
+}
+
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
+    border-left: none ;
+    border-right: none;
+}
+
+ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td:first-child {
+    padding: 0 10px;
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
     width: calc(100% - 20px);
+    margin-left: 10px;
     padding: 4px 0px 4px;
     height: 20px;
-    border: 1px solid #ddd;
+    border-top: 1px solid #ddd;
     border-bottom: 0px;
     background-color: #e8e8e8;
     border-radius: 5px 5px 0px 0px;
+}
+
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter, div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded {
+    right: 3px;
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar input {
@@ -365,6 +404,11 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     text-transform: uppercase;
     font-style: normal;
     color: #333;
+}
+
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-collector {
+    text-transform: none;
+    color: #888;
 }
 
 .phpdebugbar-widgets-toolbar i.phpdebugbar-fa.phpdebugbar-fa-search {
@@ -396,16 +440,29 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
     user-select: none;
 }
 
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="alert"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="alert"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="info"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="info"] {
     background-color: #5896e2;
 }
 
-div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="error"],
-div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="error"] {
-    background-color: #fa5661;
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="debug"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="debug"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="success"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="success"] {
+    background-color: #45ab45;
 }
 
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="critical"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="critical"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="error"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="error"] {
+    background-color: var(--color-red-vivid);
+}
+
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="notice"],
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="notice"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="warning"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="warning"] {
     background-color: #f99400;
@@ -424,6 +481,7 @@ a.phpdebugbar-tab:hover,
 span.phpdebugbar-indicator:hover,
 a.phpdebugbar-indicator:hover,
 a.phpdebugbar-close-btn:hover,
+a.phpdebugbar-restore-btn:hover,
 a.phpdebugbar-minimize-btn:hover,
 a.phpdebugbar-maximize-btn:hover,
 a.phpdebugbar-open-btn:hover {
@@ -431,13 +489,13 @@ a.phpdebugbar-open-btn:hover {
     /* transition: background-color .25s linear 0s, color .25s linear 0s; */
 }
 
-a.phpdebugbar-minimize-btn,
-a.phpdebugbar-maximize-btn {
-    width: 28px!important;
+a.phpdebugbar-close-btn, a.phpdebugbar-open-btn, a.phpdebugbar-minimize-btn , a.phpdebugbar-maximize-btn, a.phpdebugbar-tab.phpdebugbar-tab-history {
+  min-width: 14px;
+  height: 20px;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {
-    background: #fa5661;
+    background: var(--color-red-vivid);
     background-image: none;
     color: #fff !important;
     text-shadow: 1px 1px #bf3039;
@@ -445,21 +503,20 @@ a.phpdebugbar-tab.phpdebugbar-active {
 
 a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
     background-color: white;
-    color: #fa5661;
+    color: var(--color-red-vivid);
     text-shadow: 1px 1px #ebebeb;
 }
 
 a.phpdebugbar-tab span.phpdebugbar-badge {
     vertical-align: 0px;
-    padding: 2px 8px 3px 8px;
+    padding: 2px 8px;
     text-align: center;
-    background: #fa5661;
+    background: var(--color-red-vivid);
     font-size: 11px;
     font-family: monospace;
     color: #fff;
     text-shadow: 1px 1px #bf3039;
     border-radius: 10px;
-    top: -1px;
     position: relative;
 }
 
@@ -505,6 +562,10 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     overflow: visible;
 }
 
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
+    line-height: 20px;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:hover,
 ul.phpdebugbar-widgets-timeline li:hover {
     background-color: initial;
@@ -541,10 +602,6 @@ ul.phpdebugbar-widgets-timeline li:hover {
     line-height: 17px;
 }
 
-.phpdebugbar-widgets-list .phpdebugbar-widgets-list-item .phpdebugbar-widgets-name {
-    height: 15px;
-}
-
 .phpdebugbar-widgets-sql.phpdebugbar-widgets-name {
     font-weight: bold;
 }
@@ -555,7 +612,9 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     max-width: 100%;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration {
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration,
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id,
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-memory {
     margin-left: auto;
     margin-right: 5px;
 }
@@ -564,9 +623,12 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     margin-left: auto;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id {
-    margin-left: auto;
-    margin-right: 5px;
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id a {
+    color: #888;
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id a:hover {
+    color: #aaa;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params {
@@ -608,7 +670,7 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     font-family: PhpDebugbarFontAwesome;
     content: "\f005";
     color: #333;
-    font-size: 13px;
+    font-size: 15px !important;
     margin-right: 8px;
     float: left;
 }
@@ -618,10 +680,13 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-info:before {
-    font-family: PhpDebugbarFontAwesome;
     content: "\f05a";
     color: #5896e2;
-    font-size: 15px;
+}
+
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-success:before {
+    content: "\f058";
+    color: #45ab45;
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error {
@@ -629,35 +694,29 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error:before {
-    color: #fa5661;
-    font-size: 15px;
+    color: var(--color-red-vivid);
 }
 
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-warning:before {
-    color: #FF9800;
-    font-size: 13px;
-}
-
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-warning:before,
 div.phpdebugbar-widgets-messages .phpdebugbar-widgets-value.phpdebugbar-widgets-warning {
     color: #FF9800;
 }
 
+div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-deprecation:before {
+    content: "\f1f6";
+    color: #FF9800;
+}
+
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item pre.sf-dump {
-    display: inline-block;
+    display: inline-block !important;
     position: relative;
     top: -1px;
 }
 
-div.phpdebugbar-widgets-sqlqueries {
-    line-height: 20px;
-}
-
-
 div.phpdebugbar-panel div.phpdebugbar-widgets-status {
-    padding: 9px 20px!important;
+    padding: 9px 10px !important;
     width: calc(100% - 20px);
-    margin-left: -10px;
-    margin-top: -10px;
+    margin-top: 0px !important;
     line-height: 11px!important;
     font-weight: bold!important;
     background: #f5f5f5!important;
@@ -704,6 +763,7 @@ div.phpdebugbar-widgets-templates .phpdebugbar-widgets-list-item table.phpdebugb
 
 ul.phpdebugbar-widgets-list ul.phpdebugbar-widgets-table-list {
     text-align: left;
+    line-height: 150%;
 }
 
 .phpdebugbar-text-muted {
@@ -714,37 +774,39 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     float: right;
     font-size: 12px;
     padding: 0 4px;
-    background: #fa5661;
+    background: var(--color-red-vivid);
     margin: 0 2px;
     border-radius: 4px;
     color: #fff;
     text-decoration: none;
-    line-height: 1.5rem;
+    line-height: 1.25rem;
 }
 
-a.phpdebugbar-tab i {
-    line-height: 20px;
-}
-
-div.phpdebugbar-mini-design a.phpdebugbar-tab {
+div.phpdebugbar-mini-design div.phpdebugbar-header-left a.phpdebugbar-tab {
     border-right: none;
 }
 
-div.phpdebugbar-header-right > a {
-    height: 20px;
-    width: 20px;
-    background-position: center;
+div.phpdebugbar-header-right {
+    display:flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-div.phpdebugbar-header-right .phpdebugbar-indicator > i.phpdebugbar-fa {
-    vertical-align: baseline;
-    margin-top: 2px;
+div.phpdebugbar-header-right > * {
+    border-right: 1px solid #ddd;
 }
 
-div.phpdebugbar-panel {
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    padding: 10px;
+div.phpdebugbar-header-right > *:first-child {
+    border-right: 0;
+}
+
+div.phpdebugbar-header-right a.phpdebugbar-tab.phpdebugbar-tab-history  {
+    border-left: 0;
+}
+
+div.phpdebugbar-panel[data-collector="__datasets"] {
+    padding: 0 10px;
 }
 
 div.phpdebugbar-panel table {
@@ -787,6 +849,7 @@ div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
 .phpdebugbar-widgets-list-item .phpdebugbar-widgets-bg-measure {
     position: absolute;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -795,7 +858,69 @@ div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
 
 .phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
     position: absolute;
+    height: 1px !important;
+    opacity: 1 !important;
+    bottom: 0;
+    background: #63abca !important;
+}
+
+div.phpdebugbar dl.phpdebugbar-widgets-kvlist > :nth-child(4n)::before {
+background-color: #f5f5f5;
+}
+
+dt.phpdebugbar-widgets-key {
+    padding-left: 10px !important;
+}
+
+dt.phpdebugbar-widgets-key {
+    position: relative;
+    background: white;
+    z-index: 1;
+}
+
+dd.phpdebugbar-widgets-value {
+    position: relative;
+}
+
+dd.phpdebugbar-widgets-value::before {
+    content: " ";
+    position: absolute;
     height: 100%;
-    opacity: 0.2;
-    background: red;
+    left: 0;
+    top: 0;
+    width: 33.33%;
+    margin-left: -33.33%;
+}
+
+dd.phpdebugbar-widgets-value  pre.sf-dump {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+ul.phpdebugbar-widgets-table-list {
+    padding: 4px 0;
+}
+
+ul.phpdebugbar-widgets-table-list li {
+    margin-bottom: 4px;
+}
+
+ul.phpdebugbar-widgets-table-list li:last-child {
+    margin-bottom: 0;
+}
+
+
+pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
+    padding-top: 0;
+    line-height: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+    div.phpdebugbar .phpdebugbar-indicator span.phpdebugbar-tooltip,
+    div.phpdebugbar div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text,
+    div.phpdebugbar pre.sf-dump,
+    div.phpdebugbar .hljs,
+    div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-operator {
+        color: var(--color-gray-100) !important;
+    }
 }
