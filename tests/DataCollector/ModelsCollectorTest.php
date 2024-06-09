@@ -42,14 +42,49 @@ class ModelsCollectorTest extends TestCase
         User::first();
 
         $this->assertEquals(
-            ['data' => [User::class => 1], 'count' => 1, 'is_counter' => true],
+            ['data' => [
+                User::class => [
+                    'value' => 1,
+                    'xdebug_link' => [
+                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Models/User.php'))) . ':1',
+                        'ajax' => false,
+                        'filename' => 'User.php',
+                        'line' => '?',
+                    ],
+                ]
+            ],
+            'count' => 1,
+            'is_counter' => true
+            ],
             $collector->collect()
         );
 
         Person::all();
 
         $this->assertEquals(
-            ['data' => [User::class => 1, Person::class => 2], 'count' => 3, 'is_counter' => true],
+            ['data' => [
+                User::class => [
+                    'value' => 1,
+                    'xdebug_link' => [
+                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Models/User.php'))) . ':1',
+                        'ajax' => false,
+                        'filename' => 'User.php',
+                        'line' => '?',
+                    ],
+                ],
+                Person::class => [
+                    'value' => 2,
+                    'xdebug_link' => [
+                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Models/Person.php'))) . ':1',
+                        'ajax' => false,
+                        'filename' => 'Person.php',
+                        'line' => '?',
+                    ],
+                ],
+            ],
+            'count' => 3,
+            'is_counter' => true
+            ],
             $collector->collect()
         );
     }

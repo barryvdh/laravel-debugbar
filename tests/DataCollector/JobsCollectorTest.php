@@ -43,7 +43,20 @@ class JobsCollectorTest extends TestCase
         OrderShipped::dispatch(1);
 
         $this->assertEquals(
-            ['data' => [OrderShipped::class => 1], 'count' => 1, 'is_counter' => true],
+            ['data' => [
+                OrderShipped::class => [
+                    'value' => 1,
+                    'xdebug_link' => [
+                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Jobs/OrderShipped.php'))) . ':1',
+                        'ajax' => false,
+                        'filename' => 'OrderShipped.php',
+                        'line' => '?',
+                    ]
+                ]
+            ],
+            'count' => 1,
+            'is_counter' => true
+            ],
             $collector->collect()
         );
 
@@ -52,7 +65,29 @@ class JobsCollectorTest extends TestCase
         dispatch(new SendNotification());
 
         $this->assertEquals(
-            ['data' => [OrderShipped::class => 1, SendNotification::class => 3], 'count' => 4, 'is_counter' => true],
+            ['data' => [
+                OrderShipped::class => [
+                    'value' => 1,
+                    'xdebug_link' => [
+                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Jobs/OrderShipped.php'))) . ':1',
+                        'ajax' => false,
+                        'filename' => 'OrderShipped.php',
+                        'line' => '?',
+                    ],
+                ],
+                SendNotification::class => [
+                    'value' => 3,
+                    'xdebug_link' => [
+                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Jobs/SendNotification.php'))) . ':1',
+                        'ajax' => false,
+                        'filename' => 'SendNotification.php',
+                        'line' => '?',
+                    ],
+                ]
+            ],
+            'count' => 4,
+            'is_counter' => true
+            ],
             $collector->collect()
         );
     }

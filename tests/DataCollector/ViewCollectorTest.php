@@ -30,13 +30,15 @@ class ViewCollectorTest extends TestCase
 
         /** @var \Barryvdh\Debugbar\DataCollector\ViewCollector $collector */
         $collector = debugbar()->getCollector('views');
+
+        $collector->setEditorLinkTemplate('vscode');
         $collector->addView(
             view('dashboard')
         );
 
         tap(Arr::first($collector->collect()['templates']), function (array $template) {
             $this->assertEquals(
-                'vscode://file/' . realpath(__DIR__ . '/../resources/views/dashboard.blade.php') . ':1',
+                'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../resources/views/dashboard.blade.php'))) . ':1',
                 $template['xdebug_link']['url']
             );
         });
