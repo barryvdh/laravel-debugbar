@@ -113,6 +113,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             'request_headers' => $request->headers->all(),
             'request_cookies' => $request->cookies->all(),
             'response_headers' => $responseHeaders,
+            'response_data' => json_decode($response->getContent()),
         ];
 
         if ($this->session) {
