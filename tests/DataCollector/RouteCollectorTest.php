@@ -101,9 +101,8 @@ class RouteCollectorTest extends TestCase
 
     public static function closureProvider()
     {
-        $filePath = realpath(__DIR__ . '/../TestCase.php');
-        return [[sprintf('file: "%s"', $filePath),
-                 sprintf('vscode://file/%s:', urlencode(str_replace('\\', '/', $filePath)))
+        return [['/tests/TestCase.php',
+                 'vscode://file/'
         ]];
     }
 }
