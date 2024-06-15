@@ -42,20 +42,7 @@ class ModelsCollectorTest extends TestCase
         User::first();
 
         $this->assertEquals(
-            ['data' => [
-                User::class => [
-                    'value' => 1,
-                    'xdebug_link' => [
-                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Models/User.php'))) . ':1',
-                        'ajax' => false,
-                        'filename' => 'User.php',
-                        'line' => '?',
-                    ],
-                ]
-            ],
-            'count' => 1,
-            'is_counter' => true
-            ],
+            ['data' => ['Barryvdh\Debugbar\Tests\Models\User' => 1], 'count' => 1, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -63,24 +50,8 @@ class ModelsCollectorTest extends TestCase
 
         $this->assertEquals(
             ['data' => [
-                User::class => [
-                    'value' => 1,
-                    'xdebug_link' => [
-                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Models/User.php'))) . ':1',
-                        'ajax' => false,
-                        'filename' => 'User.php',
-                        'line' => '?',
-                    ],
-                ],
-                Person::class => [
-                    'value' => 2,
-                    'xdebug_link' => [
-                        'url' => 'vscode://file/' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Models/Person.php'))) . ':1',
-                        'ajax' => false,
-                        'filename' => 'Person.php',
-                        'line' => '?',
-                    ],
-                ],
+                'Barryvdh\Debugbar\Tests\Models\User' => 1,
+                'Barryvdh\Debugbar\Tests\Models\Person' => 2
             ],
             'count' => 3,
             'is_counter' => true
