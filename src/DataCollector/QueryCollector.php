@@ -160,7 +160,8 @@ class QueryCollector extends PDOCollector
 
         $pdo = null;
         try {
-            $pdo = $query->connection->getPdo();
+            $operationName = Str::upper(Str::before($query->sql, ' '));
+            $pdo = $operationName === 'SELECT' ? $query->connection->getReadPdo() : $query->connection->getPdo();
         } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
