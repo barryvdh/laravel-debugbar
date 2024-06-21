@@ -52,4 +52,25 @@ class DebugbarTest extends TestCase
         $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
     }
+
+    public function testItDoesntInjectsOnHxRequestWithHxTarget()
+    {
+        $crawler = $this->get('web/html', [
+            'Hx-Request' => 'true',
+            'Hx-Target' => 'main',
+        ]);
+
+        $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
+        $this->assertEquals(200, $crawler->getStatusCode());
+    }
+
+    public function testItInjectsOnHxRequestWithoutHxTarget()
+    {
+        $crawler = $this->get('web/html', [
+            'Hx-Request' => 'true',
+        ]);
+
+        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        $this->assertEquals(200, $crawler->getStatusCode());
+    }
 }
