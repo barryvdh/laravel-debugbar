@@ -42,14 +42,20 @@ class ModelsCollectorTest extends TestCase
         User::first();
 
         $this->assertEquals(
-            ['data' => [User::class => 1], 'count' => 1, 'is_counter' => true],
+            ['data' => ['Barryvdh\Debugbar\Tests\Models\User' => 1], 'count' => 1, 'is_counter' => true],
             $collector->collect()
         );
 
         Person::all();
 
         $this->assertEquals(
-            ['data' => [User::class => 1, Person::class => 2], 'count' => 3, 'is_counter' => true],
+            ['data' => [
+                'Barryvdh\Debugbar\Tests\Models\User' => 1,
+                'Barryvdh\Debugbar\Tests\Models\Person' => 2
+            ],
+            'count' => 3,
+            'is_counter' => true
+            ],
             $collector->collect()
         );
     }

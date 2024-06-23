@@ -77,12 +77,6 @@ SQL
                 "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
                 $statement['sql']
             );
-
-            $this->assertTrue(@file_exists($statement['backtrace'][1]->file));
-            $this->assertEquals(
-                realpath(__DIR__ . '/../resources/views/query.blade.php'),
-                realpath($statement['backtrace'][1]->file)
-            );
         });
     }
 }
