@@ -1,4 +1,7 @@
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
+.phpdebugbar {
+    visibility: hidden;
+}
 .Whoops.container {
     z-index: 5999999;
 }
