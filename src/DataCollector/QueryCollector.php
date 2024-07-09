@@ -38,7 +38,7 @@ class QueryCollector extends PDOCollector
     /**
      * @param TimeDataCollector $timeCollector
      */
-    public function __construct(TimeDataCollector $timeCollector = null)
+    public function __construct(?TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
     }

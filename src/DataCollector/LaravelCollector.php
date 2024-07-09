@@ -14,7 +14,7 @@ class LaravelCollector extends DataCollector implements Renderable
     /**
      * @param Application $app
      */
-    public function __construct(Application $app = null)
+    public function __construct(?Application $app = null)
     {
         $this->app = $app;
     }

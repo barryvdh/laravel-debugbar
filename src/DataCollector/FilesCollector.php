@@ -15,7 +15,7 @@ class FilesCollector extends DataCollector implements Renderable
     /**
      * @param \Illuminate\Container\Container $app
      */
-    public function __construct(Container $app = null)
+    public function __construct(?Container $app = null)
     {
         $this->app = $app;
         $this->basePath = base_path();
