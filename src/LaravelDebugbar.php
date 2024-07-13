@@ -448,7 +448,7 @@ class LaravelDebugbar extends DebugBar
                             $this->originalTransport = $transport;
                             $this->laravelDebugbar = $laravelDebugbar;
                         }
-                        public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage
+                        public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
                         {
                             return $this->laravelDebugbar['time']->measure(
                                 'mail: ' . Str::limit($message->getSubject(), 100),
