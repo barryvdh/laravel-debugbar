@@ -1,9 +1,9 @@
 name: Fix Code Style
 
 on:
-  push:
+  pull_request:
     branches:
-      - master
+      - "*"
 
 permissions:
   contents: write
@@ -19,6 +19,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -37,7 +39,7 @@ jobs:
     # Revert modifications so they don't get committed 💥
     - run: git checkout -- composer.json
 
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: composer fix-style
         commit_author: laravel-debugbar <laravel-debugbar@users.noreply.github.com>
