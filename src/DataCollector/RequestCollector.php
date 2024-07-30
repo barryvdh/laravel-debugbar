@@ -152,7 +152,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
     private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
     {
-        $cookie = sprintf('%s=%s', $name, urlencode($value));
+        $cookie = sprintf('%s=%s', $name, urlencode($value ?? ''));
 
         if (0 !== $expires) {
             if (is_numeric($expires)) {
