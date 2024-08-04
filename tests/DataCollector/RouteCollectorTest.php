@@ -4,7 +4,6 @@ namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
 use DebugBar\DataCollector\DataCollector;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouteCollectorTest extends TestCase
 {
@@ -27,7 +26,9 @@ class RouteCollectorTest extends TestCase
         $this->assertSame('POST web/mw', $this->routeCollector->collect()['uri']);
     }
 
-    #[DataProvider('controllerData')]
+    /**
+     * @dataProvider controllerData
+     */
     public function testItCollectsWithControllerHandler($controller, $file)
     {
         $this->get('web/show');
@@ -41,7 +42,9 @@ class RouteCollectorTest extends TestCase
         $this->assertStringContainsString($controller, $collected['controller']);
     }
 
-    #[DataProvider('viewComponentData')]
+    /**
+     * @dataProvider viewComponentData
+     */
     public function testItCollectsWithViewComponentHandler($controller, $file)
     {
         $this->get('web/view');
@@ -52,7 +55,9 @@ class RouteCollectorTest extends TestCase
         $this->assertStringContainsString($controller, $collected['controller']);
     }
 
-    #[DataProvider('closureData')]
+    /**
+     * @dataProvider closureData
+     */
     public function testItCollectsWithClosureHandler($file)
     {
         $this->get('web/html');
