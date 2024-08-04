@@ -6,6 +6,9 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\Debugbar\ServiceProvider;
 use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Barryvdh\Debugbar\Tests\Mocks\MockController;
+use Barryvdh\Debugbar\Tests\Mocks\MockViewComponent;
+use Barryvdh\Debugbar\Tests\Mocks\MockMiddleware;
 
 class TestCase extends Orchestra
 {
@@ -55,17 +58,19 @@ class TestCase extends Orchestra
      */
     protected function addWebRoutes(Router $router)
     {
-        $router->get('web/plain', [
-            'uses' => function () {
-                return 'PONG';
-            }
-        ]);
+        $router->get('web/plain', function () {
+            return 'PONG';
+        });
 
-        $router->get('web/html', [
-            'uses' => function () {
-                return '<html><head></head><body>Pong</body></html>';
-            }
-        ]);
+        $router->get('web/html', function () {
+            return '<html><head></head><body>Pong</body></html>';
+        });
+
+        $router->get('web/show', [ MockController::class, 'show' ]);
+
+        $router->get('web/view', MockViewComponent::class);
+
+        $router->post('web/mw')->middleware(MockMiddleware::class);
     }
 
     /**

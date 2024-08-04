@@ -5,8 +5,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 
