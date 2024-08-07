@@ -173,8 +173,11 @@ class QueryCollector extends PDOCollector
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
         }
 
+        $grammar = $query->connection->getQueryGrammar();
         $bindings = $this->getDataFormatter()->checkBindings($bindings);
-        if (!empty($bindings) && $this->renderSqlWithParams) {
+        if (!empty($bindings) && $this->renderSqlWithParams && method_exists($grammar, 'substituteBindingsIntoRawSql')) {
+            $sql = $grammar->substituteBindingsIntoRawSql($sql, $bindings);
+        } else if (!empty($bindings) && $this->renderSqlWithParams) {
             foreach ($bindings as $key => $binding) {
                 // This regex matches placeholders only, not the question marks,
                 // nested in quotes, while we iterate through the bindings
