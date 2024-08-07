@@ -25,7 +25,7 @@ class CacheCollector extends TimeDataCollector
 
     public function __construct($requestStartTime, $collectValues)
     {
-        parent::__construct();
+        parent::__construct($requestStartTime);
 
         $this->collectValues = $collectValues;
     }
@@ -38,6 +38,16 @@ class CacheCollector extends TimeDataCollector
         $label = $this->classMap[$class];
 
         if (isset($params['value'])) {
+            if (is_string($params['value'])) {
+                $params['size'] = strlen($params['value']);
+            } else {
+                $params['size'] = strlen(serialize($params['value']));
+            }
+
+            if (isset($params['size'])) {
+                $params['size'] = $this->getDataFormatter()->formatBytes($params['size'] * 8);
+            }
+
             if ($this->collectValues) {
                 $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($event->value));
             } else {
@@ -60,7 +70,7 @@ class CacheCollector extends TimeDataCollector
 
     public function subscribe(Dispatcher $dispatcher)
     {
-        foreach ($this->classMap as $eventClass => $type) {
+        foreach (array_keys($this->classMap) as $eventClass) {
             $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
         }
     }
