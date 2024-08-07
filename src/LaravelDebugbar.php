@@ -853,9 +853,11 @@ class LaravelDebugbar extends DebugBar
     protected function isJsonRequest(Request $request)
     {
         // If XmlHttpRequest, Live or HTMX, return true
-        if ($request->isXmlHttpRequest() ||
+        if (
+            $request->isXmlHttpRequest() ||
             $request->headers->has('X-Livewire') ||
-            ($request->headers->has('Hx-Request') && $request->headers->has('Hx-Target'))) {
+            ($request->headers->has('Hx-Request') && $request->headers->has('Hx-Target'))
+        ) {
             return true;
         }
 

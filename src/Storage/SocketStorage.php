@@ -23,7 +23,7 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    function save($id, $data)
+    public function save($id, $data)
     {
         $socketIsFresh = !$this->socket;
 
@@ -76,7 +76,7 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    function get($id)
+    public function get($id)
     {
         //
     }
@@ -84,7 +84,7 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    function find(array $filters = [], $max = 20, $offset = 0)
+    public function find(array $filters = [], $max = 20, $offset = 0)
     {
         //
     }
@@ -92,7 +92,7 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    function clear()
+    public function clear()
     {
         //
     }
