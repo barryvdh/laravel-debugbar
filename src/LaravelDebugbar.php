@@ -762,8 +762,8 @@ class LaravelDebugbar extends DebugBar
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         } elseif (
-            $this->isJsonRequest($request) &&
-            $app['config']->get('debugbar.capture_ajax', true)
+            $app['config']->get('debugbar.capture_ajax', true) &&
+            ($this->isJsonRequest($request) || $this->isJsonResponse($response))
         ) {
             try {
                 if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
@@ -790,11 +790,11 @@ class LaravelDebugbar extends DebugBar
             }
         } elseif (
             !$app['config']->get('debugbar.inject', true) ||
-            ($response->headers->has('Content-Type') &&
-                strpos($response->headers->get('Content-Type'), 'html') === false) ||
+            strpos((string) $response->headers->get('Content-Type'), 'html') === false ||
             $request->getRequestFormat() !== 'html' ||
             $response->getContent() === false ||
-            $this->isJsonRequest($request)
+            $this->isJsonRequest($request) ||
+            $this->isJsonResponse($response)
         ) {
             try {
                 // Just collect + store data, don't inject it.
@@ -862,6 +862,30 @@ class LaravelDebugbar extends DebugBar
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
         return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
+    }
+
+    /**
+     * @param  \Symfony\Component\HttpFoundation\Response $response
+     * @return bool
+     */
+    protected function isJsonResponse(Response $response)
+    {
+        if ($response->headers->get('Content-Type') == 'application/json') {
+            return true;
+        }
+
+        $content = $response->getContent();
+
+        if (function_exists('json_validate')) {
+            return json_validate($content);
+        } else if (is_string($content)) {
+            // PHP <= 8.2 check
+            json_decode($content, true);
+
+            return json_last_error() === JSON_ERROR_NONE;
+        }
+
+        return false;
     }
 
     /**
