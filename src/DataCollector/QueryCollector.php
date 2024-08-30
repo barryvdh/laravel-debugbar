@@ -161,6 +161,10 @@ class QueryCollector extends PDOCollector
         $pdo = null;
         try {
             $pdo = $query->connection->getPdo();
+
+            if(! ($pdo instanceof \PDO)) {
+                $pdo = null;
+            }
         } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
