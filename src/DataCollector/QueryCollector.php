@@ -2,8 +2,10 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use Barryvdh\Debugbar\Support\VisualExplain;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -171,37 +173,10 @@ class QueryCollector extends PDOCollector
         $bindings = $query->connection->prepareBindings($query->bindings);
 
         // Run EXPLAIN on this query (if needed)
-        if (!$limited && $this->explainQuery && $pdo && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $sql)) {
+        if (!$limited && $this->explainQuery && $pdo && in_array($query->connection->getDriverName(), ['mysql', 'pgsql']) && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $sql)) {
             $statement = $pdo->prepare('EXPLAIN ' . $sql);
             $statement->execute($bindings);
             $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
-        }
-
-        $bindings = $this->getDataFormatter()->checkBindings($bindings);
-        if (!empty($bindings) && $this->renderSqlWithParams) {
-            foreach ($bindings as $key => $binding) {
-                // This regex matches placeholders only, not the question marks,
-                // nested in quotes, while we iterate through the bindings
-                // and substitute placeholders by suitable values.
-                $regex = is_numeric($key)
-                    ? "/(?<!\?)\?(?=(?:[^'\\\']*'[^'\\']*')*[^'\\\']*$)(?!\?)/"
-                    : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
-
-                // Mimic bindValue and only quote non-integer and non-float data types
-                if (!is_int($binding) && !is_float($binding)) {
-                    if ($pdo) {
-                        try {
-                            $binding = $pdo->quote((string) $binding);
-                        } catch (\Exception $e) {
-                            $binding = $this->emulateQuote($binding);
-                        }
-                    } else {
-                        $binding = $this->emulateQuote($binding);
-                    }
-                }
-
-                $sql = preg_replace($regex, addcslashes($binding, '$'), $sql, 1);
-            }
         }
 
         $source = [];
@@ -216,13 +191,13 @@ class QueryCollector extends PDOCollector
         $this->queries[] = [
             'query' => $sql,
             'type' => 'query',
-            'bindings' => !$limited ? $this->getDataFormatter()->escapeBindings($bindings) : null,
+            'bindings' => !$limited ? $bindings : null,
             'start' => $startTime,
             'time' => $time,
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
             'explain' => $explainResults,
-            'connection' => $query->connection->getDatabaseName(),
+            'connection' => $query->connection->getName(),
             'driver' => $query->connection->getConfig('driver'),
             'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
@@ -485,7 +460,7 @@ class QueryCollector extends PDOCollector
             'memory' => 0,
             'source' => $source,
             'explain' => [],
-            'connection' => $connection->getDatabaseName(),
+            'connection' => $connection->getName(),
             'driver' => $connection->getConfig('driver'),
             'hints' => null,
             'show_copy' => false,
@@ -516,15 +491,22 @@ class QueryCollector extends PDOCollector
             $totalTime += $query['time'];
             $totalMemory += $query['memory'];
 
-            if (str_ends_with($query['connection'], '.sqlite')) {
-                $query['connection'] = $this->normalizeFilePath($query['connection']);
+            $connectionName = DB::connection($query['connection'])->getDatabaseName();
+            if (str_ends_with($connectionName, '.sqlite')) {
+                $connectionName = $this->normalizeFilePath($connectionName);
             }
 
+            $explain = match (true) {
+                $query['driver'] === 'pgsql' => array_column($query['explain'], 'QUERY PLAN'),
+                $query['driver'] === 'mysql' => $query['explain'],
+                default => [],
+            };
+
             $statements[] = [
-                'sql' => $this->getDataFormatter()->formatSql($query['query']),
+                'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
                 'params' => [],
-                'bindings' => $query['bindings'],
+                'bindings' => $this->getDataFormatter()->escapeBindings($query['bindings'] ?? []),
                 'hints' => $query['hints'],
                 'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
@@ -536,69 +518,15 @@ class QueryCollector extends PDOCollector
                 'filename' => $this->getDataFormatter()->formatSource($source, true),
                 'source' => $this->getDataFormatter()->formatSource($source),
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
-                'connection' => $query['connection'],
+                'connection' => $connectionName,
+                'driver' => $query['driver'],
+                'explain' => $explain,
+                'explain-visual' => $this->explainQuery ? [
+                    'url' => route('debugbar.queries.visual'),
+                    'confirm' =>  (new VisualExplain())->confirm($query['connection']),
+                    'data' => (new VisualExplain())->pack($query['connection'], $query['query'], $query['bindings'], time() + 15 * 60),
+                ] : null,
             ];
-
-            if ($query['explain']) {
-                // Add the results from the EXPLAIN as new rows
-                if ($query['driver'] === 'pgsql') {
-                    $explainer = trim(implode("\n", array_map(function ($explain) {
-                        return $explain->{'QUERY PLAN'};
-                    }, $query['explain'])));
-
-                    if ($explainer) {
-                        $statements[] = [
-                            'sql' => " - EXPLAIN: {$explainer}",
-                            'type' => 'explain',
-                        ];
-                    }
-                } elseif ($query['driver'] === 'sqlite') {
-                    $vmi = '<table style="margin:-5px -11px !important;width: 100% !important">';
-                    $vmi .= "<thead><tr>
-                        <td>Address</td>
-                        <td>Opcode</td>
-                        <td>P1</td>
-                        <td>P2</td>
-                        <td>P3</td>
-                        <td>P4</td>
-                        <td>P5</td>
-                        <td>Comment</td>
-                        </tr></thead>";
-
-                    foreach ($query['explain'] as $explain) {
-                        $vmi .= "<tr>
-                            <td>{$explain->addr}</td>
-                            <td>{$explain->opcode}</td>
-                            <td>{$explain->p1}</td>
-                            <td>{$explain->p2}</td>
-                            <td>{$explain->p3}</td>
-                            <td>{$explain->p4}</td>
-                            <td>{$explain->p5}</td>
-                            <td>{$explain->comment}</td>
-                            </tr>";
-                    }
-
-                    $vmi .= '</table>';
-
-                    $statements[] = [
-                        'sql' => " - EXPLAIN:",
-                        'type' => 'explain',
-                        'params' => [
-                            'Virtual Machine Instructions' => $vmi,
-                        ]
-                    ];
-                } else {
-                    foreach ($query['explain'] as $explain) {
-                        $statements[] = [
-                            'sql' => " - EXPLAIN # {$explain->id}: `{$explain->table}` ({$explain->select_type})",
-                            'type' => 'explain',
-                            'params' => $explain,
-                            'row_count' => $explain->rows,
-                            'stmt_id' => $explain->id,
-                        ];
-                    }
-                }
-            }
         }
 
         if ($this->durationBackground) {
@@ -676,7 +604,7 @@ class QueryCollector extends PDOCollector
         return [
             "queries" => [
                 "icon" => "database",
-                "widget" => "PhpDebugBar.Widgets.SQLQueriesWidget",
+                "widget" => "PhpDebugBar.Widgets.LaravelQueriesWidget",
                 "map" => "queries",
                 "default" => "[]"
             ],
@@ -685,5 +613,49 @@ class QueryCollector extends PDOCollector
                 "default" => 0
             ]
         ];
+    }
+
+    private function getSqlQueryToDisplay(array $query): string
+    {
+        $sql = $query['query'];
+        if ($query['type'] === 'query' && $this->renderSqlWithParams && method_exists(DB::connection($query['connection'])->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
+            $sql = DB::connection($query['connection'])->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
+        } elseif ($query['type'] === 'query' && $this->renderSqlWithParams) {
+            $bindings = $this->getDataFormatter()->checkBindings($query['bindings']);
+            if (!empty($bindings)) {
+                $pdo = null;
+                try {
+                    $pdo = $query->connection->getPdo();
+                } catch (\Throwable) {
+                    // ignore error for non-pdo laravel drivers
+                }
+
+                foreach ($bindings as $key => $binding) {
+                    // This regex matches placeholders only, not the question marks,
+                    // nested in quotes, while we iterate through the bindings
+                    // and substitute placeholders by suitable values.
+                    $regex = is_numeric($key)
+                        ? "/(?<!\?)\?(?=(?:[^'\\\']*'[^'\\']*')*[^'\\\']*$)(?!\?)/"
+                        : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
+
+                    // Mimic bindValue and only quote non-integer and non-float data types
+                    if (!is_int($binding) && !is_float($binding)) {
+                        if ($pdo) {
+                            try {
+                                $binding = $pdo->quote((string) $binding);
+                            } catch (\Exception $e) {
+                                $binding = $this->emulateQuote($binding);
+                            }
+                        } else {
+                            $binding = $this->emulateQuote($binding);
+                        }
+                    }
+
+                    $sql = preg_replace($regex, addcslashes($binding, '$'), $sql, 1);
+                }
+            }
+        }
+
+        return $this->getDataFormatter()->formatSql($sql);
     }
 }
