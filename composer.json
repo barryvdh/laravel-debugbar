@@ -52,8 +52,8 @@
         }
     },
     "scripts": {
-        "check-style": "phpcs -p --standard=PSR12 config/ src/ tests/  --ignore=src/Resources/* ",
-        "fix-style": "phpcbf -p --standard=PSR12 config/ src/ tests/  --ignore=src/Resources*",
+        "check-style": "phpcs",
+        "fix-style": "phpcbf",
         "test": "phpunit"
     }
 }
