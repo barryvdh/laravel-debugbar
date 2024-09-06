@@ -26,7 +26,7 @@ jobs:
         name: P${{ matrix.php }} - Lumen${{ matrix.lumen }}
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   path: src
 
@@ -78,7 +78,7 @@ jobs:
         name: P${{ matrix.php }} - Laravel${{ matrix.laravel }}
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   path: src
 
