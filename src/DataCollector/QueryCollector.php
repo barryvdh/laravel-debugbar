@@ -179,10 +179,15 @@ class QueryCollector extends PDOCollector
             }
         }
 
+        $bindings = match (true) {
+            $limited && filled($query->bindings) => null,
+            default => $query->connection->prepareBindings($query->bindings),
+        };
+
         $this->queries[] = [
             'query' => $sql,
             'type' => 'query',
-            'bindings' => !$limited ? $query->connection->prepareBindings($query->bindings) : null,
+            'bindings' => $bindings,
             'start' => $startTime,
             'time' => $time,
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
