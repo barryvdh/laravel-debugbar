@@ -355,7 +355,7 @@
                     $span.append($muted.clone().text(`:${trace.line}`));
                 }
 
-                values.push($span);
+                values.push($span.text());
             }
 
             return this.renderDetailStrings(caption, icon, values);
