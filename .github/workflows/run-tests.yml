@@ -57,7 +57,7 @@ jobs:
       run: composer test
 
     - name: Upload Failed Screenshots
-      uses: actions/upload-artifact@v2-preview
+      uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: screenshots
