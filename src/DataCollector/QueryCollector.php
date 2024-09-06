@@ -491,7 +491,8 @@ class QueryCollector extends PDOCollector
             };
 
             $statements[] = [
-                'sql' => $this->getSqlQueryToDisplay($query),
+                'sql' => $query['query'],
+                'sql-raw' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
                 'params' => [],
                 'bindings' => $query['bindings'] ?? [],

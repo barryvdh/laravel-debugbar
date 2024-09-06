@@ -221,9 +221,9 @@
                 $li
                     .attr('data-connection', statement.connection)
                     .attr('data-duplicate', false)
-                    .append($('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(statement.sql));
+                    .append($('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(statement['sql-raw']));
             } else {
-                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
+                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement['sql-raw'], 'sql')).addClass(csscls('sql'));
                 if (statement.show_copy) {
                     $code.append(
                         $('<span title="Copy to clipboard" />')

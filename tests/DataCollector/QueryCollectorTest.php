@@ -34,7 +34,7 @@ class QueryCollectorTest extends TestCase
                 $this->assertEquals(<<<SQL
 SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ? example ??' as c
 SQL
-                    , $statement['sql']);
+                    , $statement['sql-raw']);
             });
         });
     }
@@ -55,7 +55,7 @@ SQL
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
             $this->assertEquals(
                 "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
-                $statement['sql']
+                $statement['sql-raw']
             );
         });
     }
@@ -75,7 +75,7 @@ SQL
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
             $this->assertEquals(
                 "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
-                $statement['sql']
+                $statement['sql-raw']
             );
 
             $this->assertTrue(@file_exists($statement['backtrace'][1]->file));
