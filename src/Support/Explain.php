@@ -30,15 +30,9 @@ class Explain
 
     private function verify(string $connection, string $sql, array $bindings, string $hash): void
     {
-        $bindings = json_encode($bindings);
-
-        foreach ([config('app.key'), ...(config('app.previous_keys') ?? [])] as $key) {
-            if (hash_equals(hash_hmac('sha256', "{$connection}::{$sql}::{$bindings}", $key), $hash)) {
-                return;
-            }
+        if (!hash_equals($this->hash($connection, $sql, $bindings), $hash)) {
+            throw new Exception('Query to execute could not be verified.');
         }
-
-        throw new Exception('Query to execute could not be verified.');
     }
 
     public function generateRawExplain(string $connection, string $sql, array $bindings, string $hash): array
