@@ -38,7 +38,7 @@
             window.getSelection().removeAllRanges();
         },
 
-        explainMysql: function ($element, explain, rows) {
+        explainMysql: function ($element, statement, rows) {
             const headings = [];
             for (const key in rows[0]) {
                 headings.push($('<th/>').text(key));
@@ -57,10 +57,10 @@
             $table.find('thead').append($('<tr/>').append(headings));
             $table.find('tbody').append(values);
 
-            $element.append([$table, this.explainVisual(explain)]);
+            $element.append([$table, this.explainVisual(statement)]);
         },
 
-        explainPgsql: function ($element, explain, rows) {
+        explainPgsql: function ($element, statement, rows) {
             const $ul = $('<ul />').addClass(csscls('table-list'));
             const $li = $('<li />').addClass(csscls('table-list-item'));
 
@@ -68,19 +68,25 @@
                 $ul.append($li.clone().append(row));
             }
 
-            $element.append([$ul, this.explainVisual(explain)]);
+            $element.append([$ul, this.explainVisual(statement)]);
         },
 
-        explainVisual: function (explain) {
+        explainVisual: function (statement) {
             const $explainLink = $('<a href="#" target="_blank" rel="noopener"/>')
                 .addClass(csscls('visual-link'));
             const $explainButton = $('<a>Visual Explain</a>')
                 .addClass(csscls('visual-explain'))
                 .on('click', () => {
-                      if (confirm(explain['visual-confirm'])) {
-                          fetch(explain.url, {
+                      if (confirm(statement.explain['visual-confirm'])) {
+                          fetch(statement.explain.url, {
                               method: "POST",
-                              body: JSON.stringify({ data: explain.data, mode: 'visual' }),
+                              body: JSON.stringify({
+                                  connection: statement.explain.connection,
+                                  query: statement.explain.query,
+                                  bindings: statement.bindings,
+                                  hash: statement.explain.hash,
+                                  mode: 'visual',
+                              }),
                           }).then((response) => {
                               if (response.ok) {
                                   response.json()
@@ -221,9 +227,9 @@
                 $li
                     .attr('data-connection', statement.connection)
                     .attr('data-duplicate', false)
-                    .append($('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(statement['sql-raw']));
+                    .append($('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(statement.sql));
             } else {
-                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement['sql-raw'], 'sql')).addClass(csscls('sql'));
+                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
                 if (statement.show_copy) {
                     $code.append(
                         $('<span title="Copy to clipboard" />')
@@ -293,11 +299,11 @@
             if (statement.backtrace && !$.isEmptyObject(statement.backtrace)) {
                 $details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
             }
-            if (statement.driver === 'mysql' && statement.explain) {
-                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement.explain, this.explainMysql.bind(this)));
+            if (statement.explain && statement.explain.driver === 'mysql') {
+                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
             }
-            if (statement.driver === 'pgsql' && statement.explain) {
-                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement.explain, this.explainPgsql.bind(this)));
+            if (statement.explain && statement.explain.driver === 'pgsql') {
+                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainPgsql.bind(this)));
             }
 
             if($details.children().length) {
@@ -361,20 +367,25 @@
             return this.renderDetailStrings(caption, icon, values);
         },
 
-        renderDetailExplain: function (caption, icon, explain, explainFn) {
+        renderDetailExplain: function (caption, icon, statement, explainFn) {
             const $btn = $('<button/>')
                 .text('Run EXPLAIN')
                 .addClass(csscls('explain-btn'))
                 .on('click', () => {
-                    fetch(explain.url, {
+                    fetch(statement.explain.url, {
                         method: "POST",
-                        body: JSON.stringify({ data: explain.data }),
+                        body: JSON.stringify({
+                            connection: statement.explain.connection,
+                            query: statement.explain.query,
+                            bindings: statement.bindings,
+                            hash: statement.explain.hash,
+                        }),
                     }).then((response) => {
                         if (response.ok) {
                             response.json()
                                 .then((json) => {
                                     $detail.find(`.${csscls('value')}`).children().remove();
-                                    explainFn($detail.find(`.${csscls('value')}`), explain, json.data);
+                                    explainFn($detail.find(`.${csscls('value')}`), statement, json.data);
                                 })
                                 .catch((err) => alert(`Response body could not be parsed. (${err})`));
                         } else {

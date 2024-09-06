@@ -496,8 +496,7 @@ class QueryCollector extends PDOCollector
             };
 
             $statements[] = [
-                'sql' => $query['query'],
-                'sql-raw' => $this->getSqlQueryToDisplay($query),
+                'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
                 'params' => [],
                 'bindings' => $query['bindings'] ?? [],
@@ -513,11 +512,13 @@ class QueryCollector extends PDOCollector
                 'source' => $this->getDataFormatter()->formatSource($source),
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
-                'driver' => $query['driver'],
                 'explain' => $this->explainQuery && $canExplainQuery ? [
                     'url' => route('debugbar.queries.explain'),
                     'visual-confirm' =>  (new Explain())->confirm($query['connection']),
-                    'data' => (new Explain())->pack($query['connection'], $query['query'], $query['bindings'], time() + 15 * 60),
+                    'driver' => $query['driver'],
+                    'connection' => $query['connection'],
+                    'query' => $query['query'],
+                    'hash' => (new Explain())->hash($query['connection'], $query['query'], $query['bindings']),
                 ] : null,
             ];
         }

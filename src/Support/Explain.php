@@ -4,10 +4,7 @@ namespace Barryvdh\Debugbar\Support;
 
 use DB;
 use Exception;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 
 class Explain
@@ -21,49 +18,51 @@ class Explain
         };
     }
 
-    public function pack(string $connection, string $sql, ?array $bindings, int $validUntilTimestamp): ?string
+    public function hash(string $connection, string $sql, array $bindings): string
     {
+        $bindings = json_encode($bindings);
+
         return match (DB::connection($connection)->getDriverName()) {
-            'mysql', 'pgsql' => Crypt::encrypt(compact('connection', 'sql', 'bindings', 'validUntilTimestamp')),
+            'mysql', 'pgsql' => hash_hmac('sha256', "{$connection}::{$sql}::{$bindings}", config('app.key')),
             default => null,
         };
     }
 
-    private function unpack(string $encrypted): array
+    private function verify(string $connection, string $sql, array $bindings, string $hash): void
     {
-        try {
-            $data = Crypt::decrypt($encrypted);
-        } catch (DecryptException $e) {
-            throw new Exception('Query to execute could not be verified.', previous: $e);
+        $bindings = json_encode($bindings);
+
+        foreach ([config('app.key'), ...(config('app.previous_keys') ?? [])] as $key) {
+            if (hash_equals(hash_hmac('sha256', "{$connection}::{$sql}::{$bindings}", $key), $hash)) {
+                return;
+            }
         }
 
-        if ($data['validUntilTimestamp'] < time()) {
-            throw new Exception('Allowed time to analyze query has expired. Please reload the page.');
-        }
-
-        return Arr::except($data, ['validUntilTimestamp']);
+        throw new Exception('Query to execute could not be verified.');
     }
 
-    public function generateRawExplain(string $encrypted): array
+    public function generateRawExplain(string $connection, string $sql, array $bindings, string $hash): array
     {
-        $data = $this->unpack($encrypted);
-        $connection = DB::connection($data['connection']);
+        $this->verify($connection, $sql, $bindings, $hash);
+
+        $connection = DB::connection($connection);
 
         return match ($driver = $connection->getDriverName()) {
-            'mysql' => $connection->select("EXPLAIN {$data['sql']}", $data['bindings']),
-            'pgsql' => array_column($connection->select("EXPLAIN {$data['sql']}", $data['bindings']), 'QUERY PLAN'),
+            'mysql' => $connection->select("EXPLAIN {$sql}", $bindings),
+            'pgsql' => array_column($connection->select("EXPLAIN {$sql}", $bindings), 'QUERY PLAN'),
             default => throw new Exception("Visual explain not available for driver '{$driver}'."),
         };
     }
 
-    public function generateVisualExplain(string $encrypted): string
+    public function generateVisualExplain(string $connection, string $sql, array $bindings, string $hash): string
     {
-        $data = $this->unpack($encrypted);
-        $connection = DB::connection($data['connection']);
+        $this->verify($connection, $sql, $bindings, $hash);
+
+        $connection = DB::connection($connection);
 
         return match ($driver = $connection->getDriverName()) {
-            'mysql' => $this->generateVisualExplainMysql($connection, $data['sql'], $data['bindings']),
-            'pgsql' => $this->generateVisualExplainPgsql($connection, $data['sql'], $data['bindings']),
+            'mysql' => $this->generateVisualExplainMysql($connection, $sql, $bindings),
+            'pgsql' => $this->generateVisualExplainPgsql($connection, $sql, $bindings),
             default => throw new Exception("Visual explain not available for driver '{$driver}'."),
         };
     }

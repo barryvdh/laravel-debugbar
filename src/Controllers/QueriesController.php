@@ -22,8 +22,8 @@ class QueriesController extends BaseController
 
         try {
             $data = match ($request->json('mode')) {
-                'visual' => (new Explain())->generateVisualExplain($request->json('data')),
-                default => (new Explain())->generateRawExplain($request->json('data')),
+                'visual' => (new Explain())->generateVisualExplain($request->json('connection'), $request->json('query'), $request->json('bindings'), $request->json('hash')),
+                default => (new Explain())->generateRawExplain($request->json('connection'), $request->json('query'), $request->json('bindings'), $request->json('hash')),
             };
 
             return response()->json([
