@@ -333,9 +333,9 @@
 
             for (const i in values) {
                 if (showLineNumbers) {
-                    $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', values[i]]));
+                    $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(values[i])]));
                 } else {
-                    $ul.append($li.clone().append(values[i]));
+                    $ul.append($li.clone().text(values[i]));
                 }
             }
 

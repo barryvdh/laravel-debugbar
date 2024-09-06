@@ -494,7 +494,7 @@ class QueryCollector extends PDOCollector
                 'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
                 'params' => [],
-                'bindings' => $this->getDataFormatter()->escapeBindings($query['bindings'] ?? []),
+                'bindings' => $query['bindings'] ?? [],
                 'hints' => $query['hints'],
                 'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
