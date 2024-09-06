@@ -1,0 +1,408 @@
+(function($) {
+
+    var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
+
+    /**
+     * Widget for displaying sql queries.
+     *
+     * Options:
+     *  - data
+     */
+    const QueriesWidget = PhpDebugBar.Widgets.LaravelQueriesWidget = PhpDebugBar.Widget.extend({
+
+        className: csscls('sqlqueries'),
+
+        duplicateQueries: new Set(),
+
+        hiddenConnections: new Set(),
+
+        copyToClipboard: function (code) {
+            if (document.selection) {
+                const range = document.body.createTextRange();
+                range.moveToElementText(code);
+                range.select();
+            } else if (window.getSelection) {
+                const range = document.createRange();
+                range.selectNodeContents(code);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+            }
+
+            try {
+                document.execCommand('copy');
+                alert('Query copied to the clipboard');
+            } catch (err) {
+                console.log('Oops, unable to copy');
+            }
+
+            window.getSelection().removeAllRanges();
+        },
+
+        explainMysql: function ($element, statement, rows) {
+            const headings = [];
+            for (const key in rows[0]) {
+                headings.push($('<th/>').text(key));
+            }
+
+            const values = [];
+            for (const row of rows) {
+                const $tr = $('<tr/>');
+                for (const key in row) {
+                    $tr.append($('<td/>').text(row[key]));
+                }
+                values.push($tr);
+            }
+
+            const $table = $('<table><thead></thead><tbody></tbody></table>').addClass(csscls('explain'));
+            $table.find('thead').append($('<tr/>').append(headings));
+            $table.find('tbody').append(values);
+
+            $element.append([$table, this.explainVisual(statement)]);
+        },
+
+        explainPgsql: function ($element, statement, rows) {
+            const $ul = $('<ul />').addClass(csscls('table-list'));
+            const $li = $('<li />').addClass(csscls('table-list-item'));
+
+            for (const row of rows) {
+                $ul.append($li.clone().append(row));
+            }
+
+            $element.append([$ul, this.explainVisual(statement)]);
+        },
+
+        explainVisual: function (statement) {
+            const $explainLink = $('<a href="#" target="_blank" rel="noopener"/>')
+                .addClass(csscls('visual-link'));
+            const $explainButton = $('<a>Visual Explain</a>')
+                .addClass(csscls('visual-explain'))
+                .on('click', () => {
+                      if (confirm(statement.explain['visual-confirm'])) {
+                          fetch(statement.explain.url, {
+                              method: "POST",
+                              body: JSON.stringify({
+                                  connection: statement.explain.connection,
+                                  query: statement.explain.query,
+                                  bindings: statement.bindings,
+                                  hash: statement.explain.hash,
+                                  mode: 'visual',
+                              }),
+                          }).then((response) => {
+                              if (response.ok) {
+                                  response.json()
+                                      .then((json) => {
+                                          $explainLink.attr('href', json.data).text(json.data);
+                                          window.open(json.data, '_blank', 'noopener');
+                                      })
+                                      .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                              } else {
+                                  response.json()
+                                      .then((json) => alert(json.message))
+                                      .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                              }
+                          }).catch((e) => {
+                              alert(e.message);
+                          });
+                      }
+                });
+
+            return $('<div/>').append([$explainButton, $explainLink]);
+        },
+
+        identifyDuplicates: function(statements) {
+            const makeStatementHash = (statement) => {
+                return [
+                    statement.sql,
+                    statement.connection,
+                    JSON.stringify(statement.bindings),
+                ].join('::');
+            };
+
+            const countedStatements = {};
+            for (const statement of statements) {
+                if (statement.type === 'query') {
+                    countedStatements[makeStatementHash(statement)] = (countedStatements[makeStatementHash(statement)] ?? 0) + 1;
+                }
+            }
+
+            this.duplicateQueries = new Set();
+            for (const statement of statements) {
+                if (countedStatements[makeStatementHash(statement)] > 1) {
+                    this.duplicateQueries.add(statement);
+                }
+            }
+        },
+
+        render: function () {
+            const $status = $('<div />').addClass(csscls('status')).appendTo(this.$el);
+
+            const $list = new PhpDebugBar.Widgets.ListWidget({
+                itemRenderer: this.renderQuery.bind(this),
+            });
+            this.$el.append($list.$el);
+
+            this.bindAttr('data', function (data) {
+                this.identifyDuplicates(data.statements);
+
+                this.renderStatus($status, data);
+                $list.set('data', data.statements);
+            });
+        },
+
+        renderStatus: function ($status, data) {
+            $status.empty();
+
+            const connections = new Set();
+            for (const statement of data.statements) {
+                connections.add(statement.connection);
+            }
+
+            const $text = $('<span />').text(`${data.nb_statements} statements were executed`);
+            if (data.nb_failed_statements > 0 || this.duplicateQueries.size > 0) {
+                const details = [];
+                if (data.nb_failed_statements) {
+                    details.push(`${data.nb_failed_statements} failed`);
+                }
+                if (this.duplicateQueries.size > 0) {
+                    details.push(`${this.duplicateQueries.size} duplicates`);
+                }
+                $text.append(` (${details.join(', ')})`);
+            }
+            $status.append($text);
+
+            const filters = [];
+            if (this.duplicateQueries.size > 0) {
+                filters.push(
+                    $('<a />')
+                        .text('Show only duplicates')
+                        .addClass(csscls('duplicates'))
+                        .click((event) => {
+                            if ($(event.target).text() === 'Show only duplicates') {
+                                $(event.target).text('Show All');
+                                this.$el.find('[data-duplicate=false]').hide();
+                            } else {
+                                $(event.target).text('Show only duplicates');
+                                this.$el.find('[data-duplicate]').show();
+                            }
+                        })
+                );
+            }
+            if (connections.size > 1) {
+                for (const connection of connections.values()) {
+                    filters.push(
+                        $('<a />')
+                            .text(connection)
+                            .attr('data-filter', connection)
+                            .attr('data-active', true)
+                            .addClass(csscls('connection'))
+                            .on('click', (event) => {
+                                if ($(event.target).attr('data-active') === 'true') {
+                                    $(event.target).attr('data-active', false).css('opacity', 0.3);
+                                    this.hiddenConnections.add($(event.target).attr('data-filter'));
+                                } else {
+                                    $(event.target).attr('data-active', true).css('opacity', 1.0);
+                                    this.hiddenConnections.delete($(event.target).attr('data-filter'));
+                                }
+
+                                this.$el.find(`[data-connection]`).show();
+                                for (const hiddenConnection of this.hiddenConnections) {
+                                    this.$el.find(`[data-connection="${hiddenConnection}"]`).hide();
+                                }
+                            })
+                    );
+                }
+            }
+            $status.append(filters);
+
+            if (data.accumulated_duration_str) {
+                $status.append($('<span title="Accumulated duration" />').addClass(csscls('duration')).text(data.accumulated_duration_str));
+            }
+            if (data.memory_usage_str) {
+                $status.append($('<span title="Memory usage" />').addClass(csscls('memory')).text(data.memory_usage_str));
+            }
+        },
+
+        renderQuery: function ($li, statement) {
+            if (statement.type === 'transaction') {
+                $li
+                    .attr('data-connection', statement.connection)
+                    .attr('data-duplicate', false)
+                    .append($('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(statement.sql));
+            } else {
+                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
+                if (statement.show_copy) {
+                    $code.append(
+                        $('<span title="Copy to clipboard" />')
+                            .addClass(csscls('copy-clipboard'))
+                            .css('cursor', 'pointer')
+                            .on('click', (event) => {
+                                event.stopPropagation();
+                                this.copyToClipboard($code.get(0));
+                            })
+                    );
+                }
+                $li
+                    .attr('data-connection', statement.connection)
+                    .attr('data-duplicate', this.duplicateQueries.has(statement))
+                    .append($code);
+            }
+
+            if (statement.width_percent) {
+                $li.append(
+                    $('<div />').addClass(csscls('bg-measure')).append(
+                        $('<div />').addClass(csscls('value')).css({
+                            left: `${statement.start_percent}%`,
+                            width: `${Math.max(statement.width_percent, 0.01)}%`,
+                        })
+                    )
+                );
+            }
+
+            if ('is_success' in statement && !statement.is_success) {
+                $li.addClass(csscls('error')).append($('<span />').addClass(csscls('error')).text(`[${statement.error_code}] ${statement.error_message}`));
+            }
+            if (statement.duration_str) {
+                $li.append($('<span title="Duration" />').addClass(csscls('duration')).text(statement.duration_str));
+            }
+            if (statement.memory_str) {
+                $li.append($('<span title="Memory usage" />').addClass(csscls('memory')).text(statement.memory_str));
+            }
+            if (statement.connection) {
+                $li.append($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
+            }
+            if (statement.xdebug_link) {
+                const $header = $('<span title="Filename" />')
+                    .addClass(csscls('filename'))
+                    .text(statement.xdebug_link.line ? `${statement.xdebug_link.filename}#${statement.xdebug_link.line}` : statement.xdebug_link.filename);
+
+                if (statement.xdebug_link.ajax) {
+                    $header.append(
+                        $('<a/>')
+                            .attr('title', statement.xdebug_link.url)
+                            .addClass(csscls('editor-link'))
+                            .on('click', () => fetch(statement.xdebug_link.url))
+                    );
+                } else {
+                    $header.append(
+                        $('<a/>')
+                            .attr('href', statement.xdebug_link.url)
+                            .addClass(csscls('editor-link'))
+                    );
+                }
+                $li.append($header);
+            }
+
+            const $details = $('<table></table>').addClass(csscls('params'))
+            if (statement.bindings && !$.isEmptyObject(statement.bindings)) {
+                $details.append(this.renderDetailStrings('Bindings', 'thumb-tack', statement.bindings, true));
+            }
+            if (statement.hints && !$.isEmptyObject(statement.hints)) {
+                $details.append(this.renderDetailStrings('Hints', 'question-circle', statement.hints));
+            }
+            if (statement.backtrace && !$.isEmptyObject(statement.backtrace)) {
+                $details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
+            }
+            if (statement.explain && statement.explain.driver === 'mysql') {
+                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
+            }
+            if (statement.explain && statement.explain.driver === 'pgsql') {
+                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainPgsql.bind(this)));
+            }
+
+            if($details.children().length) {
+                $li
+                    .addClass(csscls('expandable'))
+                    .on('click', (event) => {
+                        if ($(event.target).closest(`.${csscls('params')}`).length) {
+                            return;
+                        }
+
+                        if ($li.find(`.${csscls('params')}:visible`).length) {
+                            $li.find(`.${csscls('params')}`).css('display', 'none');
+                        } else {
+                            $li.find(`.${csscls('params')}`).css('display', 'table');
+                        }
+                    });
+            }
+
+            $li.append($details);
+        },
+
+        renderDetail: function (caption, icon, $value) {
+           return $('<tr />').append(
+                $('<td />').addClass(csscls('name')).html(icon ? `${caption} <i class="phpdebugbar-fa phpdebugbar-fa-${icon} phpdebugbar-text-muted"></i>` : caption),
+                $('<td />').addClass(csscls('value')).append($value),
+            );
+        },
+
+        renderDetailStrings: function (caption, icon, values, showLineNumbers = false) {
+            const $ul = $('<ul />').addClass(csscls('table-list'));
+            const $li = $('<li />').addClass(csscls('table-list-item'));
+            const $muted = $('<span />').addClass('phpdebugbar-text-muted');
+
+            for (const i in values) {
+                if (showLineNumbers) {
+                    $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(values[i])]));
+                } else {
+                    $ul.append($li.clone().text(values[i]));
+                }
+            }
+
+            return this.renderDetail(caption, icon, $ul);
+        },
+
+        renderDetailBacktrace: function (caption, icon, traces) {
+            const $muted = $('<span />').addClass('phpdebugbar-text-muted');
+
+            const values = [];
+            for (const trace of traces) {
+                const $span = $('<span/>').text(trace.name || trace.file);
+                if (trace.namespace) {
+                    $span.prepend(`${trace.namespace}::`);
+                }
+                if (trace.line) {
+                    $span.append($muted.clone().text(`:${trace.line}`));
+                }
+
+                values.push($span.text());
+            }
+
+            return this.renderDetailStrings(caption, icon, values);
+        },
+
+        renderDetailExplain: function (caption, icon, statement, explainFn) {
+            const $btn = $('<button/>')
+                .text('Run EXPLAIN')
+                .addClass(csscls('explain-btn'))
+                .on('click', () => {
+                    fetch(statement.explain.url, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            connection: statement.explain.connection,
+                            query: statement.explain.query,
+                            bindings: statement.bindings,
+                            hash: statement.explain.hash,
+                        }),
+                    }).then((response) => {
+                        if (response.ok) {
+                            response.json()
+                                .then((json) => {
+                                    $detail.find(`.${csscls('value')}`).children().remove();
+                                    explainFn($detail.find(`.${csscls('value')}`), statement, json.data);
+                                })
+                                .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                        } else {
+                            response.json()
+                                .then((json) => alert(json.message))
+                                .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                        }
+                    }).catch((e) => {
+                        alert(e.message);
+                    });
+                });
+            const $detail = this.renderDetail(caption, icon, $btn);
+
+            return $detail;
+        },
+    });
+})(PhpDebugBar.$);

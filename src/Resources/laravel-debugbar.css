@@ -924,3 +924,70 @@ pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
         color: var(--color-gray-100) !important;
     }
 }
+
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard {
+    float: none !important;
+}
+
+.phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
+    height: 2px !important;
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
+    width: 150px;
+}
+
+div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-connection {
+    font-size: 12px;
+    padding: 2px 4px;
+    background: #737373;
+    margin-left: 6px;
+    border-radius: 4px;
+    color: #fff !important;
+}
+
+div.phpdebugbar-widgets-sqlqueries button.phpdebugbar-widgets-explain-btn {
+    cursor: pointer;
+    background: #383838;
+    color: #fff;
+    font-size: 13px;
+    padding: 0 8px;
+    border-radius: 4px;
+    line-height: 1.25rem;
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain {
+    margin: 0 !important;
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain th {
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-visual-explain {
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 6px;
+}
+
+div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-visual-link {
+    color: #888;
+    margin-left: 6px;
+}
+
+div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-visual-explain:after {
+    content: "\f08e";
+    font-family: PhpDebugbarFontAwesome;
+    margin-left: 4px;
+    font-size: 12px;
+}
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-expandable {
+    cursor: pointer;
+}
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-params {
+    cursor: default;
+}
