@@ -218,10 +218,9 @@ return [
             'duration_background'  => true,   // Show shaded background on each query relative to how long it took to execute.
             'explain' => [                 // Show EXPLAIN output on queries
                 'enabled' => false,
-                'types' => ['SELECT'],     // Deprecated setting, is always only SELECT
             ],
-            'hints'             => false,    // Show hints for common mistakes
-            'show_copy'         => false,    // Show copy button next to the query,
+            'hints'             => false,   // Show hints for common mistakes
+            'show_copy'         => true,    // Show copy button next to the query,
             'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
             'memory_usage'      => false,   // Show queries memory usage
             'soft_limit'       => 100,      // After the soft limit, no parameters/backtrace are captured
