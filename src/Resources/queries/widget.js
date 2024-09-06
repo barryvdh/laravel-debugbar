@@ -38,28 +38,69 @@
             window.getSelection().removeAllRanges();
         },
 
-        visualExplain: function ($element, instructions) {
-            if (confirm(instructions.confirm)) {
-                fetch(instructions.url, {
-                    method: "POST",
-                    body: JSON.stringify({ data: instructions.data }),
-                }).then((response) => {
-                    if (response.ok) {
-                        response.json()
-                            .then((json) => {
-                                $element.parent().find('[data-visual-url]').attr('href', json.url).text(json.url);
-                                window.open(json.url, '_blank', 'noopener');
-                            })
-                            .catch((err) => alert('Response body could not be parsed.'));
-                    } else {
-                        response.json()
-                            .then((json) => alert(json.message))
-                            .catch((err) => alert('Response body could not be parsed.'));
-                    }
-                }).catch((e) => {
-                    alert(e.message);
-                });
+        explainMysql: function ($element, explain, rows) {
+            const headings = [];
+            for (const key in rows[0]) {
+                headings.push($('<th/>').text(key));
             }
+
+            const values = [];
+            for (const row of rows) {
+                const $tr = $('<tr/>');
+                for (const key in row) {
+                    $tr.append($('<td/>').text(row[key]));
+                }
+                values.push($tr);
+            }
+
+            const $table = $('<table><thead></thead><tbody></tbody></table>').addClass(csscls('explain'));
+            $table.find('thead').append($('<tr/>').append(headings));
+            $table.find('tbody').append(values);
+
+            $element.append([$table, this.explainVisual(explain)]);
+        },
+
+        explainPgsql: function ($element, explain, rows) {
+            const $ul = $('<ul />').addClass(csscls('table-list'));
+            const $li = $('<li />').addClass(csscls('table-list-item'));
+
+            for (const row of rows) {
+                $ul.append($li.clone().append(row));
+            }
+
+            $element.append([$ul, this.explainVisual(explain)]);
+        },
+
+        explainVisual: function (explain) {
+            const $explainLink = $('<a href="#" target="_blank" rel="noopener"/>')
+                .addClass(csscls('visual-link'));
+            const $explainButton = $('<a>Visual Explain</a>')
+                .addClass(csscls('visual-explain'))
+                .on('click', () => {
+                      if (confirm(explain['visual-confirm'])) {
+                          fetch(explain.url, {
+                              method: "POST",
+                              body: JSON.stringify({ data: explain.data, mode: 'visual' }),
+                          }).then((response) => {
+                              if (response.ok) {
+                                  response.json()
+                                      .then((json) => {
+                                          $explainLink.attr('href', json.data).text(json.data);
+                                          window.open(json.data, '_blank', 'noopener');
+                                      })
+                                      .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                              } else {
+                                  response.json()
+                                      .then((json) => alert(json.message))
+                                      .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                              }
+                          }).catch((e) => {
+                              alert(e.message);
+                          });
+                      }
+                });
+
+            return $('<div/>').append([$explainButton, $explainLink]);
         },
 
         identifyDuplicates: function(statements) {
@@ -252,11 +293,11 @@
             if (statement.backtrace && !$.isEmptyObject(statement.backtrace)) {
                 $details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
             }
-            if (statement.driver === 'mysql' && statement.explain && !$.isEmptyObject(statement.explain)) {
-                $details.append(this.renderDetailExplainMysql('Explain', 'tachometer', statement.explain, statement['explain-visual']));
+            if (statement.driver === 'mysql' && statement.explain) {
+                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement.explain, this.explainMysql.bind(this)));
             }
-            if (statement.driver === 'pgsql' && statement.explain && !$.isEmptyObject(statement.explain)) {
-                $details.append(this.renderDetailExplainPgsql('Explain', 'tachometer', statement.explain, statement['explain-visual']));
+            if (statement.driver === 'pgsql' && statement.explain) {
+                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement.explain, this.explainPgsql.bind(this)));
             }
 
             if($details.children().length) {
@@ -320,51 +361,34 @@
             return this.renderDetailStrings(caption, icon, values);
         },
 
-        renderDetailExplainMysql: function (caption, icon, rows, visualData) {
-            const headings = [];
-            for (const key in rows[0]) {
-                headings.push($('<th/>').text(key));
-            }
-
-            const values = [];
-            for (const row of rows) {
-                const $tr = $('<tr/>');
-                for (const key in row) {
-                    $tr.append($('<td/>').text(row[key]));
-                }
-                values.push($tr);
-            }
-
-            const $table = $('<table><thead></thead><tbody></tbody></table>').addClass(csscls('explain'));
-            $table.find('thead').append($('<tr/>').append(headings));
-            $table.find('tbody').append(values);
-
-            const $visual = $('<div/>')
-                .append(
-                    $('<a>Visual Explain</a>')
-                        .addClass(csscls('visual-explain'))
-                        .on('click', () => this.visualExplain($visual, visualData)),
-                    $('<a href="#" target="_blank" rel="noopener" data-visual-url/>')
-                        .addClass(csscls('visual-link')),
-                );
-
-            return this.renderDetail(caption, icon, $('<div/>').append([$table, $visual]));
-        },
-
-        renderDetailExplainPgsql: function (caption, icon, str, visualData) {
-            const $detail = this.renderDetailStrings(caption, icon, str.map((str) => str.replaceAll(' ', '&nbsp;')));
-            const $visual = $('<div/>')
-                .append(
-                    $('<a>Visual Explain</a>')
-                        .addClass(csscls('visual-explain'))
-                        .on('click', () => this.visualExplain($visual, visualData)),
-                    $('<a href="#" target="_blank" rel="noopener" data-visual-url/>')
-                        .addClass(csscls('visual-link')),
-                );
-
-            $detail.find(`.${csscls('value')}`).append($visual);
+        renderDetailExplain: function (caption, icon, explain, explainFn) {
+            const $btn = $('<button/>')
+                .text('Run EXPLAIN')
+                .addClass(csscls('explain-btn'))
+                .on('click', () => {
+                    fetch(explain.url, {
+                        method: "POST",
+                        body: JSON.stringify({ data: explain.data }),
+                    }).then((response) => {
+                        if (response.ok) {
+                            response.json()
+                                .then((json) => {
+                                    $detail.find(`.${csscls('value')}`).children().remove();
+                                    explainFn($detail.find(`.${csscls('value')}`), explain, json.data);
+                                })
+                                .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                        } else {
+                            response.json()
+                                .then((json) => alert(json.message))
+                                .catch((err) => alert(`Response body could not be parsed. (${err})`));
+                        }
+                    }).catch((e) => {
+                        alert(e.message);
+                    });
+                });
+            const $detail = this.renderDetail(caption, icon, $btn);
 
             return $detail;
-        }
+        },
     });
 })(PhpDebugBar.$);

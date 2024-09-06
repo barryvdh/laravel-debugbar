@@ -2,16 +2,16 @@
 
 namespace Barryvdh\Debugbar\Controllers;
 
-use Barryvdh\Debugbar\Support\VisualExplain;
+use Barryvdh\Debugbar\Support\Explain;
 use Exception;
 use Illuminate\Http\Request;
 
 class QueriesController extends BaseController
 {
     /**
-     * Generate visual explain url for query.
+     * Generate explain data for query.
      */
-    public function visual(Request $request)
+    public function explain(Request $request)
     {
         if (!config('debugbar.options.db.explain.enabled', false)) {
             return response()->json([
@@ -21,9 +21,14 @@ class QueriesController extends BaseController
         }
 
         try {
+            $data = match ($request->json('mode')) {
+                'visual' => (new Explain())->generateVisualExplain($request->json('data')),
+                default => (new Explain())->generateRawExplain($request->json('data')),
+            };
+
             return response()->json([
                 'success' => true,
-                'url' => (new VisualExplain())->generateUrl($request->json('data')),
+                'data' => $data,
             ]);
         } catch (Exception $e) {
             return response()->json([

@@ -933,6 +933,10 @@ div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard {
     height: 2px !important;
 }
 
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
+    width: 150px;
+}
+
 div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-connection {
     font-size: 12px;
     padding: 2px 4px;
@@ -940,6 +944,16 @@ div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-connection {
     margin-left: 6px;
     border-radius: 4px;
     color: #fff !important;
+}
+
+div.phpdebugbar-widgets-sqlqueries button.phpdebugbar-widgets-explain-btn {
+    cursor: pointer;
+    background: #383838;
+    color: #fff;
+    font-size: 13px;
+    padding: 0 8px;
+    border-radius: 4px;
+    line-height: 1.25rem;
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain {

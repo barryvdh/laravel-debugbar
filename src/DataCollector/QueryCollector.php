@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\Support\VisualExplain;
+use Barryvdh\Debugbar\Support\Explain;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Support\Facades\DB;
@@ -154,7 +154,6 @@ class QueryCollector extends PDOCollector
         $limited = $this->softLimit && $this->queryCount > $this->softLimit;
 
         $sql = (string) $query->sql;
-        $explainResults = [];
         $time = $query->time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
@@ -170,14 +169,6 @@ class QueryCollector extends PDOCollector
         } catch (\Throwable $e) {
             // ignore error for non-pdo laravel drivers
         }
-        $bindings = $query->connection->prepareBindings($query->bindings);
-
-        // Run EXPLAIN on this query (if needed)
-        if (!$limited && $this->explainQuery && $pdo && in_array($query->connection->getDriverName(), ['mysql', 'pgsql']) && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $sql)) {
-            $statement = $pdo->prepare('EXPLAIN ' . $sql);
-            $statement->execute($bindings);
-            $explainResults = $statement->fetchAll(\PDO::FETCH_CLASS);
-        }
 
         $source = [];
 
@@ -191,12 +182,11 @@ class QueryCollector extends PDOCollector
         $this->queries[] = [
             'query' => $sql,
             'type' => 'query',
-            'bindings' => !$limited ? $bindings : null,
+            'bindings' => !$limited ? $query->connection->prepareBindings($query->bindings) : null,
             'start' => $startTime,
             'time' => $time,
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
-            'explain' => $explainResults,
             'connection' => $query->connection->getName(),
             'driver' => $query->connection->getConfig('driver'),
             'hints' => ($this->showHints && !$limited) ? $hints : null,
@@ -459,7 +449,6 @@ class QueryCollector extends PDOCollector
             'time' => 0,
             'memory' => 0,
             'source' => $source,
-            'explain' => [],
             'connection' => $connection->getName(),
             'driver' => $connection->getConfig('driver'),
             'hints' => null,
@@ -496,10 +485,9 @@ class QueryCollector extends PDOCollector
                 $connectionName = $this->normalizeFilePath($connectionName);
             }
 
-            $explain = match (true) {
-                $query['driver'] === 'pgsql' => array_column($query['explain'], 'QUERY PLAN'),
-                $query['driver'] === 'mysql' => $query['explain'],
-                default => [],
+            $canExplainQuery = match (true) {
+                in_array($query['driver'], ['mysql', 'pgsql']) => $query['bindings'] !== null && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query['query']),
+                default => false,
             };
 
             $statements[] = [
@@ -520,11 +508,10 @@ class QueryCollector extends PDOCollector
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
                 'driver' => $query['driver'],
-                'explain' => $explain,
-                'explain-visual' => $this->explainQuery ? [
-                    'url' => route('debugbar.queries.visual'),
-                    'confirm' =>  (new VisualExplain())->confirm($query['connection']),
-                    'data' => (new VisualExplain())->pack($query['connection'], $query['query'], $query['bindings'], time() + 15 * 60),
+                'explain' => $this->explainQuery && $canExplainQuery ? [
+                    'url' => route('debugbar.queries.explain'),
+                    'visual-confirm' =>  (new Explain())->confirm($query['connection']),
+                    'data' => (new Explain())->pack($query['connection'], $query['query'], $query['bindings'], time() + 15 * 60),
                 ] : null,
             ];
         }
