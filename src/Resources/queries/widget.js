@@ -278,10 +278,9 @@
                         .append(
                             $('<a/>')
                                 .attr('href', statement.xdebug_link.url)
-                                .attr('data-ajax', statement.xdebug_link.ajax)
                                 .addClass(csscls('editor-link'))
                                 .on('click', (event)=> {
-                                    if ($(event.target).attr('data-ajax') === 'true') {
+                                    if (statement.xdebug_link.ajax) {
                                         fetch($(event.target).attr('href'));
                                     }
                                 })
