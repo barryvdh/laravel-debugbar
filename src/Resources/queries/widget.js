@@ -271,21 +271,25 @@
                 $li.append($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
             }
             if (statement.xdebug_link) {
-                $li.append(
-                    $('<span title="Filename" />')
-                        .addClass(csscls('filename'))
-                        .text(statement.xdebug_link.line ? `${statement.xdebug_link.filename}#${statement.xdebug_link.line}` : statement.xdebug_link.filename)
-                        .append(
-                            $('<a/>')
-                                .attr('href', statement.xdebug_link.url)
-                                .addClass(csscls('editor-link'))
-                                .on('click', (event)=> {
-                                    if (statement.xdebug_link.ajax) {
-                                        fetch($(event.target).attr('href'));
-                                    }
-                                })
-                        )
-                );
+                const $header = $('<span title="Filename" />')
+                    .addClass(csscls('filename'))
+                    .text(statement.xdebug_link.line ? `${statement.xdebug_link.filename}#${statement.xdebug_link.line}` : statement.xdebug_link.filename);
+
+                if (statement.xdebug_link.ajax) {
+                    $header.append(
+                        $('<a/>')
+                            .attr('title', statement.xdebug_link.url)
+                            .addClass(csscls('editor-link'))
+                            .on('click', () => fetch(statement.xdebug_link.url))
+                    );
+                } else {
+                    $header.append(
+                        $('<a/>')
+                            .attr('href', statement.xdebug_link.url)
+                            .addClass(csscls('editor-link'))
+                    );
+                }
+                $li.append($header);
             }
 
             const $details = $('<table></table>').addClass(csscls('params'))
