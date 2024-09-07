@@ -344,7 +344,11 @@
                 if (showLineNumbers) {
                     $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(values[i])]));
                 } else {
-                    $ul.append($li.clone().text(values[i]));
+                    if (caption === 'Hints') {
+                        $ul.append($li.clone().append(values[i]));
+                    } else {
+                        $ul.append($li.clone().text(values[i]));
+                    }
                 }
             }
 
