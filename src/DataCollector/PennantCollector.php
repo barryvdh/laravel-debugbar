@@ -48,7 +48,7 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
         return [
             "pennant" => [
                 "icon" => "flag",
-                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "pennant",
                 "default" => "{}"
             ]
