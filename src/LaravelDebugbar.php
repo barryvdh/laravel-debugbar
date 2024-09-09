@@ -10,6 +10,7 @@ use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
+use Barryvdh\Debugbar\DataCollector\PennantCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
@@ -527,6 +528,17 @@ class LaravelDebugbar extends DebugBar
                 });
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add Jobs Collector', $e);
+            }
+        }
+
+        if ($this->shouldCollect('pennant', false)) {
+            if (class_exists('Laravel\Pennant\FeatureManager') && $app->bound(\Laravel\Pennant\FeatureManager::class)) {
+                $featureManager = $app->make(\Laravel\Pennant\FeatureManager::class);
+                try {
+                    $this->addCollector(new PennantCollector($featureManager));
+                } catch (Exception $e) {
+                    $this->addCollectorException('Cannot add PennantCollector', $e);
+                }
             }
         }
 
