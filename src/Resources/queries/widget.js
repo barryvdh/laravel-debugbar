@@ -280,9 +280,9 @@
                 $li.append($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
             }
             if (statement.xdebug_link) {
-                const $header = $('<span title="Filename" />')
+                $('<span title="Filename" />')
                     .addClass(csscls('filename'))
-                    .text(statement.xdebug_link.line ? `${statement.xdebug_link.filename}#${statement.xdebug_link.line}` : statement.xdebug_link.filename)
+                    .text(statement.xdebug_link.filename + '#' + (statement.xdebug_link.line || '?'))
                     .append($('<a/>')
                         .attr('href', statement.xdebug_link.url)
                         .addClass(csscls('editor-link'))
@@ -293,8 +293,7 @@
                                 fetch(statement.xdebug_link.url);
                             }
                         })
-                    );
-                $li.append($header);
+                    ).appendTo($li);
             }
 
             const $details = $('<table></table>').addClass(csscls('params'))
