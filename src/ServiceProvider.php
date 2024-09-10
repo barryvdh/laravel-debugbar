@@ -170,10 +170,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app['events']->listen(ResponsePrepared::class, function (ResponsePrepared $event) {
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app->make(LaravelDebugbar::class);
-            if ($event->response->isRedirection()) {
-                $debugbar->modifyResponse($event->request, $event->response);
-            } else {
-                $debugbar->getStackedData();
+            if ($debugbar->isEnabled()) {
+                if ($event->response->isRedirection()) {
+                    $debugbar->modifyResponse($event->request, $event->response);
+                } else {
+                    $debugbar->getStackedData();
+                }
             }
         });
     }
