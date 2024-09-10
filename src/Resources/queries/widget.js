@@ -31,9 +31,9 @@
             var isCopied = false;
             try {
                 isCopied = document.execCommand('copy');
-                alert('Query copied to the clipboard');
+                console.log('Query copied to the clipboard');
             } catch (err) {
-                console.log('Oops, unable to copy');
+                alert('Oops, unable to copy');
             }
 
             window.getSelection().removeAllRanges();
@@ -280,25 +280,20 @@
                 $li.append($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
             }
             if (statement.xdebug_link) {
-                const $header = $('<span title="Filename" />')
+                $('<span title="Filename" />')
                     .addClass(csscls('filename'))
-                    .text(statement.xdebug_link.line ? `${statement.xdebug_link.filename}#${statement.xdebug_link.line}` : statement.xdebug_link.filename);
-
-                if (statement.xdebug_link.ajax) {
-                    $header.append(
-                        $('<a/>')
-                            .attr('title', statement.xdebug_link.url)
-                            .addClass(csscls('editor-link'))
-                            .on('click', () => fetch(statement.xdebug_link.url))
-                    );
-                } else {
-                    $header.append(
-                        $('<a/>')
-                            .attr('href', statement.xdebug_link.url)
-                            .addClass(csscls('editor-link'))
-                    );
-                }
-                $li.append($header);
+                    .text(statement.xdebug_link.filename + '#' + (statement.xdebug_link.line || '?'))
+                    .append($('<a/>')
+                        .attr('href', statement.xdebug_link.url)
+                        .addClass(csscls('editor-link'))
+                        .on('click', event => {
+                            event.stopPropagation();
+                            if (statement.xdebug_link.ajax) {
+                                event.preventDefault();
+                                fetch(statement.xdebug_link.url);
+                            }
+                        })
+                    ).appendTo($li);
             }
 
             const $details = $('<table></table>').addClass(csscls('params'))
