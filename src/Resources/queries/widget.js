@@ -28,14 +28,17 @@
                 window.getSelection().addRange(range);
             }
 
+            var isCopied = false;
             try {
-                document.execCommand('copy');
+                isCopied = document.execCommand('copy');
                 alert('Query copied to the clipboard');
             } catch (err) {
                 console.log('Oops, unable to copy');
             }
 
             window.getSelection().removeAllRanges();
+
+            return isCopied;
         },
 
         explainMysql: function ($element, statement, rows) {
@@ -235,9 +238,15 @@
                         $('<span title="Copy to clipboard" />')
                             .addClass(csscls('copy-clipboard'))
                             .css('cursor', 'pointer')
+                            .html("&#8203;")
                             .on('click', (event) => {
                                 event.stopPropagation();
-                                this.copyToClipboard($code.get(0));
+                                if (this.copyToClipboard($code.get(0))) {
+                                    $(event.target).addClass(csscls('copy-clipboard-check'));
+                                    setTimeout(function(){
+                                        $(event.target).removeClass(csscls('copy-clipboard-check'));
+                                    }, 2000)
+                                }
                             })
                     );
                 }
