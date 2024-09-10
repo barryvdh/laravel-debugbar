@@ -100,8 +100,8 @@ class LaravelDebugbar extends DebugBar
 
     protected ?string $editorTemplateLink = null;
     protected array $remoteServerReplacements = [];
-
-
+    protected bool $responseIsModified = false;
+    protected array $stackedData = [];
     /**
      * @param Application $app
      */
@@ -706,9 +706,12 @@ class LaravelDebugbar extends DebugBar
     {
         /** @var Application $app */
         $app = $this->app;
-        if (!$this->isEnabled() || $this->isDebugbarRequest()) {
+        if (!$this->isEnabled() || $this->isDebugbarRequest() || $this->responseIsModified) {
             return $response;
         }
+
+        // Prevent duplicate modification
+        $this->responseIsModified = true;
 
         // Show the Http Response Exception in the Debugbar, when available
         if (isset($response->exception)) {
@@ -977,6 +980,29 @@ class LaravelDebugbar extends DebugBar
         if ($original) {
             $response->original = $original;
         }
+    }
+
+    /**
+     * Checks if there is stacked data in the session
+     *
+     * @return boolean
+     */
+    public function hasStackedData()
+    {
+        return count($this->getStackedData(false)) > 0;
+    }
+
+    /**
+     * Returns the data stacked in the session
+     *
+     * @param boolean $delete Whether to delete the data in the session
+     * @return array
+     */
+    public function getStackedData($delete = true): array
+    {
+        $this->stackedData = array_merge($this->stackedData, parent::getStackedData($delete));
+
+        return $this->stackedData;
     }
 
     /**
