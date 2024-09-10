@@ -29,7 +29,6 @@
         <env name="DEBUGBAR_ENABLED" value="true"/>
         <env name="DB_CONNECTION" value="testing"/>
         <env name="DB_CONNECTION" value="testing"/>
-        <env name="SESSION_DRIVER" value="database"/>
         <ini name="xdebug.file_link_format" value="vscode://file/%f:%l"/>
     </php>
 </phpunit>

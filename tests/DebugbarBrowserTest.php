@@ -7,6 +7,7 @@ use Laravel\Dusk\Browser;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
+
     /**
      * Define environment setup.
      *
