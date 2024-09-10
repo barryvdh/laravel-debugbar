@@ -17,6 +17,8 @@ class DebugbarBrowserTest extends BrowserTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
+        parent::getEnvironmentSetUp($app);
+
         $app['env'] = 'local';
 
 //        $app['config']->set('app.debug', true);
@@ -74,10 +76,9 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/redirect')
                 ->assertSee('PONG')
-                ->waitFor('.phpdebugbar-fa-history')
+                ->waitFor('.phpdebugbar')
                 ->assertSee('GET web/plain')
                 ->click('.phpdebugbar-tab-history')
-                ->waitFor('.phpdebugbar-widgets-dataset-history')
                 ->waitForTextIn('.phpdebugbar-widgets-dataset-history', 'web/redirect (stacked)')
                 ->assertSee('web/redirect');
         });
