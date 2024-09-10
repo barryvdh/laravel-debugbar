@@ -183,6 +183,7 @@ return [
         'models'          => true,  // Display models
         'livewire'        => true,  // Display Livewire (when available)
         'jobs'            => false, // Display dispatched jobs
+        'pennant'         => false, // Display Pennant feature flags
     ],
 
     /*
