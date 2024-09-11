@@ -35,14 +35,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return new LaravelDebugbar($app);
         });
 
-        $this->app->singleton(SessionHttpDriver::class, function($app) {
-            // Attach the Cookie Handler with Response
+        $this->app->singleton(SessionHttpDriver::class, function ($app) {
+            // Attach the Cookie Handler with Request
             $cookieHandler = new CookieSessionHandler($app->make('cookie'), 0, true);
             $cookieHandler->setRequest($app['request']);
+
             return new SessionHttpDriver($cookieHandler);
         });
 
-        $this->app->singleton(SymfonyHttpDriver::class, function($app) {
+        $this->app->singleton(SymfonyHttpDriver::class, function ($app) {
             return new SymfonyHttpDriver($app->make(SessionManager::class));
         });
 
@@ -175,7 +176,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app->make(LaravelDebugbar::class);
             if ($debugbar->isEnabled()) {
-
+                // Now that we have a Response, set it on the Driver
                 $httpDriver = $debugbar->getHttpDriver();
                 if ($httpDriver instanceof SessionHttpDriver || $httpDriver instanceof SymfonyHttpDriver) {
                     $httpDriver->setResponse($event->response);
