@@ -325,6 +325,10 @@ class LaravelDebugbar extends DebugBar
                 $queryCollector->setShowCopyButton(true);
             }
 
+            if ($sort = $config->get('debugbar.options.db.sort_condition', 'execution_order')) {
+                $queryCollector->setSortCondition($sort);
+            }
+
             $this->addCollector($queryCollector);
 
             try {

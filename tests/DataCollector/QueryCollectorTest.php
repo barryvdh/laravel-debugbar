@@ -85,4 +85,36 @@ SQL
             );
         });
     }
+
+    public function testWillSortByAlphabeticalOrderOfTableName()
+    {
+        debugbar()->boot();
+
+        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        $collector = debugbar()->getCollector('queries');
+        $collector->setSortCondition('alphabetical_order');
+        $collector->addQuery(new QueryExecuted(
+            "SELECT a FROM c WHERE b = ?",
+            ['1'],
+            0,
+            $this->app['db']->connection()
+        ));
+        $collector->addQuery(new QueryExecuted(
+            "SELECT b FROM a WHERE c = ?",
+            ['2'],
+            0,
+            $this->app['db']->connection()
+        ));
+        $collector->addQuery(new QueryExecuted(
+            "SELECT a FROM b WHERE c = ?",
+            ['3'],
+            0,
+            $this->app['db']->connection()
+        ));
+
+        $statements = $collector->collect()['statements'];
+        $this->assertEquals("SELECT b FROM a WHERE c = '2'", $statements[0]['sql']);
+        $this->assertEquals("SELECT a FROM b WHERE c = '3'", $statements[1]['sql']);
+        $this->assertEquals("SELECT a FROM c WHERE b = '1'", $statements[2]['sql']);
+    }
 }

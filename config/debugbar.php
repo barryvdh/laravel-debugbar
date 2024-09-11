@@ -225,6 +225,7 @@ return [
             'memory_usage'      => false,   // Show queries memory usage
             'soft_limit'       => 100,      // After the soft limit, no parameters/backtrace are captured
             'hard_limit'       => 500,      // After the hard limit, queries are ignored
+            'sort_condition'   => 'execution_order',  // Options (execution_order, alphabetical_order)
         ],
         'mail' => [
             'timeline' => false,  // Add mails to the timeline
