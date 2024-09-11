@@ -755,6 +755,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        $sessionManager = null;
         $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
         if ($app->bound(SessionManager::class)) {
 
@@ -767,8 +768,6 @@ class LaravelDebugbar extends DebugBar
                     $this->addCollectorException('Cannot add SessionCollector', $e);
                 }
             }
-        } else {
-            $sessionManager = null;
         }
 
         $requestHiddens = array_merge(
