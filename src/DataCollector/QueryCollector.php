@@ -28,6 +28,7 @@ class QueryCollector extends PDOCollector
     protected $showHints = false;
     protected $showCopyButton = false;
     protected $reflection = [];
+    protected $excludePaths = [];
     protected $backtraceExcludePaths = [
         '/vendor/laravel/framework/src/Illuminate/Support',
         '/vendor/laravel/framework/src/Illuminate/Database',
@@ -97,6 +98,11 @@ class QueryCollector extends PDOCollector
     {
         $this->findSource = $value;
         $this->middleware = $middleware;
+    }
+
+    public function mergeExcludePaths(array $excludePaths)
+    {
+        $this->excludePaths = array_merge($this->excludePaths, $excludePaths);
     }
 
     /**
@@ -491,6 +497,11 @@ class QueryCollector extends PDOCollector
                 default => false,
             };
 
+            $source = $this->getDataFormatter()->formatSource($source);
+            if (Str::startsWith($source, $this->excludePaths)) {
+                continue;
+            }
+
             $statements[] = [
                 'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
@@ -505,7 +516,7 @@ class QueryCollector extends PDOCollector
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
                 'filename' => $this->getDataFormatter()->formatSource($source, true),
-                'source' => $this->getDataFormatter()->formatSource($source),
+                'source' => $source,
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
                 'explain' => $this->explainQuery && $canExplainQuery ? [
@@ -568,6 +579,8 @@ class QueryCollector extends PDOCollector
 
         $data = [
             'nb_statements' => $this->queryCount,
+            'nb_visible_statements' => count($statements),
+            'nb_excluded_statements' => $this->queryCount - count($statements),
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
@@ -599,7 +612,7 @@ class QueryCollector extends PDOCollector
                 "default" => "[]"
             ],
             "queries:badge" => [
-                "map" => "queries.nb_statements",
+                "map" => "queries.nb_visible_statements",
                 "default" => 0
             ]
         ];

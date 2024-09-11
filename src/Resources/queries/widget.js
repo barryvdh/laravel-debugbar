@@ -161,6 +161,9 @@
             }
 
             const $text = $('<span />').text(`${data.nb_statements} statements were executed`);
+            if (data.nb_excluded_statements) {
+                $text.append(`, ${data.nb_excluded_statements} have been excluded`);
+            }
             if (data.nb_failed_statements > 0 || this.duplicateQueries.size > 0) {
                 const details = [];
                 if (data.nb_failed_statements) {
