@@ -29,8 +29,9 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
 
-        $kernel = app('Illuminate\Contracts\Http\Kernel');
-        $kernel->pushMiddleware('Illuminate\Session\Middleware\StartSession');
+        $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
+        $kernel->pushMiddleware(\Illuminate\Session\Middleware\StartSession::class);
+        $kernel->pushMiddleware(\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class);
 
         \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
