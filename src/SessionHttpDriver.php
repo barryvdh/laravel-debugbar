@@ -3,21 +3,24 @@
 namespace Barryvdh\Debugbar;
 
 use DebugBar\HttpDriverInterface;
+use Illuminate\Session\Store;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * HTTP driver for Symfony Request/Session
- *
- * @deprecated
+ * HTTP driver for Larave Request/Session using Cookies
  */
-class SymfonyHttpDriver implements HttpDriverInterface
+class SessionHttpDriver implements HttpDriverInterface
 {
-    /** @var \Illuminate\Contracts\Session\Session|\Illuminate\Session\SessionManager */
+    /** @var \SessionHandlerInterface */
     protected $session;
 
     /** @var \Symfony\Component\HttpFoundation\Response */
     protected $response;
+
+    protected $data = null;
+
+    protected $id = '_debugbar';
 
     public function __construct($session, $response = null)
     {
@@ -44,16 +47,20 @@ class SymfonyHttpDriver implements HttpDriverInterface
         }
     }
 
+    protected function ensureStarted()
+    {
+        if ($this->data === null) {
+            $this->data = json_decode($this->session->read($this->id), true) ?: [];
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
     public function isSessionStarted()
     {
-        if (!$this->session->isStarted()) {
-            $this->session->start();
-        }
-
-        return $this->session->isStarted();
+        $this->ensureStarted();
+        return true;
     }
 
     /**
@@ -61,7 +68,10 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     public function setSessionValue($name, $value)
     {
-        $this->session->put($name, $value);
+        $this->isSessionStarted();
+
+        $this->data[$name] = $value;
+        $this->session->write($this->id, json_encode($this->data));
     }
 
     /**
@@ -69,7 +79,9 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     public function hasSessionValue($name)
     {
-        return $this->session->has($name);
+        $this->ensureStarted();
+
+        return array_key_exists($name, $this->data);
     }
 
     /**
@@ -77,14 +89,19 @@ class SymfonyHttpDriver implements HttpDriverInterface
      */
     public function getSessionValue($name)
     {
-        return $this->session->get($name);
+        $this->ensureStarted();
+
+        return $this->data[$name] ?? null;
     }
 
     /**
      * {@inheritDoc}
      */
     public function deleteSessionValue($name)
-    {
-        $this->session->remove($name);
+    {$this->isSessionStarted();
+
+        unset($this->data[$name]);
+
+        $this->session->write($this->id, json_encode($this->data));
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Router;
+use Illuminate\Session\CookieSessionHandler;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
 
@@ -31,15 +32,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app->singleton(LaravelDebugbar::class, function ($app) {
-            $debugbar = new LaravelDebugbar($app);
+            return new LaravelDebugbar($app);
+        });
 
-            if ($app->bound(SessionManager::class)) {
-                $sessionManager = $app->make(SessionManager::class);
-                $httpDriver = new SymfonyHttpDriver($sessionManager);
-                $debugbar->setHttpDriver($httpDriver);
-            }
+        $this->app->singleton(SessionHttpDriver::class, function ($app) {
+            // Attach the Cookie Handler with Request
+            $cookieHandler = new CookieSessionHandler($app->make('cookie'), 0, true);
+            $cookieHandler->setRequest($app['request']);
 
-            return $debugbar;
+            return new SessionHttpDriver($cookieHandler);
+        });
+
+        $this->app->singleton(SymfonyHttpDriver::class, function ($app) {
+            return new SymfonyHttpDriver($app->make(SessionManager::class));
         });
 
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
@@ -171,6 +176,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app->make(LaravelDebugbar::class);
             if ($debugbar->isEnabled()) {
+                // Now that we have a Response, set it on the Driver
+                $httpDriver = $debugbar->getHttpDriver();
+                if ($httpDriver instanceof SessionHttpDriver || $httpDriver instanceof SymfonyHttpDriver) {
+                    $httpDriver->setResponse($event->response);
+                }
+
                 if ($event->response->isRedirection()) {
                     $debugbar->modifyResponse($event->request, $event->response);
                 } else {
