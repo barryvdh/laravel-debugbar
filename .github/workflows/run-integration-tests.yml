@@ -39,15 +39,15 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  composer create-project --prefer-dist laravel/lumen:${{ matrix.lumen }} --stability=dev --no-progress sample
+                  composer create-project --prefer-dist laravel/lumen:${{ matrix.lumen }} --stability=dev --no-progress --ignore-platform-req=php+ sample
                   cd sample
                   composer config minimum-stability dev
-                  composer update  --prefer-stable --prefer-dist --no-progress
+                  composer update  --prefer-stable --prefer-dist --no-progress --ignore-platform-req=php+
             - name: Add package from source
               run: |
                   cd sample
                   sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
-                  composer require --dev "barryvdh/laravel-debugbar:*"
+                  composer require --dev --ignore-platform-req=php+ "barryvdh/laravel-debugbar:*"
             - name: Insert service provider
               run: sed -e 's|// \$app->register(App\\\Providers\\\EventServiceProvider::class);|&\n$app->register(\\Barryvdh\\Debugbar\\LumenServiceProvider::class);|' -i sample/bootstrap/app.php
 
@@ -91,15 +91,15 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  composer create-project --prefer-dist laravel/laravel:${{ matrix.laravel }} --stability=dev --no-progress sample
+                  composer create-project --prefer-dist laravel/laravel:${{ matrix.laravel }} --stability=dev --no-progress --ignore-platform-req=php+ sample
                   cd sample
                   composer config minimum-stability dev
-                  composer update --prefer-stable --prefer-dist --no-progress
+                  composer update --prefer-stable --prefer-dist --no-progress --ignore-platform-req=php+
             - name: Add package from source
               run: |
                   cd sample
                   sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
-                  composer require --dev "barryvdh/laravel-debugbar:*"
+                  composer require --dev --ignore-platform-req=php+ "barryvdh/laravel-debugbar:*"
             - name: Execute generate run
               run: |
                   cd sample
