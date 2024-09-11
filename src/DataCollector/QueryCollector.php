@@ -16,6 +16,7 @@ class QueryCollector extends PDOCollector
     protected $timeCollector;
     protected $queries = [];
     protected $queryCount = 0;
+    protected $transactionEventsCount = 0;
     protected $softLimit = null;
     protected $hardLimit = null;
     protected $lastMemoryUsage;
@@ -439,6 +440,7 @@ class QueryCollector extends PDOCollector
      */
     public function collectTransactionEvent($event, $connection)
     {
+        $this->transactionEventsCount++;
         $source = [];
 
         if ($this->findSource) {
@@ -484,6 +486,11 @@ class QueryCollector extends PDOCollector
         $statements = [];
         foreach ($queries as $query) {
             $source = reset($query['source']);
+            $normalizedPath = is_object($source) ? $this->normalizeFilePath($source->file ?: '') : '';
+            if ($query['type'] != 'transaction' && Str::startsWith($normalizedPath, $this->excludePaths)) {
+                continue;
+            }
+
             $totalTime += $query['time'];
             $totalMemory += $query['memory'];
 
@@ -496,11 +503,6 @@ class QueryCollector extends PDOCollector
                 in_array($query['driver'], ['mysql', 'pgsql']) => $query['bindings'] !== null && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query['query']),
                 default => false,
             };
-
-            $source = $this->getDataFormatter()->formatSource($source);
-            if (Str::startsWith($source, $this->excludePaths)) {
-                continue;
-            }
 
             $statements[] = [
                 'sql' => $this->getSqlQueryToDisplay($query),
@@ -580,7 +582,7 @@ class QueryCollector extends PDOCollector
         $data = [
             'nb_statements' => $this->queryCount,
             'nb_visible_statements' => count($statements),
-            'nb_excluded_statements' => $this->queryCount - count($statements),
+            'nb_excluded_statements' => $this->queryCount + $this->transactionEventsCount - count($statements),
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
