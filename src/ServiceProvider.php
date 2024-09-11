@@ -11,6 +11,7 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Router;
 use Illuminate\Session\CookieSessionHandler;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -31,14 +32,18 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app->singleton(LaravelDebugbar::class, function ($app) {
-            $debugbar = new LaravelDebugbar($app);
+            return new LaravelDebugbar($app);
+        });
 
+        $this->app->singleton(SessionHttpDriver::class, function($app) {
             // Attach the Cookie Handler with Response
-            $cookieHandler = new CookieSessionHandler($this->app->make('cookie'), 0, true);
+            $cookieHandler = new CookieSessionHandler($app->make('cookie'), 0, true);
             $cookieHandler->setRequest($app['request']);
-            $debugbar->setHttpDriver(new SessionHttpDriver($cookieHandler));
+            return new SessionHttpDriver($cookieHandler);
+        });
 
-            return $debugbar;
+        $this->app->singleton(SymfonyHttpDriver::class, function($app) {
+            return new SymfonyHttpDriver($app->make(SessionManager::class));
         });
 
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
@@ -171,8 +176,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $debugbar = $this->app->make(LaravelDebugbar::class);
             if ($debugbar->isEnabled()) {
 
-                if ($debugbar->getHttpDriver() instanceof SessionHttpDriver) {
-                    $debugbar->getHttpDriver()->setResponse($event->response);
+                $httpDriver = $debugbar->getHttpDriver();
+                if ($httpDriver instanceof SessionHttpDriver || $httpDriver instanceof SymfonyHttpDriver) {
+                    $httpDriver->setResponse($event->response);
                 }
 
                 if ($event->response->isRedirection()) {

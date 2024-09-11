@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * HTTP driver for Symfony Request/Session
  *
- * @deprecated 
+ * @deprecated
  */
 class SymfonyHttpDriver implements HttpDriverInterface
 {
@@ -22,6 +22,15 @@ class SymfonyHttpDriver implements HttpDriverInterface
     public function __construct($session, $response = null)
     {
         $this->session = $session;
+        $this->response = $response;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @return void
+     */
+    public function setResponse($response)
+    {
         $this->response = $response;
     }
 

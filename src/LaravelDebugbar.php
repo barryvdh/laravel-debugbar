@@ -32,6 +32,8 @@ use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBar;
+use DebugBar\HttpDriverInterface;
+use DebugBar\PhpHttpDriver;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
@@ -118,6 +120,26 @@ class LaravelDebugbar extends DebugBar
         }
     }
 
+    /**
+     * Returns the HTTP driver
+     *
+     * If no http driver where defined, a PhpHttpDriver is automatically created
+     *
+     * @return HttpDriverInterface
+     */
+    public function getHttpDriver()
+    {
+        if ($this->httpDriver === null) {
+            if ($this->app->bound('cookie')) {
+                $this->httpDriver = $this->app->make(SessionHttpDriver::class);
+            } else {
+                $this->httpDriver = $this->app->make(SymfonyHttpDriver::class);
+            }
+        }
+
+        return $this->httpDriver;
+    }
+    
     /**
      * Enable the Debugbar and boot, if not already booted.
      */
