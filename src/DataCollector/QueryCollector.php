@@ -209,7 +209,7 @@ class QueryCollector extends PDOCollector
             usort($this->queries, function (array $queryOne, array $queryTwo) {
                 $queryOneTableName = substr($queryOne['query'], stripos($queryOne['query'], "from") + 4);
                 $queryTwoTableName = substr($queryTwo['query'], stripos($queryTwo['query'], "from") + 4);
-                return $queryOneTableName > $queryTwoTableName;
+                return (int)($queryOneTableName > $queryTwoTableName);
             });
         }
 
