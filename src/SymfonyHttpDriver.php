@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * HTTP driver for Symfony Request/Session
  *
- * @deprecated
  */
 class SymfonyHttpDriver implements HttpDriverInterface
 {

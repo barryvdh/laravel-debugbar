@@ -130,16 +130,12 @@ class LaravelDebugbar extends DebugBar
     public function getHttpDriver()
     {
         if ($this->httpDriver === null) {
-            if ($this->app->bound('cookie')) {
-                $this->httpDriver = $this->app->make(SessionHttpDriver::class);
-            } else {
-                $this->httpDriver = $this->app->make(SymfonyHttpDriver::class);
-            }
+            $this->httpDriver = $this->app->make(SymfonyHttpDriver::class);
         }
 
         return $this->httpDriver;
     }
-    
+
     /**
      * Enable the Debugbar and boot, if not already booted.
      */
@@ -740,6 +736,12 @@ class LaravelDebugbar extends DebugBar
         // Prevent duplicate modification
         $this->responseIsModified = true;
 
+        // Set the Response if required
+        $httpDriver = $this->getHttpDriver();
+        if ($httpDriver instanceof SymfonyHttpDriver) {
+            $httpDriver->setResponse($response);
+        }
+
         // Show the Http Response Exception in the Debugbar, when available
         if (isset($response->exception)) {
             $this->addThrowable($response->exception);
@@ -757,11 +759,11 @@ class LaravelDebugbar extends DebugBar
 
         $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
         if ($app->bound(SessionManager::class)) {
+            /** @var \Illuminate\Session\SessionManager $sessionManager */
+            $sessionManager = $app->make(SessionManager::class);
 
             if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
                 try {
-                    /** @var \Illuminate\Session\SessionManager $sessionManager */
-                    $sessionManager = $app->make(SessionManager::class);
                     $this->addCollector(new SessionCollector($sessionManager, $sessionHiddens));
                 } catch (Exception $e) {
                     $this->addCollectorException('Cannot add SessionCollector', $e);
