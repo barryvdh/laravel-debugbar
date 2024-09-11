@@ -3,9 +3,11 @@
 namespace Barryvdh\Debugbar\Tests;
 
 use Illuminate\Routing\Router;
+use Laravel\Dusk\Browser;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
+
     /**
      * Define environment setup.
      *
@@ -15,6 +17,8 @@ class DebugbarBrowserTest extends BrowserTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
+        parent::getEnvironmentSetUp($app);
+
         $app['env'] = 'local';
 
 //        $app['config']->set('app.debug', true);
@@ -25,6 +29,9 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
 
+        $kernel = app('Illuminate\Contracts\Http\Kernel');
+        $kernel->pushMiddleware('Illuminate\Session\Middleware\StartSession');
+
         \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
 
@@ -33,6 +40,12 @@ class DebugbarBrowserTest extends BrowserTestCase
      */
     protected function addWebRoutes(Router $router)
     {
+        $router->get('web/redirect', [
+            'uses' => function () {
+                return redirect($this->applicationBaseUrl() . '/web/plain');
+            }
+        ]);
+
         $router->get('web/plain', [
             'uses' => function () {
                 return 'PONG';
@@ -56,6 +69,19 @@ class DebugbarBrowserTest extends BrowserTestCase
                 return response()->json(['status' => 'pong']);
             }
         ]);
+    }
+
+    public function testItStacksOnRedirect()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/redirect')
+                ->assertSee('PONG')
+                ->waitFor('.phpdebugbar')
+                ->assertSee('GET web/plain')
+                ->click('.phpdebugbar-tab-history')
+                ->waitForTextIn('.phpdebugbar-widgets-dataset-history', 'web/redirect (stacked)')
+                ->assertSee('web/redirect');
+        });
     }
 
     public function testItInjectsOnPlainText()

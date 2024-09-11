@@ -2,17 +2,16 @@
 
 namespace Barryvdh\Debugbar;
 
-use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Router;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
-use Barryvdh\Debugbar\Facade as DebugBar;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -106,6 +105,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/debugbar-routes.php');
 
+        $this->registerResponseListener();
         $this->registerMiddleware(InjectDebugbar::class);
 
         $this->commands(['command.debugbar.clear']);
@@ -150,5 +150,33 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
+    }
+
+    /**
+     * Register the Response Listener
+     *
+     * @param  string $middleware
+     */
+    protected function registerResponseListener()
+    {
+        if (!isset($this->app['events']) || !class_exists(ResponsePrepared::class)) {
+            return;
+        }
+
+        /**
+         * For redirects, prepare the response early to store in the session.
+         * For regular requests, get the stacked data early
+         */
+        $this->app['events']->listen(ResponsePrepared::class, function (ResponsePrepared $event) {
+            /** @var LaravelDebugbar $debugbar */
+            $debugbar = $this->app->make(LaravelDebugbar::class);
+            if ($debugbar->isEnabled()) {
+                if ($event->response->isRedirection()) {
+                    $debugbar->modifyResponse($event->request, $event->response);
+                } else {
+                    $debugbar->getStackedData();
+                }
+            }
+        });
     }
 }
