@@ -10,7 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Router;
-use Illuminate\Session\SessionManager;
+use Illuminate\Session\CookieSessionHandler;
 use Illuminate\Support\Collection;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -33,11 +33,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->singleton(LaravelDebugbar::class, function ($app) {
             $debugbar = new LaravelDebugbar($app);
 
-            if ($app->bound(SessionManager::class)) {
-                $sessionManager = $app->make(SessionManager::class);
-                $httpDriver = new SymfonyHttpDriver($sessionManager);
-                $debugbar->setHttpDriver($httpDriver);
-            }
+            // Attach the Cookie Handler with Response
+            $cookieHandler = new CookieSessionHandler($this->app->make('cookie'), 0, true);
+            $cookieHandler->setRequest($app['request']);
+            $debugbar->setHttpDriver(new SessionHttpDriver($cookieHandler));
 
             return $debugbar;
         });
@@ -171,6 +170,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             /** @var LaravelDebugbar $debugbar */
             $debugbar = $this->app->make(LaravelDebugbar::class);
             if ($debugbar->isEnabled()) {
+
+                if ($debugbar->getHttpDriver() instanceof SessionHttpDriver) {
+                    $debugbar->getHttpDriver()->setResponse($event->response);
+                }
+
                 if ($event->response->isRedirection()) {
                     $debugbar->modifyResponse($event->request, $event->response);
                 } else {

@@ -736,13 +736,10 @@ class LaravelDebugbar extends DebugBar
         $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
         if ($app->bound(SessionManager::class)) {
 
-            /** @var \Illuminate\Session\SessionManager $sessionManager */
-            $sessionManager = $app->make(SessionManager::class);
-            $httpDriver = new SymfonyHttpDriver($sessionManager, $response);
-            $this->setHttpDriver($httpDriver);
-
             if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
                 try {
+                    /** @var \Illuminate\Session\SessionManager $sessionManager */
+                    $sessionManager = $app->make(SessionManager::class);
                     $this->addCollector(new SessionCollector($sessionManager, $sessionHiddens));
                 } catch (Exception $e) {
                     $this->addCollectorException('Cannot add SessionCollector', $e);
