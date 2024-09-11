@@ -28,6 +28,7 @@ class DebugbarBrowserTest extends BrowserTestCase
 
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
+        $this->addViewPaths();
 
         $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
         $kernel->pushMiddleware(\Illuminate\Session\Middleware\StartSession::class);
@@ -58,6 +59,12 @@ class DebugbarBrowserTest extends BrowserTestCase
                 return '<html><head></head><body>HTMLPONG</body></html>';
             }
         ]);
+
+        $router->get('web/ajax', [
+            'uses' => function () {
+                return view('ajax');
+            }
+        ]);
     }
 
     /**
@@ -70,6 +77,11 @@ class DebugbarBrowserTest extends BrowserTestCase
                 return response()->json(['status' => 'pong']);
             }
         ]);
+    }
+
+    protected function addViewPaths()
+    {
+        config(['view.paths' => array_merge(config('view.paths'), [__DIR__ . '/resources/views'])]);
     }
 
     public function testItStacksOnRedirect()
@@ -112,6 +124,18 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->assertSee('pong')
                 ->assertSourceMissing('debugbar')
                 ->assertDontSee('GET api/ping');
+        });
+    }
+
+    public function testItCapturesAjaxRequests()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/ajax')
+                ->waitFor('.phpdebugbar')
+                ->assertSee('GET web/ajax')
+                ->click('#ajax-link')
+                ->waitForTextIn('#result', 'pong')
+                ->assertSee('GET api/ping');
         });
     }
 }
