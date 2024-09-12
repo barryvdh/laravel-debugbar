@@ -826,7 +826,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         if (
-            $request->isXmlHttpRequest() ||
+            $this->isJsonRequest($request) ||
             !$app['config']->get('debugbar.inject', true) ||
             ($response->headers->has('Content-Type') &&
                 strpos($response->headers->get('Content-Type'), 'html') === false) ||
