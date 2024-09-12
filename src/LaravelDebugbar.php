@@ -811,6 +811,10 @@ class LaravelDebugbar extends DebugBar
         } catch (Exception $e) {
         }
 
+        if ($app['config']->get('debugbar.add_ajax_timing', false)) {
+            $this->addServerTimingHeaders($response);
+        }
+
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
