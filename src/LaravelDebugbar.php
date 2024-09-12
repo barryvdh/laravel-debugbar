@@ -821,13 +821,6 @@ class LaravelDebugbar extends DebugBar
             return $response;
         }
 
-        try {
-            // Just collect + store data, only inject the headers
-            $this->sendDataInHeaders(true);
-        } catch (Exception $e) {
-            $app['log']->error('Debugbar exception: ' . $e->getMessage());
-        }
-
         if (
             $request->isXmlHttpRequest() ||
             !$app['config']->get('debugbar.inject', true) ||
@@ -837,6 +830,13 @@ class LaravelDebugbar extends DebugBar
             $response->getContent() === false ||
             $this->isJsonRequest($request)
         ) {
+            try {
+                // Just collect + store data, only inject the headers
+                $this->sendDataInHeaders(true);
+            } catch (Exception $e) {
+                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            }
+
             return $response;
         }
 
