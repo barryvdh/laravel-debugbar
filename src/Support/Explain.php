@@ -23,7 +23,7 @@ class Explain
         $bindings = json_encode($bindings);
 
         return match (DB::connection($connection)->getDriverName()) {
-            'mysql', 'pgsql' => hash_hmac('sha256', "{$connection}::{$sql}::{$bindings}", config('app.key')),
+            'mariadb', 'mysql', 'pgsql' => hash_hmac('sha256', "{$connection}::{$sql}::{$bindings}", config('app.key')),
             default => null,
         };
     }
@@ -42,7 +42,7 @@ class Explain
         $connection = DB::connection($connection);
 
         return match ($driver = $connection->getDriverName()) {
-            'mysql' => $connection->select("EXPLAIN {$sql}", $bindings),
+            'mariadb', 'mysql' => $connection->select("EXPLAIN {$sql}", $bindings),
             'pgsql' => array_column($connection->select("EXPLAIN {$sql}", $bindings), 'QUERY PLAN'),
             default => throw new Exception("Visual explain not available for driver '{$driver}'."),
         };

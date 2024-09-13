@@ -309,7 +309,7 @@
             if (statement.backtrace && !$.isEmptyObject(statement.backtrace)) {
                 $details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
             }
-            if (statement.explain && statement.explain.driver === 'mysql') {
+            if (statement.explain && ['mariadb', 'mysql'].includes(statement.explain.driver)) {
                 $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
             }
             if (statement.explain && statement.explain.driver === 'pgsql') {
