@@ -482,6 +482,7 @@ class QueryCollector extends PDOCollector
         $totalTime = 0;
         $totalMemory = 0;
         $queries = $this->queries;
+        $explain = new Explain();
 
         $statements = [];
         foreach ($queries as $query) {
@@ -526,10 +527,10 @@ class QueryCollector extends PDOCollector
                     'driver' => $query['driver'],
                     'connection' => $query['connection'],
                     'query' => $query['query'],
-                    'hash' => (new Explain())->hash($query['connection'], $query['query'], $query['bindings']),
-                    'visual' => [
-                        'confirm' => (new Explain())->confirm($query['connection']),
-                    ],
+                    'hash' => $explain->hash($query['connection'], $query['query'], $query['bindings']),
+                    'visual' => $explain->isVisualExplainSupported($query['connection']) ? [
+                        'confirm' => $explain->confirmVisualExplain($query['connection']),
+                    ] : null,
                 ] : null,
             ];
         }

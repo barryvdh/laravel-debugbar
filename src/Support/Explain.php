@@ -2,14 +2,44 @@
 
 namespace Barryvdh\Debugbar\Support;
 
-use DB;
 use Exception;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class Explain
 {
-    public function confirm(string $connection): ?string
+    private $connections = [];
+
+    public function isVisualExplainSupported(string $connection): bool
+    {
+        if (isset($this->connections[$connection])) {
+            return $this->connections[$connection];
+        }
+
+        $driver = DB::connection($connection)->getDriverName();
+        if ($driver === 'pgsql') {
+            return $this->connections[$connection] = true;
+        }
+        if ($driver === 'mysql') {
+            // Laravel 11 added a new MariaDB database driver but older Laravel versions handle MySQL and MariaDB with
+            // the same driver - and even with new versions you can use the MySQL driver while connection to a MariaDB
+            // database. This query uses a feature implemented only in MariaDB to differentiate them.
+            try {
+                DB::connection($connection)->select('SELECT * FROM seq_1_to_1');
+                return $this->connections[$connection] = false;
+            } catch (QueryException) {
+                // This exception is expected when using MySQL as sequence tables are only available with MariaDB. So
+                // the exception gets silenced as the check for MySQL has succeeded.
+                return $this->connections[$connection] = true;
+            }
+        }
+
+        return $this->connections[$connection] = false;
+    }
+
+    public function confirmVisualExplain(string $connection): ?string
     {
         return match (DB::connection($connection)->getDriverName()) {
             'mysql' => 'The query and EXPLAIN output is sent to mysqlexplain.com. Do you want to continue?',
@@ -51,13 +81,15 @@ class Explain
     public function generateVisualExplain(string $connection, string $sql, array $bindings, string $hash): string
     {
         $this->verify($connection, $sql, $bindings, $hash);
+        if (!$this->isVisualExplainSupported($connection)) {
+            throw new Exception('Visual explain not available for this connection.');
+        }
 
         $connection = DB::connection($connection);
 
-        return match ($driver = $connection->getDriverName()) {
+        return match ($connection->getDriverName()) {
             'mysql' => $this->generateVisualExplainMysql($connection, $sql, $bindings),
             'pgsql' => $this->generateVisualExplainPgsql($connection, $sql, $bindings),
-            default => throw new Exception("Visual explain not available for driver '{$driver}'."),
         };
     }
 

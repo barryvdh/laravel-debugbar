@@ -60,7 +60,10 @@
             $table.find('thead').append($('<tr/>').append(headings));
             $table.find('tbody').append(values);
 
-            $element.append([$table, this.explainVisual(statement)]);
+            $element.append($table);
+            if (statement.explain.visual) {
+                $element.append(this.explainVisual(statement));
+            }
         },
 
         explainPgsql: function ($element, statement, rows) {
