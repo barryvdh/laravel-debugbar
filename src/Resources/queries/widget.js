@@ -80,7 +80,7 @@
             const $explainButton = $('<a>Visual Explain</a>')
                 .addClass(csscls('visual-explain'))
                 .on('click', () => {
-                      if (confirm(statement.explain['visual-confirm'])) {
+                      if (confirm(statement.explain.visual.confirm)) {
                           fetch(statement.explain.url, {
                               method: "POST",
                               body: JSON.stringify({

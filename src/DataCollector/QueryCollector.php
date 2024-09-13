@@ -523,11 +523,13 @@ class QueryCollector extends PDOCollector
                 'connection' => $connectionName,
                 'explain' => $this->explainQuery && $canExplainQuery ? [
                     'url' => route('debugbar.queries.explain'),
-                    'visual-confirm' =>  (new Explain())->confirm($query['connection']),
                     'driver' => $query['driver'],
                     'connection' => $query['connection'],
                     'query' => $query['query'],
                     'hash' => (new Explain())->hash($query['connection'], $query['query'], $query['bindings']),
+                    'visual' => [
+                        'confirm' => (new Explain())->confirm($query['connection']),
+                    ],
                 ] : null,
             ];
         }
