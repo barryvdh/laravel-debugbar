@@ -10,17 +10,11 @@ use Illuminate\Support\Facades\Http;
 
 class Explain
 {
-    private $connections = [];
-
     public function isVisualExplainSupported(string $connection): bool
     {
-        if (isset($this->connections[$connection])) {
-            return $this->connections[$connection];
-        }
-
         $driver = DB::connection($connection)->getDriverName();
         if ($driver === 'pgsql') {
-            return $this->connections[$connection] = true;
+            return true;
         }
         if ($driver === 'mysql') {
             // Laravel 11 added a new MariaDB database driver but older Laravel versions handle MySQL and MariaDB with
@@ -28,15 +22,16 @@ class Explain
             // database. This query uses a feature implemented only in MariaDB to differentiate them.
             try {
                 DB::connection($connection)->select('SELECT * FROM seq_1_to_1');
-                return $this->connections[$connection] = false;
+
+                return false;
             } catch (QueryException) {
                 // This exception is expected when using MySQL as sequence tables are only available with MariaDB. So
                 // the exception gets silenced as the check for MySQL has succeeded.
-                return $this->connections[$connection] = true;
+                return true;
             }
         }
 
-        return $this->connections[$connection] = false;
+        return false;
     }
 
     public function confirmVisualExplain(string $connection): ?string

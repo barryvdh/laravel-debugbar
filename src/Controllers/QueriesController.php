@@ -21,14 +21,21 @@ class QueriesController extends BaseController
         }
 
         try {
-            $data = match ($request->json('mode')) {
-                'visual' => (new Explain())->generateVisualExplain($request->json('connection'), $request->json('query'), $request->json('bindings'), $request->json('hash')),
-                default => (new Explain())->generateRawExplain($request->json('connection'), $request->json('query'), $request->json('bindings'), $request->json('hash')),
-            };
+            $explain = new Explain();
+
+            if ($request->json('mode') === 'visual') {
+                return response()->json([
+                    'success' => true,
+                    'data' => $explain->generateVisualExplain($request->json('connection'), $request->json('query'), $request->json('bindings'), $request->json('hash')),
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
-                'data' => $data,
+                'data' => $explain->generateRawExplain($request->json('connection'), $request->json('query'), $request->json('bindings'), $request->json('hash')),
+                'visual' => $explain->isVisualExplainSupported($request->json('connection')) ? [
+                    'confirm' => $explain->confirmVisualExplain($request->json('connection')),
+                ] : null,
             ]);
         } catch (Exception $e) {
             return response()->json([
