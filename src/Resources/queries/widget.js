@@ -71,7 +71,7 @@
             const $li = $('<li />').addClass(csscls('table-list-item'));
 
             for (const row of rows) {
-                $ul.append($li.clone().append(row));
+                $ul.append($li.clone().html($('<span/>').text(row).text().replaceAll(' ', '&nbsp;')));
             }
 
             $element.append([$ul, this.explainVisual(statement)]);
