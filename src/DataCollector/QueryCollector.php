@@ -500,7 +500,7 @@ class QueryCollector extends PDOCollector
             }
 
             $canExplainQuery = match (true) {
-                in_array($query['driver'], ['mysql', 'pgsql']) => $query['bindings'] !== null && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query['query']),
+                in_array($query['driver'], ['mariadb', 'mysql', 'pgsql']) => $query['bindings'] !== null && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query['query']),
                 default => false,
             };
 
@@ -523,7 +523,6 @@ class QueryCollector extends PDOCollector
                 'connection' => $connectionName,
                 'explain' => $this->explainQuery && $canExplainQuery ? [
                     'url' => route('debugbar.queries.explain'),
-                    'visual-confirm' =>  (new Explain())->confirm($query['connection']),
                     'driver' => $query['driver'],
                     'connection' => $query['connection'],
                     'query' => $query['query'],

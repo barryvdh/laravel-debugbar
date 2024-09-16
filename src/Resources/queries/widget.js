@@ -41,7 +41,7 @@
             return isCopied;
         },
 
-        explainMysql: function ($element, statement, rows) {
+        explainMysql: function ($element, statement, rows, visual) {
             const headings = [];
             for (const key in rows[0]) {
                 headings.push($('<th/>').text(key));
@@ -60,27 +60,30 @@
             $table.find('thead').append($('<tr/>').append(headings));
             $table.find('tbody').append(values);
 
-            $element.append([$table, this.explainVisual(statement)]);
+            $element.append($table);
+            if (visual) {
+                $element.append(this.explainVisual(statement, visual.confirm));
+            }
         },
 
-        explainPgsql: function ($element, statement, rows) {
+        explainPgsql: function ($element, statement, rows, visual) {
             const $ul = $('<ul />').addClass(csscls('table-list'));
             const $li = $('<li />').addClass(csscls('table-list-item'));
 
             for (const row of rows) {
-                $ul.append($li.clone().append(row));
+                $ul.append($li.clone().html($('<span/>').text(row).text().replaceAll(' ', '&nbsp;')));
             }
 
-            $element.append([$ul, this.explainVisual(statement)]);
+            $element.append([$ul, this.explainVisual(statement, visual.confirm)]);
         },
 
-        explainVisual: function (statement) {
+        explainVisual: function (statement, confirmMessage) {
             const $explainLink = $('<a href="#" target="_blank" rel="noopener"/>')
                 .addClass(csscls('visual-link'));
             const $explainButton = $('<a>Visual Explain</a>')
                 .addClass(csscls('visual-explain'))
                 .on('click', () => {
-                      if (confirm(statement.explain['visual-confirm'])) {
+                      if (confirm(confirmMessage)) {
                           fetch(statement.explain.url, {
                               method: "POST",
                               body: JSON.stringify({
@@ -309,7 +312,7 @@
             if (statement.backtrace && !$.isEmptyObject(statement.backtrace)) {
                 $details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
             }
-            if (statement.explain && statement.explain.driver === 'mysql') {
+            if (statement.explain && ['mariadb', 'mysql'].includes(statement.explain.driver)) {
                 $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
             }
             if (statement.explain && statement.explain.driver === 'pgsql') {
@@ -399,7 +402,7 @@
                             response.json()
                                 .then((json) => {
                                     $detail.find(`.${csscls('value')}`).children().remove();
-                                    explainFn($detail.find(`.${csscls('value')}`), statement, json.data);
+                                    explainFn($detail.find(`.${csscls('value')}`), statement, json.data, json.visual);
                                 })
                                 .catch((err) => alert(`Response body could not be parsed. (${err})`));
                         } else {
