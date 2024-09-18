@@ -822,28 +822,25 @@ class LaravelDebugbar extends DebugBar
         }
 
         try {
-            // Just collect + store data, only inject the headers
+            // Collect + store data, only inject the ID in theheaders
             $this->sendDataInHeaders(true);
         } catch (Exception $e) {
             $app['log']->error('Debugbar exception: ' . $e->getMessage());
         }
 
+        // Check if it's safe to inject the Debugbar
         if (
-            $request->isXmlHttpRequest() ||
-            !$app['config']->get('debugbar.inject', true) ||
-            ($response->headers->has('Content-Type') &&
-                strpos($response->headers->get('Content-Type'), 'html') === false) ||
-            $request->getRequestFormat() !== 'html' ||
-            $response->getContent() === false ||
-            $this->isJsonRequest($request)
+            $app['config']->get('debugbar.inject', true)
+            && str_contains($response->headers->get('Content-Type', 'text/html'), 'html')
+            && !$this->isJsonRequest($request, $response)
+            && $response->getContent() !== false
+            && in_array($request->getRequestFormat(), [null, 'html'], true)
         ) {
-            return $response;
-        }
-
-        try {
-            $this->injectDebugbar($response);
-        } catch (Exception $e) {
-            $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            try {
+                $this->injectDebugbar($response);
+            } catch (Exception $e) {
+                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            }
         }
 
         return $response;
@@ -882,9 +879,10 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return bool
      */
-    protected function isJsonRequest(Request $request)
+    protected function isJsonRequest(Request $request, Response $response)
     {
         // If XmlHttpRequest, Live or HTMX, return true
         if (
@@ -897,7 +895,17 @@ class LaravelDebugbar extends DebugBar
 
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
-        return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
+        if (isset($acceptable[0]) && in_array($acceptable[0], ['application/json', 'application/javascript'], true)) {
+            return true;
+        }
+
+        // Check if content looks like JSON without actually validating
+        $content = $response->getContent();
+        if ($content !== false && in_array($content[0], ['{', '['], true)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
