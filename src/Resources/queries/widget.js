@@ -1,6 +1,7 @@
 (function($) {
 
-    var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
+    let css = PhpDebugBar.utils.makecsscls('phpdebugbar-');
+    let csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
 
     /**
      * Widget for displaying sql queries.
@@ -83,33 +84,27 @@
             const $explainButton = $('<a>Visual Explain</a>')
                 .addClass(csscls('visual-explain'))
                 .on('click', () => {
-                      if (confirm(confirmMessage)) {
-                          fetch(statement.explain.url, {
-                              method: "POST",
-                              body: JSON.stringify({
-                                  connection: statement.explain.connection,
-                                  query: statement.explain.query,
-                                  bindings: statement.bindings,
-                                  hash: statement.explain.hash,
-                                  mode: 'visual',
-                              }),
-                          }).then((response) => {
-                              if (response.ok) {
-                                  response.json()
-                                      .then((json) => {
-                                          $explainLink.attr('href', json.data).text(json.data);
-                                          window.open(json.data, '_blank', 'noopener');
-                                      })
-                                      .catch((err) => alert(`Response body could not be parsed. (${err})`));
-                              } else {
-                                  response.json()
-                                      .then((json) => alert(json.message))
-                                      .catch((err) => alert(`Response body could not be parsed. (${err})`));
-                              }
-                          }).catch((e) => {
-                              alert(e.message);
-                          });
-                      }
+                    if (!confirm(statement.explain['visual-confirm'])) return;
+                    fetch(statement.explain.url, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            connection: statement.explain.connection,
+                            query: statement.explain.query,
+                            bindings: statement.bindings,
+                            hash: statement.explain.hash,
+                            mode: 'visual',
+                        }),
+                    }).then(response => {
+                        response.json()
+                            .then(json => {
+                                if (!response.ok) return alert(json.message);
+                                $explainLink.attr('href', json.data).text(json.data);
+                                window.open(json.data, '_blank', 'noopener');
+                            })
+                            .catch(err => alert(`Response body could not be parsed. (${err})`));
+                    }).catch(e => {
+                        alert(e.message);
+                    });
                 });
 
             return $('<div/>').append([$explainButton, $explainLink]);
@@ -181,43 +176,40 @@
 
             const filters = [];
             if (this.duplicateQueries.size > 0) {
-                filters.push(
-                    $('<a />')
-                        .text('Show only duplicates')
-                        .addClass(csscls('duplicates'))
-                        .click((event) => {
-                            if ($(event.target).text() === 'Show only duplicates') {
-                                $(event.target).text('Show All');
-                                this.$el.find('[data-duplicate=false]').hide();
-                            } else {
-                                $(event.target).text('Show only duplicates');
-                                this.$el.find('[data-duplicate]').show();
-                            }
-                        })
+                filters.push($('<a />')
+                    .text('Show only duplicates')
+                    .addClass(csscls('duplicates'))
+                    .click((event) => {
+                        if ($(event.target).text() === 'Show only duplicates') {
+                            $(event.target).text('Show All');
+                            this.$el.find('[data-duplicate=false]').hide();
+                        } else {
+                            $(event.target).text('Show only duplicates');
+                            this.$el.find('[data-duplicate]').show();
+                        }
+                    })
                 );
             }
             if (connections.size > 1) {
                 for (const connection of connections.values()) {
-                    filters.push(
-                        $('<a />')
-                            .text(connection)
-                            .attr('data-filter', connection)
-                            .attr('data-active', true)
-                            .addClass(csscls('connection'))
-                            .on('click', (event) => {
-                                if ($(event.target).attr('data-active') === 'true') {
-                                    $(event.target).attr('data-active', false).css('opacity', 0.3);
-                                    this.hiddenConnections.add($(event.target).attr('data-filter'));
-                                } else {
-                                    $(event.target).attr('data-active', true).css('opacity', 1.0);
-                                    this.hiddenConnections.delete($(event.target).attr('data-filter'));
-                                }
+                    filters.push($('<a />')
+                        .addClass(csscls('connection'))
+                        .text(connection)
+                        .attr({'data-filter': connection, 'data-active': true})
+                        .on('click', (event) => {
+                            if ($(event.target).attr('data-active') === 'true') {
+                                $(event.target).attr('data-active', false).css('opacity', 0.3);
+                                this.hiddenConnections.add($(event.target).attr('data-filter'));
+                            } else {
+                                $(event.target).attr('data-active', true).css('opacity', 1.0);
+                                this.hiddenConnections.delete($(event.target).attr('data-filter'));
+                            }
 
-                                this.$el.find(`[data-connection]`).show();
-                                for (const hiddenConnection of this.hiddenConnections) {
-                                    this.$el.find(`[data-connection="${hiddenConnection}"]`).hide();
-                                }
-                            })
+                            this.$el.find(`[data-connection]`).show();
+                            for (const hiddenConnection of this.hiddenConnections) {
+                                this.$el.find(`[data-connection="${hiddenConnection}"]`).hide();
+                            }
+                        })
                     );
                 }
             }
@@ -233,44 +225,38 @@
 
         renderQuery: function ($li, statement) {
             if (statement.type === 'transaction') {
-                $li
-                    .attr('data-connection', statement.connection)
+                $li.attr('data-connection', statement.connection)
                     .attr('data-duplicate', false)
-                    .append($('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(statement.sql));
+                    .append($('<strong />').addClass(csscls('sql name')).text(statement.sql));
             } else {
                 const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
                 if (statement.show_copy) {
-                    $code.append(
-                        $('<span title="Copy to clipboard" />')
-                            .addClass(csscls('copy-clipboard'))
-                            .css('cursor', 'pointer')
-                            .html("&#8203;")
-                            .on('click', (event) => {
-                                event.stopPropagation();
-                                if (this.copyToClipboard($code.get(0))) {
-                                    $(event.target).addClass(csscls('copy-clipboard-check'));
-                                    setTimeout(function(){
-                                        $(event.target).removeClass(csscls('copy-clipboard-check'));
-                                    }, 2000)
-                                }
-                            })
-                    );
+                    $('<span title="Copy to clipboard" />')
+                        .addClass(csscls('copy-clipboard'))
+                        .css('cursor', 'pointer')
+                        .html("&#8203;")
+                        .on('click', (event) => {
+                            event.stopPropagation();
+                            if (this.copyToClipboard($code.get(0))) {
+                                $(event.target).addClass(csscls('copy-clipboard-check'));
+                                setTimeout(function(){
+                                    $(event.target).removeClass(csscls('copy-clipboard-check'));
+                                }, 2000)
+                            }
+                        }).appendTo($code);
                 }
-                $li
-                    .attr('data-connection', statement.connection)
+                $li.attr('data-connection', statement.connection)
                     .attr('data-duplicate', this.duplicateQueries.has(statement))
                     .append($code);
             }
 
             if (statement.width_percent) {
-                $li.append(
-                    $('<div />').addClass(csscls('bg-measure')).append(
-                        $('<div />').addClass(csscls('value')).css({
-                            left: `${statement.start_percent}%`,
-                            width: `${Math.max(statement.width_percent, 0.01)}%`,
-                        })
-                    )
-                );
+                $('<div />').addClass(csscls('bg-measure')).append(
+                    $('<div />').addClass(csscls('value')).css({
+                        left: `${statement.start_percent}%`,
+                        width: `${Math.max(statement.width_percent, 0.01)}%`,
+                    })
+                ).appendTo($li);
             }
 
             if ('is_success' in statement && !statement.is_success) {
@@ -320,8 +306,7 @@
             }
 
             if($details.children().length) {
-                $li
-                    .addClass(csscls('expandable'))
+                $li.addClass(csscls('expandable'))
                     .on('click', (event) => {
                         if ($(event.target).closest(`.${csscls('params')}`).length) {
                             return;
@@ -340,7 +325,7 @@
 
         renderDetail: function (caption, icon, $value) {
            return $('<tr />').append(
-                $('<td />').addClass(csscls('name')).html(icon ? `${caption} <i class="phpdebugbar-fa phpdebugbar-fa-${icon} phpdebugbar-text-muted"></i>` : caption),
+                $('<td />').addClass(csscls('name')).html(caption + ((icon || '') && `<i class="${css('text-muted fa fa-'+icon)}" />`)),
                 $('<td />').addClass(csscls('value')).append($value),
             );
         },
@@ -348,7 +333,7 @@
         renderDetailStrings: function (caption, icon, values, showLineNumbers = false) {
             const $ul = $('<ul />').addClass(csscls('table-list'));
             const $li = $('<li />').addClass(csscls('table-list-item'));
-            const $muted = $('<span />').addClass('phpdebugbar-text-muted');
+            const $muted = $('<span />').addClass(css('text-muted'));
 
             for (const i in values) {
                 if (showLineNumbers) {
@@ -366,7 +351,7 @@
         },
 
         renderDetailBacktrace: function (caption, icon, traces) {
-            const $muted = $('<span />').addClass('phpdebugbar-text-muted');
+            const $muted = $('<span />').addClass(css('text-muted'));
 
             const values = [];
             for (const trace of traces) {
@@ -397,20 +382,15 @@
                             bindings: statement.bindings,
                             hash: statement.explain.hash,
                         }),
-                    }).then((response) => {
-                        if (response.ok) {
-                            response.json()
-                                .then((json) => {
-                                    $detail.find(`.${csscls('value')}`).children().remove();
-                                    explainFn($detail.find(`.${csscls('value')}`), statement, json.data, json.visual);
-                                })
-                                .catch((err) => alert(`Response body could not be parsed. (${err})`));
-                        } else {
-                            response.json()
-                                .then((json) => alert(json.message))
-                                .catch((err) => alert(`Response body could not be parsed. (${err})`));
-                        }
-                    }).catch((e) => {
+                    }).then(response => {
+                        response.json()
+                            .then(json => {
+                                if (!response.ok) return alert(json.message);
+                                $detail.find(`.${csscls('value')}`).children().remove();
+                                explainFn($detail.find(`.${csscls('value')}`), statement, json.data, json.visual);
+                            })
+                            .catch(err => alert(`Response body could not be parsed. (${err})`));
+                    }).catch(e => {
                         alert(e.message);
                     });
                 });
