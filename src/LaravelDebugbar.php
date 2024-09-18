@@ -796,62 +796,56 @@ class LaravelDebugbar extends DebugBar
             $this->addClockworkHeaders($response);
         }
 
+        try {
+            if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
+                $content = $response->getContent();
+
+                if (is_string($content)) {
+                    $content = json_decode($content, true);
+                }
+
+                if (is_array($content)) {
+                    $this['views']->addInertiaAjaxView($content);
+                }
+            }
+        } catch (Exception $e) {
+        }
+
+        if ($app['config']->get('debugbar.add_ajax_timing', false)) {
+            $this->addServerTimingHeaders($response);
+        }
+
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
             } catch (Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
-        } elseif (
-            $this->isJsonRequest($request) &&
-            $app['config']->get('debugbar.capture_ajax', true)
+
+            return $response;
+        }
+
+        try {
+            // Collect + store data, only inject the ID in theheaders
+            $this->sendDataInHeaders(true);
+        } catch (Exception $e) {
+            $app['log']->error('Debugbar exception: ' . $e->getMessage());
+        }
+
+        // Check if it's safe to inject the Debugbar
+        if (
+            $app['config']->get('debugbar.inject', true)
+            && str_contains($response->headers->get('Content-Type', 'text/html'), 'html')
+            && !$this->isJsonRequest($request, $response)
+            && $response->getContent() !== false
+            && in_array($request->getRequestFormat(), [null, 'html'], true)
         ) {
-            try {
-                if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
-                    $content = $response->getContent();
-
-                    if (is_string($content)) {
-                        $content = json_decode($content, true);
-                    }
-
-                    if (is_array($content)) {
-                        $this['views']->addInertiaAjaxView($content);
-                    }
-                }
-            } catch (Exception $e) {
-            }
-            try {
-                $this->sendDataInHeaders(true);
-
-                if ($app['config']->get('debugbar.add_ajax_timing', false)) {
-                    $this->addServerTimingHeaders($response);
-                }
-            } catch (Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
-            }
-        } elseif (
-            !$app['config']->get('debugbar.inject', true) ||
-            ($response->headers->has('Content-Type') &&
-                strpos($response->headers->get('Content-Type'), 'html') === false) ||
-            $request->getRequestFormat() !== 'html' ||
-            $response->getContent() === false ||
-            $this->isJsonRequest($request)
-        ) {
-            try {
-                // Just collect + store data, don't inject it.
-                $this->collect();
-            } catch (Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
-            }
-        } else {
             try {
                 $this->injectDebugbar($response);
             } catch (Exception $e) {
                 $app['log']->error('Debugbar exception: ' . $e->getMessage());
             }
         }
-
-
 
         return $response;
     }
@@ -889,9 +883,10 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return bool
      */
-    protected function isJsonRequest(Request $request)
+    protected function isJsonRequest(Request $request, Response $response)
     {
         // If XmlHttpRequest, Live or HTMX, return true
         if (
@@ -904,7 +899,17 @@ class LaravelDebugbar extends DebugBar
 
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
-        return (isset($acceptable[0]) && $acceptable[0] == 'application/json');
+        if (isset($acceptable[0]) && in_array($acceptable[0], ['application/json', 'application/javascript'], true)) {
+            return true;
+        }
+
+        // Check if content looks like JSON without actually validating
+        $content = $response->getContent();
+        if ($content !== false && in_array($content[0], ['{', '['], true)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

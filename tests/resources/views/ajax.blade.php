@@ -7,7 +7,7 @@
 <script>
     async function loadAjax() {
         try {
-            const response = await fetch('/api/ping', {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+            const response = await fetch('/api/ping');
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
             }

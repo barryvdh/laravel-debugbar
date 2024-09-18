@@ -35,6 +35,7 @@ class DebugbarTest extends TestCase
 
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItInjectsOnHtml()
@@ -43,6 +44,7 @@ class DebugbarTest extends TestCase
 
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItDoesntInjectOnJson()
@@ -51,6 +53,16 @@ class DebugbarTest extends TestCase
 
         $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+    }
+
+    public function testItDoesntInjectOnJsonLookingString()
+    {
+        $crawler = $this->call('GET', 'web/fakejson');
+
+        $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
+        $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItDoesntInjectsOnHxRequestWithHxTarget()
@@ -62,6 +74,7 @@ class DebugbarTest extends TestCase
 
         $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItInjectsOnHxRequestWithoutHxTarget()
@@ -72,5 +85,6 @@ class DebugbarTest extends TestCase
 
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
         $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 }

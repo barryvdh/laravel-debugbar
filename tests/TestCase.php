@@ -66,6 +66,10 @@ class TestCase extends Orchestra
             return '<html><head></head><body>Pong</body></html>';
         });
 
+        $router->get('web/fakejson', function () {
+            return '{"foo":"bar"}';
+        });
+
         $router->get('web/show', [ MockController::class, 'show' ]);
 
         $router->get('web/view', MockViewComponent::class);
