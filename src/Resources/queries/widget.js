@@ -234,7 +234,6 @@
                     $('<span title="Copy to clipboard" />')
                         .addClass(csscls('copy-clipboard'))
                         .css('cursor', 'pointer')
-                        .html("&#8203;")
                         .on('click', (event) => {
                             event.stopPropagation();
                             if (this.copyToClipboard($code.get(0))) {
