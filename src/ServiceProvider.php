@@ -102,7 +102,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/debugbar-routes.php');
 
-        $this->registerResponseListener();
         $this->registerMiddleware(InjectDebugbar::class);
 
         $this->commands(['command.debugbar.clear']);
@@ -129,16 +128,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Publish the config file
-     *
-     * @param  string $configPath
-     */
-    protected function publishConfig($configPath)
-    {
-        $this->publishes([$configPath => config_path('debugbar.php')], 'config');
-    }
-
-    /**
      * Register the Debugbar Middleware
      *
      * @param  string $middleware
@@ -147,33 +136,5 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
-    }
-
-    /**
-     * Register the Response Listener
-     *
-     * @param  string $middleware
-     */
-    protected function registerResponseListener()
-    {
-        if (!isset($this->app['events']) || !class_exists(ResponsePrepared::class)) {
-            return;
-        }
-
-        /**
-         * For redirects, prepare the response early to store in the session.
-         * For regular requests, get the stacked data early
-         */
-        $this->app['events']->listen(ResponsePrepared::class, function (ResponsePrepared $event) {
-            /** @var LaravelDebugbar $debugbar */
-            $debugbar = $this->app->make(LaravelDebugbar::class);
-            if ($debugbar->isEnabled()) {
-                if ($event->response->isRedirection()) {
-                    $debugbar->modifyResponse($event->request, $event->response);
-                } else {
-                    $debugbar->getStackedData();
-                }
-            }
-        });
     }
 }

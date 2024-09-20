@@ -729,7 +729,7 @@ class LaravelDebugbar extends DebugBar
     {
         /** @var Application $app */
         $app = $this->app;
-        if (!$this->isEnabled() || $this->isDebugbarRequest() || $this->responseIsModified) {
+        if (!$this->isEnabled() || !$this->booted || $this->isDebugbarRequest() || $this->responseIsModified) {
             return $response;
         }
 
