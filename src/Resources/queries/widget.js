@@ -243,7 +243,7 @@
                                     $(event.target).removeClass(csscls('copy-clipboard-check'));
                                 }, 2000)
                             }
-                        }).appendTo($code);
+                        }).prependTo($code);
                 }
                 $li.attr('data-connection', statement.connection)
                     .attr('data-duplicate', this.duplicateQueries.has(statement))

@@ -927,6 +927,7 @@ pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
 
 div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard {
     float: none !important;
+    margin-left: 0 !important;
 }
 
 .phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
