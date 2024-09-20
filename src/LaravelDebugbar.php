@@ -565,7 +565,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         $renderer = $this->getJavascriptRenderer();
-        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs'));
+        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
         $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
         $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
