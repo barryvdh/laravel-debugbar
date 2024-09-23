@@ -38,6 +38,15 @@ class DebugbarTest extends TestCase
         $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
+    public function testItInjectsOnEmptyResponse()
+    {
+        $crawler = $this->call('GET', 'web/empty');
+
+        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        $this->assertEquals(200, $crawler->getStatusCode());
+        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+    }
+
     public function testItInjectsOnHtml()
     {
         $crawler = $this->call('GET', 'web/html');
