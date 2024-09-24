@@ -906,7 +906,7 @@ class LaravelDebugbar extends DebugBar
 
         // Check if content looks like JSON without actually validating
         $content = $response->getContent();
-        if ($content !== false && in_array($content[0], ['{', '['], true)) {
+        if ($content && in_array($content[0], ['{', '['], true)) {
             return true;
         }
 
