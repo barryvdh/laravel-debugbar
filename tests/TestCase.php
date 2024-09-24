@@ -66,6 +66,10 @@ class TestCase extends Orchestra
             return '';
         });
 
+        $router->get('web/null', function () {
+            return null;
+        });
+
         $router->get('web/html', function () {
             return '<html><head></head><body>Pong</body></html>';
         });
