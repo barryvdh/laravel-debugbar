@@ -229,7 +229,11 @@
                     .attr('data-duplicate', false)
                     .append($('<strong />').addClass(csscls('sql name')).text(statement.sql));
             } else {
-                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
+                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));                
+                $li.attr('data-connection', statement.connection)
+                    .attr('data-duplicate', this.duplicateQueries.has(statement))
+                    .append($code);
+
                 if (statement.show_copy) {
                     $('<span title="Copy to clipboard" />')
                         .addClass(csscls('copy-clipboard'))
@@ -242,11 +246,8 @@
                                     $(event.target).removeClass(csscls('copy-clipboard-check'));
                                 }, 2000)
                             }
-                        }).appendTo($code);
+                        }).appendTo($li);
                 }
-                $li.attr('data-connection', statement.connection)
-                    .attr('data-duplicate', this.duplicateQueries.has(statement))
-                    .append($code);
             }
 
             if (statement.width_percent) {
