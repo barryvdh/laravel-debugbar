@@ -168,7 +168,7 @@
                     details.push(`${data.nb_failed_statements} failed`);
                 }
                 if (this.duplicateQueries.size > 0) {
-                    details.push(`${duplicateQueries.size} ${duplicateQueries.size == 1 ? 'duplicate' : 'duplicates'}`);
+                    details.push(`${this.duplicateQueries.size} ${this.duplicateQueries.size == 1 ? 'duplicate' : 'duplicates'}`);
                 }
                 $text.append(` (${details.join(', ')})`);
             }
