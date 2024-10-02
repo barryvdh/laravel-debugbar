@@ -334,7 +334,7 @@
             const $li = $('<li />').addClass(csscls('table-list-item'));
             const $muted = $('<span />').addClass(css('text-muted'));
 
-            for (const i in values) {
+            for (const i in values.values()) {
                 if (showLineNumbers) {
                     $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(values[i])]));
                 } else {
@@ -353,7 +353,7 @@
             const $muted = $('<span />').addClass(css('text-muted'));
 
             const values = [];
-            for (const trace of traces) {
+            for (const trace of traces.values()) {
                 const $span = $('<span/>').text(trace.name || trace.file);
                 if (trace.namespace) {
                     $span.prepend(`${trace.namespace}::`);
