@@ -158,9 +158,9 @@
                 connections.add(statement.connection);
             }
 
-            const $text = $('<span />').text(`${data.nb_statements} statements were executed`);
+            const $text = $('<span />').text(`${data.nb_statements} ${data.nb_statements == 1 ? 'statement was' : 'statements were'} executed`);
             if (data.nb_excluded_statements) {
-                $text.append(`, ${data.nb_excluded_statements} have been excluded`);
+                $text.append(`, ${data.nb_excluded_statements} ${data.nb_excluded_statements == 1 ? 'has' : 'have'} been excluded`);
             }
             if (data.nb_failed_statements > 0 || this.duplicateQueries.size > 0) {
                 const details = [];
@@ -168,7 +168,7 @@
                     details.push(`${data.nb_failed_statements} failed`);
                 }
                 if (this.duplicateQueries.size > 0) {
-                    details.push(`${this.duplicateQueries.size} duplicates`);
+                    details.push(`${this.duplicateQueries.size} ${this.duplicateQueries.size == 1 ? 'duplicate' : 'duplicates'}`);
                 }
                 $text.append(` (${details.join(', ')})`);
             }
