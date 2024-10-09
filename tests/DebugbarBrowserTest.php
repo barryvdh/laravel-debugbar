@@ -4,6 +4,8 @@ namespace Barryvdh\Debugbar\Tests;
 
 use Illuminate\Routing\Router;
 use Laravel\Dusk\Browser;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Database\Connection;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
@@ -63,6 +65,26 @@ class DebugbarBrowserTest extends BrowserTestCase
         $router->get('web/ajax', [
             'uses' => function () {
                 return view('ajax');
+            }
+        ]);
+
+        $router->get('web/query', [
+            'uses' => function () {
+                debugbar()->boot();
+
+                /** @var Connection $connection */
+                $connection = $this->app['db']->connectUsing(
+                    'runtime-connection',
+                    [
+                        'driver' => 'sqlite',
+                        'database' => ':memory:',
+                    ],
+                );
+
+                $executedQuery = new QueryExecuted('SELECT * FROM users WHERE username = ?', ['debuguser'], 0, $connection);
+                event($executedQuery);
+
+                return 'PONG';
             }
         ]);
     }
@@ -136,6 +158,44 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->click('#ajax-link')
                 ->waitForTextIn('#result', 'pong')
                 ->assertSee('GET api/ping');
+        });
+    }
+
+    public function testDatabaseTabIsClickable()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/plain')
+                ->waitFor('.phpdebugbar')
+                ->assertDontSee('0 statements were executed')
+                ->click('.phpdebugbar-tab[data-collector="queries"]')
+                ->assertSee('0 statements were executed');
+        });
+    }
+
+    public function testDatabaseCollectsQueries()
+    {
+        if (version_compare($this->app->version(), '10', '<')) {
+            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
+        }
+
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/query')
+                ->waitFor('.phpdebugbar')
+                ->click('.phpdebugbar-tab-history')
+                ->assertSeeIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 2)
+                ->click('.phpdebugbar-tab[data-collector="queries"]')
+                ->screenshotElement('.phpdebugbar', 'queries-tab')
+                ->waitForText('executed')
+                ->assertSee('1 statement was executed')
+                ->with('.phpdebugbar-widgets-sqlqueries', function ($queriesPane) {
+                    $queriesPane->assertSee('SELECT * FROM users')
+                        ->click('.phpdebugbar-widgets-expandable:nth-child(2)')
+                        ->assertSee('Bindings')
+                        ->assertSee('debuguser')
+                        ->assertSee('Backtrace')
+                        ->assertSee('LaravelDebugbar.php:');
+                })
+                ->screenshotElement('.phpdebugbar', 'queries-expanded');
         });
     }
 }
