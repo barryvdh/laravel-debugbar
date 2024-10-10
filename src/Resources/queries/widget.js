@@ -334,16 +334,18 @@
             const $li = $('<li />').addClass(csscls('table-list-item'));
             const $muted = $('<span />').addClass(css('text-muted'));
 
-            for (const i in values.values()) {
+            let i = 0;
+            for (const value of values) {
                 if (showLineNumbers) {
-                    $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(values[i])]));
+                    $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(value)]));
                 } else {
                     if (caption === 'Hints') {
-                        $ul.append($li.clone().append(values[i]));
+                        $ul.append($li.clone().append(value));
                     } else {
-                        $ul.append($li.clone().text(values[i]));
+                        $ul.append($li.clone().text(value));
                     }
                 }
+                i++;
             }
 
             return this.renderDetail(caption, icon, $ul);
