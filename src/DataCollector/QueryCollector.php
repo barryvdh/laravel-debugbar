@@ -623,8 +623,15 @@ class QueryCollector extends PDOCollector
     {
         $sql = $query['query'];
         if ($query['type'] === 'query' && $this->renderSqlWithParams && method_exists(DB::connection($query['connection'])->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
-            $sql = DB::connection($query['connection'])->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
-        } elseif ($query['type'] === 'query' && $this->renderSqlWithParams) {
+            try {
+                $sql = DB::connection($query['connection'])->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
+                return $this->getDataFormatter()->formatSql($sql);
+            } catch (\Throwable $e) {
+                // Continue using the old substitute
+            }
+        }
+        
+        if ($query['type'] === 'query' && $this->renderSqlWithParams) {
             $bindings = $this->getDataFormatter()->checkBindings($query['bindings']);
             if (!empty($bindings)) {
                 $pdo = null;
