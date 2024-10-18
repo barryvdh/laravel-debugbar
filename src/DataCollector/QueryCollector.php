@@ -28,6 +28,7 @@ class QueryCollector extends PDOCollector
     protected $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
     protected $showHints = false;
     protected $showCopyButton = false;
+    protected $sortCondition = 'execution_order';
     protected $reflection = [];
     protected $excludePaths = [];
     protected $backtraceExcludePaths = [
@@ -87,6 +88,16 @@ class QueryCollector extends PDOCollector
     public function setShowCopyButton($enabled = true)
     {
         $this->showCopyButton = $enabled;
+    }
+
+    /**
+     * Determine how the queries are sorted.
+     *
+     * @param string $sortCondition
+     */
+    public function setSortCondition($sortCondition = 'execution_order')
+    {
+        $this->sortCondition = $sortCondition;
     }
 
     /**
@@ -200,6 +211,14 @@ class QueryCollector extends PDOCollector
             'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
         ];
+
+        if ($this->sortCondition === 'alphabetical_order') {
+            usort($this->queries, function (array $queryOne, array $queryTwo) {
+                $queryOneTableName = substr($queryOne['query'], stripos($queryOne['query'], "from") + 4);
+                $queryTwoTableName = substr($queryTwo['query'], stripos($queryTwo['query'], "from") + 4);
+                return (int)($queryOneTableName > $queryTwoTableName);
+            });
+        }
 
         if ($this->timeCollector !== null) {
             $this->timeCollector->addMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'db');
