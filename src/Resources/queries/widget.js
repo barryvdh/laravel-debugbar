@@ -229,7 +229,7 @@
                     .attr('data-duplicate', false)
                     .append($('<strong />').addClass(csscls('sql name')).text(statement.sql));
             } else {
-                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));                
+                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
                 $li.attr('data-connection', statement.connection)
                     .attr('data-duplicate', this.duplicateQueries.has(statement))
                     .append($code);
@@ -246,7 +246,7 @@
                                     $(event.target).removeClass(csscls('copy-clipboard-check'));
                                 }, 2000)
                             }
-                        }).appendTo($li);
+                        }).prependTo($li);
                 }
             }
 
@@ -260,16 +260,16 @@
             }
 
             if ('is_success' in statement && !statement.is_success) {
-                $li.addClass(csscls('error')).append($('<span />').addClass(csscls('error')).text(`[${statement.error_code}] ${statement.error_message}`));
+                $li.addClass(csscls('error')).prepend($('<span />').addClass(csscls('error')).text(`[${statement.error_code}] ${statement.error_message}`));
             }
             if (statement.duration_str) {
-                $li.append($('<span title="Duration" />').addClass(csscls('duration')).text(statement.duration_str));
+                $li.prepend($('<span title="Duration" />').addClass(csscls('duration')).text(statement.duration_str));
             }
             if (statement.memory_str) {
-                $li.append($('<span title="Memory usage" />').addClass(csscls('memory')).text(statement.memory_str));
+                $li.prepend($('<span title="Memory usage" />').addClass(csscls('memory')).text(statement.memory_str));
             }
             if (statement.connection) {
-                $li.append($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
+                $li.prepend($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
             }
             if (statement.xdebug_link) {
                 $('<span title="Filename" />')
@@ -285,7 +285,7 @@
                                 fetch(statement.xdebug_link.url);
                             }
                         })
-                    ).appendTo($li);
+                    ).prependTo($li);
             }
 
             const $details = $('<table></table>').addClass(csscls('params'))
