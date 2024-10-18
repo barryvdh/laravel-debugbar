@@ -308,6 +308,10 @@
             if($details.children().length) {
                 $li.addClass(csscls('expandable'))
                     .on('click', (event) => {
+                        if (window.getSelection().type == "Range") {
+                            return;
+                        }
+
                         if ($(event.target).closest(`.${csscls('params')}`).length) {
                             return;
                         }
