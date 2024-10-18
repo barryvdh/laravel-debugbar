@@ -612,6 +612,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     max-width: 100%;
 }
 
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-copy-clipboard,
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration,
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id,
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-memory {
@@ -923,10 +924,6 @@ pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
     div.phpdebugbar code.phpdebugbar-widgets-sql span.hljs-operator {
         color: var(--color-gray-100) !important;
     }
-}
-
-div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard {
-    float: none !important;
 }
 
 .phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
