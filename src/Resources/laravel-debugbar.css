@@ -571,11 +571,6 @@ ul.phpdebugbar-widgets-timeline li:hover {
     background-color: initial;
 }
 
-.phpdebugbar-widgets-sqlqueries ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .phpdebugbar-widgets-templates ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     display: block;
 }
@@ -928,6 +923,10 @@ pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
 
 .phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
     height: 2px !important;
+}
+
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-copy-clipboard {
+    margin-left: 8px !important;
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
