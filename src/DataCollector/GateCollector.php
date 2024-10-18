@@ -64,8 +64,8 @@ class GateCollector extends MessagesCollector
         if (isset($arguments[0])) {
             if ($arguments[0] instanceof Model) {
                 $model = $arguments[0];
-                if ($model->getKeyName() && $model->hasAttribute($model->getKeyName())) {
-                    $target = get_class($model) . '(' . $model->getKeyName() . '=' . $model->getKey() . ')';
+                if ($model->getKeyName() && isset($model[$model->getKeyName()])) {
+                    $target = get_class($model) . '(' . $model->getKeyName() . '=' . $model->getKeyName() . ')';
                 } else {
                     $target = get_class($model);
                 }
