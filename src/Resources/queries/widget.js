@@ -229,9 +229,11 @@
                     .attr('data-duplicate', false)
                     .append($('<strong />').addClass(csscls('sql name')).text(statement.sql));
             } else {
-                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql'));
+                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql')),
+                    duplicated = this.duplicateQueries.has(statement);
                 $li.attr('data-connection', statement.connection)
-                    .attr('data-duplicate', this.duplicateQueries.has(statement))
+                    .attr('data-duplicate', duplicated)
+                    .toggleClass(csscls('sql-duplicate'), duplicated)
                     .append($code);
 
                 if (statement.show_copy) {
