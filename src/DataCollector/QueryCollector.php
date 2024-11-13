@@ -183,7 +183,7 @@ class QueryCollector extends PDOCollector
         }
 
         $bindings = match (true) {
-            $limited && filled($query->bindings) => null,
+            $limited && filled($query->bindings) => [],
             default => $query->connection->prepareBindings($query->bindings),
         };
 
