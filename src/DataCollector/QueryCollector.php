@@ -17,6 +17,7 @@ class QueryCollector extends PDOCollector
     protected $queries = [];
     protected $queryCount = 0;
     protected $transactionEventsCount = 0;
+    protected $infoStatements = 0;
     protected $softLimit = null;
     protected $hardLimit = null;
     protected $lastMemoryUsage;
@@ -472,6 +473,7 @@ class QueryCollector extends PDOCollector
     {
         $this->queries = [];
         $this->queryCount = 0;
+        $this->infoStatements = 0 ;
     }
 
     /**
@@ -562,6 +564,7 @@ class QueryCollector extends PDOCollector
                 'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.soft/hard_limit)',
                 'type' => 'info',
             ];
+            $this->infoStatements+= 2;
         } elseif ($this->hardLimit && $this->queryCount > $this->hardLimit) {
             array_unshift($statements, [
                 'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown.. Limits can be raised in the config (debugbar.options.db.hard_limit)',
@@ -571,17 +574,20 @@ class QueryCollector extends PDOCollector
                 'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.hard_limit)',
                 'type' => 'info',
             ];
+            $this->infoStatements+= 2;
         } elseif ($this->softLimit && $this->queryCount > $this->softLimit) {
             array_unshift($statements, [
                 'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limit can be raised in the config. Limits can be raised in the config (debugbar.options.db.soft_limit)',
                 'type' => 'info',
             ]);
+            $this->infoStatements++;
         }
 
+        $visibleStatements = count($statements) - $this->infoStatements;
         $data = [
             'nb_statements' => $this->queryCount,
-            'nb_visible_statements' => count($statements),
-            'nb_excluded_statements' => $this->queryCount + $this->transactionEventsCount - count($statements),
+            'nb_visible_statements' => $visibleStatements,
+            'nb_excluded_statements' => $this->queryCount + $this->transactionEventsCount - $visibleStatements,
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
             'accumulated_duration_str' => $this->formatDuration($totalTime),
@@ -613,7 +619,7 @@ class QueryCollector extends PDOCollector
                 "default" => "[]"
             ],
             "queries:badge" => [
-                "map" => "queries.nb_visible_statements",
+                "map" => "queries.nb_statements",
                 "default" => 0
             ]
         ];
@@ -630,7 +636,7 @@ class QueryCollector extends PDOCollector
                 // Continue using the old substitute
             }
         }
-        
+
         if ($query['type'] === 'query' && $this->renderSqlWithParams) {
             $bindings = $this->getDataFormatter()->checkBindings($query['bindings']);
             if (!empty($bindings)) {
