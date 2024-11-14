@@ -68,8 +68,8 @@ class DebugbarBrowserTest extends BrowserTestCase
             }
         ]);
 
-        $router->get('web/query', [
-            'uses' => function () {
+        $router->get('web/query/{num?}', [
+            'uses' => function ($num = 1) {
                 debugbar()->boot();
 
                 /** @var Connection $connection */
@@ -81,8 +81,10 @@ class DebugbarBrowserTest extends BrowserTestCase
                     ],
                 );
 
-                $executedQuery = new QueryExecuted('SELECT * FROM users WHERE username = ?', ['debuguser'], 0, $connection);
-                event($executedQuery);
+                foreach (range(1, $num) as $i) {
+                    $executedQuery = new QueryExecuted('SELECT * FROM users WHERE username = ?', ['debuguser' . $i], 0, $connection);
+                    event($executedQuery);
+                }
 
                 return 'PONG';
             }
@@ -182,7 +184,7 @@ class DebugbarBrowserTest extends BrowserTestCase
             $browser->visit('web/query')
                 ->waitFor('.phpdebugbar')
                 ->click('.phpdebugbar-tab-history')
-                ->assertSeeIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 2)
+                ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 1)
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
                 ->waitForText('executed')
@@ -195,6 +197,47 @@ class DebugbarBrowserTest extends BrowserTestCase
                         ->assertSee('Backtrace')
                         ->assertSee('LaravelDebugbar.php:');
                 })
+                ->screenshotElement('.phpdebugbar', 'queries-expanded');
+        });
+    }
+
+
+    public function testDatabaseCollectsQueriesWithSoftLimit()
+    {
+        if (version_compare($this->app->version(), '10', '<')) {
+            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
+        }
+
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/query/200')
+                ->waitFor('.phpdebugbar')
+                ->click('.phpdebugbar-tab-history')
+                ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 200, 30)
+                ->click('.phpdebugbar-tab[data-collector="queries"]')
+                ->screenshotElement('.phpdebugbar', 'queries-tab')
+                ->waitForText('executed')
+                ->waitForText('200 statements were executed (100 duplicates)')
+                ->waitForText('Query soft limit for Debugbar is reached after 100 queries, additional 100 queries only show the query.')
+                ->screenshotElement('.phpdebugbar', 'queries-expanded');
+        });
+    }
+
+    public function testDatabaseCollectsQueriesWithHardLimit()
+    {
+        if (version_compare($this->app->version(), '10', '<')) {
+            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
+        }
+
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/query/600')
+                ->waitFor('.phpdebugbar')
+                ->click('.phpdebugbar-tab-history')
+                ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 600)
+                ->click('.phpdebugbar-tab[data-collector="queries"]')
+                ->screenshotElement('.phpdebugbar', 'queries-tab')
+                ->waitForText('executed')
+                ->waitForText('600 statements were executed, 100 have been excluded (400 duplicates)')
+                ->waitForText('Query soft and hard limit for Debugbar are reached. Only the first 100 queries show details. Queries after the first 500 are ignored. ')
                 ->screenshotElement('.phpdebugbar', 'queries-expanded');
         });
     }
