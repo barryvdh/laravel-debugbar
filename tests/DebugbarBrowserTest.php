@@ -68,6 +68,22 @@ class DebugbarBrowserTest extends BrowserTestCase
             }
         ]);
 
+        $router->get('web/custom-prototype', [
+            'uses' => function () {
+
+                /** @var Connection $connection */
+                $connection = $this->app['db']->connectUsing(
+                    'runtime-connection',
+                    [
+                        'driver' => 'sqlite',
+                        'database' => ':memory:',
+                    ],
+                );
+                event(new QueryExecuted('SELECT * FROM users WHERE username = ?', ['debuguser'], 0, $connection));
+                return view('custom-prototype');
+            }
+        ]);
+
         $router->get('web/query/{num?}', [
             'uses' => function ($num = 1) {
                 debugbar()->boot();
@@ -85,7 +101,6 @@ class DebugbarBrowserTest extends BrowserTestCase
                     $executedQuery = new QueryExecuted('SELECT * FROM users WHERE username = ?', ['debuguser' . $i], 0, $connection);
                     event($executedQuery);
                 }
-
                 return 'PONG';
             }
         ]);
@@ -201,6 +216,32 @@ class DebugbarBrowserTest extends BrowserTestCase
         });
     }
 
+    public function testDatabaseCollectsQueriesWithCustomPrototype()
+    {
+        if (version_compare($this->app->version(), '10', '<')) {
+            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
+        }
+
+        $this->browse(function (Browser $browser) {
+            $browser->visit('web/custom-prototype')
+                ->waitFor('.phpdebugbar')
+                ->click('.phpdebugbar-tab-history')
+                ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 1)
+                ->click('.phpdebugbar-tab[data-collector="queries"]')
+                ->screenshotElement('.phpdebugbar', 'queries-tab')
+                ->waitForText('executed')
+                ->assertSee('1 statement was executed')
+                ->with('.phpdebugbar-widgets-sqlqueries', function ($queriesPane) {
+                    $queriesPane->assertSee('SELECT * FROM users')
+                        ->click('.phpdebugbar-widgets-expandable:nth-child(2)')
+                        ->assertSee('Bindings')
+                        ->assertSee('debuguser')
+                        ->assertSee('Backtrace')
+                        ->assertSee('LaravelDebugbar.php:');
+                })
+                ->screenshotElement('.phpdebugbar', 'queries-expanded');
+        });
+    }
 
     public function testDatabaseCollectsQueriesWithSoftLimit()
     {
