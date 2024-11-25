@@ -343,7 +343,7 @@
             const $li = $('<li />').addClass(csscls('table-list-item'));
             const $muted = $('<span />').addClass(css('text-muted'));
 
-            $.each(values, (i, value) => {
+            values.forEach((value, i) => {
                 if (showLineNumbers) {
                     $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(value)]));
                 } else {
