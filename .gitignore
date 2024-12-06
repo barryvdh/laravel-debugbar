@@ -4,6 +4,7 @@
 /node_modules
 /package-lock.json
 /docs/.vuepress/dist
+/docs/.vuepress/.temp
 composer.phar
 composer.lock
 .DS_Store
