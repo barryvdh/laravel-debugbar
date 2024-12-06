@@ -1,6 +1,9 @@
 /.idea
 /build
 /vendor
+/node_modules
+/package-lock.json
+/docs/.vuepress/dist
 composer.phar
 composer.lock
 .DS_Store

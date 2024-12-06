@@ -1,0 +1,1 @@
+export const siteData = JSON.parse("{\"base\":\"/\",\"lang\":\"en-US\",\"title\":\"Laravel Debugbar\",\"description\":\"Laravel Debugbar integrates PHP Debug Bar with Laravel\",\"head\":[],\"locales\":{}}")
