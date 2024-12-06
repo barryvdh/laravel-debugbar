@@ -6,8 +6,12 @@ export default defineUserConfig({
   base: '/',
   title: 'Laravel Debugbar',
   description: 'Laravel Debugbar integrates PHP Debug Bar with Laravel',
-  
+
   bundler: viteBundler(),
+  head: [
+    ['link', {rel: "stylesheet", href: '/debugbar.css'}],
+    ['script', {src: '/debugbar.js'}],
+  ],
   theme: defaultTheme({
     // logo: '/images/logo.png',
     navbar: [
