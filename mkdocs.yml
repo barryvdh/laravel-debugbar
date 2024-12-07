@@ -1,0 +1,34 @@
+site_name: Laravel Debugbar
+site_description: Debugbar for Laravel
+site_url: https://laraveldebugbar.com
+repo_url: https://github.com/barryvdh/laravel-debugbar
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Features: features.md
+  - Usage: usage.md
+theme:
+  name: material
+  custom_dir: overrides
+  palette:
+    - primary: custom
+      scheme: slate
+#  palette:
+#    primary: custom
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.instant
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.sections
+    - navigation.expand
+extra_css:
+  - assets/extra.css
+  - assets/debugbar.css
+extra_javascript:
+  - assets/debugbar.js
+markdown_extensions:
+  - admonition

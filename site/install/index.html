@@ -1,0 +1,808 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Debugbar for Laravel">
+      
+      
+      
+        <link rel="canonical" href="https://laraveldebugbar.com/install/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../features/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
+    
+    
+      
+        <title>Install - Laravel Debugbar</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/extra.css">
+    
+      <link rel="stylesheet" href="../assets/debugbar.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#installation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Laravel Debugbar" class="md-header__button md-logo" aria-label="Laravel Debugbar" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Laravel Debugbar
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Install
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/barryvdh/laravel-debugbar" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Install
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../features/" class="md-tabs__link">
+        
+  
+    
+  
+  Features
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../usage/" class="md-tabs__link">
+        
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../faq/" class="md-tabs__link">
+        
+  
+    
+  
+  FAQ
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Laravel Debugbar" class="md-nav__button md-logo" aria-label="Laravel Debugbar" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Laravel Debugbar
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/barryvdh/laravel-debugbar" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Install
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Install
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#laravel-without-auto-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laravel without auto-discovery:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laravel without auto-discovery:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copy-the-package-config-to-your-local-config-with-the-publish-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Copy the package config to your local config with the publish command:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laravel-with-octane" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laravel with Octane:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lumen:
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#laravel-without-auto-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laravel without auto-discovery:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Laravel without auto-discovery:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copy-the-package-config-to-your-local-config-with-the-publish-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Copy the package config to your local config with the publish command:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laravel-with-octane" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laravel with Octane:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lumen:
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="installation">Installation</h1>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Use the DebugBar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design).</p>
+</div>
+<p>Require this package with composer. It is recommended to only require the package for development.</p>
+<pre><code class="language-shell">composer require barryvdh/laravel-debugbar --dev
+</code></pre>
+<p>Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.</p>
+<p>The Debugbar will be enabled when <code>APP_DEBUG</code> is <code>true</code>.</p>
+<blockquote>
+<p>If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.</p>
+</blockquote>
+<h3 id="laravel-without-auto-discovery">Laravel without auto-discovery:</h3>
+<p>If you don't use auto-discovery, add the ServiceProvider to the providers list. For Laravel 11 or newer, add the ServiceProvider in bootstrap/providers.php. For Laravel 10 or older, add the ServiceProvider in config/app.php.</p>
+<pre><code class="language-php">Barryvdh\Debugbar\ServiceProvider::class,
+</code></pre>
+<p>If you want to use the facade to log messages, add this within the <code>register</code> method of <code>app/Providers/AppServiceProvider.php</code> class:</p>
+<pre><code class="language-php">public function register(): void
+{
+    $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+    $loader-&gt;alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
+}
+</code></pre>
+<p>The profiler is enabled by default, if you have APP_DEBUG=true. You can override that in the config (<code>debugbar.enabled</code>) or by setting <code>DEBUGBAR_ENABLED</code> in your <code>.env</code>. See more options in <code>config/debugbar.php</code>
+You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
+You can also only display the js or css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to <code>true</code> for syntax highlighting)</p>
+<h4 id="copy-the-package-config-to-your-local-config-with-the-publish-command">Copy the package config to your local config with the publish command:</h4>
+<pre><code class="language-shell">php artisan vendor:publish --provider=&quot;Barryvdh\Debugbar\ServiceProvider&quot;
+</code></pre>
+<h3 id="laravel-with-octane">Laravel with Octane:</h3>
+<p>Make sure to add LaravelDebugbar to your flush list in <code>config/octane.php</code>.</p>
+<pre><code class="language-php">    'flush' =&gt; [
+        \Barryvdh\Debugbar\LaravelDebugbar::class,
+    ],
+</code></pre>
+<h3 id="lumen">Lumen:</h3>
+<p>For Lumen, register a different Provider in <code>bootstrap/app.php</code>:</p>
+<pre><code class="language-php">if (env('APP_DEBUG')) {
+ $app-&gt;register(Barryvdh\Debugbar\LumenServiceProvider::class);
+}
+</code></pre>
+<p>To change the configuration, copy the file to your config folder and enable it:</p>
+<pre><code class="language-php">$app-&gt;configure('debugbar');
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../features/" class="md-footer__link md-footer__link--next" aria-label="Next: Features">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Features
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.tracking", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.sections", "navigation.expand"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+<!-- Add scripts that need to run before here -->
+
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../assets/debugbar.js"></script>
+      
+    
+<!-- Add scripts that need to run afterwards here -->
+
+<script>
+
+    var phpdebugbar = new PhpDebugBar.DebugBar();
+    phpdebugbar.setHideEmptyTabs(false);
+    phpdebugbar.addIndicator("php_version", new PhpDebugBar.DebugBar.Indicator({"icon":"code","tooltip":"PHP Version"}), "right");
+    phpdebugbar.addTab("messages", new PhpDebugBar.DebugBar.Tab({"icon":"list-alt","title":"Messages", "widget": new PhpDebugBar.Widgets.MessagesWidget()}));
+    phpdebugbar.addIndicator("time", new PhpDebugBar.DebugBar.Indicator({"icon":"clock-o","tooltip":"Request Duration"}), "right");
+    phpdebugbar.addTab("timeline", new PhpDebugBar.DebugBar.Tab({"icon":"tasks","title":"Timeline", "widget": new PhpDebugBar.Widgets.TimelineWidget()}));
+    phpdebugbar.addIndicator("memory", new PhpDebugBar.DebugBar.Indicator({"icon":"cogs","tooltip":"Memory Usage"}), "right");
+    phpdebugbar.addTab("exceptions", new PhpDebugBar.DebugBar.Tab({"icon":"bug","title":"Exceptions", "widget": new PhpDebugBar.Widgets.ExceptionsWidget()}));
+    phpdebugbar.addTab("views", new PhpDebugBar.DebugBar.Tab({"icon":"leaf","title":"Views", "widget": new PhpDebugBar.Widgets.TemplatesWidget()}));
+    phpdebugbar.addTab("route", new PhpDebugBar.DebugBar.Tab({"icon":"share","title":"Route", "widget": new PhpDebugBar.Widgets.HtmlVariableListWidget()}));
+    phpdebugbar.addIndicator("currentroute", new PhpDebugBar.DebugBar.Indicator({"icon":"share","tooltip":"Route"}), "right");
+    phpdebugbar.addTab("queries", new PhpDebugBar.DebugBar.Tab({"icon":"database","title":"Queries", "widget": new PhpDebugBar.Widgets.LaravelQueriesWidget()}));
+    phpdebugbar.addTab("models", new PhpDebugBar.DebugBar.Tab({"icon":"cubes","title":"Models", "widget": new PhpDebugBar.Widgets.HtmlVariableListWidget()}));
+    phpdebugbar.addTab("emails", new PhpDebugBar.DebugBar.Tab({"icon":"inbox","title":"Mails", "widget": new PhpDebugBar.Widgets.MailsWidget()}));
+    phpdebugbar.addTab("gate", new PhpDebugBar.DebugBar.Tab({"icon":"list-alt","title":"Gate", "widget": new PhpDebugBar.Widgets.MessagesWidget()}));
+    phpdebugbar.addTab("session", new PhpDebugBar.DebugBar.Tab({"icon":"archive","title":"Session", "widget": new PhpDebugBar.Widgets.VariableListWidget()}));
+    phpdebugbar.addTab("request", new PhpDebugBar.DebugBar.Tab({"icon":"tags","title":"Request", "widget": new PhpDebugBar.Widgets.HtmlVariableListWidget()}));
+    phpdebugbar.setDataMap({
+        "php_version": ["php.version", ],
+        "messages": ["messages.messages", []],
+        "messages:badge": ["messages.count", null],
+        "time": ["time.duration_str", '0ms'],
+        "timeline": ["time", {}],
+        "memory": ["memory.peak_usage_str", '0B'],
+        "exceptions": ["exceptions.exceptions", []],
+        "exceptions:badge": ["exceptions.count", null],
+        "views": ["views", []],
+        "views:badge": ["views.nb_templates", 0],
+        "route": ["route", {}],
+        "currentroute": ["route.uri", ],
+        "queries": ["queries", []],
+        "queries:badge": ["queries.nb_statements", 0],
+        "models": ["models.data", {}],
+        "models:badge": ["models.count", 0],
+        "emails": ["symfonymailer_mails.mails", []],
+        "emails:badge": ["symfonymailer_mails.count", null],
+        "gate": ["gate.messages", []],
+        "gate:badge": ["gate.count", null],
+        "session": ["session", {}],
+        "request": ["request", {}]
+    });
+    phpdebugbar.restoreState();
+    phpdebugbar.enableAjaxHandlerTab();
+    phpdebugbar.ajaxHandler = new PhpDebugBar.AjaxHandler(phpdebugbar, undefined, true);
+    phpdebugbar.ajaxHandler.bindToFetch();
+    phpdebugbar.ajaxHandler.bindToXHR();
+    phpdebugbar.addDataSet({"__meta":{"id":"Xc4cb08d3a43e3f30cce6199364664a36","datetime":"2024-12-06 19:38:24","utime":1733513904.882341,"method":"GET","uri":"\/","ip":"127.0.0.1"},"php":{"version":"8.2.19","interface":"fpm-fcgi"},"messages":{"count":2,"messages":[{"message":"Hello world","message_html":null,"is_string":true,"label":"debug","time":1733513904.869746,"xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fapp%2FHttp%2FControllers%2FDemoController.php\u0026line=11","ajax":false,"filename":"DemoController.php","line":"11"}},{"message":"array:1 [\n  \u0022foo\u0022 =\u003E \u0022Bar\u0022\n]","message_html":"\u003Cpre class=sf-dump id=sf-dump-154929457 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=1 class=sf-dump-compact\u003E\n  \u0022\u003Cspan class=sf-dump-key\u003Efoo\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00223 characters\u0022\u003EBar\u003C\/span\u003E\u0022\n\u003C\/samp\u003E]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-154929457\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","is_string":false,"label":"debug","time":1733513904.870969,"xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fapp%2FHttp%2FControllers%2FDemoController.php\u0026line=13","ajax":false,"filename":"DemoController.php","line":"13"}}]},"time":{"start":1733513904.732528,"end":1733513904.88235,"duration":0.14982199668884277,"duration_str":"150ms","measures":[{"label":"Booting","start":1733513904.732528,"relative_start":0,"end":1733513904.842289,"relative_end":1733513904.842289,"duration":0.10976099967956543,"duration_str":"110ms","memory":0,"memory_str":"0B","params":[],"collector":"time"},{"label":"Application","start":1733513904.842298,"relative_start":0.10977005958557129,"end":1733513904.882351,"relative_end":9.5367431640625e-7,"duration":0.04005289077758789,"duration_str":"40.05ms","memory":0,"memory_str":"0B","params":[],"collector":"time"}]},"memory":{"peak_usage":20595672,"peak_usage_str":"20MB"},"exceptions":{"count":1,"exceptions":[{"type":"RuntimeException","message":"This is just a demo","code":0,"file":"app\/Http\/Controllers\/DemoController.php","line":16,"stack_trace":null,"stack_trace_html":"\u003Cpre class=sf-dump id=sf-dump-851820530 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-note\u003Earray:49\u003C\/span\u003E [\u003Csamp data-depth=1 class=sf-dump-expanded\u003E\n  \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002272 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/ControllerDispatcher.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E46\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00225 characters\u0022\u003Eindex\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002235 characters\u0022\u003EApp\\Http\\Controllers\\DemoController\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E []\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002257 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Route.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E265\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00228 characters\u0022\u003Edispatch\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002239 characters\u0022\u003EIlluminate\\Routing\\ControllerDispatcher\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:3\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003E[object Illuminate\\Routing\\Route]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002244 characters\u0022\u003E[object App\\Http\\Controllers\\DemoController]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E2\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00225 characters\u0022\u003Eindex\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E2\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002257 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Route.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E211\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002213 characters\u0022\u003ErunController\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002224 characters\u0022\u003EIlluminate\\Routing\\Route\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E []\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E3\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002258 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E808\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00223 characters\u0022\u003Erun\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002224 characters\u0022\u003EIlluminate\\Routing\\Route\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E []\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E4\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E144\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Routing\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002225 characters\u0022\u003EIlluminate\\Routing\\Router\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E5\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002281 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E51\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E6\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002248 characters\u0022\u003EIlluminate\\Routing\\Middleware\\SubstituteBindings\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E7\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002286 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/VerifyCsrfToken.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E88\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E8\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002253 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E9\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002282 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/View\/Middleware\/ShareErrorsFromSession.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E49\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E10\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002249 characters\u0022\u003EIlluminate\\View\\Middleware\\ShareErrorsFromSession\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E11\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002275 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E121\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E12\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002275 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E64\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002221 characters\u0022\u003EhandleStatefulRequest\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002242 characters\u0022\u003EIlluminate\\Session\\Middleware\\StartSession\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:3\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003E[object Illuminate\\Session\\Store]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E2\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E13\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002242 characters\u0022\u003EIlluminate\\Session\\Middleware\\StartSession\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E14\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002288 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Cookie\/Middleware\/AddQueuedCookiesToResponse.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E37\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E15\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002255 characters\u0022\u003EIlluminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E16\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002276 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Cookie\/Middleware\/EncryptCookies.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E75\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E17\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002243 characters\u0022\u003EIlluminate\\Cookie\\Middleware\\EncryptCookies\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E18\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E119\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E19\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002258 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E807\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00224 characters\u0022\u003Ethen\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E20\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002258 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E786\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002219 characters\u0022\u003ErunRouteWithinStack\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002225 characters\u0022\u003EIlluminate\\Routing\\Router\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003E[object Illuminate\\Routing\\Route]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E21\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002258 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E750\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00228 characters\u0022\u003ErunRoute\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002225 characters\u0022\u003EIlluminate\\Routing\\Router\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003E[object Illuminate\\Routing\\Route]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E22\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002258 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E739\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002215 characters\u0022\u003EdispatchToRoute\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002225 characters\u0022\u003EIlluminate\\Routing\\Router\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E23\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002266 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E201\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00228 characters\u0022\u003Edispatch\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002225 characters\u0022\u003EIlluminate\\Routing\\Router\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E24\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E144\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002236 characters\u0022\u003EIlluminate\\Foundation\\Http\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003EIlluminate\\Foundation\\Http\\Kernel\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E25\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002266 characters\u0022\u003Evendor\/barryvdh\/laravel-debugbar\/src\/Middleware\/InjectDebugbar.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E66\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E26\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002243 characters\u0022\u003EBarryvdh\\Debugbar\\Middleware\\InjectDebugbar\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E27\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002288 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E21\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E28\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002296 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E31\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002255 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\TransformsRequest\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E29\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002263 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E30\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002288 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E21\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E31\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002282 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E51\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002255 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\TransformsRequest\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E32\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002249 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\TrimStrings\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E33\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002276 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E27\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E34\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002243 characters\u0022\u003EIlluminate\\Http\\Middleware\\ValidatePostSize\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E35\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022103 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E110\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E36\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002270 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E37\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002270 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E49\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E38\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002237 characters\u0022\u003EIlluminate\\Http\\Middleware\\HandleCors\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E39\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002272 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E58\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E40\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002239 characters\u0022\u003EIlluminate\\Http\\Middleware\\TrustProxies\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E41\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002294 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E22\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E42\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E183\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003EIlluminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n      \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E43\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002261 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E119\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EIlluminate\\Pipeline\\{closure}\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E44\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002266 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E176\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00224 characters\u0022\u003Ethen\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002228 characters\u0022\u003EIlluminate\\Pipeline\\Pipeline\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003E[object Closure]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E45\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002266 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E145\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002224 characters\u0022\u003EsendRequestThroughRouter\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003EIlluminate\\Foundation\\Http\\Kernel\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E46\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002266 characters\u0022\u003Evendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E1190\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00226 characters\u0022\u003Ehandle\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003EIlluminate\\Foundation\\Http\\Kernel\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E47\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:6\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002216 characters\u0022\u003Epublic\/index.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E17\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002213 characters\u0022\u003EhandleRequest\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eclass\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002233 characters\u0022\u003EIlluminate\\Foundation\\Application\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Etype\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00222 characters\u0022\u003E-\u0026gt;\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002232 characters\u0022\u003E[object Illuminate\\Http\\Request]\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n  \u003C\/samp\u003E]\n  \u003Cspan class=sf-dump-index\u003E48\u003C\/span\u003E =\u003E \u003Cspan class=sf-dump-note\u003Earray:4\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Efile\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002257 characters\u0022\u003EApplications\/Herd.app\/Contents\/Resources\/valet\/server.php\u003C\/span\u003E\u0022\n    \u0022\u003Cspan class=sf-dump-key\u003Eline\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-num\u003E167\u003C\/span\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Eargs\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=3 class=sf-dump-compact\u003E\n      \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002249 characters\u0022\u003E\/Users\/barry\/Sites\/debugbar-demo\/public\/index.php\u003C\/span\u003E\u0022\n    \u003C\/samp\u003E]\n    \u0022\u003Cspan class=sf-dump-key\u003Efunction\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00227 characters\u0022\u003Erequire\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n\u003C\/samp\u003E]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-851820530\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","surrounding_lines":["        debug([\u0027foo\u0027 =\u003E \u0027Bar\u0027]);\n","\n","\n","        debugbar()-\u003EaddThrowable(new \\RuntimeException(\u0027This is just a demo\u0027));\n","\n","        return view(\u0027welcome\u0027);\n","    }\n"],"xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fapp%2FHttp%2FControllers%2FDemoController.php\u0026line=16","ajax":false,"filename":"DemoController.php","line":"16"}}]},"views":{"nb_templates":1,"templates":[{"name":"welcome","param_count":null,"params":[],"start":1733513904.876705,"type":"blade","hash":"blade\/Users\/barry\/Sites\/debugbar-demo\/resources\/views\/welcome.blade.phpwelcome","xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fresources%2Fviews%2Fwelcome.blade.php\u0026line=1","ajax":false,"filename":"welcome.blade.php","line":"?"}}]},"route":{"uri":"GET \/","middleware":"web","controller":"App\\Http\\Controllers\\DemoController@index","namespace":null,"prefix":"","where":[],"file":"\u003Ca href=\u0022phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fapp%2FHttp%2FControllers%2FDemoController.php\u0026line=9\u0022 onclick=\u0022\u0022\u003Eapp\/Http\/Controllers\/DemoController.php:9-19\u003C\/a\u003E"},"queries":{"nb_statements":2,"nb_visible_statements":3,"nb_excluded_statements":0,"nb_failed_statements":0,"accumulated_duration":0.00438,"accumulated_duration_str":"4.38ms","memory_usage":0,"memory_usage_str":null,"statements":[{"sql":"Connection Established","type":"transaction","params":[],"bindings":[],"hints":null,"show_copy":false,"backtrace":[{"index":7,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/SessionManager.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/SessionManager.php","line":108},{"index":8,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/SessionManager.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/SessionManager.php","line":95},{"index":11,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","line":159},{"index":12,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","line":57},{"index":13,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php","line":183}],"start":1733513904.859738,"duration":0,"duration_str":"","memory":0,"memory_str":null,"filename":"SessionManager.php:108","source":{"index":7,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/SessionManager.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/SessionManager.php","line":108},"xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FSessionManager.php\u0026line=108","ajax":false,"filename":"SessionManager.php","line":"108"},"connection":"debugbar_demo","explain":null,"start_percent":0,"width_percent":0},{"sql":"select * from `sessions` where `id` = \u0027AxJjKVVaSywLfeTVJQb81sdXb69wxZxIJw7G0nSl\u0027 limit 1","type":"query","params":[],"bindings":["AxJjKVVaSywLfeTVJQb81sdXb69wxZxIJw7G0nSl"],"hints":null,"show_copy":true,"backtrace":[{"index":15,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","line":97},{"index":16,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","line":113},{"index":17,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","line":101},{"index":18,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","line":85},{"index":19,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","line":147}],"start":1733513904.862472,"duration":0.00346,"duration_str":"3.46ms","memory":0,"memory_str":null,"filename":"DatabaseSessionHandler.php:97","source":{"index":15,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","line":97},"xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FDatabaseSessionHandler.php\u0026line=97","ajax":false,"filename":"DatabaseSessionHandler.php","line":"97"},"connection":"debugbar_demo","explain":null,"start_percent":0,"width_percent":78.995},{"sql":"update `sessions` set `payload` = \u0027YTozOntzOjY6Il90b2tlbiI7czo0MDoiSXRyY0pobkZ1OE5Pc1dXRE1mOTNmczNUQnNlQ1dWQzFuYVFCdWY3VCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjU6Imh0dHA6Ly9kZWJ1Z2Jhci1kZW1vLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19\u0027, `last_activity` = 1733513904, `user_id` = null, `ip_address` = \u0027127.0.0.1\u0027, `user_agent` = \u0027Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/130.0.0.0 Safari\/537.36\u0027 where `id` = \u0027AxJjKVVaSywLfeTVJQb81sdXb69wxZxIJw7G0nSl\u0027","type":"query","params":[],"bindings":["YTozOntzOjY6Il90b2tlbiI7czo0MDoiSXRyY0pobkZ1OE5Pc1dXRE1mOTNmczNUQnNlQ1dWQzFuYVFCdWY3VCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjU6Imh0dHA6Ly9kZWJ1Z2Jhci1kZW1vLnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19",1733513904,null,"127.0.0.1","Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/130.0.0.0 Safari\/537.36","AxJjKVVaSywLfeTVJQb81sdXb69wxZxIJw7G0nSl"],"hints":null,"show_copy":true,"backtrace":[{"index":11,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","line":173},{"index":12,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","line":140},{"index":13,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Store.php","line":172},{"index":14,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","line":245},{"index":15,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/Middleware\/StartSession.php","line":130}],"start":1733513904.880239,"duration":0.00092,"duration_str":"920\u03bcs","memory":0,"memory_str":null,"filename":"DatabaseSessionHandler.php:173","source":{"index":11,"namespace":null,"name":"vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","file":"\/Users\/barry\/Sites\/debugbar-demo\/vendor\/laravel\/framework\/src\/Illuminate\/Session\/DatabaseSessionHandler.php","line":173},"xdebug_link":{"url":"phpstorm:\/\/open?file=%2FUsers%2Fbarry%2FSites%2Fdebugbar-demo%2Fvendor%2Flaravel%2Fframework%2Fsrc%2FIlluminate%2FSession%2FDatabaseSessionHandler.php\u0026line=173","ajax":false,"filename":"DatabaseSessionHandler.php","line":"173"},"connection":"debugbar_demo","explain":null,"start_percent":78.995,"width_percent":21.005}]},"models":{"data":[],"count":0,"is_counter":true},"symfonymailer_mails":{"count":0,"mails":[]},"gate":{"count":0,"messages":[]},"session":{"_token":"ItrcJhnFu8NOsWWDMf93fs3TBseCWVC1naQBuf7T","_previous":"array:1 [\n  \u0022url\u0022 =\u003E \u0022http:\/\/debugbar-demo.test\u0022\n]","_flash":"array:2 [\n  \u0022old\u0022 =\u003E []\n  \u0022new\u0022 =\u003E []\n]"},"request":{"path_info":"\/","status_code":"\u003Cpre class=sf-dump id=sf-dump-320837274 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-num\u003E200\u003C\/span\u003E\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-320837274\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","status_text":"OK","format":"html","content_type":"text\/html; charset=UTF-8","request_query":"\u003Cpre class=sf-dump id=sf-dump-466215750 data-indent-pad=\u0022  \u0022\u003E[]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-466215750\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","request_request":"\u003Cpre class=sf-dump id=sf-dump-372500445 data-indent-pad=\u0022  \u0022\u003E[]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-372500445\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","request_headers":"\u003Cpre class=sf-dump id=sf-dump-451861335 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-note\u003Earray:9\u003C\/span\u003E [\u003Csamp data-depth=1 class=sf-dump-expanded\u003E\n  \u0022\u003Cspan class=sf-dump-key\u003Ecookie\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022713 characters\u0022\u003EXSRF-TOKEN=eyJpdiI6IjU5WGdNWjdOQ3lyazFxODNMdnNYOXc9PSIsInZhbHVlIjoiK0Noc0FwcWRqb3YydFI3UEIwc3BaQlE5VDllL0VZSHVoZE03RlFScDVON0l5UXppQzBXeEtHK2ZaOStGQnE2TmxOSFRlWTJXeXRtdTlnc1RyK3p0WmZYZmFhQkV3MExNU0V1ZEhvbWlXbm96c0NCZTFaSzljZmt5MzJwWmxUNE4iLCJtYWMiOiI1YzY5ODYxMjY0NmVmNWI5MmMxMWYxYThhY2RkMzAxNTU2NThhMjk0ZmE2YzI0MjkzZDBlZmJlZWNlMzM1ZjI0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImZ5dFJWNkdSMkRRbDFVeEhzVndmekE9PSIsInZhbHVlIjoicEtpOHdQWVMreDB3YmlFWlhXS2UrVXExc3kwalM5ai9OVFhOVnJIMzA4SG5nZ1BLSlhYYS9rS0pGbUsyQ1BmRkZTSElqM3lYZW9VOUkxTFpOaUdmK2d5TVFvTngyMG5wN01CZm92TEI2Z2pRNW1FOWZrbnpGaE8zSHZYWllkRzEiLCJtYWMiOiIwODgwMDhmY2Y0NTcyNjJiMWVhODIxMzMyZjlkMzI2YWIyYzYxZDcxYjg5MGExOGQ1NjdjMTJiOTQ4YTMyNDA1IiwidGFnIjoiIn0%3D\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Eaccept-language\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002235 characters\u0022\u003Enl,en-GB;q=0.9,en-US;q=0.8,en;q=0.7\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Eaccept-encoding\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002213 characters\u0022\u003Egzip, deflate\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Eaccept\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022135 characters\u0022\u003Etext\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Euser-agent\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022117 characters\u0022\u003EMozilla\/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/130.0.0.0 Safari\/537.36\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Eupgrade-insecure-requests\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str\u003E1\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Ecache-control\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u00229 characters\u0022\u003Emax-age=0\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Econnection\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002210 characters\u0022\u003Ekeep-alive\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Ehost\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002218 characters\u0022\u003Edebugbar-demo.test\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n\u003C\/samp\u003E]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-451861335\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","request_cookies":"\u003Cpre class=sf-dump id=sf-dump-2047811591 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=1 class=sf-dump-expanded\u003E\n  \u0022\u003Cspan class=sf-dump-key\u003EXSRF-TOKEN\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002240 characters\u0022\u003EItrcJhnFu8NOsWWDMf93fs3TBseCWVC1naQBuf7T\u003C\/span\u003E\u0022\n  \u0022\u003Cspan class=sf-dump-key\u003Elaravel_session\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002240 characters\u0022\u003EAxJjKVVaSywLfeTVJQb81sdXb69wxZxIJw7G0nSl\u003C\/span\u003E\u0022\n\u003C\/samp\u003E]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-2047811591\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","response_headers":"\u003Cpre class=sf-dump id=sf-dump-131554156 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-note\u003Earray:5\u003C\/span\u003E [\u003Csamp data-depth=1 class=sf-dump-expanded\u003E\n  \u0022\u003Cspan class=sf-dump-key\u003Econtent-type\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002224 characters\u0022\u003Etext\/html; charset=UTF-8\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Ecache-control\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002217 characters\u0022\u003Eno-cache, private\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Edate\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002229 characters\u0022\u003EFri, 06 Dec 2024 19:38:24 GMT\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003Eset-cookie\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022428 characters\u0022\u003EXSRF-TOKEN=eyJpdiI6ImpHbXdJQU91WWRRWGphdVpFVXQ5Wmc9PSIsInZhbHVlIjoiNDRwdWl3U25tbDhqc1pCL21QNHJOUllpcGovSUZDclc1ckVDMGdKeHVNdmpUNkhYNzA5cXQxNHlSM2tHWXpGTk8rVEJkVzFzeGFaaFROUXVwZy8rakVGeDV3MTBjNEdadkNEU0w3d090NC8xc1NxRy94Y0dlWjNnbVZpcDI0Qk4iLCJtYWMiOiI1Yjc3OTI3NWUyNDc3M2NiNTVlMzJhOGM2M2IyYWNjZDMzNTVhMDRmYjc4ZDUwYWQ0Yzg0NWZkM2RlNGM1NWIzIiwidGFnIjoiIn0%3D; expires=Fri, 06 Dec 2024 21:38:24 GMT; Max-Age=7200; path=\/; samesite=lax\u003C\/span\u003E\u0022\n    \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022443 characters\u0022\u003Elaravel_session=eyJpdiI6IjNlSmoyNDY2TTl4YkZWSE91Y1ZsSmc9PSIsInZhbHVlIjoiNW02UmpOekkxeFQyaXlPYmhYdktnWG9TdDVXOXRmUXRTK3JXbGJJZkRoa3hxbS9lRHJUdHlUQnZ0Uk5ZY1JBLzNNNzVsa3BrbDhWb0tjZzJtdStURzlPcmlpQUwrelp2aVY1K1VWOU52QkVWYXNQUWhpQW9aODhHVVM1ZkdMOHIiLCJtYWMiOiJjZmZlYmUyMzhiYjg5MzQ4NThjNDAzMGY3NWMwYTU5YmQ4MmM0ZjNjODkwNTlhNTI0OTViYmMzOTk1ZWYwNDgxIiwidGFnIjoiIn0%3D; expires=Fri, 06 Dec 2024 21:38:24 GMT; Max-Age=7200; path=\/; httponly; samesite=lax\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003ESet-Cookie\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u003Cspan class=sf-dump-index\u003E0\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022400 characters\u0022\u003EXSRF-TOKEN=eyJpdiI6ImpHbXdJQU91WWRRWGphdVpFVXQ5Wmc9PSIsInZhbHVlIjoiNDRwdWl3U25tbDhqc1pCL21QNHJOUllpcGovSUZDclc1ckVDMGdKeHVNdmpUNkhYNzA5cXQxNHlSM2tHWXpGTk8rVEJkVzFzeGFaaFROUXVwZy8rakVGeDV3MTBjNEdadkNEU0w3d090NC8xc1NxRy94Y0dlWjNnbVZpcDI0Qk4iLCJtYWMiOiI1Yjc3OTI3NWUyNDc3M2NiNTVlMzJhOGM2M2IyYWNjZDMzNTVhMDRmYjc4ZDUwYWQ0Yzg0NWZkM2RlNGM1NWIzIiwidGFnIjoiIn0%3D; expires=Fri, 06-Dec-2024 21:38:24 GMT; path=\/\u003C\/span\u003E\u0022\n    \u003Cspan class=sf-dump-index\u003E1\u003C\/span\u003E =\u003E \u0022\u003Cspan class=sf-dump-str title=\u0022415 characters\u0022\u003Elaravel_session=eyJpdiI6IjNlSmoyNDY2TTl4YkZWSE91Y1ZsSmc9PSIsInZhbHVlIjoiNW02UmpOekkxeFQyaXlPYmhYdktnWG9TdDVXOXRmUXRTK3JXbGJJZkRoa3hxbS9lRHJUdHlUQnZ0Uk5ZY1JBLzNNNzVsa3BrbDhWb0tjZzJtdStURzlPcmlpQUwrelp2aVY1K1VWOU52QkVWYXNQUWhpQW9aODhHVVM1ZkdMOHIiLCJtYWMiOiJjZmZlYmUyMzhiYjg5MzQ4NThjNDAzMGY3NWMwYTU5YmQ4MmM0ZjNjODkwNTlhNTI0OTViYmMzOTk1ZWYwNDgxIiwidGFnIjoiIn0%3D; expires=Fri, 06-Dec-2024 21:38:24 GMT; path=\/; httponly\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n\u003C\/samp\u003E]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-131554156\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n","session_attributes":"\u003Cpre class=sf-dump id=sf-dump-192078811 data-indent-pad=\u0022  \u0022\u003E\u003Cspan class=sf-dump-note\u003Earray:3\u003C\/span\u003E [\u003Csamp data-depth=1 class=sf-dump-expanded\u003E\n  \u0022\u003Cspan class=sf-dump-key\u003E_token\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002240 characters\u0022\u003EItrcJhnFu8NOsWWDMf93fs3TBseCWVC1naQBuf7T\u003C\/span\u003E\u0022\n  \u0022\u003Cspan class=sf-dump-key\u003E_previous\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:1\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Eurl\u003C\/span\u003E\u0022 =\u003E \u0022\u003Cspan class=sf-dump-str title=\u002225 characters\u0022\u003Ehttp:\/\/debugbar-demo.test\u003C\/span\u003E\u0022\n  \u003C\/samp\u003E]\n  \u0022\u003Cspan class=sf-dump-key\u003E_flash\u003C\/span\u003E\u0022 =\u003E \u003Cspan class=sf-dump-note\u003Earray:2\u003C\/span\u003E [\u003Csamp data-depth=2 class=sf-dump-compact\u003E\n    \u0022\u003Cspan class=sf-dump-key\u003Eold\u003C\/span\u003E\u0022 =\u003E []\n    \u0022\u003Cspan class=sf-dump-key\u003Enew\u003C\/span\u003E\u0022 =\u003E []\n  \u003C\/samp\u003E]\n\u003C\/samp\u003E]\n\u003C\/pre\u003E\u003Cscript\u003ESfdump(\u0022sf-dump-192078811\u0022, {\u0022maxDepth\u0022:0})\u003C\/script\u003E\n"}}, "Xc4cb08d3a43e3f30cce6199364664a36");
+</script>
+    
+  </body>
+</html>
