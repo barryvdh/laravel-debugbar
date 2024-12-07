@@ -5,4 +5,3 @@ hide:
   - navigation
   - toc
 ---
-

@@ -9,7 +9,7 @@
     margin: 0
 }
 
-.md-content {
+.md-content h1, .home-content h1 {
     display: none
 }
 
@@ -29,13 +29,21 @@
         <div class="mdx-hero">
 
             <h1>{{ config.site_description }}</h1>
+
+            <img alt="Unit Tests" src="https://github.com/barryvdh/laravel-debugbar/workflows/Unit%20Tests/badge.svg">
+            <a href="http://choosealicense.com/licenses/mit/"><img alt="Packagist License" src="https://img.shields.io/badge/Licence-MIT-blue"></a>
+            <a href="https://packagist.org/packages/barryvdh/laravel-debugbar"><img alt="Latest Stable Version" src="https://img.shields.io/packagist/v/barryvdh/laravel-debugbar?label=Stable"></a>
+            <a href="https://packagist.org/packages/barryvdh/laravel-debugbar"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/barryvdh/laravel-debugbar?label=Downloads"></a>
+            <a href="https://fruitcake.nl/"><img alt="Fruitcake" src="https://img.shields.io/badge/Powered%20By-Fruitcake-b2bc35.svg"></a>
+
+            <p>
+                Laravel Debugbar is a package that integrates PHP Debug Bar with Laravel. It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
+            </p>
+            
             <div class="mdx-hero__image">
                 <img src="assets/preview.png" alt="" width="1293" height="267" draggable="false">
             </div>
             <div class="mdx-hero__content">
-
-                Laravel Debugbar is a package that integrates PHP Debug Bar with Laravel. It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
-
 
                 <p>Get started in 1 minute.</p>
                 <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title | e }}"
@@ -49,6 +57,7 @@
         </div>
     </div>
 </section>
+
 {% endblock %}
 
 {% block content %}
