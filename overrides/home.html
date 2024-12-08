@@ -12,7 +12,9 @@
 .md-content h1, .home-content h1 {
     display: none
 }
-
+.md-content__button {
+    display: none;
+}
 @media screen and (min-width: 60em) {
     .md-sidebar--secondary {
         display: none
@@ -45,10 +47,9 @@
             </div>
             <div class="mdx-hero__content">
 
-                <p>Get started in 1 minute.</p>
                 <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title | e }}"
                    class="md-button md-button--primary">
-                    Install
+                    Get started
                 </a>
                 <a href="{{ config.repo_url }}" title="View on Github" class="md-button">
                     View on Github

@@ -17,7 +17,7 @@ The Debugbar will be enabled when `APP_DEBUG` is `true`.
 
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
-### Laravel without auto-discovery:
+### Without auto-discovery
 
 If you don't use auto-discovery, add the ServiceProvider to the providers list. For Laravel 11 or newer, add the ServiceProvider in bootstrap/providers.php. For Laravel 10 or older, add the ServiceProvider in config/app.php.
 
@@ -39,13 +39,13 @@ The profiler is enabled by default, if you have APP_DEBUG=true. You can override
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
 You can also only display the js or css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
 
-#### Copy the package config to your local config with the publish command:
+### Publish config
 
 ```shell
 php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 ```
 
-### Laravel with Octane:
+### With Octane
 
 Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
 
@@ -55,7 +55,7 @@ Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
     ],
 ```
 
-### Lumen:
+### With Lumen
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
 

@@ -1,12 +1,18 @@
 site_name: Laravel Debugbar
+site_author: Barry vd. Heuvel
 site_description: Debugbar for Laravel
 site_url: https://laraveldebugbar.com
 repo_url: https://github.com/barryvdh/laravel-debugbar
+edit_uri: ./edit/docs/docs
+copyright: Copyright &copy; Barry vd. Heuvel
+
 nav:
   - Home: index.md
-  - Install: install.md
+  - Getting started:
+      - Install: installation.md
+      - Usage: usage.md
   - Features: features.md
-  - Usage: usage.md
+
 theme:
   name: material
   custom_dir: overrides
@@ -26,6 +32,9 @@ theme:
     - navigation.sections
     - navigation.expand
     - content.code.copy
+    - content.action.edit
+    - toc.follow
+    - search.highlight
 extra_css:
   - assets/extra.css
   - assets/debugbar.css
@@ -46,3 +55,10 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - toc:
+      permalink: true
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: barryvdh
+      repo: laravel-debugbar

@@ -1,3 +1,7 @@
+---
+hide:
+  - navigation
+---
 !!! warning
 
     Debugbar can slow the application down (because it has to gather and render data). So when experiencing slowness, try disabling some of the collectors.
