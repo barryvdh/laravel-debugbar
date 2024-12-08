@@ -25,6 +25,7 @@ theme:
     - navigation.footer
     - navigation.sections
     - navigation.expand
+    - content.code.copy
 extra_css:
   - assets/extra.css
   - assets/debugbar.css
@@ -32,3 +33,16 @@ extra_javascript:
   - assets/debugbar.js
 markdown_extensions:
   - admonition
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      extend_pygments_lang:
+        - name: php
+          lang: php
+          options:
+            startinline: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
