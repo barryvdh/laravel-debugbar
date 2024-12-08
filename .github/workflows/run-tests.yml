@@ -24,6 +24,8 @@ jobs:
         laravel: [^11, ^10, ^9]
         dependency-version: [prefer-stable]
         exclude:
+          - laravel: ^9
+            php: 8.4
           - laravel: ^10
             php: 8.0
           - laravel: ^11
