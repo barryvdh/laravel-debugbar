@@ -62,3 +62,8 @@ markdown_extensions:
       repo_url_shorthand: true
       user: barryvdh
       repo: laravel-debugbar
+
+extra:
+  analytics:
+    provider: google
+    property: G-KVHB3EWT91
