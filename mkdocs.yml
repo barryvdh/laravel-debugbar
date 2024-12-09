@@ -56,6 +56,7 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.details
   - toc:
       permalink: true
   - pymdownx.magiclink:
@@ -68,3 +69,6 @@ extra:
   analytics:
     provider: google
     property: G-KVHB3EWT91
+
+watch:
+  - overrides
