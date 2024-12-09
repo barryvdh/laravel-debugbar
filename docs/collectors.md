@@ -11,9 +11,11 @@ hide:
 This package includes some custom collectors:
 
 - [QueryCollector](#querycollector): Show all queries, including binding + timing
-- RouteCollector: Show information about the current Route.
+- [RouteCollector](#routecollector): Show information about the current Route.
 - [ViewCollector](#viewcollector): Show the currently loaded views. (Optionally: display the shared data)
 - EventsCollector: Show all events
+- GateCollector: Show the gates that are checked
+- PennantCollector: Show Pennant flags
 - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
 - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
 - LogsCollector: Show the latest log entries from the storage logs. (disabled by default)
@@ -127,6 +129,12 @@ The Query Collector has the following features
         // ...
     ],
 ```
+
+### RouteCollector
+
+This shows the current route and middleware.
+
+![RouteCollector](img/route.png)
 
 ### Timeline Collector
 
