@@ -3,7 +3,7 @@
 ## Install with composer
 !!! danger
 
-    Use the DebugBar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design).
+    Use the Debugbar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design).
 
 
 Require this package with composer. It is recommended to only require the package for development.
