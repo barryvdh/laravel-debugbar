@@ -12,6 +12,7 @@ nav:
       - Install: installation.md
       - Usage: usage.md
   - Features: features.md
+  - Collectors: collectors.md
 
 theme:
   name: material

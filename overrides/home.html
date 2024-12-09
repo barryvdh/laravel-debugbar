@@ -42,6 +42,8 @@
                 Laravel Debugbar is a package that integrates PHP Debug Bar with Laravel. It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
             </p>
 
+            {{ super() }}
+
             <div class="mdx-hero__image">
                 <img src="img/preview.png" alt="" width="1133" height="287" draggable="false">
             </div>
@@ -55,7 +57,6 @@
                     View on Github
                 </a>
 
-
             </div>
         </div>
     </div>
@@ -63,8 +64,5 @@
 
 {% endblock %}
 
-{% block content %}
-{{ super() }}
-{% endblock %}
 
 {% block footer %}{% endblock %}

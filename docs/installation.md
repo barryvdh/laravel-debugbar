@@ -1,5 +1,6 @@
 # Installation
 
+## Install with composer
 !!! danger
 
     Use the DebugBar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design).
@@ -13,9 +14,44 @@ composer require barryvdh/laravel-debugbar --dev
 
 Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
 
-The Debugbar will be enabled when `APP_DEBUG` is `true`.
-
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
+
+
+## Enable
+By default, Debugbar will be enabled when `APP_DEBUG` is `true`.
+
+
+The profiler is enabled by default, if you have APP_DEBUG=true. You can override that in the config (`debugbar.enabled`) or by setting `DEBUGBAR_ENABLED` in your `.env`. See more options in `config/debugbar.php`
+
+```php
+    /*
+     |--------------------------------------------------------------------------
+     | Debugbar Settings
+     |--------------------------------------------------------------------------
+     |
+     | Debugbar is enabled by default, when debug is set to true in app.php.
+     | You can override the value by setting enable to true or false instead of null.
+     |
+     | You can provide an array of URI's that must be ignored (eg. 'api/*')
+     |
+     */
+
+    'enabled' => env('DEBUGBAR_ENABLED', null),
+    'hide_empty_tabs' => false, // Hide tabs until they have content
+    'except' => [
+        'telescope*',
+        'horizon*',
+    ],
+
+```
+
+### Publish config
+
+```shell
+php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+```
+
+## Non-default installs
 
 ### Without auto-discovery
 
@@ -33,16 +69,6 @@ public function register(): void
     $loader = \Illuminate\Foundation\AliasLoader::getInstance();
     $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
 }
-```
-
-The profiler is enabled by default, if you have APP_DEBUG=true. You can override that in the config (`debugbar.enabled`) or by setting `DEBUGBAR_ENABLED` in your `.env`. See more options in `config/debugbar.php`
-You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
-You can also only display the js or css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
-
-### Publish config
-
-```shell
-php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 ```
 
 ### With Octane
