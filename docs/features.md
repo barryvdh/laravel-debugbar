@@ -3,6 +3,10 @@ hide:
   - navigation
 ---
 
+## Collectors
+
+See the [Collectors page](collectors.md) for available collectors.
+
 ## AJAX Requests
 
 Laravel Debugbar tracks AJAX/XHR request in your application. You can open these in the dropdown menu, or click the history button to show the requests.
