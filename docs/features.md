@@ -13,7 +13,7 @@ Laravel Debugbar tracks AJAX/XHR request in your application. You can open these
 
 Tip: you can disable he 'autoshow' toggle in the history tab to keep the current dataset active, instead of switching.
 
-![AJAX Request](img/ajax.png)
+![AJAX Request](img/ajax.gif)
 
 Configuration:
 ```php
@@ -51,7 +51,7 @@ With the default settings, storage is only visible from your local IP. To enable
 
     Do not open the history outside your local environment, to avoid leaking credentials or sensitive data.
 
-![History](img/history.png)
+![History](img/history.gif)
 
 Configuration:
 ```php
