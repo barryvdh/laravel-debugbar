@@ -17,6 +17,8 @@ nav:
 theme:
   name: material
   custom_dir: overrides
+  logo: assets/logo_white.png
+  favicon: assets/favicon.png
   palette:
     - primary: custom
       scheme: slate
