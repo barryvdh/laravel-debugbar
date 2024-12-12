@@ -15,7 +15,8 @@ Tip: you can disable he 'autoshow' toggle in the history tab to keep the current
 
 ![AJAX Request](img/ajax.gif)
 
-Configuration:
+<details><summary>config/debugbar.php</summary>
+
 ```php
 /*
  |--------------------------------------------------------------------------
@@ -41,6 +42,8 @@ Configuration:
 
 ```
 
+</details>
+
 ## History browser
 
 By default, Debugbar stores request history. This is useful for non-browser requests, redirects or external requests. You can open it with the 'folder' button (3rd from the right).
@@ -53,7 +56,8 @@ With the default settings, storage is only visible from your local IP. To enable
 
 ![History](img/history.gif)
 
-Configuration:
+<details><summary>config/debugbar.php</summary>
+
 ```php
     /*
      |--------------------------------------------------------------------------
@@ -83,12 +87,17 @@ Configuration:
     ],
 ```
 
+</details>
+
 ## Editor integration
 
 Debugbar can open links to views, exception, routes etc in your Editor directly, if you set this up correctly. By default this should just work for PHPStorm on local development. You can change your editor by setting `DEBUGBAR_EDITOR` or the config.
 If your working in a remote host or docker, you can change the mapping between remote and local paths.
 
-Configuration:
+![History](img/editor.gif)
+
+<details><summary>config/debugbar.php</summary>
+
 ```php
 /*
     |--------------------------------------------------------------------------
@@ -133,3 +142,5 @@ Configuration:
     'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
 
 ```
+
+</details>

@@ -39,7 +39,7 @@ And the default collectors:
 
 To enable or disable any of the collectors, set the configuration to `true` or `false`. Some collector have additional options in the configuration:
 
-<details><summary>debugbar.php</summary>
+<details><summary>config/debugbar.php</summary>
 
 ```php
 
