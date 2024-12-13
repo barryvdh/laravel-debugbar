@@ -16,14 +16,13 @@ nav:
 
 theme:
   name: material
-  custom_dir: overrides
+  custom_dir: docs/overrides
   logo: assets/logo_white.png
   favicon: assets/favicon.png
   palette:
     - primary: custom
+      accent: custom
       scheme: slate
-#  palette:
-#    primary: custom
   features:
     - navigation.tabs
     - navigation.tabs.sticky
@@ -45,6 +44,10 @@ extra_javascript:
   - assets/debugbar.js
 markdown_extensions:
   - admonition
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight:
       use_pygments: true
       anchor_linenums: true
@@ -71,6 +74,7 @@ extra:
   analytics:
     provider: google
     property: G-KVHB3EWT91
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/barryvdh/laravel-debugbar
 
-watch:
-  - overrides
