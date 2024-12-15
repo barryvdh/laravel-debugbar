@@ -144,3 +144,21 @@ If your working in a remote host or docker, you can change the mapping between r
 ```
 
 </details>
+
+## Configuraton
+
+### Custom features { #custom }
+
+Custom features or collectors are not enabled by default, but can be enabled by enabling the configuration setting.
+This is usually because the target audience of a feature is not large enough.
+
+### Configurable options { #config }
+
+Configurable features are not enabled by default, but can be enabled. This is usually because the target audience of a feature is not large enough.
+You can enable the feature by changing the mentioned value in [config/debugbar.php](https://github.com/barryvdh/laravel-debugbar/blob/master/config/debugbar.php) after [publishing the config](installation.md#publish-config).
+
+### Experimental Features  { #experimental }
+
+Some features are marked as 'Experimental'. This mostly means the feature is new and not enabled by default, but might become enable by default in the future.
+You are welcome to test this feature and report any issues. 
+

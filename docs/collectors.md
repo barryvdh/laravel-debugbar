@@ -89,6 +89,9 @@ To enable or disable any of the collectors, set the configuration to `true` or `
 
 ### QueryCollector
 
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.db -->
+
 The Query Collector has the following features
  - Show the executed queries including timing
  - Show/mark duplicate queries
@@ -103,6 +106,8 @@ The Query Collector has the following features
  - Show memory usage (disabled by default)
 
 ![Query Collector](img/queries.png)
+
+<details><summary>config/debugbar.php</summary>
 
 ```php
   'options' => [
@@ -129,10 +134,12 @@ The Query Collector has the following features
         // ...
     ],
 ```
+</details>
 
 #### On-demand query EXPLAIN
 
 <!-- md:version v3.14.0 -->
+<!-- md:feature options.db.explain -->
 <!-- md:flag experimental -->
 
 Enable the `options.db.explain` option to run on-demand EXPLAIN queries for any SELECT query in the Debugbar.
