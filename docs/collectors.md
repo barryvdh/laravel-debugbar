@@ -147,6 +147,20 @@ This will update in the interface. You also have an option to navigate to mysqle
 
 ![Query On-demand Explain](img/query-explain.gif)
 
+
+#### Query limits
+
+<!-- md:version v3.10.0 -->
+<!-- md:feature options.db.soft_limit -->
+<!-- md:feature options.db.hard_limit -->
+<!-- md:flag experimental -->
+
+With Query Hard & Soft limits, you can reduce the amount of queries shown by default. When the soft limit is reached, bindings will be excluded.
+When the hard limit is reached, the queries are excluded altogether to prevent loading too much data.
+If you want to avoid any limits, you can set the option to `null`
+
+![Query Limits](img/query-limits.png)
+
 ### RouteCollector
 
 This shows the current route and middleware.
