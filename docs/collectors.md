@@ -31,7 +31,7 @@ Bootstraps the following collectors for Laravel:
 And the default collectors:
 
 - PhpInfoCollector
-- MessagesCollector
+- [MessagesCollector](#messages-collector)
 - [TimeDataCollector](#timeline-collector) (With Booting and Application timing)
 - MemoryCollector
 - ExceptionsCollector
@@ -163,11 +163,17 @@ If you want to avoid any limits, you can set the option to `null`
 
 ### RouteCollector
 
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.route -->
+
 This shows the current route and middleware.
 
 ![RouteCollector](img/route.png)
 
 ### Timeline Collector
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.time -->
 
 ![Timeline Collector](img/timeline.png)
 
@@ -180,6 +186,9 @@ This shows the current route and middleware.
 ```
 
 ### ViewCollector
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.views -->
 
 The ViewCollector shows views and has the following features:
 
@@ -204,6 +213,25 @@ The ViewCollector shows views and has the following features:
     ]
 
 ```
+
+## Messages Collector
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.messages -->
+
+The Message collectors gathers all messages from `debug()` calls and anything written to the logs.
+
+You can pass multiple parameters to `debug()`, even complex object.
+
+### Trace
+
+When calling `debug()`, the source of the call is shown and can be opened with your IDE.
+
+<!-- md:version v3.10.0 -->
+<!-- md:feature options.messages.trace -->
+
+
+![Messages Collector](img/messages.png)
 ## Additional options
 
 ```php
