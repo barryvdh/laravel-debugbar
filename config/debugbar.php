@@ -26,7 +26,7 @@ return [
      | Storage settings
      |--------------------------------------------------------------------------
      |
-     | DebugBar stores data for session/ajax requests.
+     | Debugbar stores data for session/ajax requests.
      | You can disable this, so the debugbar stores data in headers/session,
      | but this can cause problems with large data collectors.
      | By default, file storage (in the storage folder) is used. Redis and PDO
@@ -237,29 +237,29 @@ return [
         ],
         'views' => [
             'timeline' => false,    // Add the views to the timeline (Experimental)
-            'data' => false,        //true for all data, 'keys' for only names, false for no parameters.
+            'data' => false,        // True for all data, 'keys' for only names, false for no parameters.
             'group' => 50,          // Group duplicate views. Pass value to auto-group, or true/false to force
             'exclude_paths' => [    // Add the paths which you don't want to appear in the views
                 'vendor/filament'   // Exclude Filament components by default
             ],
         ],
         'route' => [
-            'label' => true,  // show complete route on bar
+            'label' => true,  // Show complete route on bar
         ],
         'session' => [
-            'hiddens' => [], // hides sensitive values using array paths
+            'hiddens' => [], // Hides sensitive values using array paths
         ],
         'symfony_request' => [
-            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
+            'hiddens' => [], // Hides sensitive values using array paths, example: request_request.password
         ],
         'events' => [
-            'data' => false, // collect events data, listeners
+            'data' => false, // Collect events data, listeners
         ],
         'logs' => [
             'file' => null,
         ],
         'cache' => [
-            'values' => true, // collect cache values
+            'values' => true, // Collect cache values
         ],
     ],
 
@@ -278,10 +278,10 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | DebugBar route prefix
+     | Debugbar route prefix
      |--------------------------------------------------------------------------
      |
-     | Sometimes you want to set route prefix to be used by DebugBar to load
+     | Sometimes you want to set route prefix to be used by Debugbar to load
      | its resources from. Usually the need comes from misconfigured web server or
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
@@ -290,7 +290,7 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | DebugBar route middleware
+     | Debugbar route middleware
      |--------------------------------------------------------------------------
      |
      | Additional middleware to run on the Debugbar routes
@@ -299,17 +299,17 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | DebugBar route domain
+     | Debugbar route domain
      |--------------------------------------------------------------------------
      |
-     | By default DebugBar route served from the same domain that request served.
+     | By default Debugbar route served from the same domain that request served.
      | To override default domain, specify it as a non-empty value.
      */
     'route_domain' => null,
 
     /*
      |--------------------------------------------------------------------------
-     | DebugBar theme
+     | Debugbar theme
      |--------------------------------------------------------------------------
      |
      | Switches between light and dark theme. If set to auto it will respect system preferences
@@ -322,7 +322,7 @@ return [
      | Backtrace stack limit
      |--------------------------------------------------------------------------
      |
-     | By default, the DebugBar limits the number of frames returned by the 'debug_backtrace()' function.
+     | By default, the Debugbar limits the number of frames returned by the 'debug_backtrace()' function.
      | If you need larger stacktraces, you can increase this number. Setting it to 0 will result in no limit.
      */
     'debug_backtrace_limit' => 50,
