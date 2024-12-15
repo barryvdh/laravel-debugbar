@@ -33,6 +33,7 @@ theme:
     - navigation.footer
     - navigation.sections
     - navigation.expand
+    - content.tooltips
     - content.code.copy
     - content.action.edit
     - toc.follow
@@ -44,6 +45,7 @@ extra_javascript:
   - assets/debugbar.js
 markdown_extensions:
   - admonition
+  - abbr
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
@@ -78,3 +80,5 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/barryvdh/laravel-debugbar
 
+hooks:
+  - docs/overrides/shortcodes.py

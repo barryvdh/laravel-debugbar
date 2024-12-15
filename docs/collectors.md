@@ -130,6 +130,16 @@ The Query Collector has the following features
     ],
 ```
 
+#### On-demand query EXPLAIN
+
+<!-- md:version v3.14.0 -->
+<!-- md:flag experimental -->
+
+Enable the `options.db.explain` option to run on-demand EXPLAIN queries for any SELECT query in the Debugbar.
+This will update in the interface. You also have an option to navigate to mysqlexplain.com for a visual explain.
+
+![Query On-demand Explain](img/query-explain.gif)
+
 ### RouteCollector
 
 This shows the current route and middleware.
