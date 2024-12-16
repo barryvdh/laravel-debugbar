@@ -89,6 +89,18 @@ With the default settings, storage is only visible from your local IP. To enable
 
 </details>
 
+## Light and Dark mode Theme
+
+<!-- md:version v3.4.0 -->
+<!-- md:feature theme -->
+<!-- md:default auto -->
+
+Debugbar supports Dark and Light mode. It defaults to `auto` which uses the browser setting. You can set it with `DEBUGBAR_THEME` or change the config to force th `light` or `dark`.
+See Light Mode below:
+
+![Light Theme](img/light-theme.png)
+
+
 ## Editor integration
 
 Debugbar can open links to views, exception, routes etc in your Editor directly, if you set this up correctly. By default this should just work for PHPStorm on local development. You can change your editor by setting `DEBUGBAR_EDITOR` or the config.
