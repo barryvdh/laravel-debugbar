@@ -8,34 +8,31 @@ hide:
 
 ## Collectors
 
-This package includes some custom collectors:
+This package includes with these Collectors enabled by default:
 
-- [QueryCollector](#querycollector): Show all queries, including binding + timing
-- [RouteCollector](#routecollector): Show information about the current Route.
-- [ViewCollector](#viewcollector): Show the currently loaded views. (Optionally: display the shared data)
-- EventsCollector: Show all events
-- GateCollector: Show the gates that are checked
-- PennantCollector: Show Pennant flags
-- LaravelCollector: Show the Laravel version and Environment. (disabled by default)
-- SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
-- LogsCollector: Show the latest log entries from the storage logs. (disabled by default)
-- FilesCollector: Show the files that are included/required by PHP. (disabled by default)
-- ConfigCollector: Display the values from the config files. (disabled by default)
-- CacheCollector: Display all cache events. (disabled by default)
+- [Queries](#db): Show all database queries
+- [Messages](#messages): Debug messages and objects
+- [Logs](#log): Show all Log messages (Show in Messages when available)
+- [Views](#views): Show the currently loaded views.
+- [Timeline](#time): Timeline with Booting and Application timing
+- [Route](#route): Show information about the current Route.
+- Session: Current session data
+- Request: Request data
+- Livewire: Only active when Livewire is used
+- PhpInfo: Current PHP version
+- Memory: Memory usage
+- Exceptions: Errors with stacktrace
 
-Bootstraps the following collectors for Laravel:
-
-- LogCollector: Show all Log messages
-- SymfonyMailCollector for Mail
-
-And the default collectors:
-
-- PhpInfoCollector
-- [MessagesCollector](#messages-collector)
-- [TimeDataCollector](#timeline-collector) (With Booting and Application timing)
-- MemoryCollector
-- ExceptionsCollector
-
+These collectors can be enabled in the config:
+- Auth: Logged in status
+- Events: Show all events
+- Mail: Sent emails
+- Gates: Show the gates that are checked
+- Laravel Info: Show the Laravel version and Environment. 
+- Files: Show the files that are included/required by PHP.
+- Config: Display the values from the config files. 
+- Cache: Display all cache events. 
+- Pennant: Show Pennant flags
 
 To enable or disable any of the collectors, set the configuration to `true` or `false`. Some collector have additional options in the configuration:
 
@@ -87,7 +84,7 @@ To enable or disable any of the collectors, set the configuration to `true` or `
 
 </details>
 
-### QueryCollector
+### Query Collector { #db }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.db -->
@@ -160,42 +157,46 @@ If you want to avoid any limits, you can set the option to `null`
 
 ![Query Limits](img/query-limits.png)
 
-### RouteCollector
+
+## Messages Collector { #messages }
 
 <!-- md:version v1.0 -->
-<!-- md:feature collectors.route -->
+<!-- md:feature collectors.messages -->
 
-This shows the current route and middleware.
+The Message collectors gathers all messages from `debug()` calls and anything written to the logs.
 
-![RouteCollector](img/route.png)
+You can pass multiple parameters to `debug()`, even complex object.
 
-### Timeline Collector
+### Trace
+
+When calling `debug()`, the source of the call is shown and can be opened with your IDE.
+
+<!-- md:version v3.10.0 -->
+<!-- md:feature options.messages.trace -->
+
+![Messages Collector](img/messages.png)
+
+## Log Collectors { #log }
 
 <!-- md:version v1.0 -->
-<!-- md:feature collectors.time -->
+<!-- md:feature collectors.log -->
 
-![Timeline Collector](img/timeline.png)
+When the [Messages Collector](#messages) is enabled, Log messages are added to the Messages tab. Otherwise a Monolog tab will show with just the log messages
 
-```php
-    'options' => [
-        'time' => [
-            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
-        ],
-    ]
-```
+![Monolog](img/monolog.png)
 
-### ViewCollector
+### ViewCollector { #views }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.views -->
 
 The ViewCollector shows views and has the following features:
 
- - Show used templates and source
- - Optionally add them to the timeline
- - Group similar views (useful for components)
- - Exclude folders (eg. for Filament or other vendors)
- - Optionally show data (this can be resource heavy)
+- Show used templates and source
+- Optionally add them to the timeline
+- Group similar views (useful for components)
+- Exclude folders (eg. for Filament or other vendors)
+- Optionally show data (this can be resource heavy)
 
 ![ViewCollector](img/views.png)
 
@@ -213,24 +214,30 @@ The ViewCollector shows views and has the following features:
 
 ```
 
-## Messages Collector
+### RouteCollector { #route }
 
 <!-- md:version v1.0 -->
-<!-- md:feature collectors.messages -->
+<!-- md:feature collectors.route -->
 
-The Message collectors gathers all messages from `debug()` calls and anything written to the logs.
+This shows the current route and middleware.
 
-You can pass multiple parameters to `debug()`, even complex object.
+![RouteCollector](img/route.png)
 
-### Trace
+### Timeline Collector { #time }
 
-When calling `debug()`, the source of the call is shown and can be opened with your IDE.
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.time -->
 
-<!-- md:version v3.10.0 -->
-<!-- md:feature options.messages.trace -->
+![Timeline Collector](img/timeline.png)
 
+```php
+    'options' => [
+        'time' => [
+            'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
+        ],
+    ]
+```
 
-![Messages Collector](img/messages.png)
 ## Additional options
 
 ```php
