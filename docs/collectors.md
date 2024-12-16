@@ -6,7 +6,7 @@ hide:
 
     Debugbar can slow the application down (because it has to gather and render data). So when experiencing slowness, try disabling some of the collectors.
 
-## Collectors
+# Collectors
 
 This package includes with these Collectors enabled by default:
 
@@ -16,24 +16,27 @@ This package includes with these Collectors enabled by default:
 - [Views](#views): Show the currently loaded views.
 - [Timeline](#time): Timeline with Booting and Application timing
 - [Route](#route): Show information about the current Route.
-- Session: Current session data
-- Request: Request data
-- Livewire: Only active when Livewire is used
-- PhpInfo: Current PHP version
-- Memory: Memory usage
-- Exceptions: Errors with stacktrace
+- [Exceptions](#exceptions): Exceptions and Throwable with stacktrace
+- [Session](#session): Current session data
+- [Request](#request): Request data
+- [Livewire](#livewire): Only active when Livewire is used
+- [PhpInfo](#phpinfo): Current PHP version
+
 
 These collectors can be enabled in the config:
 
-- Auth: Logged in status
-- Events: Show all events
-- Mail: Sent emails
-- Gates: Show the gates that are checked
-- Laravel Info: Show the Laravel version and Environment. 
-- Files: Show the files that are included/required by PHP.
-- Config: Display the values from the config files. 
-- Cache: Display all cache events. 
-- Pennant: Show Pennant flags
+- [Gate](#gate): Show the gates that are checked
+- [Events](#events): Show all events
+- [Auth](#auth): Logged in status
+
+- [Mail](#mail): Sent emails
+
+- [Laravel Info](#laravel): Show the Laravel version and Environment. 
+- [Memory](#memory): Memory usage
+- [Files](#files): Show the files that are included/required by PHP.
+- [Config](#config): Display the values from the config files. 
+- [Cache](#cache): Display all cache events. 
+- [Pennant](#pennant): Show Pennant flags
 
 To enable or disable any of the collectors, set the configuration to `true` or `false`. Some collector have additional options in the configuration:
 
@@ -85,7 +88,7 @@ To enable or disable any of the collectors, set the configuration to `true` or `
 
 </details>
 
-### Query Collector { #db }
+## Query Collector { #db }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.db -->
@@ -134,7 +137,7 @@ The Query Collector has the following features
 ```
 </details>
 
-#### On-demand query EXPLAIN
+### On-demand query EXPLAIN
 
 <!-- md:version v3.14.0 -->
 <!-- md:flag experimental -->
@@ -146,7 +149,7 @@ This will update in the interface. You also have an option to navigate to mysqle
 ![Query On-demand Explain](img/query-explain.gif)
 
 
-#### Query limits
+### Query limits
 
 <!-- md:version v3.10.0 -->
 <!-- md:feature options.db.soft_limit: 100 -->
@@ -186,7 +189,7 @@ When the [Messages Collector](#messages) is enabled, Log messages are added to t
 
 ![Monolog](img/monolog.png)
 
-### ViewCollector { #views }
+## Views { #views }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.views -->
@@ -215,21 +218,14 @@ The ViewCollector shows views and has the following features:
 
 ```
 
-### RouteCollector { #route }
-
-<!-- md:version v1.0 -->
-<!-- md:feature collectors.route -->
-
-This shows the current route and middleware.
-
-![RouteCollector](img/route.png)
-
-### Timeline Collector { #time }
+## Timeline { #time }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.time -->
 
 ![Timeline Collector](img/timeline.png)
+
+<details><summary>config/debugbar.php</summary>
 
 ```php
     'options' => [
@@ -239,7 +235,177 @@ This shows the current route and middleware.
     ]
 ```
 
+</details>
+
+## Route { #route }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.route -->
+
+This shows the current route and middleware.
+
+![RouteCollector](img/route.png)
+
+## Exceptions { #exceptions }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.exceptions -->
+
+Show any errors from the application, including traces.
+
+You can manually add exceptions by calling `debugbar()->addThrowable($throwable);`
+
+![ExceptionCollector](img/exceptions.png)
+
+## Session { #session }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.phpinfo -->
+<!-- md:default false -->
+
+A simple widget showing the current PHP Version.
+
+![Session Collector](img/session.png)
+
+
+## Request { #request }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.request -->
+
+Show Request info, like headers, data, cookies etc.
+
+![Request Collector](img/request.png)
+
+## Livewire { #livewire }
+
+<!-- md:version v3.3.3 -->
+<!-- md:feature collectors.livewire -->
+
+Show the Livewire components that are rendered on the page.
+
+![Livewire Collector](img/livewire.png)
+
+
+## PHP Info { #phpinfo }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.phpinfo -->
+
+A simple widget showing the current PHP Version.
+
+![PhpInfo Collector](img/phpinfo.png)
+
+## Gate { #gate }
+
+<!-- md:version v2.1.0 -->
+<!-- md:feature collectors.gate -->
+<!-- md:default false -->
+
+The Gate Collector shows the checks that have passed or failed.
+
+![Gate Collector](img/gate.png)
+
+## Events { #events }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.events -->
+
+This is similar to the Timeline buts adds all events. This can be a lot of data, so use with caution.
+
+![Events](img/events.gif)
+
+## Auth { #auth }
+
+<!-- md:version v1.2.2 -->
+<!-- md:feature collectors.auth -->
+<!-- md:default false -->
+
+A widget showing the current login status + a collector with more information.
+
+![Auth Collector](img/auth.png)
+
+## Mail { #mail }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.mail -->
+<!-- md:default false -->
+
+A collector showing the sent emails.
+
+![Mail Collector](img/mail.png)
+
+### Mail Preview
+
+<!-- md:version v3.12.0 -->
+<!-- md:feature options.mail.show_body -->
+<!-- md:default true -->
+
+You can open a rendered preview of the email when the body is attached, by clicking 'View Mail'
+
+![Mail Preview](img/mail-preview.png)
+
+## Laravel Info { #laravel }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.laravel -->
+<!-- md:default false -->
+
+A widget showing the current Laravel Version, environment and locale.
+
+![Laravel Collector](img/laravel-info.png)
+
+## Memory Usage { #memory }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.memory -->
+<!-- md:default false -->
+
+Show the Memory Usage of the application
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'memory' => [
+            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
+            'with_baseline' => false,  // Set boot memory usage as memory peak baseline
+            'precision' => 0,          // Memory rounding precision
+        ],
+    ]
+```
+
+</details>
+
+![Memory Collector](img/memory.png)
+
+## Files { #files }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.files -->
+<!-- md:default false -->
+
+## Config { #config }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.config -->
+<!-- md:default false -->
+
+## Cache { #memory }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.files -->
+<!-- md:default false -->
+
+## Pennant { #pennant }
+
+<!-- md:version v3.14-->
+<!-- md:feature collectors.pennant -->
+<!-- md:default false -->
+
 ## Additional options
+
+<details><summary>config/debugbar.php</summary>
 
 ```php
 /*
@@ -298,3 +464,5 @@ This shows the current route and middleware.
     ],
 
 ```
+
+</details>
