@@ -24,6 +24,7 @@ This package includes with these Collectors enabled by default:
 - Exceptions: Errors with stacktrace
 
 These collectors can be enabled in the config:
+
 - Auth: Logged in status
 - Events: Show all events
 - Mail: Sent emails
