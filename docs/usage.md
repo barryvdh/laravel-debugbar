@@ -1,3 +1,19 @@
+---
+hide:
+  - navigation
+---
+
+# Usage
+
+## Using the Debugbar
+
+When the Debugbar is enabled, the Debugbar is shown on the bottom of the screen, similar to the documentation preview.
+
+Based on your configuration, it shows the [Collectors](#collectors.md) for the current request. You can open, close, restore or minimize the toolbar for your need. The state will be remembered.
+
+![Usage](img/usage.gif)
+
+## Debugbar Facade
 You can now add messages using the Facade (when added), using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
 
 ```php
@@ -28,6 +44,8 @@ try {
 }
 ```
 
+## Helpers
+
 There are also helper functions available for the most common calls:
 
 ```php
@@ -53,16 +71,6 @@ Debugbar::addCollector(new DebugBar\DataCollector\MessagesCollector('my_messages
 $debugbar = App::make('debugbar');
 $debugbar->addCollector(new DebugBar\DataCollector\MessagesCollector('my_messages'));
 ```
-
-By default, the Debugbar is injected just before `</body>`. If you want to inject the Debugbar yourself,
-set the config option 'inject' to false and use the renderer yourself and follow http://phpdebugbar.com/docs/rendering.html
-
-```php
-$renderer = Debugbar::getJavascriptRenderer();
-```
-
-Note: Not using the auto-inject, will disable the Request information, because that is added After the response.
-You can add the default_request datacollector in the config as alternative.
 
 ## Enabling/Disabling on run time
 You can enable or disable the debugbar during run time.

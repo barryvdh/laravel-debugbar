@@ -139,8 +139,8 @@ The Query Collector has the following features
 #### On-demand query EXPLAIN
 
 <!-- md:version v3.14.0 -->
-<!-- md:feature options.db.explain -->
 <!-- md:flag experimental -->
+<!-- md:feature options.db.explain -->
 
 Enable the `options.db.explain` option to run on-demand EXPLAIN queries for any SELECT query in the Debugbar.
 This will update in the interface. You also have an option to navigate to mysqlexplain.com for a visual explain.
@@ -151,9 +151,8 @@ This will update in the interface. You also have an option to navigate to mysqle
 #### Query limits
 
 <!-- md:version v3.10.0 -->
-<!-- md:feature options.db.soft_limit -->
-<!-- md:feature options.db.hard_limit -->
-<!-- md:flag experimental -->
+<!-- md:feature options.db.soft_limit: 100 -->
+<!-- md:feature options.db.hard_limit: 500 -->
 
 With Query Hard & Soft limits, you can reduce the amount of queries shown by default. When the soft limit is reached, bindings will be excluded.
 When the hard limit is reached, the queries are excluded altogether to prevent loading too much data.

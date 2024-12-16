@@ -8,9 +8,8 @@ copyright: Copyright &copy; Barry vd. Heuvel
 
 nav:
   - Home: index.md
-  - Getting started:
-      - Install: installation.md
-      - Usage: usage.md
+  - Install: installation.md
+  - Usage: usage.md
   - Features: features.md
   - Collectors: collectors.md
 

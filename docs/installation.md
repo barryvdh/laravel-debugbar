@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Installation
 
 ## Install with composer
