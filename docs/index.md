@@ -14,7 +14,7 @@ hide:
 
 Laravel Debugbar is a package that integrates [PHP Debug Bar](https://github.com/php-debugbar/php-debugbar) with Laravel. 
 
-![Debugbar Dark Mode screenshot](img/preview.png)
+![Debugbar Dark Mode screenshot](img/debugbar.gif)
 
 !!! tip "Live Demo"
     See an interactive example of the Laravel Debugbar in action below. (Don't worry, this is just dummy data)

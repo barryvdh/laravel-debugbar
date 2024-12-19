@@ -9,9 +9,9 @@ hide:
 
 When the Debugbar is enabled, the Debugbar is shown on the bottom of the screen, similar to the documentation preview.
 
-Based on your configuration, it shows the [Collectors](#collectors.md) for the current request. You can open, close, restore or minimize the toolbar for your need. The state will be remembered.
+Based on your configuration, it shows the [Collectors](collectors.md) for the current request. You can open, close, restore or minimize the toolbar for your need. The state will be remembered.
 
-![Usage](img/usage.gif)
+![Usage](img/debugbar.gif)
 
 ## Debugbar Facade
 You can now add messages using the Facade (when added), using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):

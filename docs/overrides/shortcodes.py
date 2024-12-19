@@ -208,7 +208,7 @@ def _badge_for_example_download(text: str, page: Page, files: Files):
 # Create badge for default value
 def _badge_for_default(text: str, page: Page, files: Files):
     icon = "material-water"
-    href = _resolve_path("features.md#default", page, files)
+    href = _resolve_path("features.md#config", page, files)
     return _badge(
         icon = f"[:{icon}:]({href} 'Default value')",
         text = text
@@ -217,7 +217,7 @@ def _badge_for_default(text: str, page: Page, files: Files):
 # Create badge for empty default value
 def _badge_for_default_none(page: Page, files: Files):
     icon = "material-water-outline"
-    href = _resolve_path("features.md#default", page, files)
+    href = _resolve_path("features.md#config", page, files)
     return _badge(
         icon = f"[:{icon}:]({href} 'Default value is empty')"
     )
@@ -257,7 +257,7 @@ def _badge_for_customization(page: Page, files: Files):
 # Create badge for multiple instance flag
 def _badge_for_multiple(page: Page, files: Files):
     icon = "material-inbox-multiple"
-    href = _resolve_path("features.md#experimental", page, files)
+    href = _resolve_path("features.md#multiple", page, files)
     return _badge(
         icon = f"[:{icon}:]({href} 'Multiple instances')"
     )
@@ -265,7 +265,7 @@ def _badge_for_multiple(page: Page, files: Files):
 # Create badge for experimental flag
 def _badge_for_experimental(page: Page, files: Files):
     icon = "material-flask-outline"
-    href = _resolve_path("features.md#experimental-features", page, files)
+    href = _resolve_path("features.md#experimental", page, files)
     return _badge(
         icon = f"[:{icon}:]({href} 'Experimental')"
     )

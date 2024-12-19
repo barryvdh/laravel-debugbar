@@ -391,7 +391,7 @@ Show the Memory Usage of the application
 <!-- md:feature collectors.config -->
 <!-- md:default false -->
 
-## Cache { #memory }
+## Cache { #cache }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.files -->
