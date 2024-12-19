@@ -403,6 +403,10 @@ Show the Memory Usage of the application
 <!-- md:feature collectors.pennant -->
 <!-- md:default false -->
 
+Shows all the Pennant flags that are checked during this request
+
+![Pennant Collector](img/pennant.png)
+
 ## Additional options
 
 <details><summary>config/debugbar.php</summary>
