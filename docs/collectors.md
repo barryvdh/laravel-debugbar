@@ -28,15 +28,15 @@ These collectors can be enabled in the config:
 - [Gate](#gate): Show the gates that are checked
 - [Events](#events): Show all events
 - [Auth](#auth): Logged in status
-
 - [Mail](#mail): Sent emails
-
 - [Laravel Info](#laravel): Show the Laravel version and Environment. 
 - [Memory](#memory): Memory usage
-- [Files](#files): Show the files that are included/required by PHP.
-- [Config](#config): Display the values from the config files. 
+- [Config](#config): Display the values from the config files.
 - [Cache](#cache): Display all cache events. 
+- [Models](#models): Loaded Models
+- [Jobs](#jobs): Sent emails
 - [Pennant](#pennant): Show Pennant flags
+- [Files](#files): Show the files that are included/required by PHP.
 
 To enable or disable any of the collectors, set the configuration to `true` or `false`. Some collector have additional options in the configuration:
 
@@ -273,9 +273,21 @@ A simple widget showing the current PHP Version.
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.request -->
 
-Show Request info, like headers, data, cookies etc.
+Show Request info, like headers, data, cookies etc. Sensitive data is hidden by default, but you can add your own sensitive data to the config.
 
 ![Request Collector](img/request.png)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'symfony_request' => [
+            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
+        ],
+    ],
+```
+
+</details>
 
 ## Livewire { #livewire }
 
@@ -285,7 +297,6 @@ Show Request info, like headers, data, cookies etc.
 Show the Livewire components that are rendered on the page.
 
 ![Livewire Collector](img/livewire.png)
-
 
 ## PHP Info { #phpinfo }
 
@@ -324,6 +335,19 @@ This is similar to the Timeline buts adds all events. This can be a lot of data,
 A widget showing the current login status + a collector with more information.
 
 ![Auth Collector](img/auth.png)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'auth' => [
+            'show_name' => true,   // Also show the users name/email in the debugbar
+            'show_guards' => true, // Show the guards that are used
+        ],
+    ],
+```
+
+</details>
 
 ## Mail { #mail }
 
@@ -379,33 +403,82 @@ Show the Memory Usage of the application
 
 ![Memory Collector](img/memory.png)
 
-## Files { #files }
-
-<!-- md:version v1.0 -->
-<!-- md:feature collectors.files -->
-<!-- md:default false -->
-
 ## Config { #config }
 
-<!-- md:version v1.0 -->
+<!-- md:version v3.0 -->
 <!-- md:feature collectors.config -->
 <!-- md:default false -->
 
+!!! warning
+
+     Be careful when turning this on, as it can expose sensitive credentials. Make sure your app is not publicly available.
+
+
+Shows the loaded configuration values.
+
+![Config Collector](img/config.png)
+
 ## Cache { #cache }
 
-<!-- md:version v1.0 -->
-<!-- md:feature collectors.files -->
+<!-- md:version v3.0.0 -->
+<!-- md:feature collectors.cache -->
 <!-- md:default false -->
+
+Show the hits/misses of the Cache in a Timeline.
+
+![Cache Collector](img/cache.png)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'values' => true, // collect cache values
+    ],
+```
+
+</details>
+
+## Models { #models }
+
+<!-- md:version v3.2.5-->
+<!-- md:feature collectors.models -->
+<!-- md:default false -->
+
+Shows how often each Model is loaded. If this is high, you might want move some logic to SQL instead of processing large Collections.
+
+![Models Collector](img/models.png)
+
+## Jobs { #jobs }
+
+<!-- md:version v3.2.5-->
+<!-- md:feature collectors.models -->
+<!-- md:default false -->
+
+Show the Jobs that are dispatched from this request.
+
+![Jobs Collector](img/jobs.png)
 
 ## Pennant { #pennant }
 
-<!-- md:version v3.14-->
+<!-- md:version v3.14.0 -->
 <!-- md:feature collectors.pennant -->
 <!-- md:default false -->
 
 Shows all the Pennant flags that are checked during this request
 
 ![Pennant Collector](img/pennant.png)
+
+## Files { #files }
+
+<!-- md:version v1.0 -->
+<!-- md:feature collectors.files -->
+<!-- md:default false -->
+
+!!! deprecated
+
+     This was mainly useful before OPcache was widely used, and this collector could be used for optimizing files. It's deprecated now.
+
+![Files Collector](img/files.png)
 
 ## Additional options
 
