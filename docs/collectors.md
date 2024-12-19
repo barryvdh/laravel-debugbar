@@ -35,6 +35,7 @@ These collectors can be enabled in the config:
 - [Cache](#cache): Display all cache events. 
 - [Models](#models): Loaded Models
 - [Jobs](#jobs): Sent emails
+- [Logs](#logs): Logs from the log files
 - [Pennant](#pennant): Show Pennant flags
 - [Files](#files): Show the files that are included/required by PHP.
 
@@ -88,7 +89,7 @@ To enable or disable any of the collectors, set the configuration to `true` or `
 
 </details>
 
-## Query Collector { #db }
+## Database Queries { #db }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.db -->
@@ -162,7 +163,7 @@ If you want to avoid any limits, you can set the option to `null`
 ![Query Limits](img/query-limits.png)
 
 
-## Messages Collector { #messages }
+## Messages { #messages }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.messages -->
@@ -180,7 +181,7 @@ When calling `debug()`, the source of the call is shown and can be opened with y
 
 ![Messages Collector](img/messages.png)
 
-## Log Collectors { #log }
+## Logger { #log }
 
 <!-- md:version v1.0 -->
 <!-- md:feature collectors.log -->
@@ -188,6 +189,35 @@ When calling `debug()`, the source of the call is shown and can be opened with y
 When the [Messages Collector](#messages) is enabled, Log messages are added to the Messages tab. Otherwise a Monolog tab will show with just the log messages
 
 ![Monolog](img/monolog.png)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+  'options' => [
+        // ...
+        'db' => [
+            'with_params'       => true,   // Render SQL with the parameters substituted
+            'exclude_paths'     => [       // Paths to exclude entirely from the collector
+                // 'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
+            ],
+            'backtrace'         => true,   // Use a backtrace to find the origin of the query in your files.
+            'backtrace_exclude_paths' => [],   // Paths to exclude from backtrace. (in addition to defaults)
+            'timeline'          => false,  // Add the queries to the timeline
+            'duration_background'  => true,   // Show shaded background on each query relative to how long it took to execute.
+            'explain' => [                 // Show EXPLAIN output on queries
+                'enabled' => false,
+            ],
+            'hints'             => false,   // Show hints for common mistakes
+            'show_copy'         => true,    // Show copy button next to the query,
+            'slow_threshold'    => false,   // Only track queries that last longer than this time in ms
+            'memory_usage'      => false,   // Show queries memory usage
+            'soft_limit'       => 100,      // After the soft limit, no parameters/backtrace are captured
+            'hard_limit'       => 500,      // After the hard limit, queries are ignored
+        ],
+        // ...
+    ],
+```
+</details>
 
 ## Views { #views }
 
@@ -245,6 +275,18 @@ The ViewCollector shows views and has the following features:
 This shows the current route and middleware.
 
 ![RouteCollector](img/route.png)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'route' => [
+            'label' => true,  // show complete route on bar
+        ],    
+    ],
+```
+
+</details>
 
 ## Exceptions { #exceptions }
 
@@ -325,6 +367,19 @@ The Gate Collector shows the checks that have passed or failed.
 This is similar to the Timeline buts adds all events. This can be a lot of data, so use with caution.
 
 ![Events](img/events.gif)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'events' => [
+            'data' => false, // collect events data, listeners
+        ],
+    ],
+```
+
+</details>
+
 
 ## Auth { #auth }
 
@@ -432,8 +487,9 @@ Show the hits/misses of the Cache in a Timeline.
 
 ```php
     'options' => [
-        'values' => true, // collect cache values
-    ],
+        'cache' => [
+            'values' => true, // collect cache values
+        ],    ],
 ```
 
 </details>
@@ -458,6 +514,28 @@ Show the Jobs that are dispatched from this request.
 
 ![Jobs Collector](img/jobs.png)
 
+## Logs { #logs }
+
+<!-- md:version v1.0-->
+<!-- md:feature collectors.logs -->
+<!-- md:default false -->
+
+Show the most recent logs from the log files in storage/logs
+
+![Logs Collector](img/logs.png)
+
+<details><summary>config/debugbar.php</summary>
+
+```php
+    'options' => [
+        'logs' => [
+            'file' => null, // Additional files
+        ],   
+     ],
+```
+
+</details>
+
 ## Pennant { #pennant }
 
 <!-- md:version v3.14.0 -->
@@ -479,67 +557,3 @@ Shows all the Pennant flags that are checked during this request
      This was mainly useful before OPcache was widely used, and this collector could be used for optimizing files. It's deprecated now.
 
 ![Files Collector](img/files.png)
-
-## Additional options
-
-<details><summary>config/debugbar.php</summary>
-
-```php
-/*
-     |--------------------------------------------------------------------------
-     | Extra options
-     |--------------------------------------------------------------------------
-     |
-     | Configure some DataCollectors
-     |
-     */
-
-    'options' => [
-        'time' => [
-            // See above
-        ],
-        'messages' => [
-            'trace' => true,   // Trace the origin of the debug message
-        ],
-        'memory' => [
-            'reset_peak' => false,     // run memory_reset_peak_usage before collecting
-            'with_baseline' => false,  // Set boot memory usage as memory peak baseline
-            'precision' => 0,          // Memory rounding precision
-        ],
-        'auth' => [
-            'show_name' => true,   // Also show the users name/email in the debugbar
-            'show_guards' => true, // Show the guards that are used
-        ],
-        'db' => [
-            // See above        
-        ],
-        'mail' => [
-            'timeline' => false,  // Add mails to the timeline
-            'show_body' => true,
-        ],
-        'views' => [
-            // See above
-        ],
-        'route' => [
-            'label' => true,  // show complete route on bar
-        ],
-        'session' => [
-            'hiddens' => [], // hides sensitive values using array paths
-        ],
-        'symfony_request' => [
-            'hiddens' => [], // hides sensitive values using array paths, example: request_request.password
-        ],
-        'events' => [
-            'data' => false, // collect events data, listeners
-        ],
-        'logs' => [
-            'file' => null,
-        ],
-        'cache' => [
-            'values' => true, // collect cache values
-        ],
-    ],
-
-```
-
-</details>
