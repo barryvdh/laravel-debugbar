@@ -12,7 +12,7 @@ This package includes with these Collectors enabled by default:
 
 - [Queries](#db): Show all database queries
 - [Messages](#messages): Debug messages and objects
-- [Logs](#log): Show all Log messages (Show in Messages when available)
+- [Logger](#log): Show all Log messages (Show in Messages when available)
 - [Views](#views): Show the currently loaded views.
 - [Timeline](#time): Timeline with Booting and Application timing
 - [Route](#route): Show information about the current Route.
