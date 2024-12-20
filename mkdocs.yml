@@ -37,6 +37,7 @@ theme:
     - content.action.edit
     - toc.follow
     - search.highlight
+    - meta
 extra_css:
   - assets/extra.css
   - assets/debugbar.css

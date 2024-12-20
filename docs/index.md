@@ -1,5 +1,6 @@
 ---
-title: Laravel Debugbar
+title: Debugbar for Laravel
+description: Laravel Debugbar is a package that integrates PHP Debug Bar with Laravel to debug database queries and profile other information.
 hide:
   - navigation
   - toc 
@@ -12,7 +13,7 @@ hide:
 [![Total Downloads](https://img.shields.io/packagist/dt/barryvdh/laravel-debugbar?label=Downloads)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Fruitcake](https://img.shields.io/badge/Powered%20By-Fruitcake-b2bc35.svg)](https://fruitcake.nl/)
 
-Laravel Debugbar is a package that integrates [PHP Debug Bar](https://github.com/php-debugbar/php-debugbar) with Laravel. 
+Laravel Debugbar is a package that integrates [PHP Debug Bar](https://github.com/php-debugbar/php-debugbar) with Laravel to debug [database queries](collectors.md#db) and [profile other information](collectors.md).
 
 ![Debugbar Dark Mode screenshot](img/debugbar.gif)
 

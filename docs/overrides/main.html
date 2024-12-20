@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 <!-- Meta tags -->
-{% block site_meta %}
+{% block extrahead %}
 {{ super() }}
 
-{% if page.meta and page.meta.title %}
+{% if page.is_homepage %}
+<meta property="og:title" content="{{ config.site_name }}" />
+{% elif page.meta and page.meta.title %}
 <meta property="og:title" content="{{ page.meta.title }} - {{ config.site_name }}" />
 {% elif page.title and not page.is_homepage %}
 <meta property="og:title" content="{{ page.title | striptags }} - {{ config.site_name }}" />
@@ -21,10 +23,13 @@
 <meta property="og:type" content="website" />
 {% if page.canonical_url %}
 <meta property="og:url" content="{{ page.canonical_url }}" />
-
 {% endif %}
 
+{% if page.meta and page.meta.preview_image %}
+<meta property="og:image" content="{{ config.site_url }}{{ page.meta.preview_image }}" />
+{% else %}
 <meta property="og:image" content="{{ config.site_url }}img/preview.jpg" />
+{% endif %}
 
 {% endblock %}
 
