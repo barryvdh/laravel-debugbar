@@ -1,5 +1,27 @@
 {% extends "base.html" %}
 
+<!-- Meta tags -->
+{% block site_meta %}
+{{ super() }}
+
+{% if page.meta and page.meta.title %}
+<meta property="og:title" content="{{ page.meta.title }} - {{ config.site_name }}" />
+{% elif page.title and not page.is_homepage %}
+<meta property="og:title" content="{{ page.title | striptags }} - {{ config.site_name }}" />
+{% else %}
+<meta property="og:title" content="{{ config.site_name }}}" />
+{% endif %}
+
+<meta property="og:type" content="website" />
+{% if page.canonical_url %}
+<meta property="og:url" content="{{ page.canonical_url }}" />
+
+{% endif %}
+
+<meta property="og:image" content="{{ 'img/preview.jpg' | url }}" />
+
+{% endblock %}
+
 {% block scripts %}
 <!-- Add scripts that need to run before here -->
 {{ super() }}
