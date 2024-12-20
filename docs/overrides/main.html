@@ -12,13 +12,19 @@
 <meta property="og:title" content="{{ config.site_name }}}" />
 {% endif %}
 
+{% if page.meta and page.meta.description %}
+<meta property="og:description" content="{{ page.meta.description }}" />
+{% elif config.site_description %}
+<meta property="og:description" content="{{ config.site_description }}" />
+{% endif %}
+
 <meta property="og:type" content="website" />
 {% if page.canonical_url %}
 <meta property="og:url" content="{{ page.canonical_url }}" />
 
 {% endif %}
 
-<meta property="og:image" content="{{ 'img/preview.jpg' | url }}" />
+<meta property="og:image" content="{{ config.site_url }}img/preview.jpg" />
 
 {% endblock %}
 
