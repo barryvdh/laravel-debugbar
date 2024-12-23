@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.14.10 - 2024-12-23
+
+### What's Changed
+
+* Fix Debugbar spelling inconsistencies by @ralphjsmit in https://github.com/barryvdh/laravel-debugbar/pull/1626
+* Fix Visual Explain confirm message by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1709
+
+### New Contributors
+
+* @ralphjsmit made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1626
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.14.9...v3.14.10
+
 ## v3.14.9 - 2024-11-25
 
 ### What's Changed
