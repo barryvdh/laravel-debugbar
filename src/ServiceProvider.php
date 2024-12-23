@@ -136,5 +136,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
+        $kernel->appendMiddlewareToGroup('web', $middleware);
     }
 }
