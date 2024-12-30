@@ -134,8 +134,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected function registerMiddleware($middleware)
     {
+        /** @var \Illuminate\Foundation\Http\Kernel $kernel */
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
-        $kernel->appendMiddlewareToGroup('web', $middleware);
+        if (isset($kernel->getMiddlewareGroups()['web'])) {
+            $kernel->appendMiddlewareToGroup('web', $middleware);
+        }
     }
 }
