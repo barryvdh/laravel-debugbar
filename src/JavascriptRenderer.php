@@ -20,19 +20,11 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         parent::__construct($debugBar, $baseUrl, $basePath);
 
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
+        $this->cssFiles['laravel-darkmode'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
         $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
 
-        $theme = config('debugbar.theme', 'auto');
-        switch ($theme) {
-            case 'dark':
-                $this->cssFiles['laravel-dark'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
-                break;
-            case 'auto':
-                $this->cssFiles['laravel-dark-0'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-start.css';
-                $this->cssFiles['laravel-dark-1'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
-                $this->cssFiles['laravel-dark-2'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-end.css';
-        }
+        $this->setDefaultTheme(config('debugbar.theme', 'auto'));
     }
 
     /**
