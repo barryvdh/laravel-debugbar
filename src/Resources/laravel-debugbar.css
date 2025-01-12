@@ -65,7 +65,7 @@ div.phpdebugbar-openhandler[data-theme='dark'] {
 
     --color-link: var(--color-gray-500);
     --color-hover: var(--color-gray-400);
-    --color-hover-bg: var(--color-gray-300);
+    --color-hover-bg: var(--color-gray-700);
 
     --color-header-hover: var(--color-gray-700);
     --color-background-alt: var(--color-gray-900);
@@ -507,10 +507,6 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     line-height: 20px;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:hover,
-ul.phpdebugbar-widgets-timeline li:hover {
-    background-color: initial;
-}
 
 .phpdebugbar-widgets-templates ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     display: block;
@@ -596,6 +592,9 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugb
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) {
     background-color: var(--color-background-alt);
+}
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even):hover {
+    background-color: var(--color-hover-bg);
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value {
