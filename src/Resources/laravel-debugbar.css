@@ -91,7 +91,6 @@ div.phpdebugbar-openhandler-overlay {
 div.phpdebugbar-openhandler {
     border: 1px solid var(--color-border);
     border-top: 3px solid var(--color-red-vivid);
-    padding: 10px;
     border-radius: 5px;
     overflow-y: scroll;
     z-index: 6000002;
