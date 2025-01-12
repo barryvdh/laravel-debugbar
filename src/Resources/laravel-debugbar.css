@@ -233,14 +233,6 @@ div.phpdebugbar-minimized {
     border-top-color: var(--color-border);
 }
 
-div.phpdebugbar code, div.phpdebugbar pre, div.phpdebugbar samp {
-    background: none !important;
-    font-size: 1em;
-    border: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
 div.phpdebugbar .hljs {
     padding: 0;
 }
@@ -895,12 +887,6 @@ ul.phpdebugbar-widgets-table-list li {
 
 ul.phpdebugbar-widgets-table-list li:last-child {
     margin-bottom: 0;
-}
-
-
-pre.phpdebugbar-widgets-code-block ul.phpdebugbar-widgets-numbered-code li {
-    padding-top: 0;
-    line-height: 20px;
 }
 
 .phpdebugbar-widgets-bg-measure .phpdebugbar-widgets-value {
