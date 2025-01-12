@@ -98,65 +98,17 @@ div.phpdebugbar-openhandler {
     cursor: default;
 }
 
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > a,
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button {
-    display: inline-block;
-    cursor: pointer;
-    margin: 5px;
-    padding: 0px 12px 2px;
-    border: 1px solid var(--color-border);
-    background-color: var(--color-header);
-    color: var(--color-header-text);
-    font-size: 13px;
-}
 
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form {
     margin: 15px 0px 5px;
-    text-transform: uppercase;
     font-size: 13px;
     font-weight: bold;
 }
 
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form br {
-    display: none;
-}
-
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form > b {
-    display: none;
-}
-
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form input,
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select {
-    margin: 0px 10px 10px 2px;
-    border: 1px solid var(--color-border);
-    padding: 3px 6px 2px;
-    line-height: 16px;
-}
-
-@media (max-width: 720px) {
-    div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select + br,
-    div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form input[name="uri"] + br {
-        display: block;
-    }
-}
-
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions > form select {
-    padding: 2px 5px 1px;
-}
-
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions input[name="uri"] {
-    width: 200px;
-}
-
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions input[name="ip"] {
-    width: 90px;
-}
-
-div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button {
-    outline: none;
-    margin: 0px 0px 10px 2px;
-    padding: 5px 15px 4px;
-    line-height: 12px;
+div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button,
+div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions select,
+div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions input {
+   height: 24px;
 }
 
 div.phpdebugbar-openhandler table {
