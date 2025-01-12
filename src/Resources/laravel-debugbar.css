@@ -18,8 +18,8 @@ div.phpdebugbar-openhandler {
     --color-badge: #fff;
     --color-badge-text: var(--color-red-vivid);
 
-    /*--color-badge-active: #555;*/
-    /*--color-badge-active-text: #fff;*/
+    --color-badge-active: var(--color-red-vivid);
+    --color-badge-active-text: #fff;
 
     /*--color-link: #888;*/
     /*--color-hover: #aaa;*/
@@ -28,6 +28,49 @@ div.phpdebugbar-openhandler {
     --color-header-hover: #ebebeb;
     --color-background-alt: #f5f5f5;
 }
+
+/* Dark mode */
+div.phpdebugbar[data-theme='dark'],
+div.phpdebugbar-openhandler[data-theme='dark'] {
+    --color-white: #FFFFFF;
+    --color-gray-100: #F7FAFC;
+    --color-gray-200: #EDF2F7;
+    --color-gray-300: #E2E8F0;
+    --color-gray-400: #CBD5E0;
+    --color-gray-500: #A0AEC0;
+    --color-gray-600: #718096;
+    --color-gray-700: #4A5568;
+    --color-gray-800: #252a37;
+    --color-gray-900: #18181b;
+    --color-red-vivid: #eb4432;
+
+    --color-background: var(--color-gray-800);
+    --color-text: var(--color-gray-100);
+    --color-text-muted: var(--color-gray-600);
+    --color-border: var(--color-gray-600);
+
+    --color-header:var(--color-gray-900);
+    --color-header-text: var(--color-gray-200);
+    --color-header-border: var(--color-gray-800);
+
+    --color-active: var(--color-gray-800);
+    --color-active-text: var(--color-gray-100);
+
+    --color-icons: var(--color-header-text);
+    --color-badge: var(--color-white);
+    --color-badge-text: var(--color-red-vivid);
+
+    --color-badge-active: var(--color-red-vivid);
+    --color-badge-active-text: var(--color-white);
+
+    --color-link: var(--color-gray-500);
+    --color-hover: var(--color-gray-400);
+    --color-hover-bg: var(--color-gray-300);
+
+    --color-header-hover: var(--color-gray-700);
+    --color-background-alt: var(--color-gray-900);
+}
+
 
 
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
@@ -64,7 +107,6 @@ div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button {
     border: 1px solid var(--color-border);
     background-color: var(--color-header);
     color: var(--color-header-text);
-    text-shadow: 1px 1px #fff;
     font-size: 13px;
 }
 
@@ -134,7 +176,6 @@ div.phpdebugbar-openhandler table th {
 }
 
 div.phpdebugbar-openhandler table th {
-    text-shadow: 1px 1px #fff;
     font-size: 12px;
     text-transform: uppercase;
     padding: 5px 8px;
@@ -233,7 +274,6 @@ div.phpdebugbar-body {
 div.phpdebugbar-header {
     min-height: 30px;
     line-height: 20px;
-    text-shadow: 1px 1px #FFF;
 }
 
 div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span,  div.phpdebugbar-header > div > span > i{
@@ -365,7 +405,6 @@ ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-collector {
 
 ul.phpdebugbar-widgets-timeline li .phpdebugbar-widgets-value span.phpdebugbar-widgets-label {
     color: #fff;
-    text-shadow: 1px 1px #000;
 }
 
 ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params {
@@ -432,7 +471,6 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
     padding: 5px 8px 4px;
     text-transform: uppercase;
     font-size: 10px;
-    text-shadow: 1px 1px #585858;
     transition: background-color .25s linear 0s, color .25s linear 0s;
     color: #FFF;
 
@@ -507,13 +545,11 @@ a.phpdebugbar-tab.phpdebugbar-active {
     background: var(--color-red-vivid);
     background-image: none;
     color: #fff !important;
-    text-shadow: 1px 1px #bf3039;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
     background-color: var(--color-badge);
     color: var(--color-badge-text);
-    text-shadow: 1px 1px #ebebeb;
 }
 
 a.phpdebugbar-tab span.phpdebugbar-badge {
@@ -523,8 +559,7 @@ a.phpdebugbar-tab span.phpdebugbar-badge {
     background: var(--color-red-vivid);
     font-size: 11px;
     font-family: monospace;
-    color: #fff;
-    text-shadow: 1px 1px #bf3039;
+    color: var(--color-badge-active-text);
     border-radius: 10px;
     position: relative;
 }
@@ -542,7 +577,6 @@ div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text {
     width: auto;
     white-space: nowrap;
     padding: 2px 18px;
-    text-shadow: none;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -734,7 +768,6 @@ div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before {
     font-family: PhpDebugbarFontAwesome;
     content: "\f05a";
     color: var(--color-icons);
-    text-shadow: 1px 1px #fff;
     font-size: 14px;
     position: relative;
     top: 1px;
@@ -865,7 +898,7 @@ div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count:before {
 }
 
 div.phpdebugbar dl.phpdebugbar-widgets-kvlist > :nth-child(4n)::before {
-background-color: #f5f5f5;
+background-color: var(--background-color-alt);
 }
 
 dt.phpdebugbar-widgets-key {

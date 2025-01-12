@@ -20,7 +20,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         parent::__construct($debugBar, $baseUrl, $basePath);
 
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
-        $this->cssFiles['laravel-darkmode'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
         $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
 
