@@ -319,31 +319,10 @@ dl.phpdebugbar-widgets-kvlist dd {
     margin-left: 25%;
 }
 
-div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
-    width: 100%;
-    padding: 4px 0px 4px;
-    height: 20px;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 0px;
-    background-color: var(--color-header);
-}
-
-div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter, div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded {
-    right: 3px;
-}
-
-div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar input {
-    width: calc(100% - 58px);
-    margin-left: 0px;
-    border-radius: 3px;
-    padding: 2px 6px;
-    height: 15px;
-}
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-label,
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-collector {
-    padding: 1px 0px 0px 10px;
-    margin: 0px;
+
     text-transform: uppercase;
     font-style: normal;
 }
@@ -360,13 +339,11 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter,
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded {
-    position: relative;
-    top: -52px;
+
     display: inline-block;
     background-color: #6d6d6d;
     margin-left: 3px;
     border-radius: 3px;
-    padding: 5px 8px 4px;
     text-transform: uppercase;
     font-size: 10px;
     transition: background-color .25s linear 0s, color .25s linear 0s;
