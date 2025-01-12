@@ -1,6 +1,4 @@
 /* Dark mode */
-
-
 div.phpdebugbar[data-theme='dark'],
 div.phpdebugbar-openhandler[data-theme='dark'] {
     --color-gray-100: #F7FAFC;
@@ -15,43 +13,34 @@ div.phpdebugbar-openhandler[data-theme='dark'] {
     --color-red-vivid: #eb4432;
 
     --color-background: var(--color-gray-800);
-    --color-text: var(--color-gray-200);
-  
-}
+    --color-text: var(--color-gray-100);
+    --color-text-muted: var(--color-gray-600);
+    --color-border: var(--color-gray-600);
 
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-dataset-history .phpdebugbar-widgets-dataset-actions,
-div.phpdebugbar-openhandler[data-theme="dark"] {
-    background: var(--color-gray-800);
-}
+    --color-header:var(--color-gray-900);
+    --color-header-text: var(--color-gray-200);
+    --color-header-border: var(--color-gray-800);
 
-div.phpdebugbar[data-theme="dark"],
-div.phpdebugbar-openhandler[data-theme="dark"],
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-header > div > *,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-collector,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-list li span.phpdebugbar-widgets-label,
-div.phpdebugbar[data-theme="dark"] code.phpdebugbar-widgets-sql span.hljs-keyword,
-div.phpdebugbar-openhandler[data-theme="dark"] .php debugbar-openhandler-header,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-header a,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select {
-    color: var(--color-gray-200);
+    /*--color-active: #444;*/
+    /*--color-active-text: #e0e0e0;*/
+
+    --color-icons: var(--color-header-text);
+    --color-badge: #fff;
+    --color-badge-text: var(--color-red-vivid);
+
+    --color-badge-active: var(--color-red-vivid);
+    --color-badge-active-text: #fff;
+
+    --color-link: var(--color-gray-500);
+    --color-hover: var(--color-gray-400);
+    --color-hover-bg: var(--color-gray-300);
+
+    --color-header-hover: var(--color-gray-700);
+    --color-background-alt: var(--color-gray-900);
 }
 
 div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label {
     text-shadow: 1px 1px #000;
-}
-
-div.phpdebugbar-openhandler[data-theme="dark"],
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item pre.phpdebugbar-widgets-file,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > a,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions button,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > form input,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > form select,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select {
-    border-color: var(--color-gray-600);
 }
 
 div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before,
@@ -67,219 +56,7 @@ div.phpdebugbar[data-theme="dark"] div.phpdebugbar-header {
     text-shadow: none;
 }
 
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-header-right > * {
-    border-right-color: var(--color-gray-800);
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-header > div > select,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > form input,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > form select,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel .phpdebugbar-widgets-dataset-actions select,
-div.phpdebugbar[data-theme="dark"] input[type='text'],
-div.phpdebugbar[data-theme="dark"] input[type='password'] {
-    background-color: var(--color-gray-800);
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-header,
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-restore-btn,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-header,
-div.phpdebugbar[data-theme="dark"] dl.phpdebugbar-widgets-kvlist > :nth-child(4n-1),
-div.phpdebugbar[data-theme="dark"] dl.phpdebugbar-widgets-kvlist > :nth-child(4n),
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even),
-div.phpdebugbar[data-theme="dark"] .hljs,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params th,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > a,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions button,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-templates table.phpdebugbar-widgets-params th {
-    background-color: var(--color-gray-900);
-}
-
-div.phpdebugbar[data-theme="dark"] .phpdebugbar-widgets-mails ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-headers,
-div.phpdebugbar[data-theme="dark"] ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params {
-    border-left-color: var(--color-gray-600);
-}
-
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-tab:hover,
-div.phpdebugbar[data-theme="dark"] span.phpdebugbar-indicator:hover,
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-indicator:hover,
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-close-btn:hover,
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-minimize-btn:hover,
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-maximize-btn:hover,
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-open-btn:hover,
-div.phpdebugbar-openhandler[data-theme="dark"] table th,
-div.phpdebugbar-openhandler[data-theme="dark"] table tr:nth-child(2n),
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
-    background-color: var(--color-gray-700);
-}
-
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-tab.phpdebugbar-active:hover {
-    background-color: var(--color-red-vivid);
-}
-
-div.phpdebugbar[data-theme="dark"] .phpdebugbar-indicator span.phpdebugbar-tooltip,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text,
-div.phpdebugbar[data-theme="dark"] pre.sf-dump,
-div.phpdebugbar[data-theme="dark"] .hljs,
-div.phpdebugbar[data-theme="dark"] code.phpdebugbar-widgets-sql span.hljs-operator {
-    color: var(--color-gray-100);
-}
-
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-public,
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-protected,
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-private {
-    color: var(--color-gray-100) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-openhandler[data-theme="dark"] a {
-    color: var(--color-gray-500);
-}
-
-div.phpdebugbar[data-theme="dark"] .phpdebugbar-indicator span.phpdebugbar-tooltip,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text {
-    background: var(--color-gray-900);
-}
-
-div.phpdebugbar[data-theme="dark"] .hljs-tag .hljs-value,
-div.phpdebugbar[data-theme="dark"] .hljs-phpdoc,
-div.phpdebugbar[data-theme="dark"] .tex .hljs-formula,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-message {
-    color: var(--color-red-vivid);
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-database,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-duration,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-memory,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-row-count,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-copy-clipboard,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-stmt-id,
-div.phpdebugbar[data-theme="dark"] .phpdebugbar-widgets-callgraph pre,
-div.phpdebugbar[data-theme="dark"] .phpdebugbar-text-muted,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-text-muted
-{
-    color: var(--color-gray-600);
-}
-
-div.phpdebugbar[data-theme="dark"] li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename,
-div.phpdebugbar[data-theme="dark"] li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-filename a.phpdebugbar-widgets-editor-link
-{
-    color: #ddd;
-}
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
-    background-color: #473e00;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
-    color: #7B7B7B;
-}
-
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-note {
-    color: #8be9fd;
-}
-
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-num,
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-const,
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-index {
-    color: #bd93f9;
-}
-
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-key,
-div.phpdebugbar[data-theme="dark"] pre.sf-dump .sf-dump-str {
-    color: #f1fa8c;
-}
-
 div.phpdebugbar-openhandler[data-theme="dark"] {
     border-top-color: var(--color-red-vivid);
 }
 
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-header .phpdebugbar-tab {
-    border-color: var(--color-gray-800);
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-body {
-    border-top-color: var(--color-gray-800);
-}
-
-div.phpdebugbar[data-theme="dark"] a.phpdebugbar-restore-btn {
-    border-right-color: var(--color-gray-800) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel div.phpdebugbar-widgets-status {
-    background-color: var(--color-gray-900) !important;
-    border-bottom-color: var(--color-gray-800) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-templates div.phpdebugbar-widgets-status {
-    background: var(--color-gray-900) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-panel div.phpdebugbar-widgets-status > * {
-    color: var(--color-gray-200) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-render-time,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-memory,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-param-count,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-templates span.phpdebugbar-widgets-type {
-    color: var(--color-gray-600) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
-    border-color: var(--color-gray-600) !important;
-}
-
-div.phpdebugbar[data-theme="dark"] code,
-div.phpdebugbar[data-theme="dark"] pre {
-    color: #f1fa8c;
-}
-
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > a,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions button,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > form input,
-div.phpdebugbar-openhandler[data-theme="dark"] .phpdebugbar-openhandler-actions > form select,
-div.phpdebugbar[data-theme="dark"] input[type='text'],
-div.phpdebugbar[data-theme="dark"] input[type='password'] {
-    color: var(--color-gray-300);
-}
-
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-filename,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-database,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-duration,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-memory,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-row-count,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-copy-clipboard,
-div.phpdebugbar[data-theme="dark"] div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate span.phpdebugbar-widgets-stmt-id {
-    color: var(--color-gray-500);
-}
-
-div.phpdebugbar[data-theme="dark"] dl.phpdebugbar-widgets-kvlist > :nth-child(4n)::before {
-    background-color: var(--color-gray-900);
-}
-
-div.phpdebugbar[data-theme="dark"] dt.phpdebugbar-widgets-key {
-    background: var(--color-gray-800);
-}
-
-div.phpdebugbar[data-theme="dark"] code.language-php,
-div.phpdebugbar[data-theme="dark"] pre.language-php {
-    color: #FFF;
-}
-
-div.phpdebugbar[data-theme="dark"] pre.phpdebugbar-widgets-code-block ul {
-    background: none;
-}
-
-.phpdebugbar-widgets-dataset-history table tr.phpdebugbar-widgets-active {
-    background-color: var(--color-gray-700);
-    color: white;
-}
-
-.phpdebugbar-widgets-dataset-history table th,
-.phpdebugbar-widgets-dataset-history table td {
-    border-color: var(--color-gray-600);
-}
-
-ul.phpdebugbar-widgets-timeline table.phpdebugbar-widgets-params td {
-    border-color: var(--color-gray-700);
-}
