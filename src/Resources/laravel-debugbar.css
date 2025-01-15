@@ -71,8 +71,6 @@ div.phpdebugbar-openhandler[data-theme='dark'] {
     --color-background-alt: var(--color-gray-900);
 }
 
-
-
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
 .Whoops.container {
     z-index: 5999999;
@@ -214,11 +212,6 @@ div.phpdebugbar-body {
     border-top: 1px solid var(--color-header-border);
 }
 
-div.phpdebugbar-header {
-    min-height: 30px;
-    line-height: 20px;
-}
-
 div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span,  div.phpdebugbar-header > div > span > i{
     display: inline-block;
     transform: translateY(-0.5px) !important;
@@ -261,11 +254,6 @@ a.phpdebugbar-restore-btn {
     border-right: none;
 }
 
-div.phpdebugbar-header > div > * {
-    padding: 5px 8px;
-    font-size: 13px;
-    height: 20px;
-}
 
 div.phpdebugbar-header .phpdebugbar-tab {
     border-left: 1px solid var(--color-header-border);
@@ -404,16 +392,6 @@ a.phpdebugbar-maximize-btn:hover,
 a.phpdebugbar-open-btn:hover {
     background-color: var(--color-header-hover);
     /* transition: background-color .25s linear 0s, color .25s linear 0s; */
-}
-
-a.phpdebugbar-close-btn,
-a.phpdebugbar-open-btn,
-a.phpdebugbar-minimize-btn ,
-a.phpdebugbar-maximize-btn,
-a.phpdebugbar-tab.phpdebugbar-tab-history,
-a.phpdebugbar-tab.phpdebugbar-tab-settings {
-  min-width: 14px;
-  height: 20px;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {

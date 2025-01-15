@@ -23,7 +23,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
         $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
 
-        $this->setDefaultTheme(config('debugbar.theme', 'auto'));
+        $this->setTheme(config('debugbar.theme', 'auto'));
     }
 
     /**
