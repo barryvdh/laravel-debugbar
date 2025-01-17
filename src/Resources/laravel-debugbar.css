@@ -1,74 +1,74 @@
 div.phpdebugbar,
 div.phpdebugbar-openhandler {
-    --color-red-vivid: #eb4432;
+    --debugbar-red-vivid: #eb4432;
 
-    /*--color-background: #fff;*/
-    --color-text: #222;
-    /*--color-text-muted: #888;*/
-    --color-border: #bbb;
+    /*--debugbar-background: #fff;*/
+    --debugbar-text: #222;
+    /*--debugbar-text-muted: #888;*/
+    --debugbar-border: #bbb;
 
-    --color-header: #efefef;
-    --color-header-text: #555;
-    /*--color-header-border: #ddd;*/
+    --debugbar-header: #fff;
+    --debugbar-header-text: #555;
+    /*--debugbar-header-border: #ddd;*/
 
-    /*--color-active: #ccc;*/
-    /*--color-active-text: #666;*/
+    /*--debugbar-active: #ccc;*/
+    /*--debugbar-active-text: #666;*/
 
-    --color-icons: var(--color-header-text);
-    --color-badge: #fff;
-    --color-badge-text: var(--color-red-vivid);
+    --debugbar-icons: var(--debugbar-header-text);
+    --debugbar-badge: #fff;
+    --debugbar-badge-text: var(--debugbar-red-vivid);
 
-    --color-badge-active: var(--color-red-vivid);
-    --color-badge-active-text: #fff;
+    --debugbar-badge-active: var(--debugbar-red-vivid);
+    --debugbar-badge-active-text: #fff;
 
-    /*--color-link: #888;*/
-    /*--color-hover: #aaa;*/
-    /*--color-hover-bg: #fafafa;*/
+    /*--debugbar-link: #888;*/
+    /*--debugbar-hover: #aaa;*/
+    /*--debugbar-hover-bg: #fafafa;*/
 
-    --color-header-hover: #ebebeb;
-    --color-background-alt: #f5f5f5;
+    --debugbar-header-hover: #ebebeb;
+    --debugbar-background-alt: #f5f5f5;
 }
 
 /* Dark mode */
 div.phpdebugbar[data-theme='dark'],
 div.phpdebugbar-openhandler[data-theme='dark'] {
-    --color-white: #FFFFFF;
-    --color-gray-100: #F7FAFC;
-    --color-gray-200: #EDF2F7;
-    --color-gray-300: #E2E8F0;
-    --color-gray-400: #CBD5E0;
-    --color-gray-500: #A0AEC0;
-    --color-gray-600: #718096;
-    --color-gray-700: #4A5568;
-    --color-gray-800: #252a37;
-    --color-gray-900: #18181b;
-    --color-red-vivid: #eb4432;
+    --debugbar-white: #FFFFFF;
+    --debugbar-gray-100: #F7FAFC;
+    --debugbar-gray-200: #EDF2F7;
+    --debugbar-gray-300: #E2E8F0;
+    --debugbar-gray-400: #CBD5E0;
+    --debugbar-gray-500: #A0AEC0;
+    --debugbar-gray-600: #718096;
+    --debugbar-gray-700: #4A5568;
+    --debugbar-gray-800: #252a37;
+    --debugbar-gray-900: #18181b;
+    --debugbar-red-vivid: #eb4432;
 
-    --color-background: var(--color-gray-800);
-    --color-text: var(--color-gray-100);
-    --color-text-muted: var(--color-gray-600);
-    --color-border: var(--color-gray-600);
+    --debugbar-background: var(--debugbar-gray-800);
+    --debugbar-text: var(--debugbar-gray-100);
+    --debugbar-text-muted: var(--debugbar-gray-600);
+    --debugbar-border: var(--debugbar-gray-600);
 
-    --color-header:var(--color-gray-900);
-    --color-header-text: var(--color-gray-200);
-    --color-header-border: var(--color-gray-800);
+    --debugbar-header:var(--debugbar-gray-900);
+    --debugbar-header-text: var(--debugbar-gray-200);
+    --debugbar-header-border: var(--debugbar-gray-800);
 
-    --color-active: var(--color-gray-800);
-    --color-active-text: var(--color-gray-100);
+    --debugbar-active: var(--debugbar-gray-800);
+    --debugbar-active-text: var(--debugbar-gray-100);
 
-    --color-icons: var(--color-header-text);
-    --color-badge: var(--color-white);
-    --color-badge-text: var(--color-red-vivid);
+    --debugbar-icons: var(--debugbar-header-text);
+    --debugbar-badge: var(--debugbar-white);
+    --debugbar-badge-text: var(--debugbar-red-vivid);
 
-    --color-badge-active: var(--color-red-vivid);
-    --color-badge-active-text: var(--color-white);
+    --debugbar-badge-active: var(--debugbar-red-vivid);
+    --debugbar-badge-active-text: var(--debugbar-white);
 
-    --color-link: var(--color-gray-500);
-    --color-hover: var(--color-gray-400);
-    --color-hover-bg: var(--color-gray-700);
+    --debugbar-link: var(--debugbar-gray-500);
+    --debugbar-hover: var(--debugbar-gray-400);
+    --debugbar-hover-bg: var(--debugbar-gray-700);
 
-    --color-header-hover: var(--color-gray-700);
-    --color-background-alt: var(--color-gray-900);
+    --debugbar-header-hover: var(--debugbar-gray-700);
+    --debugbar-background-alt: var(--debugbar-gray-900);
 }
 
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
@@ -87,8 +87,8 @@ div.phpdebugbar-openhandler-overlay {
 }
 
 div.phpdebugbar-openhandler {
-    border: 1px solid var(--color-border);
-    border-top: 3px solid var(--color-red-vivid);
+    border: 1px solid var(--debugbar-border);
+    border-top: 3px solid var(--debugbar-red-vivid);
     border-radius: 5px;
     overflow-y: scroll;
     z-index: 6000002;
@@ -119,7 +119,7 @@ div.phpdebugbar-openhandler table td,
 div.phpdebugbar-openhandler table th {
     width: auto!important;
     text-align: left;
-    border: 0px solid var(--color-border);
+    border: 0px solid var(--debugbar-border);
     padding: 2px 8px;
     font-size: 14px;
 }
@@ -132,7 +132,7 @@ div.phpdebugbar-openhandler table th {
 
 div.phpdebugbar-openhandler table th,
 div.phpdebugbar-openhandler table tr:nth-child(2n) {
-    background-color: var(--color-background-alt);
+    background-color: var(--debugbar-background-alt);
 }
 
 div.phpdebugbar-openhandler table th:nth-child(1), div.phpdebugbar-openhandler table td:nth-child(1), /* Date */
@@ -170,7 +170,7 @@ div.phpdebugbar-resize-handle {
     cursor: ns-resize;
     border-top: none;
     border-bottom: 0px;
-    background-color: var(--color-red-vivid);
+    background-color: var(--debugbar-red-vivid);
 }
 
 .phpdebugbar.phpdebugbar-minimized div.phpdebugbar-resize-handle {
@@ -179,7 +179,7 @@ div.phpdebugbar-resize-handle {
 
 div.phpdebugbar-closed,
 div.phpdebugbar-minimized {
-    border-top-color: var(--color-border);
+    border-top-color: var(--debugbar-border);
 }
 
 div.phpdebugbar .hljs {
@@ -191,7 +191,7 @@ div.phpdebugbar .phpdebugbar-widgets-messages .hljs > code {
 }
 
 div.phpdebugbar code, div.phpdebugbar pre {
-    color: var(--color-text);
+    color: var(--debugbar-text);
 }
 
 div.phpdebugbar-widgets-exceptions .phpdebugbar-widgets-filename {
@@ -203,13 +203,13 @@ div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item pre.phpdebug
 }
 
 div.phpdebugbar pre.sf-dump {
-    color: var(--color-text);
+    color: var(--debugbar-text);
     outline: none;
     padding-left: 0px;
 }
 
 div.phpdebugbar-body {
-    border-top: 1px solid var(--color-header-border);
+    border-top: 1px solid var(--debugbar-header-border);
 }
 
 div.phpdebugbar-header  span.phpdebugbar-text, div.phpdebugbar-header > div > span > span,  div.phpdebugbar-header > div > span > i{
@@ -243,7 +243,7 @@ div.phpdebugbar-openhandler-header {
 }
 
 a.phpdebugbar-restore-btn {
-    border-right-color: var(--color-border) !important;
+    border-right-color: var(--debugbar-border) !important;
     height: 20px;
     width: 24px;
     background-position: center;
@@ -256,7 +256,7 @@ a.phpdebugbar-restore-btn {
 
 
 div.phpdebugbar-header .phpdebugbar-tab {
-    border-left: 1px solid var(--color-header-border);
+    border-left: 1px solid var(--debugbar-header-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -363,7 +363,7 @@ div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-w
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="critical"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="error"],
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded[rel="error"] {
-    background-color: var(--color-red-vivid);
+    background-color: var(--debugbar-red-vivid);
 }
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter[rel="notice"],
@@ -390,53 +390,35 @@ a.phpdebugbar-restore-btn:hover,
 a.phpdebugbar-minimize-btn:hover,
 a.phpdebugbar-maximize-btn:hover,
 a.phpdebugbar-open-btn:hover {
-    background-color: var(--color-header-hover);
+    background-color: var(--debugbar-header-hover);
     /* transition: background-color .25s linear 0s, color .25s linear 0s; */
 }
 
 a.phpdebugbar-tab.phpdebugbar-active {
-    background: var(--color-red-vivid);
+    background: var(--debugbar-red-vivid);
     background-image: none;
     color: #fff !important;
 }
 
 a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
-    background-color: var(--color-badge);
-    color: var(--color-badge-text);
+    background-color: var(--debugbar-badge);
+    color: var(--debugbar-badge-text);
 }
 
 a.phpdebugbar-tab span.phpdebugbar-badge {
     vertical-align: 0px;
     padding: 2px 8px;
     text-align: center;
-    background: var(--color-red-vivid);
+    background: var(--debugbar-red-vivid);
     font-size: 11px;
     font-family: var(--font-mono);
-    color: var(--color-badge-active-text);
+    color: var(--debugbar-badge-active-text);
     border-radius: 10px;
     position: relative;
 }
 
 .phpdebugbar-indicator {
     cursor: text;
-}
-
-.phpdebugbar-indicator span.phpdebugbar-tooltip,
-div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text {
-    border: none;
-    border-radius: 5px;
-    background: var(--color-background-alt);
-    font-size: 12px;
-    width: auto;
-    white-space: nowrap;
-    padding: 2px 18px;
-
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 div.phpdebugbar-mini-design a.phpdebugbar-tab:hover span.phpdebugbar-text {
@@ -484,7 +466,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
 .phpdebugbar-widgets-mails ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-headers {
     margin: 10px 0px;
     padding: 7px 10px;
-    border-left: 2px solid var(--color-header);
+    border-left: 2px solid var(--debugbar-header);
     line-height: 17px;
 }
 
@@ -521,7 +503,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params {
     margin: 10px 0px;
     font-size: 12px;
-    border-left: 2px solid var(--color-border);
+    border-left: 2px solid var(--debugbar-border);
 }
 
 div.phpdebugbar-widgets-templates table.phpdebugbar-widgets-params th,
@@ -545,10 +527,10 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugb
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) {
-    background-color: var(--color-background-alt);
+    background-color: var(--debugbar-background-alt);
 }
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even):hover {
-    background-color: var(--color-hover-bg);
+    background-color: var(--debugbar-hover-bg);
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value {
@@ -583,7 +565,7 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error:before {
-    color: var(--color-red-vivid);
+    color: var(--debugbar-red-vivid);
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-warning:before,
@@ -608,18 +590,18 @@ div.phpdebugbar-panel div.phpdebugbar-widgets-status {
     margin-top: 0px !important;
     line-height: 11px!important;
     font-weight: bold!important;
-    background: var(--color-background-alt) !important;
-    border-bottom: 1px solid var(--color-border) !important;
+    background: var(--debugbar-background-alt) !important;
+    border-bottom: 1px solid var(--debugbar-border) !important;
 }
 
 div.phpdebugbar-panel div.phpdebugbar-widgets-status > * {
-    color: var(--color-header-text)!important;
+    color: var(--debugbar-header-text)!important;
 }
 
 div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before {
     font-family: PhpDebugbarFontAwesome;
     content: "\f05a";
-    color: var(--color-icons);
+    color: var(--debugbar-icons);
     font-size: 14px;
     position: relative;
     top: 1px;
@@ -632,7 +614,7 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params th {
-    background-color: var(--color-header);
+    background-color: var(--debugbar-header);
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
@@ -659,7 +641,7 @@ ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     float: right;
     font-size: 12px;
     padding: 0 4px;
-    background: var(--color-red-vivid);
+    background: var(--debugbar-red-vivid);
     margin: 0 2px;
     border-radius: 4px;
     color: #fff;
@@ -679,7 +661,7 @@ div.phpdebugbar-header-right {
 }
 
 div.phpdebugbar-header-right > * {
-    border-right: 1px solid var(--color-header);
+    border-right: 1px solid var(--debugbar-header);
 }
 
 div.phpdebugbar-header-right > *:first-child {
@@ -705,7 +687,7 @@ div.phpdebugbar-panel table .phpdebugbar-widgets-name {
 
 dl.phpdebugbar-widgets-kvlist > :nth-child(4n-1),
 dl.phpdebugbar-widgets-kvlist > :nth-child(4n) {
-    background-color: var(--color-background-alt);
+    background-color: var(--debugbar-background-alt);
 }
 
 .phpdebugbar pre.sf-dump:after {
@@ -830,7 +812,7 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain {
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain th {
-    border: 1px solid var(--color-header);
+    border: 1px solid var(--debugbar-header);
     text-align: center;
 }
 
