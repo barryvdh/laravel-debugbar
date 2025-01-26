@@ -17,6 +17,13 @@ class RouteCollectorTest extends TestCase
         $this->routeCollector = debugbar()->getCollector('route');
     }
 
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('debugbar.collectors.route', true);
+        
+        parent::getEnvironmentSetUp($app);
+    }
+
     public function testItCollectsRouteUri()
     {
         $this->get('web/html');
