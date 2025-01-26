@@ -20,7 +20,7 @@ class RouteCollectorTest extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('debugbar.collectors.route', true);
-        
+
         parent::getEnvironmentSetUp($app);
     }
 

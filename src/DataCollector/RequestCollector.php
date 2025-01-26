@@ -253,7 +253,9 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                     $reflector->getEndLine()
                 );
 
-                $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
+                if (isset($result['controller'])) {
+                    $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
+                }
             } else {
                 $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
             }
