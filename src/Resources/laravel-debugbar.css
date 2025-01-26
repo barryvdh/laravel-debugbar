@@ -647,7 +647,7 @@ div.phpdebugbar-header-right > *:first-child {
     border-right: 0;
 }
 
-div.phpdebugbar-header-right a.phpdebugbar-tab.phpdebugbar-tab-history  {
+div.phpdebugbar-header-right a.phpdebugbar-tab.phpdebugbar-tab-settings {
     border-left: 0;
 }
 
