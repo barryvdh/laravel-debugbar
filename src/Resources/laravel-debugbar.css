@@ -22,8 +22,8 @@ div.phpdebugbar-openhandler {
     --debugbar-badge-active: var(--debugbar-red-vivid);
     --debugbar-badge-active-text: #fff;
 
-    /*--debugbar-link: #888;*/
-    /*--debugbar-hover: #aaa;*/
+    --debugbar-link: #777;
+    --debugbar-hover: #666;
 
     --debugbar-header-hover: #ebebeb;
 }
@@ -64,8 +64,8 @@ div.phpdebugbar-openhandler[data-theme='dark'] {
     --debugbar-badge-active: var(--debugbar-red-vivid);
     --debugbar-badge-active-text: var(--debugbar-white);
 
-    --debugbar-link: var(--debugbar-gray-500);
-    --debugbar-hover: var(--debugbar-gray-400);
+    --debugbar-link: var(--debugbar-gray-300);
+    --debugbar-hover: var(--debugbar-gray-100);
     --debugbar-hover-bg: var(--debugbar-gray-700);
 }
 
