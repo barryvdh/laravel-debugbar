@@ -168,7 +168,7 @@ return [
         'log'             => true,  // Logs from Monolog (merged in messages if enabled)
         'db'              => true,  // Show database (PDO) queries and bindings
         'views'           => true,  // Views with their data
-        'route'           => true,  // Current route information
+        'route'           => false,  // Current route information
         'auth'            => false, // Display Laravel authentication status
         'gate'            => true,  // Display Laravel Gate checks
         'session'         => true,  // Display session data
@@ -250,6 +250,7 @@ return [
             'hiddens' => [], // Hides sensitive values using array paths
         ],
         'symfony_request' => [
+            'label' => true,  // Show route on bar
             'hiddens' => [], // Hides sensitive values using array paths, example: request_request.password
         ],
         'events' => [
