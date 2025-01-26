@@ -81,7 +81,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "tooltip" => [
                     'status' => $this->response->getStatusCode()
                 ],
-                "map" => "request.path",
+                "map" => "request.uri",
                 "link" => "request",
                 "default" => ""
             ];
