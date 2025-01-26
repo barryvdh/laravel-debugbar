@@ -5,10 +5,13 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -20,7 +23,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 {
     /** @var \Symfony\Component\HttpFoundation\Request $request */
     protected $request;
-    /** @var  \Symfony\Component\HttpFoundation\Request $response */
+    /** @var  \Symfony\Component\HttpFoundation\Response $response */
     protected $response;
     /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
     protected $session;
@@ -63,7 +66,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
      */
     public function getWidgets()
     {
-        return [
+        $widgets = [
             "request" => [
                 "icon" => "tags",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
@@ -71,6 +74,25 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "default" => "{}"
             ]
         ];
+
+        if (Config::get('debugbar.options.request.label', true)) {
+            $widgets['currentrequest'] = [
+                "icon" => "share",
+                "tooltip" => [
+                    'status' => $this->response->getStatusCode()
+                ],
+                "map" => "request.uri",
+                "link" => "request",
+                "default" => ""
+            ];
+            if ($this->request instanceof Request) {
+                $widgets['currentrequest']['tooltip'] += [
+                    'controller_action' => optional($this->request->route())->getActionName(),
+                ];
+            }
+        }
+
+        return $widgets;
     }
 
     /**
@@ -99,15 +121,37 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         $statusCode = $response->getStatusCode();
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START :  $request->server->get('REQUEST_TIME_FLOAT');
+        $query = $request->getQueryString();
+        $htmlData = [];
 
         $data = [
-            'path_info' => $request->getPathInfo(),
-            'status_code' => $statusCode,
-            'status_text' => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
-            'format' => $request->getRequestFormat(),
-            'content_type' => $response->headers->get('Content-Type') ? $response->headers->get(
+            'status' => $statusCode . ' ' . (isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : ''),
+            'duration' => $startTime ? $this->formatDuration(microtime(true) - $startTime) : null,
+            'peak_memory' => $this->formatBytes(memory_get_peak_usage(true), 1),
+            ];
+
+        if ($request instanceof Request) {
+
+            if ($route = $request->route()) {
+                $htmlData += $this->getRouteInformation($route);
+            }
+
+            $fulLUrl = $request->fullUrl();
+            $data += [
+                'full_url' => strlen($fulLUrl) > 100 ? [$fulLUrl] : $fulLUrl,
+            ];
+        }
+
+        if ($response instanceof RedirectResponse) {
+            $data['response'] = 'Redirect to ' . $response->getTargetUrl();
+        }
+
+        $data += [
+            'response' => $response->headers->get('Content-Type') ? $response->headers->get(
                 'Content-Type'
             ) : 'text/html',
+            'request_format' => $request->getRequestFormat(),
             'request_query' => $request->query->all(),
             'request_request' => $request->request->all(),
             'request_headers' => $request->headers->all(),
@@ -137,7 +181,6 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             }
         }
 
-        $htmlData = [];
         if (class_exists(Telescope::class)) {
             $entry = IncomingEntry::make([
                 'requestId' => $this->currentRequestId,
@@ -148,6 +191,81 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         return $htmlData + $data;
+    }
+
+    protected function getRouteInformation($route)
+    {
+        if (!is_a($route, 'Illuminate\Routing\Route')) {
+            return [];
+        }
+        $uri = head($route->methods()) . ' ' . $route->uri();
+        $action = $route->getAction();
+
+        $result = [
+            'uri' => $uri ?: '-',
+        ];
+
+        $result = array_merge($result, $action);
+        $uses = $action['uses'] ?? null;
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
+
+        if (request()->hasHeader('X-Livewire')) {
+            try {
+                $component = request('components')[0];
+                $name = json_decode($component['snapshot'], true)['memo']['name'];
+                $method = $component['calls'][0]['method'];
+                $class = app(\Livewire\Mechanisms\ComponentRegistry::class)->getClass($name);
+                if (class_exists($class) && method_exists($class, $method)) {
+                    $controller = $class . '@' . $method;
+                    $result['controller'] = ltrim($controller, '\\');
+                }
+            } catch (\Throwable $e) {
+                //
+            }
+        }
+
+        if (str_contains($controller, '@')) {
+            list($controller, $method) = explode('@', $controller);
+            if (class_exists($controller) && method_exists($controller, $method)) {
+                $reflector = new \ReflectionMethod($controller, $method);
+            }
+            unset($result['uses']);
+        } elseif ($uses instanceof \Closure) {
+            $reflector = new \ReflectionFunction($uses);
+            $result['uses'] = $this->formatVar($uses);
+        } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
+            if (class_exists($controller) && method_exists($controller, 'render')) {
+                $reflector = new \ReflectionMethod($controller, 'render');
+                $result['controller'] = $controller . '@render';
+            }
+        }
+
+        if (isset($reflector)) {
+            $filename = $this->normalizeFilePath($reflector->getFileName());
+
+            if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
+                $result['file'] = sprintf(
+                    '<a href="%s" onclick="%s" class="phpdebugbar-widgets-editor-link">%s:%s-%s</a>',
+                    $link['url'],
+                    $link['ajax'] ? 'event.preventDefault();$.ajax(this.href);' : '',
+                    $filename,
+                    $reflector->getStartLine(),
+                    $reflector->getEndLine()
+                );
+
+                if (isset($result['controller'])) {
+                    $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
+                }
+            } else {
+                $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
+            }
+        }
+
+        if (isset($result['middleware']) && is_array($result['middleware'])) {
+            $result['middleware'] = implode(', ', $result['middleware']);
+        }
+
+        return array_filter($result);
     }
 
     private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)

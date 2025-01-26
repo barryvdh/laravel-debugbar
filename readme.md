@@ -5,7 +5,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/barryvdh/laravel-debugbar?label=Downloads)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Fruitcake](https://img.shields.io/badge/Powered%20By-Fruitcake-b2bc35.svg)](https://fruitcake.nl/)
 
-This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel.
+This is a package to integrate [PHP Debug Bar](https://github.com/php-debugbar/php-debugbar) with Laravel.
 It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
 It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
 It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
