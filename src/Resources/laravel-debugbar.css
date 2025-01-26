@@ -673,10 +673,6 @@ dl.phpdebugbar-widgets-kvlist > :nth-child(4n) {
     clear: none!important;
 }
 
-div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-message {
-    color: #dd1044;
-}
-
 div.phpdebugbar-widgets-exceptions li.phpdebugbar-widgets-list-item > div {
     display: none;
 }

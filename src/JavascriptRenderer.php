@@ -43,7 +43,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     {
         $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
-            'theme' => config('debugbar.theme', 'auto'),
         ]));
 
         $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [
