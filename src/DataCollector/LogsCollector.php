@@ -100,7 +100,7 @@ class LogsCollector extends MessagesCollector
      */
     public function getLogs($file)
     {
-        $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
+        $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\](?:(?!\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\])[\s\S])*/";
 
         $log_levels = $this->getLevels();
 
