@@ -1,8 +1,6 @@
 ---
 description: Laravel Debugbar contains features like collectors, capturing ajax requesting, browsing history etc.
 preview_image: img/preview-features.jpg
-hide:
-  - navigation
 ---
 
 ## Collectors

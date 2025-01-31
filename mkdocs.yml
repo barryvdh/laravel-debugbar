@@ -36,13 +36,14 @@ theme:
     - content.code.copy
     - content.action.edit
     - toc.follow
+    - toc.integrate
     - search.highlight
     - meta
 extra_css:
   - assets/extra.css
-  - assets/debugbar.css
+  - assets/debugbar.css?v=1738314470
 extra_javascript:
-  - assets/debugbar.js
+  - assets/debugbar.js?v=1738314470
 markdown_extensions:
   - admonition
   - abbr

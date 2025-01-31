@@ -1,8 +1,6 @@
 ---
 description: Using Laravel Debugbar is simple. After installing, just enable Debug mode and you should be good. Read further for more options.
 preview_image: img/preview-usage.jpg
-hide:
-  - navigation
 ---
 
 # Usage

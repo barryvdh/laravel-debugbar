@@ -1,8 +1,6 @@
 ---
 description: Installing Laravel Debugbar in a project is simple. Use 'composer require barryvdh/laravel-debugbar --dev' to get started now
 preview_image: img/preview-install.jpg
-hide:
-  - navigation
 ---
 
 # Installation

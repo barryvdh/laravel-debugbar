@@ -1216,6 +1216,20 @@ div.phpdebugbar-openhandler table {
     table-layout: fixed;
     font-size: 14px;
 }
+div.phpdebugbar-openhandler table td,
+div.phpdebugbar-openhandler table th {
+    border: 0px solid var(--debugbar-border);
+    padding: 2px 8px;
+}
+div.phpdebugbar-openhandler table th,
+div.phpdebugbar-openhandler table tr:nth-child(2n) {
+    background-color: var(--debugbar-background-alt);
+}
+div.phpdebugbar-openhandler table th:nth-child(2), div.phpdebugbar-openhandler table td:nth-child(2), /* Method */
+div.phpdebugbar-openhandler table th:nth-child(4), div.phpdebugbar-openhandler table td:nth-child(4), /* IP */
+div.phpdebugbar-openhandler table th:nth-child(5), div.phpdebugbar-openhandler table td:nth-child(5) { /* Filter */
+    text-align: center;
+}
 div.phpdebugbar-openhandler table td {
     padding: 6px 3px;
     border-bottom: 1px solid var(--debugbar-border);
@@ -1225,6 +1239,7 @@ div.phpdebugbar-openhandler table td a{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions {
     text-align: center;
@@ -1345,59 +1360,6 @@ div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions button,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions select,
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions input {
     height: 24px;
-}
-
-div.phpdebugbar-openhandler table {
-    margin: 15px 0px 10px;
-    table-layout: auto;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-div.phpdebugbar-openhandler table td,
-div.phpdebugbar-openhandler table th {
-    width: auto!important;
-    text-align: left;
-    border: 0px solid var(--debugbar-border);
-    padding: 2px 8px;
-    font-size: 14px;
-}
-
-div.phpdebugbar-openhandler table th {
-    font-size: 12px;
-    text-transform: uppercase;
-    padding: 5px 8px;
-}
-
-div.phpdebugbar-openhandler table th,
-div.phpdebugbar-openhandler table tr:nth-child(2n) {
-    background-color: var(--debugbar-background-alt);
-}
-
-div.phpdebugbar-openhandler table th:nth-child(1), div.phpdebugbar-openhandler table td:nth-child(1), /* Date */
-div.phpdebugbar-openhandler table th:nth-child(2), div.phpdebugbar-openhandler table td:nth-child(2), /* Method */
-div.phpdebugbar-openhandler table th:nth-child(4), div.phpdebugbar-openhandler table td:nth-child(4), /* IP */
-div.phpdebugbar-openhandler table th:nth-child(5), div.phpdebugbar-openhandler table td:nth-child(5) { /* Filter */
-    width: 5%!important;
-    white-space: nowrap;
-}
-
-div.phpdebugbar-openhandler table th:nth-child(2), div.phpdebugbar-openhandler table td:nth-child(2), /* Method */
-div.phpdebugbar-openhandler table th:nth-child(4), div.phpdebugbar-openhandler table td:nth-child(4), /* IP */
-div.phpdebugbar-openhandler table th:nth-child(5), div.phpdebugbar-openhandler table td:nth-child(5) { /* Filter */
-    text-align: center;
-}
-
-div.phpdebugbar-openhandler table th:nth-child(3) { /* URL */
-    width: calc(100vw - 100% - 196px)!important;
-}
-
-div.phpdebugbar-openhandler table td a {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
 }
 
 div.phpdebugbar-resize-handle {

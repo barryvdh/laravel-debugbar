@@ -1815,6 +1815,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
          */
         setOpenHandler: function(handler) {
             this.openHandler = handler;
+            this.openHandler.$el.attr('data-theme', this.$el.attr('data-theme'));
             if (handler !== null) {
                 this.$openbtn.show();
             } else {
@@ -2950,7 +2951,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
             this.$closebtn = $('<a><i class="phpdebugbar-fa phpdebugbar-fa-times"></i></a>');
             this.$table = $('<tbody />');
             $('<div>PHP DebugBar | Open</div>').addClass(csscls('header')).append(this.$closebtn).appendTo(this.$el);
-            $('<table><thead><tr><th width="150">Date</th><th width="55">Method</th><th>URL</th><th width="125">IP</th><th width="100">Filter data</th></tr></thead></table>').append(this.$table).appendTo(this.$el);
+            $('<table><thead><tr><th width="155">Date</th><th width="75">Method</th><th>URL</th><th width="125">IP</th><th width="100">Filter data</th></tr></thead></table>').append(this.$table).appendTo(this.$el);
             this.$actions = $('<div />').addClass(csscls('actions')).appendTo(this.$el);
 
             this.$closebtn.on('click', function() {

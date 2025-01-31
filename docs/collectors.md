@@ -1,8 +1,6 @@
 ---
 description: Laravel Debugbar contains a lot of collectors to help you debug or profile Database Queries, Log messages, View templates, Request and Route information, etc.
 preview_image: img/preview-usage.jpg
-hide:
-  - navigation
 ---
 !!! warning
 
