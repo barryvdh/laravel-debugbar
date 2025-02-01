@@ -48,42 +48,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
         );
 
-        $this->app->extend(
-            'view',
-            function (Factory $factory, Container $application): Factory {
-                $laravelDebugbar = $application->make(LaravelDebugbar::class);
-
-                $shouldTrackViewTime = $laravelDebugbar->isEnabled() &&
-                    $laravelDebugbar->shouldCollect('time', true) &&
-                    $laravelDebugbar->shouldCollect('views', true) &&
-                    $application['config']->get('debugbar.options.views.timeline', false);
-
-                if (! $shouldTrackViewTime) {
-                    /* Do not swap the engine to save performance */
-                    return $factory;
-                }
-
-                $extensions = array_reverse($factory->getExtensions());
-                $engines = array_flip($extensions);
-                $enginesResolver = $application->make('view.engine.resolver');
-
-                foreach ($engines as $engine => $extension) {
-                    $resolved = $enginesResolver->resolve($engine);
-
-                    $factory->addExtension($extension, $engine, function () use ($resolved, $laravelDebugbar) {
-                        return new DebugbarViewEngine($resolved, $laravelDebugbar);
-                    });
-                }
-
-                // returns original order of extensions
-                foreach ($extensions as $extension => $engine) {
-                    $factory->addExtension($extension, $engine);
-                }
-
-                return $factory;
-            }
-        );
-
         Collection::macro('debug', function () {
             debug($this);
             return $this;

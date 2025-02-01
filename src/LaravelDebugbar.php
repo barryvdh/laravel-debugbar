@@ -196,7 +196,7 @@ class LaravelDebugbar extends DebugBar
                 $this['time']->showMemoryUsage();
             }
 
-            if (! $this->isLumen() && $startTime) {
+            if ($startTime) {
                 $app->booted(
                     function () use ($startTime) {
                         $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
@@ -204,7 +204,23 @@ class LaravelDebugbar extends DebugBar
                 );
             }
 
-            $this->startMeasure('application', 'Application', 'time');
+            if ($events) {
+                 $events->listen(\Illuminate\Routing\Events\Routing::class, function() {
+                     $this->startMeasure('Routing');
+                 });
+                 $events->listen(\Illuminate\Routing\Events\RouteMatched::class, function() {
+                     $this->stopMeasure('Routing');
+                 });
+
+                $events->listen(\Illuminate\Routing\Events\PreparingResponse::class, function() {
+                    $this->startMeasure('Preparing Response');
+                });
+                $events->listen(\Illuminate\Routing\Events\ResponsePrepared::class, function() {
+                    $this->stopMeasure('Preparing Response');
+                });
+            } else {
+                $this->startMeasure('application', 'Application', 'time');
+            }
         }
 
         if ($this->shouldCollect('memory', true)) {
@@ -253,7 +269,12 @@ class LaravelDebugbar extends DebugBar
                 $collectData = $config->get('debugbar.options.views.data', true);
                 $excludePaths = $config->get('debugbar.options.views.exclude_paths', []);
                 $group = $config->get('debugbar.options.views.group', true);
-                $this->addCollector(new ViewCollector($collectData, $excludePaths, $group));
+                if ($this->hasCollector('time') && $config->get('debugbar.options.views.timeline', false)) {
+                    $timeCollector = $this['time'];
+                } else {
+                    $timeCollector = null;
+                }
+                $this->addCollector(new ViewCollector($collectData, $excludePaths, $group, $timeCollector));
                 $events->listen(
                     'composing:*',
                     function ($event, $params) {
