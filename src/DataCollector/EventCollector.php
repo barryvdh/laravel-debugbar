@@ -22,7 +22,6 @@ class EventCollector extends TimeDataCollector
     public function __construct($requestStartTime = null, $collectValues = false)
     {
         parent::__construct($requestStartTime);
-        $this->previousTime = microtime(true);
         $this->collectValues = $collectValues;
         $this->setDataFormatter(new SimpleFormatter());
     }
@@ -32,8 +31,7 @@ class EventCollector extends TimeDataCollector
         $currentTime = microtime(true);
 
         if (! $this->collectValues) {
-            $this->addMeasure($name, $this->previousTime, $currentTime);
-            $this->previousTime = $currentTime;
+            $this->addMeasure($name, $currentTime, $currentTime, [], null, 'Events');
 
             return;
         }
@@ -74,8 +72,7 @@ class EventCollector extends TimeDataCollector
 
             $params['listeners.' . $i] = $listener;
         }
-        $this->addMeasure($name, $this->previousTime, $currentTime, $params);
-        $this->previousTime = $currentTime;
+        $this->addMeasure($name, $currentTime, $currentTime, $params, null, 'Events');
     }
 
     public function subscribe(Dispatcher $events)
