@@ -41,9 +41,9 @@ theme:
     - meta
 extra_css:
   - assets/extra.css
-  - assets/debugbar.css?v=1738314470
+  - assets/debugbar.css?v=1738421028
 extra_javascript:
-  - assets/debugbar.js?v=1738314470
+  - assets/debugbar.js?v=1738424090
 markdown_extensions:
   - admonition
   - abbr

@@ -949,6 +949,8 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value pre.sf-dump,
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item pre.sf-dump {
     display: inline-block !important;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-collector,
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-label {
@@ -1239,7 +1241,6 @@ div.phpdebugbar-openhandler table td a{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    cursor: pointer;
 }
 div.phpdebugbar-openhandler .phpdebugbar-openhandler-actions {
     text-align: center;
