@@ -6,21 +6,15 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 
 class LaravelCollector extends DataCollector implements Renderable
 {
-    /** @var \Illuminate\Foundation\Application $app */
-    protected $app;
-
     /**
      * @param Application $app
      */
-    public function __construct(?ApplicationContract $app = null)
+    public function __construct(protected ApplicationContract $laravel)
     {
-        $this->app = $app ?: app();
     }
 
     /**
@@ -29,7 +23,7 @@ class LaravelCollector extends DataCollector implements Renderable
     public function collect()
     {
         return [
-            "version" => Str::of($this->app->version())->explode('.')->first(),
+            "version" => Str::of($this->laravel->version())->explode('.')->first(),
         ];
     }
 
@@ -39,9 +33,9 @@ class LaravelCollector extends DataCollector implements Renderable
     public function gatherData()
     {
         return [
-            'Laravel Version' => $this->app->version(),
+            'Laravel Version' => $this->laravel->version(),
             'PHP Version' => phpversion(),
-            'Environment' => $this->app->environment(),
+            'Environment' => $this->laravel->environment(),
             'Debug Mode' => config('app.debug') ? 'Enabled' : 'Disabled',
             'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
             'Timezone' => config('app.timezone'),
