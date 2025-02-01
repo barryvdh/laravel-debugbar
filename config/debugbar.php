@@ -232,11 +232,11 @@ return [
             'hard_limit'       => 500,      // After the hard limit, queries are ignored
         ],
         'mail' => [
-            'timeline' => false,  // Add mails to the timeline
+            'timeline' => true,  // Add mails to the timeline
             'show_body' => true,
         ],
         'views' => [
-            'timeline' => false,    // Add the views to the timeline (Experimental)
+            'timeline' => true,    // Add the views to the timeline
             'data' => false,        // True for all data, 'keys' for only names, false for no parameters.
             'group' => 50,          // Group duplicate views. Pass value to auto-group, or true/false to force
             'exclude_paths' => [    // Add the paths which you don't want to appear in the views
