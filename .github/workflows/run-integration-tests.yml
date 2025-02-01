@@ -11,54 +11,6 @@ on:
         - cron: '0 0 * * *'
 
 jobs:
-    php-lumen-integration-tests:
-        runs-on: ubuntu-latest
-        timeout-minutes: 15
-        env:
-            COMPOSER_NO_INTERACTION: 1
-        strategy:
-            matrix:
-                php: [8.4, 8.3, 8.2, 8.1, 8.0]
-                lumen: [10.*, 9.*]
-                exclude:
-                  - lumen: 10.*
-                    php: 8.0
-        name: P${{ matrix.php }} - Lumen${{ matrix.lumen }}
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  path: src
-
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php }}
-                  coverage: none
-                  tools: composer:v2
-
-            - name: Install dependencies
-              run: |
-                  composer create-project --prefer-dist laravel/lumen:${{ matrix.lumen }} --stability=dev --no-progress sample
-                  cd sample
-                  composer config minimum-stability dev
-                  composer update  --prefer-stable --prefer-dist --no-progress
-            - name: Add package from source
-              run: |
-                  cd sample
-                  sed -e 's|"type": "project",|&\n"repositories": [ { "type": "path", "url": "../src" } ],|' -i composer.json
-                  composer require --dev "barryvdh/laravel-debugbar:*"
-            - name: Insert service provider
-              run: sed -e 's|// \$app->register(App\\\Providers\\\EventServiceProvider::class);|&\n$app->register(\\Barryvdh\\Debugbar\\LumenServiceProvider::class);|' -i sample/bootstrap/app.php
-
-            - name: Execute clear run
-              run: |
-                  cd sample
-                  mkdir -p "storage/debugbar/" && touch "storage/debugbar/foo.json"
-                  php artisan debugbar:clear
-            - name: Check file count in logs
-              run: |
-                if [ `ls -1q "sample/storage/debugbar/" | wc -l` -gt 0 ];then exit 1;fi
     php-laravel-integration-tests:
         runs-on: ubuntu-latest
         timeout-minutes: 15
@@ -67,13 +19,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [8.4, 8.3, 8.2, 8.1, 8.0]
-                laravel: [11.*, 10.*, 9.*]
+                php: [8.4, 8.3, 8.2, 8.1]
+                laravel: [11.*, 10.*]
                 exclude:
-                  - laravel: 10.*
-                    php: 8.0
-                  - laravel: 11.*
-                    php: 8.0
                   - laravel: 11.*
                     php: 8.1
         name: P${{ matrix.php }} - Laravel${{ matrix.laravel }}
