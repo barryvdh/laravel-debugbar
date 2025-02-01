@@ -4,6 +4,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
@@ -13,11 +14,11 @@ class LaravelCollector extends DataCollector implements Renderable
 {
     /** @var \Illuminate\Foundation\Application $app */
     protected $app;
-    
+
     /**
      * @param Application $app
      */
-    public function __construct(?Application $app = null)
+    public function __construct(?ApplicationContract $app = null)
     {
         $this->app = $app ?: app();
     }
