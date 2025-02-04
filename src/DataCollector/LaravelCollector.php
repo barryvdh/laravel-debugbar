@@ -23,7 +23,7 @@ class LaravelCollector extends DataCollector implements Renderable
     public function collect()
     {
         return [
-            "version" => Str::of($this->laravel->version())->explode('.')->first(),
+            "version" => Str::of($this->laravel->version())->explode('.')->first() . '.x',
         ];
     }
 
