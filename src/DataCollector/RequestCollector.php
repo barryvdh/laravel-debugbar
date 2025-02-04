@@ -87,6 +87,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             ];
             if ($this->request instanceof Request) {
                 $widgets['currentrequest']['tooltip'] += [
+                    'action_name' => optional($this->request->route())->getName(),
                     'controller_action' => optional($this->request->route())->getActionName(),
                 ];
             }
