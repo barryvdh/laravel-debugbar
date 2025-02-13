@@ -24,24 +24,18 @@ class LaravelCollector extends DataCollector implements Renderable
     {
         return [
             "version" => Str::of($this->laravel->version())->explode('.')->first() . '.x',
+            'tooltip' => [
+                'Laravel Version' => $this->laravel->version(),
+                'PHP Version' => phpversion(),
+                'Environment' => $this->laravel->environment(),
+                'Debug Mode' => config('app.debug') ? 'Enabled' : 'Disabled',
+                'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
+                'Timezone' => config('app.timezone'),
+                'Locale' => config('app.locale'),
+            ]
         ];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function gatherData()
-    {
-        return [
-            'Laravel Version' => $this->laravel->version(),
-            'PHP Version' => phpversion(),
-            'Environment' => $this->laravel->environment(),
-            'Debug Mode' => config('app.debug') ? 'Enabled' : 'Disabled',
-            'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
-            'Timezone' => config('app.timezone'),
-            'Locale' => config('app.locale'),
-        ];
-    }
 
     /**
      * {@inheritDoc}
@@ -59,9 +53,12 @@ class LaravelCollector extends DataCollector implements Renderable
         return [
             "version" => [
                 "icon" => "laravel phpdebugbar-fab",
-                "tooltip" => $this->gatherData(),
                 "map" => "laravel.version",
                 "default" => ""
+            ],
+            "version:tooltip" => [
+                "map" => "laravel.tooltip",
+                "default" => "{}"
             ],
         ];
     }

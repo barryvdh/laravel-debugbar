@@ -70,7 +70,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             "request" => [
                 "icon" => "tags",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
-                "map" => "request",
+                "map" => "request.data",
                 "default" => "{}"
             ]
         ];
@@ -78,19 +78,14 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         if (Config::get('debugbar.options.request.label', true)) {
             $widgets['currentrequest'] = [
                 "icon" => "share",
-                "tooltip" => [
-                    'status' => $this->response->getStatusCode()
-                ],
-                "map" => "request.uri",
+                "map" => "request.data.uri",
                 "link" => "request",
                 "default" => ""
             ];
-            if ($this->request instanceof Request) {
-                $widgets['currentrequest']['tooltip'] += [
-                    'action_name' => optional($this->request->route())->getName(),
-                    'controller_action' => optional($this->request->route())->getActionName(),
-                ];
-            }
+            $widgets['currentrequest:tooltip'] = [
+                "map" => "request.tooltip",
+                "default" => "{}"
+            ];
         }
 
         return $widgets;
@@ -130,7 +125,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             'status' => $statusCode . ' ' . (isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : ''),
             'duration' => $startTime ? $this->formatDuration(microtime(true) - $startTime) : null,
             'peak_memory' => $this->formatBytes(memory_get_peak_usage(true), 1),
-            ];
+        ];
 
         if ($request instanceof Request) {
 
@@ -191,7 +186,19 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
         }
 
-        return $htmlData + $data;
+        $tooltip = Arr::only($data, ['status', 'full_url']);
+
+        if ($this->request instanceof Request) {
+            $tooltip += [
+                'action_name' => optional($this->request->route())->getName(),
+                'controller_action' => optional($this->request->route())->getActionName(),
+            ];
+        }
+
+        return [
+            'data' => $htmlData + $data,
+            'tooltip' => array_filter($tooltip)
+        ];
     }
 
     protected function getRouteInformation($route)
@@ -288,10 +295,10 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             }
 
             $cookie .= '; expires=' . substr(
-                \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
-                0,
-                -5
-            );
+                    \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
+                    0,
+                    -5
+                );
         }
 
         if ($domain) {
