@@ -186,7 +186,10 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
         }
 
-        $tooltip = Arr::only($data, ['status', 'full_url']);
+        $tooltip = [
+            'status' => $data['status'],
+            'url' => Str::limit($request->fullUrl(), 100),
+        ];
 
         if ($this->request instanceof Request) {
             $tooltip += [
