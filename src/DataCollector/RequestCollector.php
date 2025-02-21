@@ -71,6 +71,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "icon" => "tags",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "request.data",
+                "order" => -100,
                 "default" => "{}"
             ],
             'request:badge' => [
@@ -192,7 +193,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $tooltip = [
             'status' => $data['status'],
-            'url' => Str::limit($request->fullUrl(), 100),
+            'full_url' => Str::limit($request->fullUrl(), 100),
         ];
 
         if ($this->request instanceof Request) {
@@ -202,8 +203,10 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             ];
         }
 
+        unset($htmlData['as'], $htmlData['uses']);
+
         return [
-            'data' => $htmlData + $data,
+            'data' => $tooltip + $htmlData + $data,
             'tooltip' => array_filter($tooltip),
             'badge' => $statusCode >= 300 ? $data['status'] : null,
         ];
@@ -278,7 +281,9 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         if (isset($result['middleware']) && is_array($result['middleware'])) {
-            $result['middleware'] = implode(', ', $result['middleware']);
+            $middleware = implode(', ', $result['middleware']);
+            unset($result['middleware']);
+            $result['middleware'] = $middleware;
         }
 
         return array_filter($result);
