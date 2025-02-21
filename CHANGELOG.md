@@ -1,5 +1,42 @@
 # Changelog
 
+## v3.15.0 - 2025-02-21
+
+### What's Changed
+
+* Add middleware to web to save session by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1710
+* Check web middleware by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1712
+* Add special `dev` to composer keywords by @jnoordsij in https://github.com/barryvdh/laravel-debugbar/pull/1713
+* Removed extra sentence by @cheack in https://github.com/barryvdh/laravel-debugbar/pull/1714
+* Hide empty tabs by default by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1711
+* Combine route info with Request by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1720
+* fix: The log is not processed correctly when it consists of multiple lines. by @uniho in https://github.com/barryvdh/laravel-debugbar/pull/1721
+* [WIP] Use php-debugbar dark theme, move to variables by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1717
+* Remove openhandler overrides by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1723
+* Drop Lumen And Laravel 9 by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1725
+* Use tooltip for Laravel collector by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1724
+* Add more data to timeline by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1726
+* Laravel version preview as repo branch name by @angeljqv in https://github.com/barryvdh/laravel-debugbar/pull/1727
+* Laravel 12 support by @jonnott in https://github.com/barryvdh/laravel-debugbar/pull/1730
+* Preview action_name on request tooltip by @angeljqv in https://github.com/barryvdh/laravel-debugbar/pull/1728
+* Map tooltips by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1732
+* Add back L9 by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1734
+* Fix tooltip url by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1735
+* Show request status as badge by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1736
+* Fix request badge by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1737
+* Use Laravel ULID for key by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1738
+* defer datasets by config option by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1739
+* Reorder request tab by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1740
+* Defer config by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1741
+
+### New Contributors
+
+* @cheack made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1714
+* @angeljqv made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1727
+* @jonnott made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1730
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.14.10...v3.15.0
+
 ## v3.14.10 - 2024-12-23
 
 ### What's Changed
