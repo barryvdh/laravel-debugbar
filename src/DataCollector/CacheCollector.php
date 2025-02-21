@@ -70,6 +70,10 @@ class CacheCollector extends TimeDataCollector
         $data = parent::collect();
         $data['nb_measures'] = count($data['measures']);
 
+        if (! $data['nb_measures']) {
+            return [];
+        }
+
         return $data;
     }
 
