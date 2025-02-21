@@ -23,7 +23,8 @@ class DebugbarBrowserTest extends BrowserTestCase
 
         $app['env'] = 'local';
 
-//        $app['config']->set('app.debug', true);
+        //$app['config']->set('app.debug', true);
+        $app['config']->set('debugbar.hide_empty_tabs', false);
 
         /** @var Router $router */
         $router = $app['router'];
