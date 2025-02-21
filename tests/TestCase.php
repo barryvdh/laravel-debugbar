@@ -47,6 +47,7 @@ class TestCase extends Orchestra
     {
         /** @var Router $router */
         $router = $app['router'];
+        $app['config']->set('debugbar.hide_empty_tabs', false);
 
         $this->addWebRoutes($router);
         $this->addApiRoutes($router);
