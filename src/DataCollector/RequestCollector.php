@@ -75,7 +75,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             ],
             'request:badge' => [
                 "map" => "request.badge",
-                "default" => ""
+                "default" => "null"
             ]
         ];
 
