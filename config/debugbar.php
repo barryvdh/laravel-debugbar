@@ -121,13 +121,15 @@ return [
      |
      | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
      | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
+     |
+     | You can defer loading the dataset, so it will be loaded with ajax after the request is done. (Experimental)
      */
 
     'capture_ajax' => true,
     'add_ajax_timing' => false,
     'ajax_handler_auto_show' => true,
     'ajax_handler_enable_tab' => true,
-
+    'defer_datasets' => false,
     /*
      |--------------------------------------------------------------------------
      | Custom Error Handler for Deprecated warnings
