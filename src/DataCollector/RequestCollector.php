@@ -72,6 +72,10 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "request.data",
                 "default" => "{}"
+            ],
+            'request:badge' => [
+                "map" => "request.badge",
+                "default" => ""
             ]
         ];
 
@@ -200,7 +204,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         return [
             'data' => $htmlData + $data,
-            'tooltip' => array_filter($tooltip)
+            'tooltip' => array_filter($tooltip),
+            'badge' => $statusCode >= 300 ? $data['status'] : null,
         ];
     }
 
