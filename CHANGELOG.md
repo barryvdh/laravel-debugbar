@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.15.1 - 2025-02-24
+
+### What's Changed
+
+* Hide more empty tabs  by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1742
+* Always show application by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1745
+* Add conflict with old debugbar by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1746
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.15.0...v3.15.1
+
 ## v3.15.0 - 2025-02-21
 
 ### What's Changed
