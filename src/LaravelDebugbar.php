@@ -206,6 +206,8 @@ class LaravelDebugbar extends DebugBar
                 );
             }
 
+            $this->startMeasure('application', 'Application', 'time');
+
             if ($events) {
                  $events->listen(\Illuminate\Routing\Events\Routing::class, function() {
                      $this->startMeasure('Routing');
@@ -220,8 +222,6 @@ class LaravelDebugbar extends DebugBar
                 $events->listen(\Illuminate\Routing\Events\ResponsePrepared::class, function() {
                     $this->stopMeasure('Preparing Response');
                 });
-            } else {
-                $this->startMeasure('application', 'Application', 'time');
             }
         }
 
