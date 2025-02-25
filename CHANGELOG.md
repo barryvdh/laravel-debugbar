@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.15.2 - 2025-02-25
+
+### What's Changed
+
+* Fix empty tabs on clockwork by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1750
+* fix: Ignore info query statements in Clockwork converter by @boserup in https://github.com/barryvdh/laravel-debugbar/pull/1749
+* Check if request controller is string by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1751
+
+### New Contributors
+
+* @boserup made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1749
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.15.1...v3.15.2
+
 ## v3.15.1 - 2025-02-24
 
 ### What's Changed
