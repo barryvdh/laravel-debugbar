@@ -272,7 +272,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                     $reflector->getEndLine()
                 );
 
-                if (isset($result['controller'])) {
+                if (isset($result['controller']) && is_string($result['controller'])) {
                     $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
                 }
             } else {
