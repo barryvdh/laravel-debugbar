@@ -97,11 +97,7 @@ class EventCollector extends TimeDataCollector
     public function collect()
     {
         $data = parent::collect();
-        $data['nb_measures'] = count($data['measures']);
-
-        if (! $data['nb_measures']) {
-            return [];
-        }
+        $data['nb_measures'] = $data['count'] = count($data['measures']);
 
         return $data;
     }
