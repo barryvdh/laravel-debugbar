@@ -97,7 +97,7 @@ class Converter
         if (isset($data['queries']['statements'])) {
             $queries = $data['queries'];
             foreach ($queries['statements'] as $statement) {
-                if ($statement['type'] === 'explain') {
+                if ($statement['type'] === 'explain' || $statement['type'] === 'info') {
                     continue;
                 }
                 $output['databaseQueries'][] = [
