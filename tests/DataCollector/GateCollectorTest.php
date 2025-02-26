@@ -37,14 +37,14 @@ class GateCollectorTest extends TestCase
         $gateError = $collect['messages'][0];
         $this->assertEquals('error', $gateError['label']);
         $this->assertEquals(
-            '[ability => test, result => null, user => 1, arguments => []]',
+            '[ability => test, target => null, result => null, user => 1, arguments => []]',
             $gateError['message']
         );
 
         $gateSuccess = $collect['messages'][1];
         $this->assertEquals('success', $gateSuccess['label']);
         $this->assertEquals(
-            '[ability => test, result => true, user => 1, arguments => []]',
+            '[ability => test, target => null, result => true, user => 1, arguments => []]',
             $gateSuccess['message']
         );
     }

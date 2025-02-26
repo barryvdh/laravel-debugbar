@@ -5,8 +5,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 
@@ -96,13 +94,17 @@ class RouteCollector extends DataCollector implements Renderable
 
             if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
                 $result['file'] = sprintf(
-                    '<a href="%s" onclick="%s">%s:%s-%s</a>',
+                    '<a href="%s" onclick="%s" class="phpdebugbar-widgets-editor-link">%s:%s-%s</a>',
                     $link['url'],
                     $link['ajax'] ? 'event.preventDefault();$.ajax(this.href);' : '',
                     $filename,
                     $reflector->getStartLine(),
                     $reflector->getEndLine()
                 );
+
+                if (isset($result['controller'])) {
+                    $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
+                }
             } else {
                 $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
             }
@@ -112,9 +114,7 @@ class RouteCollector extends DataCollector implements Renderable
             $result['middleware'] = $middleware;
         }
 
-
-
-        return $result;
+        return array_filter($result);
     }
 
     /**
@@ -151,14 +151,6 @@ class RouteCollector extends DataCollector implements Renderable
                 "default" => "{}"
             ]
         ];
-        if (Config::get('debugbar.options.route.label', true)) {
-            $widgets['currentroute'] = [
-                "icon" => "share",
-                "tooltip" => "Route",
-                "map" => "route.uri",
-                "default" => ""
-            ];
-        }
         return $widgets;
     }
 

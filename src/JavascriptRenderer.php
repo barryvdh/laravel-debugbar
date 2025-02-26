@@ -21,17 +21,9 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
+        $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
 
-        $theme = config('debugbar.theme', 'auto');
-        switch ($theme) {
-            case 'dark':
-                $this->cssFiles['laravel-dark'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
-                break;
-            case 'auto':
-                $this->cssFiles['laravel-dark-0'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-start.css';
-                $this->cssFiles['laravel-dark-1'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
-                $this->cssFiles['laravel-dark-2'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-end.css';
-        }
+        $this->setTheme(config('debugbar.theme', 'auto'));
     }
 
     /**
@@ -51,7 +43,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     {
         $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
-            'theme' => config('debugbar.theme', 'auto'),
         ]));
 
         $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [

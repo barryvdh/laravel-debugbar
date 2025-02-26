@@ -6,6 +6,8 @@ use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use DebugBar\DataCollector\TimeDataCollector;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ViewCollector extends DataCollector implements Renderable, AssetProvider
@@ -15,6 +17,7 @@ class ViewCollector extends DataCollector implements Renderable, AssetProvider
     protected $collect_data;
     protected $exclude_paths;
     protected $group;
+    protected $timeCollector;
 
     /**
      * Create a ViewCollector
@@ -22,14 +25,16 @@ class ViewCollector extends DataCollector implements Renderable, AssetProvider
      * @param bool|string $collectData Collects view data when true
      * @param string[] $excludePaths Paths to exclude from collection
      * @param int|bool $group Group the same templates together
+     * @param TimeDataCollector|null TimeCollector
      * */
-    public function __construct($collectData = true, $excludePaths = [], $group = true)
+    public function __construct($collectData = true, $excludePaths = [], $group = true, ?TimeDataCollector $timeCollector = null)
     {
         $this->setDataFormatter(new SimpleFormatter());
         $this->collect_data = $collectData;
         $this->templates = [];
         $this->exclude_paths = $excludePaths;
         $this->group = $group;
+        $this->timeCollector = $timeCollector;
     }
 
     public function getName()
@@ -103,6 +108,11 @@ class ViewCollector extends DataCollector implements Renderable, AssetProvider
         }
 
         $this->addTemplate($name, $data, $type, $path);
+
+        if ($this->timeCollector !== null) {
+            $time = microtime(true);
+            $this->timeCollector->addMeasure('View: ' . $name, $time, $time, [], 'views', 'View');
+        }
     }
 
     private function getInertiaView(string $name, array $data, ?string $path)
@@ -192,6 +202,7 @@ class ViewCollector extends DataCollector implements Renderable, AssetProvider
         }
 
         return [
+            'count' => count($this->templates),
             'nb_templates' => count($this->templates),
             'templates' => $templates,
         ];

@@ -39,11 +39,11 @@ class Converter
             $output = array_merge($output, $data['clockwork']);
         }
 
-        if (isset($data['memory'])) {
+        if (isset($data['memory']['peak_usage'])) {
             $output['memoryUsage'] = $data['memory']['peak_usage'];
         }
 
-        if (isset($data['time'])) {
+        if (isset($data['time']['measures'])) {
             $time = $data['time'];
             $output['time'] = $time['start'];
             $output['responseTime'] = $time['end'];
@@ -84,7 +84,7 @@ class Converter
             ];
         }
 
-        if (isset($data['messages'])) {
+        if (isset($data['messages']['messages'])) {
             foreach ($data['messages']['messages'] as $message) {
                 $output['log'][] = [
                     'message' => $message['message'],
@@ -94,10 +94,10 @@ class Converter
             }
         }
 
-        if (isset($data['queries'])) {
+        if (isset($data['queries']['statements'])) {
             $queries = $data['queries'];
             foreach ($queries['statements'] as $statement) {
-                if ($statement['type'] === 'explain') {
+                if ($statement['type'] === 'explain' || $statement['type'] === 'info') {
                     continue;
                 }
                 $output['databaseQueries'][] = [
@@ -112,7 +112,7 @@ class Converter
             $output['databaseDuration'] = $queries['accumulated_duration'] * 1000;
         }
 
-        if (isset($data['models'])) {
+        if (isset($data['models']['data'])) {
             $output['modelsActions'] = [];
             $output['modelsCreated'] = [];
             $output['modelsUpdated'] = [];
@@ -120,7 +120,7 @@ class Converter
             $output['modelsRetrieved'] = $data['models']['data'];
         }
 
-        if (isset($data['views'])) {
+        if (isset($data['views']['templates'])) {
             foreach ($data['views']['templates'] as $view) {
                 $output['viewsData'][] = [
                     'description' => 'Rendering a view',
@@ -135,7 +135,7 @@ class Converter
             }
         }
 
-        if (isset($data['event'])) {
+        if (isset($data['event']['measures'])) {
             foreach ($data['event']['measures'] as $event) {
                 $event['data'] = [];
                 $event['listeners'] = [];
@@ -152,7 +152,7 @@ class Converter
             }
         }
 
-        if (isset($data['symfonymailer_mails'])) {
+        if (isset($data['symfonymailer_mails']['mails'])) {
             foreach ($data['symfonymailer_mails']['mails'] as $mail) {
                 $output['emailsData'][] = [
                     'data' => [
