@@ -366,6 +366,7 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
     border: none;
     font-family: inherit;
     overflow: visible;
+    overflow-x: auto;
 }
 
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-sql {
