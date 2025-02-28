@@ -742,3 +742,8 @@ div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-
 div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-params {
     cursor: default;
 }
+
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
+    position: sticky;
+    top: 100vh;
+}
