@@ -203,7 +203,7 @@ class QueryCollector extends PDOCollector
         ];
 
         if ($this->timeCollector !== null) {
-            $this->timeCollector->addMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'db');
+            $this->timeCollector->addMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'db', 'Database Query');
         }
     }
 
@@ -584,7 +584,9 @@ class QueryCollector extends PDOCollector
         }
 
         $visibleStatements = count($statements) - $this->infoStatements;
+
         $data = [
+            'count' => $visibleStatements,
             'nb_statements' => $this->queryCount,
             'nb_visible_statements' => $visibleStatements,
             'nb_excluded_statements' => $this->queryCount + $this->transactionEventsCount - $visibleStatements,

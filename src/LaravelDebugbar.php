@@ -20,6 +20,7 @@ use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
+use Barryvdh\Debugbar\Support\RequestIdGenerator;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
@@ -118,6 +119,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->is_lumen) {
             $this->version = Str::betweenFirst($app->version(), '(', ')');
         }
+        $this->setRequestIdGenerator(new RequestIdGenerator());
     }
 
     /**
@@ -196,7 +198,7 @@ class LaravelDebugbar extends DebugBar
                 $this['time']->showMemoryUsage();
             }
 
-            if (! $this->isLumen() && $startTime) {
+            if ($startTime) {
                 $app->booted(
                     function () use ($startTime) {
                         $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
@@ -205,6 +207,22 @@ class LaravelDebugbar extends DebugBar
             }
 
             $this->startMeasure('application', 'Application', 'time');
+
+            if ($events) {
+                 $events->listen(\Illuminate\Routing\Events\Routing::class, function() {
+                     $this->startMeasure('Routing');
+                 });
+                 $events->listen(\Illuminate\Routing\Events\RouteMatched::class, function() {
+                     $this->stopMeasure('Routing');
+                 });
+
+                $events->listen(\Illuminate\Routing\Events\PreparingResponse::class, function() {
+                    $this->startMeasure('Preparing Response');
+                });
+                $events->listen(\Illuminate\Routing\Events\ResponsePrepared::class, function() {
+                    $this->stopMeasure('Preparing Response');
+                });
+            }
         }
 
         if ($this->shouldCollect('memory', true)) {
@@ -253,7 +271,12 @@ class LaravelDebugbar extends DebugBar
                 $collectData = $config->get('debugbar.options.views.data', true);
                 $excludePaths = $config->get('debugbar.options.views.exclude_paths', []);
                 $group = $config->get('debugbar.options.views.group', true);
-                $this->addCollector(new ViewCollector($collectData, $excludePaths, $group));
+                if ($this->hasCollector('time') && $config->get('debugbar.options.views.timeline', false)) {
+                    $timeCollector = $this['time'];
+                } else {
+                    $timeCollector = null;
+                }
+                $this->addCollector(new ViewCollector($collectData, $excludePaths, $group, $timeCollector));
                 $events->listen(
                     'composing:*',
                     function ($event, $params) {
@@ -569,6 +592,7 @@ class LaravelDebugbar extends DebugBar
         $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
         $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
+        $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
 
         $this->booted = true;
     }
