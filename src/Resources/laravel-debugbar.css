@@ -743,7 +743,10 @@ div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item .phpdebugbar
     cursor: default;
 }
 
+div.phpdebugbar-widgets-messages ul.phpdebugbar-widgets-list {
+    min-height: calc(100% - 45px - 20px - 8px - 1px); /* padding-bottom of list(45px), height of toolbar(20px), padding of toolbar(8px), border of toolbar(1px) */
+}
+
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar {
     position: sticky;
-    top: 100vh;
 }
