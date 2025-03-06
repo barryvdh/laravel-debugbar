@@ -630,7 +630,7 @@ class QueryCollector extends PDOCollector
     private function getSqlQueryToDisplay(array $query): string
     {
         $sql = $query['query'];
-        if ($query['type'] === 'query' && $this->renderSqlWithParams && method_exists(DB::connection($query['connection'])->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
+        if ($query['type'] === 'query' && $this->renderSqlWithParams && DB::connection($query['connection'])->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists(DB::connection($query['connection'])->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
             try {
                 $sql = DB::connection($query['connection'])->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
                 return $this->getDataFormatter()->formatSql($sql);
