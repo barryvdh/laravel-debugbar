@@ -105,7 +105,7 @@ class Explain
     {
         return (string) Http::asForm()->post('https://explain.dalibo.com/new', [
             'query' => $query,
-            'plan' => $connection->selectOne("EXPLAIN (FORMAT JSON) {$query}", $bindings)->{'QUERY PLAN'},
+            'plan' => $connection->selectOne("EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) {$query}", $bindings)->{'QUERY PLAN'},
             'title' => '',
         ])->effectiveUri();
     }
