@@ -188,6 +188,12 @@ class LaravelDebugbar extends DebugBar
             if ($config->get('debugbar.options.messages.trace', true)) {
                 $this['messages']->collectFileTrace(true);
             }
+
+            if ($config->get('debugbar.options.messages.capture_dumps', false)) {
+                \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) {
+                    self::addMessage($var);
+                });
+            }
         }
 
         if ($this->shouldCollect('time', true)) {

@@ -203,7 +203,8 @@ return [
             'memory_usage' => false,  // Calculated by subtracting memory start and end, it may be inaccurate
         ],
         'messages' => [
-            'trace' => true,   // Trace the origin of the debug message
+            'trace' => true,          // Trace the origin of the debug message
+            'capture_dumps' => false, // Capture laravel `dump();` as message
         ],
         'memory' => [
             'reset_peak' => false,     // run memory_reset_peak_usage before collecting
