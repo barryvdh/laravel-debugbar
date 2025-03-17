@@ -727,7 +727,7 @@ class LaravelDebugbar extends DebugBar
         $this->addThrowable(
             new Exception(
                 $message . ' on Laravel Debugbar: ' . $exception->getMessage(),
-                $exception->getCode(),
+                (int) $exception->getCode(),
                 $exception
             )
         );
