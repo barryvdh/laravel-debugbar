@@ -658,6 +658,10 @@ class LaravelDebugbar extends DebugBar
             $this['messages']->addMessage($message . $file, 'deprecation');
         }
 
+        if (! $this->prevErrorHandler) {
+            return;
+        }
+
         return call_user_func($this->prevErrorHandler, $level, $message, $file, $line, $context);
     }
 
