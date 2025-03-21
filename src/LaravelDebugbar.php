@@ -101,6 +101,13 @@ class LaravelDebugbar extends DebugBar
      */
     protected $is_lumen = false;
 
+    /**
+     * Laravel default error handler
+     *
+     * @var callable|null
+     */
+    protected $prevErrorHandler = null;
+
     protected ?string $editorTemplateLink = null;
     protected array $remoteServerReplacements = [];
     protected bool $responseIsModified = false;
@@ -173,7 +180,7 @@ class LaravelDebugbar extends DebugBar
 
         // Set custom error handler
         if ($config->get('debugbar.error_handler', false)) {
-            set_error_handler([$this, 'handleError']);
+            $this->prevErrorHandler = set_error_handler([$this, 'handleError']);
         }
 
         $this->selectStorage($this);
@@ -649,16 +656,17 @@ class LaravelDebugbar extends DebugBar
      */
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
-        $exception = new \ErrorException($message, 0, $level, $file, $line);
-        if (error_reporting() & $level) {
-            throw $exception;
-        }
-
-        $this->addThrowable($exception);
+        $this->addThrowable(new \ErrorException($message, 0, $level, $file, $line));
         if ($this->hasCollector('messages')) {
             $file = $file ? ' on ' . $this['messages']->normalizeFilePath($file) . ":{$line}" : '';
             $this['messages']->addMessage($message . $file, 'deprecation');
         }
+
+        if (! $this->prevErrorHandler) {
+            return;
+        }
+
+        return call_user_func($this->prevErrorHandler, $level, $message, $file, $line, $context);
     }
 
     /**
