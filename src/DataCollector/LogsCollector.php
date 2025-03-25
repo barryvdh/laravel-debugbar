@@ -106,14 +106,14 @@ class LogsCollector extends MessagesCollector
 
         // There has GOT to be a better way of doing this...
         preg_match_all($pattern, $file, $headings);
-        $log_data = preg_split($pattern, $file);
+        $log_data = preg_split($pattern, $file) ?: [];
 
         $log = [];
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $ll) {
                     if (strpos(strtolower($h[$i]), strtolower('.' . $ll))) {
-                        $log[] = ['level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i]];
+                        $log[] = ['level' => $ll, 'header' => $h[$i], 'stack' => $log_data[$i] ?? ''];
                     }
                 }
             }
