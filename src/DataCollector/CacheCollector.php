@@ -39,7 +39,11 @@ class CacheCollector extends TimeDataCollector
 
         if (isset($params['value'])) {
             if ($this->collectValues) {
-                $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($event->value));
+                if (is_string($params['value'])) {
+                    $params['value'] = @unserialize($params['value']) ?: $params['value'];
+                }
+
+                $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($params['value']));
             } else {
                 unset($params['value']);
             }
