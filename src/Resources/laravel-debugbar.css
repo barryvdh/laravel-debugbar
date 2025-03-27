@@ -540,7 +540,7 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params th {
-    background-color: var(--debugbar-header);
+    background-color: var(--debugbar-background-alt);
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
@@ -712,7 +712,7 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain {
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain th {
-    border: 1px solid var(--debugbar-header);
+    border: 1px solid var(--debugbar-border);
     text-align: center;
 }
 
