@@ -656,7 +656,10 @@ class LaravelDebugbar extends DebugBar
      */
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
-        $this->addThrowable(new \ErrorException($message, 0, $level, $file, $line));
+        if ($this->hasCollector('exceptions')) {
+            $this->getCollector('exceptions')->addWarning($level, $message, $file, $line);
+        }
+
         if ($this->hasCollector('messages')) {
             $file = $file ? ' on ' . $this['messages']->normalizeFilePath($file) . ":{$line}" : '';
             $this['messages']->addMessage($message . $file, 'deprecation');
