@@ -37,6 +37,7 @@ return [
      | Specify a callback if you want to limit based on IP or authentication.
      | Leaving it to null will allow localhost only.
      */
+
     'storage' => [
         'enabled'    => true,
         'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
@@ -139,6 +140,7 @@ return [
      | in the Messages tab.
      |
      */
+
     'error_handler' => false,
 
     /*
@@ -150,6 +152,7 @@ return [
      | Extension, without the server-side code. It uses Debugbar collectors instead.
      |
      */
+
     'clockwork' => false,
 
     /*
@@ -290,6 +293,7 @@ return [
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
      */
+
     'route_prefix' => '_debugbar',
 
     /*
@@ -299,6 +303,7 @@ return [
      |
      | Additional middleware to run on the Debugbar routes
      */
+
     'route_middleware' => [],
 
     /*
@@ -309,6 +314,7 @@ return [
      | By default Debugbar route served from the same domain that request served.
      | To override default domain, specify it as a non-empty value.
      */
+
     'route_domain' => null,
 
     /*
@@ -319,6 +325,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
+
     'theme' => env('DEBUGBAR_THEME', 'auto'),
 
     /*
@@ -329,5 +336,6 @@ return [
      | By default, the Debugbar limits the number of frames returned by the 'debug_backtrace()' function.
      | If you need larger stacktraces, you can increase this number. Setting it to 0 will result in no limit.
      */
+
     'debug_backtrace_limit' => 50,
 ];
