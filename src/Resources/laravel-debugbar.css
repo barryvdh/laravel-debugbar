@@ -442,7 +442,11 @@ div.phpdebugbar-widgets-templates table.phpdebugbar-widgets-params td {
 
 div.phpdebugbar-widgets-templates table.phpdebugbar-widgets-params th {
     padding: 2px 10px!important;
-    background-color: #efefef;
+    background-color: var(--debugbar-background);
+}
+
+div.phpdebugbar-widgets-templates ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(odd) table.phpdebugbar-widgets-params th {
+    background-color: var(--debugbar-background-alt);
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugbar-widgets-name {
