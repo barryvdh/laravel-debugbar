@@ -31,6 +31,7 @@ class CacheCollector extends TimeDataCollector
         parent::__construct();
 
         $this->collectValues = $collectValues;
+        $this->memoryMeasure = true;
     }
 
     public function onCacheEvent(CacheEvent $event)
@@ -41,6 +42,8 @@ class CacheCollector extends TimeDataCollector
         $label = $this->classMap[$class];
 
         if (isset($params['value'])) {
+            $params['memoryUsage'] = strlen(serialize($params['value'])) * 8;
+
             if ($this->collectValues) {
                 if ($this->isHtmlVarDumperUsed()) {
                     $params['value'] = $this->getVarDumper()->renderVar($params['value']);
