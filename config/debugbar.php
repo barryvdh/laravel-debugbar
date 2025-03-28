@@ -215,10 +215,13 @@ return [
             'show_name' => true,   // Also show the users name/email in the debugbar
             'show_guards' => true, // Show the guards that are used
         ],
+        'gate' => [
+            'trace' => false,      // Trace the origin of the Gate checks
+        ],
         'db' => [
             'with_params'       => true,   // Render SQL with the parameters substituted
             'exclude_paths'     => [       // Paths to exclude entirely from the collector
-//                'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
+                //'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
             ],
             'backtrace'         => true,   // Use a backtrace to find the origin of the query in your files.
             'backtrace_exclude_paths' => [],   // Paths to exclude from backtrace. (in addition to defaults)

@@ -566,6 +566,11 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('gate', false)) {
             try {
                 $this->addCollector($app->make(GateCollector::class));
+
+                if ($config->get('debugbar.options.gate.trace', false)) {
+                    $this['gate']->collectFileTrace(true);
+                    $this['gate']->addBacktraceExcludePaths($config->get('debugbar.options.gate.exclude_paths',[]));
+                }
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add GateCollector', $e);
             }
