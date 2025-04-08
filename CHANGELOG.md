@@ -1,5 +1,27 @@
 # Changelog
 
+## v3.15.3 - 2025-04-08
+
+### What's Changed
+
+* Add condition for implemented query grammar by @rikwillems in https://github.com/barryvdh/laravel-debugbar/pull/1757
+* Collect dumps on message collector by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1759
+* Fix `capture_dumps` option on laravel `dd();` by @parallels999 in https://github.com/barryvdh/laravel-debugbar/pull/1762
+* Preserve laravel error handler by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1760
+* Fix `Trying to access array offset on false on LogsCollector.php` by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1763
+* Update css theme for views widget by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1768
+* Fix laravel-debugbar.css on query widget by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1765
+* Use htmlvardumper if available on CacheCollector by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1766
+* Update QueryCollector.php fix issue #1775 by @Mathias-DS in https://github.com/barryvdh/laravel-debugbar/pull/1776
+* Better grouping the events count by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1774
+
+### New Contributors
+
+* @rikwillems made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1757
+* @Mathias-DS made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1776
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.15.2...v3.15.3
+
 ## v3.15.2 - 2025-02-25
 
 ### What's Changed
