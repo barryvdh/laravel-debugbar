@@ -30,9 +30,6 @@
         "phpunit/phpunit": "^9.5.10|^10|^11",
         "squizlabs/php_codesniffer": "^3.5"
     },
-    "conflict": {
-        "maximebf/debugbar": "*"
-    },
     "autoload": {
         "psr-4": {
             "Barryvdh\\Debugbar\\": "src/"
