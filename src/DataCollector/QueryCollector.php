@@ -378,7 +378,7 @@ class QueryCollector extends PDOCollector
         $filename = pathinfo($file, PATHINFO_FILENAME);
 
         foreach ($this->middleware as $alias => $class) {
-            if (strpos($class, $filename) !== false) {
+            if (!is_null($class) && !is_null($filename) && strpos($class, $filename) !== false) {
                 return $alias;
             }
         }
