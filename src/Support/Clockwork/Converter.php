@@ -70,12 +70,12 @@ class Converter
                 $controller = $route['uses'];
             }
 
-            $output['controller'] = $controller;
+            $output['controller'] = preg_replace('/<a\b[^>]*>(.*?)<\/a>/i', '', (string) $controller) ?: null;
 
             list($method, $uri) = explode(' ', $route['uri'], 2);
 
             $output['routes'][] = [
-                'action' => $controller,
+                'action' => $output['controller'],
                 'after' => isset($route['after']) ? $route['after'] : null,
                 'before' => isset($route['before']) ? $route['before'] : null,
                 'method' => $method,
