@@ -196,7 +196,7 @@ class QueryCollector extends PDOCollector
             'time' => $time,
             'memory' => $this->lastMemoryUsage ? memory_get_usage(false) - $this->lastMemoryUsage : 0,
             'source' => $source,
-            'connection' => $query->connection->getName(),
+            'connection' => $query->connection,
             'driver' => $query->connection->getConfig('driver'),
             'hints' => ($this->showHints && !$limited) ? $hints : null,
             'show_copy' => $this->showCopyButton,
@@ -459,7 +459,7 @@ class QueryCollector extends PDOCollector
             'time' => 0,
             'memory' => 0,
             'source' => $source,
-            'connection' => $connection->getName(),
+            'connection' => $connection,
             'driver' => $connection->getConfig('driver'),
             'hints' => null,
             'show_copy' => false,
@@ -496,7 +496,7 @@ class QueryCollector extends PDOCollector
             $totalTime += $query['time'];
             $totalMemory += $query['memory'];
 
-            $connectionName = DB::connection($query['connection'])->getDatabaseName();
+            $connectionName = $query['connection']->getDatabaseName();
             if (str_ends_with($connectionName, '.sqlite')) {
                 $connectionName = $this->normalizeFilePath($connectionName);
             }
@@ -526,9 +526,9 @@ class QueryCollector extends PDOCollector
                 'explain' => $this->explainQuery && $canExplainQuery ? [
                     'url' => route('debugbar.queries.explain'),
                     'driver' => $query['driver'],
-                    'connection' => $query['connection'],
+                    'connection' => $query['connection']->getName(),
                     'query' => $query['query'],
-                    'hash' => (new Explain())->hash($query['connection'], $query['query'], $query['bindings']),
+                    'hash' => (new Explain())->hash($query['connection']->getName(), $query['query'], $query['bindings']),
                 ] : null,
             ];
         }
@@ -630,9 +630,9 @@ class QueryCollector extends PDOCollector
     private function getSqlQueryToDisplay(array $query): string
     {
         $sql = $query['query'];
-        if ($query['type'] === 'query' && $this->renderSqlWithParams && DB::connection($query['connection'])->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists(DB::connection($query['connection'])->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
+        if ($query['type'] === 'query' && $this->renderSqlWithParams && $query['connection']->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists($query['connection']->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
             try {
-                $sql = DB::connection($query['connection'])->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
+                $sql = $query['connection']->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
                 return $this->getDataFormatter()->formatSql($sql);
             } catch (\Throwable $e) {
                 // Continue using the old substitute
