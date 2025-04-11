@@ -14,17 +14,15 @@ class ModelsCollectorTest extends TestCase
 
     public function testItCollectsRetrievedModels()
     {
-        $eventList = ['retrieved', 'created', 'updated', 'deleted', 'restored'];
-        $keyMap = array_combine($eventList, array_map('ucfirst', $eventList));
-        $data = [];
-
         $this->loadLaravelMigrations();
-
         debugbar()->boot();
 
         /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
         $collector = debugbar()->getCollector('models');
         $collector->setXdebugLinkTemplate('');
+        $eventList = ['retrieved', 'created', 'updated', 'deleted', 'restored'];
+        $keyMap = array_combine($eventList, array_map('ucfirst', $eventList));
+        $data = [];
 
         $this->assertEquals(
             ['data' => $data, 'count' => 0, 'key_map' => $keyMap, 'is_counter' => true],
