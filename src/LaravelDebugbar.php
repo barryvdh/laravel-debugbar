@@ -472,6 +472,7 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector(new ObjectCountCollector('models'));
                 $eventList = ['retrieved', 'created', 'updated', 'deleted', 'restored'];
                 $this['models']->setKeyMap(array_combine($eventList, array_map('ucfirst', $eventList)));
+                $this['models']->collectCountSummary(true);
                 foreach ($eventList as $event) {
                     $events->listen("eloquent.{$event}: *", function ($event, $models) {
                         $event = explode(': ', $event);

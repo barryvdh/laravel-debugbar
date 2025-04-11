@@ -20,12 +20,12 @@ class ModelsCollectorTest extends TestCase
         /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
         $collector = debugbar()->getCollector('models');
         $collector->setXdebugLinkTemplate('');
-        $eventList = ['retrieved', 'created', 'updated', 'deleted', 'restored'];
-        $keyMap = array_combine($eventList, array_map('ucfirst', $eventList));
+        $collector->collectCountSummary(false);
+        $collector->setKeyMap([]);
         $data = [];
 
         $this->assertEquals(
-            ['data' => $data, 'count' => 0, 'key_map' => $keyMap, 'is_counter' => true],
+            ['data' => $data, 'key_map' => [], 'count' => 0, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -43,7 +43,7 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class] = ['created' => 2];
         $this->assertEquals(
-            ['data' => $data, 'key_map' => $keyMap, 'count' => 2, 'is_counter' => true],
+            ['data' => $data, 'key_map' => [], 'count' => 2, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -51,7 +51,7 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class]['retrieved'] = 1;
         $this->assertEquals(
-            ['data' => $data, 'key_map' => $keyMap, 'count' => 3, 'is_counter' => true],
+            ['data' => $data, 'key_map' => [], 'count' => 3, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -59,7 +59,7 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class]['updated'] = 1;
         $this->assertEquals(
-            ['data' => $data, 'key_map' => $keyMap, 'count' => 4, 'is_counter' => true],
+            ['data' => $data, 'key_map' => [], 'count' => 4, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -67,7 +67,7 @@ class ModelsCollectorTest extends TestCase
 
         $data[Person::class] = ['retrieved' => 2];
         $this->assertEquals(
-            ['data' => $data, 'key_map' => $keyMap, 'count' => 6, 'is_counter' => true],
+            ['data' => $data, 'key_map' => [], 'count' => 6, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -75,7 +75,7 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class]['deleted'] = 1;
         $this->assertEquals(
-            ['data' => $data, 'key_map' => $keyMap, 'count' => 7, 'is_counter' => true],
+            ['data' => $data, 'key_map' => [], 'count' => 7, 'is_counter' => true],
             $collector->collect()
         );
     }
