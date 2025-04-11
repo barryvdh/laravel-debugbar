@@ -34,16 +34,19 @@ class JobsCollectorTest extends TestCase
         /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
         $collector = debugbar()->getCollector('jobs');
         $collector->setXdebugLinkTemplate('');
+        $keyMap = ['value' => 'Count'];
+        $data = [];
 
         $this->assertEquals(
-            ['data' => [], 'count' => 0, 'is_counter' => true],
+            ['data' => $data, 'count' => 0, 'key_map' => $keyMap, 'is_counter' => true],
             $collector->collect()
         );
 
         OrderShipped::dispatch(1);
 
+        $data[OrderShipped::class] = ['value' => 1];
         $this->assertEquals(
-            ['data' => [OrderShipped::class => 1], 'count' => 1, 'is_counter' => true],
+            ['data' => $data, 'count' => 1, 'key_map' => $keyMap, 'is_counter' => true],
             $collector->collect()
         );
 
@@ -51,8 +54,9 @@ class JobsCollectorTest extends TestCase
         dispatch(new SendNotification());
         dispatch(new SendNotification());
 
+        $data[SendNotification::class] = ['value' => 3];
         $this->assertEquals(
-            ['data' => [OrderShipped::class => 1, SendNotification::class => 3], 'count' => 4, 'is_counter' => true],
+            ['data' => $data, 'count' => 4, 'key_map' => $keyMap, 'is_counter' => true],
             $collector->collect()
         );
     }
