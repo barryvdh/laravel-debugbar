@@ -470,7 +470,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('models', true) && $events) {
             try {
                 $this->addCollector(new ObjectCountCollector('models'));
-                $eventList = ['retrieved', 'created', 'updated', 'deleted', 'restored'];
+                $eventList = ['retrieved', 'created', 'updated', 'deleted'];
                 $this['models']->setKeyMap(array_combine($eventList, array_map('ucfirst', $eventList)));
                 $this['models']->collectCountSummary(true);
                 foreach ($eventList as $event) {
