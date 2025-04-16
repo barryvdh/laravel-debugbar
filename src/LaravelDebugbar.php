@@ -470,11 +470,16 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('models', true) && $events) {
             try {
                 $this->addCollector(new ObjectCountCollector('models'));
-                $events->listen('eloquent.retrieved:*', function ($event, $models) {
-                    foreach (array_filter($models) as $model) {
-                        $this['models']->countClass($model);
-                    }
-                });
+                $eventList = ['retrieved', 'created', 'updated', 'deleted'];
+                $this['models']->setKeyMap(array_combine($eventList, array_map('ucfirst', $eventList)));
+                $this['models']->collectCountSummary(true);
+                foreach ($eventList as $event) {
+                    $events->listen("eloquent.{$event}: *", function ($event, $models) {
+                        $event = explode(': ', $event);
+                        $count = count(array_filter($models));
+                        $this['models']->countClass($event[1], $count, explode('.', $event[0])[1]);
+                    });
+                }
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add Models Collector', $e);
             }
