@@ -40,6 +40,9 @@
                         var m = lines[i];
 
                         if (measure.params && !$.isEmptyObject(measure.params)) {
+                            if (measure.params.delete) {
+                                $(m).next().find('td:contains(delete)').parent().remove();
+                            }
                             if (measure.params.delete && measure.params.key) {
                                 $('<a />')
                                     .addClass(csscls('forget'))
