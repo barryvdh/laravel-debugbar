@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.15.4 - 2025-04-16
+
+### What's Changed
+
+* Remove html `<a/>` tag from route on clockwork by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1777
+* Fix default for capturing dd/dump by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1783
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.15.3...v3.15.4
+
 ## v3.15.3 - 2025-04-08
 
 ### What's Changed
