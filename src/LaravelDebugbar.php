@@ -196,7 +196,7 @@ class LaravelDebugbar extends DebugBar
                 $this['messages']->collectFileTrace(true);
             }
 
-            if ($config->get('debugbar.options.messages.capture_dumps', true)) {
+            if ($config->get('debugbar.options.messages.capture_dumps', false)) {
                 $originalHandler = \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) use (&$originalHandler) {
                     if ($originalHandler) {
                         $originalHandler($var);
