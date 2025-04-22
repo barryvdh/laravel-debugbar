@@ -6,6 +6,7 @@ use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\HasDataFormatter;
 use Illuminate\Cache\Events\{
     CacheFlushed,
+    CacheFlushFailed,
     CacheHit,
     CacheMissed,
     KeyForgetFailed,
@@ -27,6 +28,7 @@ class CacheCollector extends TimeDataCollector
         CacheHit::class => 'hit',
         CacheMissed::class => 'missed',
         CacheFlushed::class => 'flushed',
+        CacheFlushFailed::class => 'flush_failed',
         KeyWritten::class => 'written',
         KeyWriteFailed::class => 'write_failed',
         KeyForgotten::class => 'forgotten',
