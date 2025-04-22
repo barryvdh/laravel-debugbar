@@ -657,7 +657,7 @@ class LaravelDebugbar extends DebugBar
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
         if ($this->hasCollector('exceptions')) {
-            $this->getCollector('exceptions')->addWarning($level, $message, $file, $line);
+            $this['exceptions']->addWarning($level, $message, $file, $line);
         }
 
         if ($this->hasCollector('messages')) {
