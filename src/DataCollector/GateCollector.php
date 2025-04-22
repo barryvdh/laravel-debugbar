@@ -13,7 +13,7 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Illuminate\Support\Str;
 
 /**
- * Collector for Laravel's Auth provider
+ * Collector for Laravel's gate checks
  */
 class GateCollector extends MessagesCollector
 {
