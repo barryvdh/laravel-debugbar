@@ -675,13 +675,14 @@ class LaravelDebugbar extends DebugBar
      * @param string $name Internal name, used to stop the measure
      * @param string $label Public name
      * @param string|null $collector
+     * @param string|null $group
      */
-    public function startMeasure($name, $label = null, $collector = null)
+    public function startMeasure($name, $label = null, $collector = null, $group = null)
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector */
             $time = $this->getCollector('time');
-            $time->startMeasure($name, $label, $collector);
+            $time->startMeasure($name, $label, $collector, $group);
         }
     }
 
