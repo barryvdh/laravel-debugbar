@@ -36,7 +36,7 @@ class EventCollector extends TimeDataCollector
         $eventClass = explode(':', $name)[0];
 
         foreach ($this->excludedEvents as $excludedEvent) {
-            if (str_starts_with($eventClass, $excludedEvent)) {
+            if (Str::is($excludedEvent, $eventClass)) {
                 return;
             }
         }
