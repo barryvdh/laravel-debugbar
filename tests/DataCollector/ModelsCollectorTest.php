@@ -66,14 +66,10 @@ class ModelsCollectorTest extends TestCase
         $data[User::class]['updated'] = 1;
         $this->assertEquals(
             [
-                'data' => [
-                    $data
-                ],
-                'count' => 1,
+                'data' => $data,
+                'count' => 4,
                 'is_counter' => true,
-                'key_map' => [
-                    'value' => 'Count'
-                ],
+                'key_map' => [],
             ],
             $collector->collect()
         );
@@ -92,10 +88,9 @@ class ModelsCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'data' => $data,
-                'count' => 3,
+                'count' => 7,
                 'is_counter' => true,
                 'key_map' => [
-                    'value' => 'Count'
                 ]
             ],
             $collector->collect()

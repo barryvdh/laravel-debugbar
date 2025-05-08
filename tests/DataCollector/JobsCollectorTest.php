@@ -55,7 +55,7 @@ class JobsCollectorTest extends TestCase
                 'data' => $data,
                 'count' => 1,
                 'is_counter' => true,
-                'key_map' => ['value' => 'Count']
+                'key_map' => []
             ],
             $collector->collect()
         );
@@ -70,7 +70,7 @@ class JobsCollectorTest extends TestCase
                 'data' => $data,
                 'count' => 4,
                 'is_counter' => true,
-                'key_map' => ['value' => 'Count']
+                'key_map' => []
             ],
             $collector->collect()
         );
