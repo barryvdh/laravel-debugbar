@@ -2,100 +2,98 @@
 
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\Jobs\OrderShipped;
-use Barryvdh\Debugbar\Tests\Jobs\SendNotification;
+use Barryvdh\Debugbar\Tests\Models\Person;
+use Barryvdh\Debugbar\Tests\Models\User;
 use Barryvdh\Debugbar\Tests\TestCase;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
 
-class JobsCollectorTest extends TestCase
+class ModelsCollectorTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('debugbar.collectors.jobs', true);
-        // The `sync` and `null` driver don't dispatch events
-        // `database` or `redis` driver work great
-        $app['config']->set('queue.default', 'database');
-
-        parent::getEnvironmentSetUp($app);
-    }
-
-    public function testItCollectsDispatchedJobs()
+    public function testItCollectsRetrievedModels()
     {
         $this->loadLaravelMigrations();
-        $this->createJobsTable();
-
         debugbar()->boot();
 
         /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
-        $collector = debugbar()->getCollector('jobs');
+        $collector = debugbar()->getCollector('models');
         $collector->setXdebugLinkTemplate('');
+        $collector->collectCountSummary(false);
         $collector->setKeyMap([]);
         $data = [];
 
         $this->assertEquals(
-            [
-                'data' => $data,
-                'count' => 0,
-                'is_counter' => true,
-                'key_map' => []
-            ],
+            ['data' => $data, 'key_map' => [], 'count' => 0, 'is_counter' => true],
             $collector->collect()
         );
 
-        OrderShipped::dispatch(1);
+        User::create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'password' => Hash::make('password'),
+        ]);
 
-        $data[OrderShipped::class] = ['value' => 1];
+        User::create([
+            'name' => 'Jane Doe',
+            'email' => 'jane@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $data[User::class] = ['created' => 2];
         $this->assertEquals(
             [
                 'data' => $data,
-                'count' => 1,
+                'count' => 2,
                 'is_counter' => true,
-                'key_map' => ['value' => 'Count']
+                'key_map' => [
+                ],
             ],
             $collector->collect()
         );
 
-        dispatch(new SendNotification());
-        dispatch(new SendNotification());
-        dispatch(new SendNotification());
+        $user = User::first();
 
-        $data[SendNotification::class] = ['value' => 3];
+        $data[User::class]['retrieved'] = 1;
+        $this->assertEquals(
+            ['data' => $data, 'key_map' => [], 'count' => 3, 'is_counter' => true],
+            $collector->collect()
+        );
+
+        $user->update(['name' => 'Jane Doe']);
+
+        $data[User::class]['updated'] = 1;
         $this->assertEquals(
             [
                 'data' => $data,
                 'count' => 4,
                 'is_counter' => true,
-                'key_map' => ['value' => 'Count']
+                'key_map' => [],
             ],
             $collector->collect()
         );
-    }
 
-    protected function createJobsTable()
-    {
-        (new class extends Migration
-        {
-            public function up()
-            {
-                if (Schema::hasTable('jobs')) {
-                    return;
-                }
+        Person::all();
 
-                Schema::create('jobs', function (Blueprint $table) {
-                    $table->bigIncrements('id');
-                    $table->string('queue')->index();
-                    $table->longText('payload');
-                    $table->unsignedTinyInteger('attempts');
-                    $table->unsignedInteger('reserved_at')->nullable();
-                    $table->unsignedInteger('available_at');
-                    $table->unsignedInteger('created_at');
-                });
-            }
-        })->up();
+        $data[Person::class] = ['retrieved' => 2];
+        $this->assertEquals(
+            ['data' => $data, 'key_map' => [], 'count' => 6, 'is_counter' => true],
+            $collector->collect()
+        );
+
+        $user->delete();
+
+        $data[User::class]['deleted'] = 1;
+        $this->assertEquals(
+            [
+                'data' => $data,
+                'count' => 7,
+                'is_counter' => true,
+                'key_map' => [
+                ]
+            ],
+            $collector->collect()
+        );
     }
 }
