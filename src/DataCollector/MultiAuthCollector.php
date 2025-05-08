@@ -25,6 +25,9 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /** @var bool */
     protected $showName = false;
 
+    /** @var bool */
+    protected $showGuardsData = true;
+
     /**
      * @param \Illuminate\Auth\AuthManager $auth
      * @param array $guards
@@ -42,6 +45,15 @@ class MultiAuthCollector extends DataCollector implements Renderable
     public function setShowName($showName)
     {
         $this->showName = (bool) $showName;
+    }
+
+    /**
+     * Set to hide the guards tab, and show only name
+     * @param bool $showGuardsData
+     */
+    public function setShowGuardsData($showGuardsData)
+    {
+        $this->showGuardsData = (bool) $showGuardsData;
     }
 
     /**
@@ -79,6 +91,9 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         $data['names'] = rtrim($names, ', ');
+        if (!$this->showGuardsData) {
+            unset($data['guards']);
+        }
 
         return $data;
     }
@@ -142,14 +157,16 @@ class MultiAuthCollector extends DataCollector implements Renderable
      */
     public function getWidgets()
     {
-        $widgets = [
-            "auth" => [
+        $widgets = [];
+
+        if ($this->showGuardsData) {
+            $widgets["auth"] = [
                 "icon" => "lock",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "auth.guards",
-                "default" => "{}"
-            ]
-        ];
+                "default" => "{}",
+            ];
+        }
 
         if ($this->showName) {
             $widgets['auth.name'] = [

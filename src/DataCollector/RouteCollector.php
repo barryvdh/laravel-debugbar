@@ -5,8 +5,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 
@@ -57,21 +55,38 @@ class RouteCollector extends DataCollector implements Renderable
         ];
 
         $result = array_merge($result, $action);
+        $uses = $action['uses'] ?? null;
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
 
+        if (request()->hasHeader('X-Livewire')) {
+            try {
+                $component = request('components')[0];
+                $name = json_decode($component['snapshot'], true)['memo']['name'];
+                $method = $component['calls'][0]['method'];
+                $class = app(\Livewire\Mechanisms\ComponentRegistry::class)->getClass($name);
+                if (class_exists($class) && method_exists($class, $method)) {
+                    $controller = $class . '@' . $method;
+                    $result['controller'] = ltrim($controller, '\\');
+                }
+            } catch (\Throwable $e) {
+                //
+            }
+        }
 
-        if (
-            isset($action['controller'])
-            && is_string($action['controller'])
-            && strpos($action['controller'], '@') !== false
-        ) {
-            list($controller, $method) = explode('@', $action['controller']);
+        if (str_contains($controller, '@')) {
+            list($controller, $method) = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }
             unset($result['uses']);
-        } elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
-            $reflector = new \ReflectionFunction($action['uses']);
-            $result['uses'] = $this->formatVar($result['uses']);
+        } elseif ($uses instanceof \Closure) {
+            $reflector = new \ReflectionFunction($uses);
+            $result['uses'] = $this->formatVar($uses);
+        } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
+            if (class_exists($controller) && method_exists($controller, 'render')) {
+                $reflector = new \ReflectionMethod($controller, 'render');
+                $result['controller'] = $controller . '@render';
+            }
         }
 
         if (isset($reflector)) {
@@ -79,13 +94,17 @@ class RouteCollector extends DataCollector implements Renderable
 
             if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
                 $result['file'] = sprintf(
-                    '<a href="%s" onclick="%s">%s:%s-%s</a>',
+                    '<a href="%s" onclick="%s" class="phpdebugbar-widgets-editor-link">%s:%s-%s</a>',
                     $link['url'],
                     $link['ajax'] ? 'event.preventDefault();$.ajax(this.href);' : '',
                     $filename,
                     $reflector->getStartLine(),
                     $reflector->getEndLine()
                 );
+
+                if (isset($result['controller'])) {
+                    $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
+                }
             } else {
                 $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
             }
@@ -95,9 +114,7 @@ class RouteCollector extends DataCollector implements Renderable
             $result['middleware'] = $middleware;
         }
 
-
-
-        return $result;
+        return array_filter($result);
     }
 
     /**
@@ -134,14 +151,6 @@ class RouteCollector extends DataCollector implements Renderable
                 "default" => "{}"
             ]
         ];
-        if (Config::get('debugbar.options.route.label', true)) {
-            $widgets['currentroute'] = [
-                "icon" => "share",
-                "tooltip" => "Route",
-                "map" => "route.uri",
-                "default" => ""
-            ];
-        }
         return $widgets;
     }
 

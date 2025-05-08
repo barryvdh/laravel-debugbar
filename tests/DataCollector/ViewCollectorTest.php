@@ -10,21 +10,8 @@ class ViewCollectorTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        ini_set('xdebug.file_link_format', 'vscode://file/%f:%l');
-    }
-
     public function testIdeLinksAreAbsolutePaths()
     {
-        if (!ini_get('xdebug.file_link_format')) {
-            $this->markTestSkipped(
-                'The Xdebug extension is not available.'
-            );
-            return;
-        }
 
         debugbar()->boot();
 
@@ -36,7 +23,7 @@ class ViewCollectorTest extends TestCase
 
         tap(Arr::first($collector->collect()['templates']), function (array $template) {
             $this->assertEquals(
-                'vscode://file/' . realpath(__DIR__ . '/../resources/views/dashboard.blade.php') . ':1',
+                'phpstorm://open?file=' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../resources/views/dashboard.blade.php'))) . '&line=1',
                 $template['xdebug_link']['url']
             );
         });

@@ -19,6 +19,11 @@ class DebugbarViewEngine implements Engine
     protected $laravelDebugbar;
 
     /**
+     * @var array
+     */
+    protected $exclude_paths;
+
+    /**
      * @param  Engine  $engine
      * @param  LaravelDebugbar  $laravelDebugbar
      */
@@ -26,6 +31,7 @@ class DebugbarViewEngine implements Engine
     {
         $this->engine = $engine;
         $this->laravelDebugbar = $laravelDebugbar;
+        $this->exclude_paths = app('config')->get('debugbar.options.views.exclude_paths', []);
     }
 
     /**
@@ -38,11 +44,17 @@ class DebugbarViewEngine implements Engine
         $basePath = base_path();
         $shortPath = @file_exists((string) $path) ? realpath($path) : $path;
 
-        if (strpos($shortPath, $basePath) === 0) {
+        if (str_starts_with($shortPath, $basePath)) {
             $shortPath = ltrim(
                 str_replace('\\', '/', substr($shortPath, strlen($basePath))),
                 '/'
             );
+        }
+
+        foreach ($this->exclude_paths as $excludePath) {
+            if (str_starts_with($shortPath, $excludePath)) {
+                return $this->engine->get($path, $data);
+            }
         }
 
         return $this->laravelDebugbar->measure($shortPath, function () use ($path, $data) {

@@ -3,16 +3,21 @@
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
-use DebugBar\Bridge\Twig\TwigCollector;
+use DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\Renderable;
+use DebugBar\DataCollector\TimeDataCollector;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
-class ViewCollector extends TwigCollector
+class ViewCollector extends DataCollector implements Renderable, AssetProvider
 {
     protected $name;
     protected $templates = [];
     protected $collect_data;
     protected $exclude_paths;
     protected $group;
+    protected $timeCollector;
 
     /**
      * Create a ViewCollector
@@ -20,14 +25,16 @@ class ViewCollector extends TwigCollector
      * @param bool|string $collectData Collects view data when true
      * @param string[] $excludePaths Paths to exclude from collection
      * @param int|bool $group Group the same templates together
+     * @param TimeDataCollector|null TimeCollector
      * */
-    public function __construct($collectData = true, $excludePaths = [], $group = true)
+    public function __construct($collectData = true, $excludePaths = [], $group = true, ?TimeDataCollector $timeCollector = null)
     {
         $this->setDataFormatter(new SimpleFormatter());
         $this->collect_data = $collectData;
         $this->templates = [];
         $this->exclude_paths = $excludePaths;
         $this->group = $group;
+        $this->timeCollector = $timeCollector;
     }
 
     public function getName()
@@ -48,6 +55,17 @@ class ViewCollector extends TwigCollector
                 'map' => 'views.nb_templates',
                 'default' => 0
             ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssets()
+    {
+        return [
+            'css' => 'widgets/templates/widget.css',
+            'js' => 'widgets/templates/widget.js',
         ];
     }
 
@@ -81,14 +99,20 @@ class ViewCollector extends TwigCollector
                 }
             }
 
+            $shortPath = $this->normalizeFilePath($path);
             foreach ($this->exclude_paths as $excludePath) {
-                if (str_starts_with($path, $excludePath)) {
+                if (str_starts_with($shortPath, $excludePath)) {
                     return;
                 }
             }
         }
 
         $this->addTemplate($name, $data, $type, $path);
+
+        if ($this->timeCollector !== null) {
+            $time = microtime(true);
+            $this->timeCollector->addMeasure('View: ' . $name, $time, $time, [], 'views', 'View');
+        }
     }
 
     private function getInertiaView(string $name, array $data, ?string $path)
@@ -178,6 +202,7 @@ class ViewCollector extends TwigCollector
         }
 
         return [
+            'count' => count($this->templates),
             'nb_templates' => count($this->templates),
             'templates' => $templates,
         ];

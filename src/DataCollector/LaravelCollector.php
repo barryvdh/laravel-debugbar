@@ -4,19 +4,17 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Str;
 
 class LaravelCollector extends DataCollector implements Renderable
 {
-    /** @var \Illuminate\Foundation\Application $app */
-    protected $app;
-
     /**
      * @param Application $app
      */
-    public function __construct(Application $app = null)
+    public function __construct(protected ApplicationContract $laravel)
     {
-        $this->app = $app;
     }
 
     /**
@@ -24,15 +22,20 @@ class LaravelCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        // Fallback if not injected
-        $app = $this->app ?: app();
-
         return [
-            "version" => $app::VERSION,
-            "environment" => $app->environment(),
-            "locale" => $app->getLocale(),
+            "version" => Str::of($this->laravel->version())->explode('.')->first() . '.x',
+            'tooltip' => [
+                'Laravel Version' => $this->laravel->version(),
+                'PHP Version' => phpversion(),
+                'Environment' => $this->laravel->environment(),
+                'Debug Mode' => config('app.debug') ? 'Enabled' : 'Disabled',
+                'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
+                'Timezone' => config('app.timezone'),
+                'Locale' => config('app.locale'),
+            ]
         ];
     }
+
 
     /**
      * {@inheritDoc}
@@ -49,22 +52,13 @@ class LaravelCollector extends DataCollector implements Renderable
     {
         return [
             "version" => [
-                "icon" => "github",
-                "tooltip" => "Laravel Version",
+                "icon" => "laravel phpdebugbar-fab",
                 "map" => "laravel.version",
                 "default" => ""
             ],
-            "environment" => [
-                "icon" => "desktop",
-                "tooltip" => "Environment",
-                "map" => "laravel.environment",
-                "default" => ""
-            ],
-            "locale" => [
-                "icon" => "flag",
-                "tooltip" => "Current locale",
-                "map" => "laravel.locale",
-                "default" => "",
+            "version:tooltip" => [
+                "map" => "laravel.tooltip",
+                "default" => "{}"
             ],
         ];
     }

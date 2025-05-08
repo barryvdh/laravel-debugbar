@@ -48,21 +48,6 @@ class QueryFormatter extends DataFormatter
     }
 
     /**
-     * Make the bindings safe for outputting.
-     *
-     * @param array $bindings
-     * @return array
-     */
-    public function escapeBindings($bindings)
-    {
-        foreach ($bindings as &$binding) {
-            $binding = htmlentities((string) $binding, ENT_QUOTES, 'UTF-8', false);
-        }
-
-        return $bindings;
-    }
-
-    /**
      * Format a source object.
      *
      * @param  object|null  $source  If the backtrace is disabled, the $source will be null.
