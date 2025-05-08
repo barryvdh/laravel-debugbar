@@ -215,10 +215,13 @@ return [
             'show_name' => env('DEBUGBAR_OPTIONS_AUTH_SHOW_NAME', true),     // Also show the users name/email in the debugbar
             'show_guards' => env('DEBUGBAR_OPTIONS_AUTH_SHOW_GUARDS', true), // Show the guards that are used
         ],
+        'gate' => [
+            'trace' => false,      // Trace the origin of the Gate checks
+        ],
         'db' => [
             'with_params'       => env('DEBUGBAR_OPTIONS_WITH_PARAMS', true),   // Render SQL with the parameters substituted
             'exclude_paths'     => [       // Paths to exclude entirely from the collector
-//                'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
+                //'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
             ],
             'backtrace'         => env('DEBUGBAR_OPTIONS_DB_BACKTRACE', true),   // Use a backtrace to find the origin of the query in your files.
             'backtrace_exclude_paths' => [],   // Paths to exclude from backtrace. (in addition to defaults)
