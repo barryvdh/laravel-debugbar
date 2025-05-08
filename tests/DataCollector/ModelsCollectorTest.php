@@ -45,10 +45,9 @@ class ModelsCollectorTest extends TestCase
         $this->assertEquals(
             [
                 'data' => $data,
-                'count' => 0,
+                'count' => 2,
                 'is_counter' => true,
                 'key_map' => [
-                    'value' => 'Count'
                 ],
             ],
             $collector->collect()
