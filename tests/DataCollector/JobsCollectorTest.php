@@ -38,7 +38,12 @@ class JobsCollectorTest extends TestCase
         $data = [];
 
         $this->assertEquals(
-            ['data' => $data, 'count' => 0, 'key_map' => [], 'is_counter' => true],
+            [
+                'data' => $data,
+                'count' => 0,
+                'is_counter' => true,
+                'key_map' => ['value' => 'Count']
+            ],
             $collector->collect()
         );
 
@@ -46,7 +51,12 @@ class JobsCollectorTest extends TestCase
 
         $data[OrderShipped::class] = ['value' => 1];
         $this->assertEquals(
-            ['data' => $data, 'count' => 1, 'key_map' => [], 'is_counter' => true],
+            [
+                'data' => $data,
+                'count' => 1,
+                'is_counter' => true,
+                'key_map' => ['value' => 'Count']
+            ],
             $collector->collect()
         );
 
@@ -56,7 +66,12 @@ class JobsCollectorTest extends TestCase
 
         $data[SendNotification::class] = ['value' => 3];
         $this->assertEquals(
-            ['data' => $data, 'count' => 4, 'key_map' => [], 'is_counter' => true],
+            [
+                'data' => $data,
+                'count' => 4,
+                'is_counter' => true,
+                'key_map' => ['value' => 'Count']
+            ],
             $collector->collect()
         );
     }

@@ -43,7 +43,14 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class] = ['created' => 2];
         $this->assertEquals(
-            ['data' => $data, 'key_map' => [], 'count' => 2, 'is_counter' => true],
+            [
+                'data' => $data,
+                'count' => 0,
+                'is_counter' => true,
+                'key_map' => [
+                    'value' => 'Count'
+                ],
+            ],
             $collector->collect()
         );
 
@@ -59,7 +66,16 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class]['updated'] = 1;
         $this->assertEquals(
-            ['data' => $data, 'key_map' => [], 'count' => 4, 'is_counter' => true],
+            [
+                'data' => [
+                    $data
+                ],
+                'count' => 1,
+                'is_counter' => true,
+                'key_map' => [
+                    'value' => 'Count'
+                ],
+            ],
             $collector->collect()
         );
 
@@ -75,7 +91,14 @@ class ModelsCollectorTest extends TestCase
 
         $data[User::class]['deleted'] = 1;
         $this->assertEquals(
-            ['data' => $data, 'key_map' => [], 'count' => 7, 'is_counter' => true],
+            [
+                'data' => $data,
+                'count' => 3,
+                'is_counter' => true,
+                'key_map' => [
+                    'value' => 'Count'
+                ]
+            ],
             $collector->collect()
         );
     }
