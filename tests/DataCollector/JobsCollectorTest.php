@@ -2,98 +2,100 @@
 
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\Models\Person;
-use Barryvdh\Debugbar\Tests\Models\User;
+use Barryvdh\Debugbar\Tests\Jobs\OrderShipped;
+use Barryvdh\Debugbar\Tests\Jobs\SendNotification;
 use Barryvdh\Debugbar\Tests\TestCase;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
-class ModelsCollectorTest extends TestCase
+class JobsCollectorTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testItCollectsRetrievedModels()
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('debugbar.collectors.jobs', true);
+        // The `sync` and `null` driver don't dispatch events
+        // `database` or `redis` driver work great
+        $app['config']->set('queue.default', 'database');
+
+        parent::getEnvironmentSetUp($app);
+    }
+
+    public function testItCollectsDispatchedJobs()
     {
         $this->loadLaravelMigrations();
+        $this->createJobsTable();
+
         debugbar()->boot();
 
         /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
-        $collector = debugbar()->getCollector('models');
+        $collector = debugbar()->getCollector('jobs');
         $collector->setXdebugLinkTemplate('');
-        $collector->collectCountSummary(false);
         $collector->setKeyMap([]);
         $data = [];
 
         $this->assertEquals(
-            ['data' => $data, 'key_map' => [], 'count' => 0, 'is_counter' => true],
-            $collector->collect()
-        );
-
-        User::create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        User::create([
-            'name' => 'Jane Doe',
-            'email' => 'jane@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        $data[User::class] = ['created' => 2];
-        $this->assertEquals(
             [
                 'data' => $data,
-                'count' => 2,
+                'count' => 0,
                 'is_counter' => true,
-                'key_map' => [
-                ],
+                'key_map' => []
             ],
             $collector->collect()
         );
 
-        $user = User::first();
+        OrderShipped::dispatch(1);
 
-        $data[User::class]['retrieved'] = 1;
+        $data[OrderShipped::class] = ['value' => 1];
         $this->assertEquals(
-            ['data' => $data, 'key_map' => [], 'count' => 3, 'is_counter' => true],
+            [
+                'data' => $data,
+                'count' => 1,
+                'is_counter' => true,
+                'key_map' => []
+            ],
             $collector->collect()
         );
 
-        $user->update(['name' => 'Jane Doe']);
+        dispatch(new SendNotification());
+        dispatch(new SendNotification());
+        dispatch(new SendNotification());
 
-        $data[User::class]['updated'] = 1;
+        $data[SendNotification::class] = ['value' => 3];
         $this->assertEquals(
             [
                 'data' => $data,
                 'count' => 4,
                 'is_counter' => true,
-                'key_map' => [],
+                'key_map' => []
             ],
             $collector->collect()
         );
+    }
 
-        Person::all();
+    protected function createJobsTable()
+    {
+        (new class extends Migration
+        {
+            public function up()
+            {
+                if (Schema::hasTable('jobs')) {
+                    return;
+                }
 
-        $data[Person::class] = ['retrieved' => 2];
-        $this->assertEquals(
-            ['data' => $data, 'key_map' => [], 'count' => 6, 'is_counter' => true],
-            $collector->collect()
-        );
-
-        $user->delete();
-
-        $data[User::class]['deleted'] = 1;
-        $this->assertEquals(
-            [
-                'data' => $data,
-                'count' => 7,
-                'is_counter' => true,
-                'key_map' => [
-                ]
-            ],
-            $collector->collect()
-        );
+                Schema::create('jobs', function (Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('queue')->index();
+                    $table->longText('payload');
+                    $table->unsignedTinyInteger('attempts');
+                    $table->unsignedInteger('reserved_at')->nullable();
+                    $table->unsignedInteger('available_at');
+                    $table->unsignedInteger('created_at');
+                });
+            }
+        })->up();
     }
 }
