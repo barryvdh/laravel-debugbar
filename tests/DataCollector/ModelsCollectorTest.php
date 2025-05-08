@@ -35,21 +35,47 @@ class ModelsCollectorTest extends TestCase
         ]);
 
         $this->assertEquals(
-            ['data' => [], 'count' => 0, 'is_counter' => true],
+            [
+                'data' => [],
+                'count' => 0,
+                'is_counter' => true,
+                'key_map' => [
+                    'value' => 'Count'
+                ],
+            ],
             $collector->collect()
         );
 
         User::first();
 
         $this->assertEquals(
-            ['data' => [User::class => 1], 'count' => 1, 'is_counter' => true],
+            [
+                'data' => [
+                    User::class => ['value' => 1]
+                ],
+                'count' => 1,
+                'is_counter' => true,
+                'key_map' => [
+                    'value' => 'Count'
+                ],
+            ],
             $collector->collect()
         );
 
         Person::all();
 
         $this->assertEquals(
-            ['data' => [User::class => 1, Person::class => 2], 'count' => 3, 'is_counter' => true],
+            [
+                'data' => [
+                    User::class => ['value' => 1],
+                    Person::class => ['value' => 2]
+                ],
+                'count' => 3,
+                'is_counter' => true,
+                'key_map' => [
+                    'value' => 'Count'
+                ]
+            ],
             $collector->collect()
         );
     }
