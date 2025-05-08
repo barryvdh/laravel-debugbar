@@ -4,11 +4,16 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\HasDataFormatter;
-use Illuminate\Cache\Events\CacheEvent;
-use Illuminate\Cache\Events\CacheHit;
-use Illuminate\Cache\Events\CacheMissed;
-use Illuminate\Cache\Events\KeyForgotten;
-use Illuminate\Cache\Events\KeyWritten;
+use Illuminate\Cache\Events\{
+    CacheFlushed,
+    CacheFlushFailed,
+    CacheHit,
+    CacheMissed,
+    KeyForgetFailed,
+    KeyForgotten,
+    KeyWriteFailed,
+    KeyWritten,
+};
 use Illuminate\Events\Dispatcher;
 
 class CacheCollector extends TimeDataCollector
@@ -22,8 +27,12 @@ class CacheCollector extends TimeDataCollector
     protected $classMap = [
         CacheHit::class => 'hit',
         CacheMissed::class => 'missed',
+        CacheFlushed::class => 'flushed',
+        CacheFlushFailed::class => 'flush_failed',
         KeyWritten::class => 'written',
+        KeyWriteFailed::class => 'write_failed',
         KeyForgotten::class => 'forgotten',
+        KeyForgetFailed::class => 'forget_failed',
     ];
 
     public function __construct($requestStartTime, $collectValues)
@@ -33,7 +42,7 @@ class CacheCollector extends TimeDataCollector
         $this->collectValues = $collectValues;
     }
 
-    public function onCacheEvent(CacheEvent $event)
+    public function onCacheEvent($event)
     {
         $class = get_class($event);
         $params = get_object_vars($event);
@@ -53,7 +62,7 @@ class CacheCollector extends TimeDataCollector
         }
 
 
-        if (!empty($params['key']) && in_array($label, ['hit', 'written'])) {
+        if (!empty($params['key'] ?? null) && in_array($label, ['hit', 'written'])) {
             $params['delete'] = route('debugbar.cache.delete', [
                 'key' => urlencode($params['key']),
                 'tags' => !empty($params['tags']) ? json_encode($params['tags']) : '',
@@ -61,13 +70,12 @@ class CacheCollector extends TimeDataCollector
         }
 
         $time = microtime(true);
-        $this->addMeasure($label . "\t" . $event->key, $time, $time, $params);
+        $this->addMeasure($label . "\t" . ($params['key'] ?? ''), $time, $time, $params);
     }
-
 
     public function subscribe(Dispatcher $dispatcher)
     {
-        foreach ($this->classMap as $eventClass => $type) {
+        foreach (array_keys($this->classMap) as $eventClass) {
             $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
         }
     }
