@@ -276,7 +276,8 @@ class LaravelDebugbar extends DebugBar
             try {
                 $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
                 $collectData = $config->get('debugbar.options.events.data', false);
-                $this->addCollector(new EventCollector($startTime, $collectData));
+                $excludedEvents = $config->get('debugbar.options.events.excluded', []);
+                $this->addCollector(new EventCollector($startTime, $collectData, $excludedEvents));
                 $events->subscribe($this['event']);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add EventCollector', $e);

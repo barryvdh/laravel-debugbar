@@ -13,16 +13,20 @@ class EventCollector extends TimeDataCollector
     /** @var Dispatcher */
     protected $events;
 
+    /** @var Dispatcher */
+    protected $excludedEvents;
+
     /** @var integer */
     protected $previousTime;
 
     /** @var bool */
     protected $collectValues;
 
-    public function __construct($requestStartTime = null, $collectValues = false)
+    public function __construct($requestStartTime = null, $collectValues = false, $excludedEvents = [])
     {
         parent::__construct($requestStartTime);
         $this->collectValues = $collectValues;
+        $this->excludedEvents = $excludedEvents;
         $this->setDataFormatter(new SimpleFormatter());
     }
 
@@ -30,6 +34,12 @@ class EventCollector extends TimeDataCollector
     {
         $currentTime = microtime(true);
         $eventClass = explode(':', $name)[0];
+
+        foreach ($this->excludedEvents as $excludedEvent) {
+            if (Str::is($excludedEvent, $eventClass)) {
+                return;
+            }
+        }
 
         if (! $this->collectValues) {
             $this->addMeasure($name, $currentTime, $currentTime, [], null, $eventClass);
