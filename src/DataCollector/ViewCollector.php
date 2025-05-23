@@ -125,7 +125,7 @@ class ViewCollector extends DataCollector implements Renderable, AssetProvider
             $name = $data['component'];
             $data = $data['props'];
 
-            if ($files = glob(resource_path('js/Pages/' . $name . '.*'))) {
+            if ($files = glob(resource_path(config('debugbar.options.views.inertia_pages') .'/'. $name . '.*'))) {
                 $path = $files[0];
                 $type = pathinfo($path, PATHINFO_EXTENSION);
 
