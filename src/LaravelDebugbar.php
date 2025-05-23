@@ -125,8 +125,9 @@ class LaravelDebugbar extends DebugBar
         $this->is_lumen = Str::contains($this->version, 'Lumen');
         if ($this->is_lumen) {
             $this->version = Str::betweenFirst($app->version(), '(', ')');
+        } else {
+            $this->setRequestIdGenerator(new RequestIdGenerator());
         }
-        $this->setRequestIdGenerator(new RequestIdGenerator());
     }
 
     /**
@@ -209,13 +210,16 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('time', true)) {
             $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
-            $this->addCollector(new TimeDataCollector($startTime));
+
+            if (!$this->hasCollector('time')) {
+                $this->addCollector(new TimeDataCollector($startTime));
+            }
 
             if ($config->get('debugbar.options.time.memory_usage')) {
                 $this['time']->showMemoryUsage();
             }
 
-            if ($startTime) {
+            if ($startTime && !$this->isLumen()) {
                 $app->booted(
                     function () use ($startTime) {
                         $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
