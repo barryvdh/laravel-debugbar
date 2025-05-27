@@ -69,6 +69,13 @@ div.phpdebugbar-openhandler[data-theme='dark'] {
     --debugbar-hover-bg: var(--debugbar-gray-700);
 }
 
+div.phpdebugbar[data-theme='dark'] code.phpdebugbar-widgets-sql,
+div.phpdebugbar[data-theme='dark'] .phpdebugbar-widgets-name,
+div.phpdebugbar[data-theme='dark'] .phpdebugbar-widgets-key,
+div.phpdebugbar[data-theme='dark'] .phpdebugbar-widgets-success > pre.sf-dump > .sf-dump-note {
+    color: #fdfd96;
+}
+
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
 .Whoops.container {
     z-index: 5999999;
