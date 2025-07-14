@@ -224,3 +224,7 @@ The Stopwatch extension adds a [stopwatch tag](http://symfony.com/blog/new-in-sy
     …some things that gets timed
 {% endstopwatch %}
 ```
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=barryvdh/laravel-debugbar&type=Date)](https://www.star-history.com/#barryvdh/laravel-debugbar&Date)
