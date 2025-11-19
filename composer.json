@@ -19,9 +19,9 @@
     "require": {
         "php": "^8.1",
         "php-debugbar/php-debugbar": "^2.2.4",
-        "illuminate/routing": "^9|^10|^11|^12",
-        "illuminate/session": "^9|^10|^11|^12",
-        "illuminate/support": "^9|^10|^11|^12",
+        "illuminate/routing": "^10|^11|^12",
+        "illuminate/session": "^10|^11|^12",
+        "illuminate/support": "^10|^11|^12",
         "symfony/finder": "^6|^7"
     },
     "require-dev": {
