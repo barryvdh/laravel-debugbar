@@ -14,7 +14,7 @@ return [
      |
      */
 
-    'enabled' => env('DEBUGBAR_ENABLED', null),
+    'enabled' => env('DEBUGBAR_ENABLED'),
     'hide_empty_tabs' => env('DEBUGBAR_HIDE_EMPTY_TABS', true), // Hide tabs until they have content
     'except' => [
         'telescope*',
@@ -43,7 +43,7 @@ return [
         'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
         'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, socket, custom
         'path'       => env('DEBUGBAR_STORAGE_PATH', storage_path('debugbar')), // For file driver
-        'connection' => env('DEBUGBAR_STORAGE_CONNECTION', null), // Leave null for default connection (Redis/PDO)
+        'connection' => env('DEBUGBAR_STORAGE_CONNECTION'), // Leave null for default connection (Redis/PDO)
         'provider'   => env('DEBUGBAR_STORAGE_PROVIDER', ''), // Instance of StorageInterface for custom driver
         'hostname'   => env('DEBUGBAR_STORAGE_HOSTNAME', '127.0.0.1'), // Hostname to use with the "socket" driver
         'port'       => env('DEBUGBAR_STORAGE_PORT', 2304), // Port to use with the "socket" driver
@@ -267,7 +267,7 @@ return [
             'excluded' => [], // Example: ['eloquent.*', 'composing', Illuminate\Cache\Events\CacheHit::class]
         ],
         'logs' => [
-            'file' => env('DEBUGBAR_OPTIONS_LOGS_FILE', null),
+            'file' => env('DEBUGBAR_OPTIONS_LOGS_FILE'),
         ],
         'cache' => [
             'values' => env('DEBUGBAR_OPTIONS_CACHE_VALUES', true), // Collect cache values
@@ -316,7 +316,7 @@ return [
      | By default Debugbar route served from the same domain that request served.
      | To override default domain, specify it as a non-empty value.
      */
-    'route_domain' => env('DEBUGBAR_ROUTE_DOMAIN', null),
+    'route_domain' => env('DEBUGBAR_ROUTE_DOMAIN'),
 
     /*
      |--------------------------------------------------------------------------
