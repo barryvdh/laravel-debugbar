@@ -19,7 +19,7 @@ return [
     'except' => [
         'telescope*',
         'horizon*',
-        '_boost*',
+        '_boost/browser-logs',
     ],
 
     /*
