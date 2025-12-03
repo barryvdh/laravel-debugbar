@@ -24,7 +24,6 @@ class DebugbarTest extends TestCase
         $app->resolving(LaravelDebugbar::class, function ($debugbar) {
                 $refObject = new \ReflectionObject($debugbar);
                 $refProperty = $refObject->getProperty('enabled');
-                $refProperty->setAccessible(true);
                 $refProperty->setValue($debugbar, true);
         });
     }

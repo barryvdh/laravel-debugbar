@@ -167,7 +167,6 @@ class GateCollector extends MessagesCollector
         } else {
             $reflection = new \ReflectionClass($finder);
             $property = $reflection->getProperty('views');
-            $property->setAccessible(true);
             $this->reflection['viewfinderViews'] = $property;
         }
 
