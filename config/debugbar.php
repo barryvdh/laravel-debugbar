@@ -60,7 +60,7 @@ return [
     |            "phpstorm", "phpstorm-remote", "idea", "idea-remote",
     |            "vscode", "vscode-insiders", "vscode-remote", "vscode-insiders-remote",
     |            "vscodium", "nova", "xdebug", "atom", "espresso",
-    |            "netbeans", "cursor", "windsurf"
+    |            "netbeans", "cursor", "windsurf", "zed", "antigravity"
     |
     */
 
