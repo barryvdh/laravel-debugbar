@@ -56,10 +56,11 @@ return [
     |
     | Choose your preferred editor to use when clicking file name.
     |
-    | Supported: "phpstorm", "vscode", "vscode-insiders", "vscode-remote",
-    |            "vscode-insiders-remote", "vscodium", "textmate", "emacs",
-    |            "sublime", "atom", "nova", "macvim", "idea", "netbeans",
-    |            "xdebug", "espresso"
+    | Supported: "sublime", "textmate", "emacs", "macvim", "codelite",
+    |            "phpstorm", "phpstorm-remote", "idea", "idea-remote",
+    |            "vscode", "vscode-insiders", "vscode-remote", "vscode-insiders-remote",
+    |            "vscodium", "nova", "xdebug", "atom", "espresso",
+    |            "netbeans", "cursor", "windsurf"
     |
     */
 
