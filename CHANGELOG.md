@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.16.2 - 2025-12-16
+
+### What's Changed
+
+* Remove default null value env by @Erulezz in https://github.com/barryvdh/laravel-debugbar/pull/1815
+* Remove --ignore-platform-req=php+ on integration test setup by @erikn69 in https://github.com/barryvdh/laravel-debugbar/pull/1814
+* Remove calls to PHP 8.5-deprecated `setAccessible` by @jnoordsij in https://github.com/barryvdh/laravel-debugbar/pull/1822
+
+### New Contributors
+
+* @Erulezz made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1815
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.16.1...v3.16.2
+
 ## v3.16.1 - 2025-11-19
 
 ### What's Changed
