@@ -165,7 +165,8 @@ class QueryCollector extends PDOCollector
 
         $pdo = null;
         try {
-            $pdo = $query->connection->getPdo();
+            $operationName = Str::upper(Str::before($sql, ' '));
++           $pdo = $operationName === 'SELECT' ? $query->connection->getReadPdo() : $query->connection->getPdo();
 
             if(! ($pdo instanceof \PDO)) {
                 $pdo = null;
