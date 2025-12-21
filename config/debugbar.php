@@ -14,11 +14,12 @@ return [
      |
      */
 
-    'enabled' => env('DEBUGBAR_ENABLED', null),
+    'enabled' => env('DEBUGBAR_ENABLED'),
     'hide_empty_tabs' => env('DEBUGBAR_HIDE_EMPTY_TABS', true), // Hide tabs until they have content
     'except' => [
         'telescope*',
         'horizon*',
+        '_boost/browser-logs',
     ],
 
     /*
@@ -42,7 +43,7 @@ return [
         'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
         'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, socket, custom
         'path'       => env('DEBUGBAR_STORAGE_PATH', storage_path('debugbar')), // For file driver
-        'connection' => env('DEBUGBAR_STORAGE_CONNECTION', null), // Leave null for default connection (Redis/PDO)
+        'connection' => env('DEBUGBAR_STORAGE_CONNECTION'), // Leave null for default connection (Redis/PDO)
         'provider'   => env('DEBUGBAR_STORAGE_PROVIDER', ''), // Instance of StorageInterface for custom driver
         'hostname'   => env('DEBUGBAR_STORAGE_HOSTNAME', '127.0.0.1'), // Hostname to use with the "socket" driver
         'port'       => env('DEBUGBAR_STORAGE_PORT', 2304), // Port to use with the "socket" driver
@@ -215,10 +216,13 @@ return [
             'show_name' => env('DEBUGBAR_OPTIONS_AUTH_SHOW_NAME', true),     // Also show the users name/email in the debugbar
             'show_guards' => env('DEBUGBAR_OPTIONS_AUTH_SHOW_GUARDS', true), // Show the guards that are used
         ],
+        'gate' => [
+            'trace' => false,      // Trace the origin of the Gate checks
+        ],
         'db' => [
             'with_params'       => env('DEBUGBAR_OPTIONS_WITH_PARAMS', true),   // Render SQL with the parameters substituted
             'exclude_paths'     => [       // Paths to exclude entirely from the collector
-//                'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
+                //'vendor/laravel/framework/src/Illuminate/Session', // Exclude sessions queries
             ],
             'backtrace'         => env('DEBUGBAR_OPTIONS_DB_BACKTRACE', true),   // Use a backtrace to find the origin of the query in your files.
             'backtrace_exclude_paths' => [],   // Paths to exclude from backtrace. (in addition to defaults)
@@ -229,7 +233,8 @@ return [
             ],
             'hints'             => env('DEBUGBAR_OPTIONS_DB_HINTS', false),          // Show hints for common mistakes
             'show_copy'         => env('DEBUGBAR_OPTIONS_DB_SHOW_COPY', true),       // Show copy button next to the query,
-            'slow_threshold'    => env('DEBUGBAR_OPTIONS_DB_SLOW_THRESHOLD', false), // Only track queries that last longer than this time in ms
+            'only_slow_queries' => env('DEBUGBAR_OPTIONS_DB_ONLY_SLOW_QUERIES', true), // Only track queries that last longer than `slow_threshold`
+            'slow_threshold'    => env('DEBUGBAR_OPTIONS_DB_SLOW_THRESHOLD', false), // Max query execution time (ms). Exceeding queries will be highlighted
             'memory_usage'      => env('DEBUGBAR_OPTIONS_DB_MEMORY_USAGE', false),   // Show queries memory usage
             'soft_limit'       => (int) env('DEBUGBAR_OPTIONS_DB_SOFT_LIMIT', 100),  // After the soft limit, no parameters/backtrace are captured
             'hard_limit'       => (int) env('DEBUGBAR_OPTIONS_DB_HARD_LIMIT', 500),  // After the hard limit, queries are ignored
@@ -239,9 +244,10 @@ return [
             'show_body' => env('DEBUGBAR_OPTIONS_MAIL_SHOW_BODY', true),
         ],
         'views' => [
-            'timeline' => env('DEBUGBAR_OPTIONS_VIEWS_TIMELINE', true), // Add the views to the timeline
-            'data' => env('DEBUGBAR_OPTIONS_VIEWS_DATA', false),        // True for all data, 'keys' for only names, false for no parameters.
-            'group' => (int) env('DEBUGBAR_OPTIONS_VIEWS_GROUP', 50),   // Group duplicate views. Pass value to auto-group, or true/false to force
+            'timeline' => env('DEBUGBAR_OPTIONS_VIEWS_TIMELINE', true),                  // Add the views to the timeline
+            'data' => env('DEBUGBAR_OPTIONS_VIEWS_DATA', false),                         // True for all data, 'keys' for only names, false for no parameters.
+            'group' => (int) env('DEBUGBAR_OPTIONS_VIEWS_GROUP', 50),                    // Group duplicate views. Pass value to auto-group, or true/false to force
+            'inertia_pages' => env('DEBUGBAR_OPTIONS_VIEWS_INERTIA_PAGES', 'js/Pages'),  // Path for Inertia views
             'exclude_paths' => [    // Add the paths which you don't want to appear in the views
                 'vendor/filament'   // Exclude Filament components by default
             ],
@@ -258,9 +264,10 @@ return [
         ],
         'events' => [
             'data' => env('DEBUGBAR_OPTIONS_EVENTS_DATA', false), // Collect events data, listeners
+            'excluded' => [], // Example: ['eloquent.*', 'composing', Illuminate\Cache\Events\CacheHit::class]
         ],
         'logs' => [
-            'file' => env('DEBUGBAR_OPTIONS_LOGS_FILE', null),
+            'file' => env('DEBUGBAR_OPTIONS_LOGS_FILE'),
         ],
         'cache' => [
             'values' => env('DEBUGBAR_OPTIONS_CACHE_VALUES', true), // Collect cache values
@@ -309,7 +316,7 @@ return [
      | By default Debugbar route served from the same domain that request served.
      | To override default domain, specify it as a non-empty value.
      */
-    'route_domain' => env('DEBUGBAR_ROUTE_DOMAIN', null),
+    'route_domain' => env('DEBUGBAR_ROUTE_DOMAIN'),
 
     /*
      |--------------------------------------------------------------------------

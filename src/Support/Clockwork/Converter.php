@@ -117,7 +117,16 @@ class Converter
             $output['modelsCreated'] = [];
             $output['modelsUpdated'] = [];
             $output['modelsDeleted'] = [];
-            $output['modelsRetrieved'] = $data['models']['data'];
+            $output['modelsRetrieved'] = [];
+
+            foreach ($data['models']['data'] as $model => $value) {
+                foreach ($value as $event => $count) {
+                    $eventKey = 'models' . ucfirst($event);
+                    if (isset($output[$eventKey])) {
+                        $output[$eventKey][$model] = $count;
+                    }
+                }
+            }
         }
 
         if (isset($data['views']['templates'])) {

@@ -3,11 +3,38 @@
 namespace Barryvdh\Debugbar;
 
 use Laravel\Lumen\Application;
+use DebugBar\DataCollector\TimeDataCollector;
 
 class LumenServiceProvider extends ServiceProvider
 {
     /** @var  Application */
     protected $app;
+
+    public function boot()
+    {
+        parent::boot();
+
+        $this->app->call(
+            function () {
+                $debugBar = $this->app->get(LaravelDebugbar::class);
+                if ($debugBar->shouldCollect('time', true)) {
+                    $startTime = $this->app['request']->server('REQUEST_TIME_FLOAT');
+
+                    if (!$debugBar->hasCollector('time')) {
+                        $debugBar->addCollector(new TimeDataCollector($startTime));
+                    }
+
+                    if ($this->app['config']->get('debugbar.options.time.memory_usage')) {
+                        $debugBar['time']->showMemoryUsage();
+                    }
+
+                    if ($startTime) {
+                        $debugBar->addMeasure('Booting', $startTime, microtime(true), [], 'time');
+                    }
+                }
+            }
+        );
+    }
 
     /**
      * Get the active router.

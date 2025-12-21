@@ -138,9 +138,9 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 $htmlData += $this->getRouteInformation($route);
             }
 
-            $fulLUrl = $request->fullUrl();
+            $fullUrl = $request->fullUrl();
             $data += [
-                'full_url' => strlen($fulLUrl) > 100 ? [$fulLUrl] : $fulLUrl,
+                'full_url' => strlen($fullUrl) > 100 ? [$fullUrl] : $fullUrl,
             ];
         }
 

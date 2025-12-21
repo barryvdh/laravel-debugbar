@@ -69,6 +69,13 @@ div.phpdebugbar-openhandler[data-theme='dark'] {
     --debugbar-hover-bg: var(--debugbar-gray-700);
 }
 
+div.phpdebugbar[data-theme='dark'] code.phpdebugbar-widgets-sql,
+div.phpdebugbar[data-theme='dark'] .phpdebugbar-widgets-name,
+div.phpdebugbar[data-theme='dark'] .phpdebugbar-widgets-key,
+div.phpdebugbar[data-theme='dark'] .phpdebugbar-widgets-success > pre.sf-dump > .sf-dump-note {
+    color: #fdfd96;
+}
+
 /* Force Laravel Whoops exception handler to be displayed under the debug bar */
 .Whoops.container {
     z-index: 5999999;
@@ -231,7 +238,8 @@ div.phpdebugbar .phpdebugbar-header select {
 }
 
 dl.phpdebugbar-widgets-kvlist dt,
-dl.phpdebugbar-widgets-kvlist dd {
+dl.phpdebugbar-widgets-kvlist dd,
+table.phpdebugbar-widgets-tablevar td {
     min-height: 20px;
     line-height: 20px;
     padding: 4px 5px 5px;
@@ -243,7 +251,8 @@ dl.phpdebugbar-widgets-kvlist dd.phpdebugbar-widgets-value.phpdebugbar-widgets-p
     background: transparent;
 }
 
-dl.phpdebugbar-widgets-kvlist dt {
+dl.phpdebugbar-widgets-kvlist dt,
+table.phpdebugbar-widgets-tablevar td:first-child {
     width: calc(25% - 10px);
 }
 
@@ -463,7 +472,8 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugb
     margin-left: 3px;
 }
 
-ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) {
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even),
+table.phpdebugbar-widgets-tablevar tr:nth-child(even) {
     background-color: var(--debugbar-background-alt);
 }
 
@@ -478,6 +488,10 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     font-size: 15px !important;
     margin-right: 8px;
     float: left;
+}
+
+table.phpdebugbar-widgets-tablevar td {
+    border: 0;
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-info {

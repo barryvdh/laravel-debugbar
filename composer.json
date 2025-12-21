@@ -18,10 +18,10 @@
     ],
     "require": {
         "php": "^8.1",
-        "php-debugbar/php-debugbar": "~3.0",
-        "illuminate/routing": "^9|^10|^11|^12",
-        "illuminate/session": "^9|^10|^11|^12",
-        "illuminate/support": "^9|^10|^11|^12",
+        "php-debugbar/php-debugbar": "^3.0",
+        "illuminate/routing": "^10|^11|^12",
+        "illuminate/session": "^10|^11|^12",
+        "illuminate/support": "^10|^11|^12",
         "symfony/finder": "^6|^7"
     },
     "require-dev": {
@@ -47,7 +47,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "3.15-dev"
+            "dev-master": "3.16-dev"
         },
         "laravel": {
             "providers": [
