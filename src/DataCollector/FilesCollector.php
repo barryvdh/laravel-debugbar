@@ -114,7 +114,7 @@ class FilesCollector extends DataCollector implements Renderable
         $name = $this->getName();
         return [
             "$name" => [
-                "icon" => "files-o",
+                "icon" => "files",
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
                 "map" => "$name.messages",
                 "default" => "{}"

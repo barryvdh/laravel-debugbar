@@ -52,7 +52,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
     {
         return [
             "models" => [
-                "icon" => "cubes",
+                "icon" => "box",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "models.data",
                 "default" => "{}"

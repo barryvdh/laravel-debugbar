@@ -89,7 +89,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     {
         return [
             "livewire" => [
-                "icon" => "bolt",
+                "icon" => "brand-livewire",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "livewire.data",
                 "default" => "{}"

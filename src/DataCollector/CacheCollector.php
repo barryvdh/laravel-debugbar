@@ -89,7 +89,7 @@ class CacheCollector extends TimeDataCollector
     {
         return [
           'cache' => [
-            'icon' => 'clipboard',
+            'icon' => 'clipboard-text',
             'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
             'map' => 'cache',
             'default' => '{}',

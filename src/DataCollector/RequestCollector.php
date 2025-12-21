@@ -82,7 +82,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         if (Config::get('debugbar.options.request.label', true)) {
             $widgets['currentrequest'] = [
-                "icon" => "share",
+                "icon" => "share-3",
                 "map" => "request.data.uri",
                 "link" => "request",
                 "default" => ""

@@ -24,6 +24,7 @@ class EventCollector extends TimeDataCollector
         parent::__construct($requestStartTime);
         $this->collectValues = $collectValues;
         $this->setDataFormatter(new SimpleFormatter());
+
     }
 
     public function onWildcardEvent($name = null, $data = [])

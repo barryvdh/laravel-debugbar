@@ -11,17 +11,17 @@ use Illuminate\Routing\UrlGenerator;
  */
 class JavascriptRenderer extends BaseJavascriptRenderer
 {
-    // Use XHR handler by default, instead of jQuery
-    protected $ajaxHandlerBindToJquery = false;
-    protected $ajaxHandlerBindToXHR = true;
 
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
 
-        $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
-        $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
-        $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
+        $resourceDir = __DIR__ . '/../resources';
+        $this->cssFiles['laravel'] = $resourceDir . '/laravel-debugbar.css';
+        $this->cssFiles['laravel-icons'] = $resourceDir . '/laravel-icons.css';
+
+        $this->jsFiles['laravel-cache'] = $resourceDir . '/cache/widget.js';
+        $this->jsFiles['laravel-queries'] = $resourceDir . '/queries/widget.js';
 
         $this->setTheme(config('debugbar.theme', 'auto'));
     }

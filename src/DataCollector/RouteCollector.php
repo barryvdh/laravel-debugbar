@@ -145,7 +145,7 @@ class RouteCollector extends DataCollector implements Renderable
     {
         $widgets = [
             "route" => [
-                "icon" => "share",
+                "icon" => "share-3",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "route",
                 "default" => "{}"

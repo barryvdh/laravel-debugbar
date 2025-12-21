@@ -6,3 +6,4 @@ composer.lock
 .DS_Store
 .phpunit*
 /tests/Browser
+/node_modules

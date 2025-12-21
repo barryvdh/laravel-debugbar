@@ -52,7 +52,7 @@ class LaravelCollector extends DataCollector implements Renderable
     {
         return [
             "version" => [
-                "icon" => "laravel phpdebugbar-fab",
+                "icon" => "brand-laravel",
                 "map" => "laravel.version",
                 "default" => ""
             ],
