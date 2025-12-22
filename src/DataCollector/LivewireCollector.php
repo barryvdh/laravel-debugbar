@@ -45,7 +45,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->id;
 
-            $this->data[$key] = $this->formatVar($data);
+            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
         });
 
         Livewire::listen('render', function (Component $component) use ($request) {
@@ -65,7 +65,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->getId();
 
-            $this->data[$key] = $this->formatVar($data);
+            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
         });
     }
 

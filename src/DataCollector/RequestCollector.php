@@ -128,8 +128,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $data = [
             'status' => $statusCode . ' ' . (isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : ''),
-            'duration' => $startTime ? $this->formatDuration(microtime(true) - $startTime) : null,
-            'peak_memory' => $this->formatBytes(memory_get_peak_usage(true), 1),
+            'duration' => $startTime ? $this->getDataFormatter()->formatDuration(microtime(true) - $startTime) : null,
+            'peak_memory' => $this->getDataFormatter()->formatBytes(memory_get_peak_usage(true), 1),
         ];
 
         if ($request instanceof Request) {
@@ -251,7 +251,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             unset($result['uses']);
         } elseif ($uses instanceof \Closure) {
             $reflector = new \ReflectionFunction($uses);
-            $result['uses'] = $this->formatVar($uses);
+            $result['uses'] = $this->getDataFormatter()->formatVar($uses);
         } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
             if (class_exists($controller) && method_exists($controller, 'render')) {
                 $reflector = new \ReflectionMethod($controller, 'render');

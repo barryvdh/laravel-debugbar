@@ -515,7 +515,7 @@ class QueryCollector extends PDOCollector
                 'backtrace' => array_values($query['source']),
                 'start' => $query['start'] ?? null,
                 'duration' => $query['time'],
-                'duration_str' => ($query['type'] == 'transaction') ? '' : $this->formatDuration($query['time']),
+                'duration_str' => ($query['type'] == 'transaction') ? '' : $this->getDataFormatter()->formatDuration($query['time']),
                 'slow' => $this->slowThreshold && $this->slowThreshold <= $query['time'],
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
@@ -592,7 +592,7 @@ class QueryCollector extends PDOCollector
             'nb_excluded_statements' => $this->queryCount + $this->transactionEventsCount - $visibleStatements,
             'nb_failed_statements' => 0,
             'accumulated_duration' => $totalTime,
-            'accumulated_duration_str' => $this->formatDuration($totalTime),
+            'accumulated_duration_str' => $this->getDataFormatter()->formatDuration($totalTime),
             'memory_usage' => $totalMemory,
             'memory_usage_str' => $totalMemory ? $this->getDataFormatter()->formatBytes($totalMemory) : null,
             'statements' => $statements

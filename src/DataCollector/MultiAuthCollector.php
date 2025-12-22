@@ -86,7 +86,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         foreach ($data['guards'] as $key => $var) {
             if (!is_string($data['guards'][$key])) {
-                $data['guards'][$key] = $this->formatVar($var);
+                $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
             }
         }
 

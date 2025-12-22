@@ -81,7 +81,7 @@ class RouteCollector extends DataCollector implements Renderable
             unset($result['uses']);
         } elseif ($uses instanceof \Closure) {
             $reflector = new \ReflectionFunction($uses);
-            $result['uses'] = $this->formatVar($uses);
+            $result['uses'] = $this->getDataFormatter()->formatVar($uses);
         } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
             if (class_exists($controller) && method_exists($controller, 'render')) {
                 $reflector = new \ReflectionMethod($controller, 'render');
