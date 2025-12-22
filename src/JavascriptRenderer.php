@@ -17,11 +17,12 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         parent::__construct($debugBar, $baseUrl, $basePath);
 
         $resourceDir = __DIR__ . '/../resources';
-        $this->cssFiles['laravel'] = $resourceDir . '/laravel-debugbar.css';
-        $this->cssFiles['laravel-icons'] = $resourceDir . '/laravel-icons.css';
 
-        $this->jsFiles['laravel-cache'] = $resourceDir . '/cache/widget.js';
-        $this->jsFiles['laravel-queries'] = $resourceDir . '/queries/widget.js';
+        $this->additionalAssets[] = [
+            'base_path' => $resourceDir,
+            'css' => ['laravel-debugbar.css', 'laravel-icons.css'],
+            'js' => ['cache/widget.js', 'queries/widget.js'],
+        ];
 
         $this->setTheme(config('debugbar.theme', 'auto'));
     }
