@@ -71,8 +71,10 @@ If you want to use the facade to log messages, add this within the `register` me
 ```php
 public function register(): void
 {
-    $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-    $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
+    if (class_exists(\Barryvdh\Debugbar\Facades\Debugbar::class)) {
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
+    }
 }
 ```
 
