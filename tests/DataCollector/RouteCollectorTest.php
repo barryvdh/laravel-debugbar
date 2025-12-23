@@ -36,7 +36,7 @@ class RouteCollectorTest extends TestCase
     /**
      * @dataProvider controllerData
      */
-    public function testItCollectsWithControllerHandler($controller, $file)
+    public function testItCollectsWithControllerHandler($controller, $file, $url)
     {
         $this->get('web/show');
 
@@ -45,21 +45,25 @@ class RouteCollectorTest extends TestCase
         $this->assertNotEmpty($collected);
         $this->assertArrayHasKey('file', $collected);
         $this->assertArrayHasKey('controller', $collected);
-        $this->assertStringContainsString($file, $collected['file']);
-        $this->assertStringContainsString($controller, $collected['controller']);
+        $this->assertStringContainsString($file, $collected['file']['value']);
+        $this->assertStringContainsString($url, $collected['file']['xdebug_link']['url']);
+        $this->assertStringContainsString($controller, $collected['controller']['value']);
+        $this->assertStringContainsString($url, $collected['controller']['xdebug_link']['url']);
     }
 
     /**
      * @dataProvider viewComponentData
      */
-    public function testItCollectsWithViewComponentHandler($controller, $file)
+    public function testItCollectsWithViewComponentHandler($controller, $file, $url)
     {
         $this->get('web/view');
 
         $collected = $this->routeCollector->collect();
 
-        $this->assertStringContainsString($file, $collected['file']);
-        $this->assertStringContainsString($controller, $collected['controller']);
+        $this->assertStringContainsString($file, $collected['file']['value']);
+        $this->assertStringContainsString($url, $collected['file']['xdebug_link']['url']);
+        $this->assertStringContainsString($controller, $collected['controller']['value']);
+        $this->assertStringContainsString($url, $collected['controller']['xdebug_link']['url']);
     }
 
     /**
@@ -75,7 +79,7 @@ class RouteCollectorTest extends TestCase
         $this->assertArrayHasKey('uses', $collected);
         $this->assertArrayHasKey('file', $collected);
         $this->assertStringContainsString($file, $collected['uses']);
-        $this->assertStringContainsString($file, $collected['file']);
+        $this->assertStringContainsString($file, $collected['file']['value']);
     }
 
     public function testItCollectsMiddleware()
@@ -93,6 +97,7 @@ class RouteCollectorTest extends TestCase
     {
         $filePath = urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Mocks/MockController.php')));
         return [['MockController@show',
+                 'MockController.php',
                  sprintf('phpstorm://open?file=%s', $filePath)
         ]];
     }
@@ -101,6 +106,7 @@ class RouteCollectorTest extends TestCase
     {
         $filePath = urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../Mocks/MockViewComponent.php')));
         return [['MockViewComponent@render',
+                 'MockViewComponent.php',
                  sprintf('phpstorm://open?file=%s', $filePath)
         ]];
     }
