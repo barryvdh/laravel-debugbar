@@ -91,22 +91,20 @@ class RouteCollector extends DataCollector implements Renderable
 
         if (isset($reflector)) {
             $filename = $this->normalizeFilePath($reflector->getFileName());
+            $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
 
             if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
-                $result['file'] = sprintf(
-                    '<a href="%s" onclick="%s" class="phpdebugbar-widgets-editor-link">%s:%s-%s</a>',
-                    $link['url'],
-                    $link['ajax'] ? 'event.preventDefault();$.ajax(this.href);' : '',
-                    $filename,
-                    $reflector->getStartLine(),
-                    $reflector->getEndLine()
-                );
+                $result['file'] = [
+                    'value' => $result['file'],
+                    'xdebug_link' => $link,
+                ];
 
                 if (isset($result['controller'])) {
-                    $result['controller'] .= '<a href="'.$link['url'].'" class="phpdebugbar-widgets-editor-link"></a>';
+                    $result['controller'] = [
+                        'value' => $result['controller'],
+                        'xdebug_link' => $link,
+                    ];
                 }
-            } else {
-                $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
             }
         }
 
