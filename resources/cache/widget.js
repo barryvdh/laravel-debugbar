@@ -1,6 +1,5 @@
-(function ($) {
-
-    var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
+(function () {
+    const csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
 
     /**
      * Widget for the displaying cache events
@@ -8,55 +7,69 @@
      * Options:
      *  - data
      */
-    var LaravelCacheWidget = PhpDebugBar.Widgets.LaravelCacheWidget = PhpDebugBar.Widgets.TimelineWidget.extend({
+    class LaravelCacheWidget extends PhpDebugBar.Widgets.TimelineWidget {
+        get tagName() {
+            return 'ul';
+        }
 
-        tagName: 'ul',
+        get className() {
+            return csscls('timeline cache');
+        }
 
-        className: csscls('timeline cache'),
-
-        onForgetClick: function (e, el) {
+        onForgetClick(e, el) {
             e.stopPropagation();
 
-            $.ajax({
-                url: $(el).attr("data-url"),
-                type: 'DELETE',
-                success: function (result) {
-                    $(el).fadeOut(200);
+            fetch(el.getAttribute('data-url'), {
+                method: 'DELETE'
+            }).then((response) => {
+                if (response.ok) {
+                    el.style.transition = 'opacity 200ms';
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 200);
                 }
+            }).catch((err) => {
+                console.error('Failed to forget cache key:', err);
             });
-        },
+        }
 
-        render: function () {
-            LaravelCacheWidget.__super__.render.apply(this);
+        render() {
+            super.render();
 
             this.bindAttr('data', function (data) {
-
                 if (data.measures) {
-                    var self = this;
-                    var lines = this.$el.find('.' + csscls('measure'));
+                    const lines = this.el.querySelectorAll(`.${csscls('measure')}`);
 
-                    for (var i = 0; i < data.measures.length; i++) {
-                        var measure = data.measures[i];
-                        var m = lines[i];
+                    for (let i = 0; i < data.measures.length; i++) {
+                        const measure = data.measures[i];
+                        const m = lines[i];
 
-                        if (measure.params && !$.isEmptyObject(measure.params)) {
+                        if (measure.params && Object.keys(measure.params).length > 0) {
                             if (measure.params.delete) {
-                                $(m).next().find('td.phpdebugbar-widgets-name:contains(delete)').closest('tr').remove();
+                                const nextElement = m.nextElementSibling;
+                                if (nextElement) {
+                                    const deleteRow = Array.from(nextElement.querySelectorAll('td.phpdebugbar-widgets-name'))
+                                        .find(td => td.textContent.includes('delete'));
+                                    if (deleteRow) {
+                                        deleteRow.closest('tr')?.remove();
+                                    }
+                                }
                             }
                             if (measure.params.delete && measure.params.key) {
-                                $('<a />')
-                                    .addClass(csscls('forget'))
-                                    .text('forget')
-                                    .attr('data-url', measure.params.delete)
-                                    .one('click', function (e) {
-                                        self.onForgetClick(e, this); })
-                                    .appendTo(m);
+                                const forgetLink = document.createElement('a');
+                                forgetLink.className = csscls('forget');
+                                forgetLink.textContent = 'forget';
+                                forgetLink.setAttribute('data-url', measure.params.delete);
+                                forgetLink.addEventListener('click', (e) => {
+                                    this.onForgetClick(e, forgetLink);
+                                }, { once: true });
+                                m.appendChild(forgetLink);
                             }
                         }
                     }
                 }
             });
         }
-    });
+    }
 
-})(PhpDebugBar.$);
+    PhpDebugBar.Widgets.LaravelCacheWidget = LaravelCacheWidget;
+})();

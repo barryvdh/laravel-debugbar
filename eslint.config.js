@@ -37,16 +37,16 @@ export default antfu(
             // Allow unused vars with _ prefix or Widget suffix
             'unused-imports/no-unused-vars': ['error', {
                 args: 'none',
-                varsIgnorePattern: '^_|Widget$',
+                varsIgnorePattern: '^(_|.*Widget)$',
                 caughtErrors: 'none'
             }],
             'no-unused-vars': ['error', {
                 args: 'none',
-                varsIgnorePattern: '^_|Widget$',
+                varsIgnorePattern: '^(_|.*Widget)$',
                 caughtErrors: 'none'
             }],
 
-            // jQuery patterns
+            // Code style
             'style/brace-style': ['error', '1tbs'],
             'style/comma-dangle': ['error', 'never'],
             'style/no-mixed-operators': 'off',
@@ -57,11 +57,6 @@ export default antfu(
             'no-sequences': 'off',
             'no-unused-expressions': 'off',
             'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
-            'unicorn/prefer-query-selector': 'off',
-            'unicorn/prefer-dom-node-append': 'off',
-            'unicorn/prefer-modern-dom-apis': 'off',
-            'unicorn/prefer-add-event-listener': 'off',
-            'unicorn/prefer-number-properties': 'off',
             'unicorn/no-array-for-each': 'off',
 
             // JSDoc relaxed rules
@@ -72,9 +67,12 @@ export default antfu(
             'func-style': 'off',
             'antfu/consistent-list-newline': 'off',
 
-            // Prefer modern JS
+            // Modern JavaScript requirements
             'prefer-const': 'error',
-            'no-var': 'error'
+            'no-var': 'error',
+            'prefer-arrow-callback': 'warn',
+            'prefer-template': 'warn',
+            'object-shorthand': 'warn'
         }
     },
 
@@ -87,8 +85,6 @@ export default antfu(
             globals: {
                 ...globals.browser,
                 PhpDebugBar: 'writable',
-                jQuery: 'readonly',
-                $: 'readonly',
                 hljs: 'readonly'
             }
         }

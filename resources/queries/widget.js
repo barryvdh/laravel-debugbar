@@ -1,7 +1,6 @@
-(function($) {
-
-    let css = PhpDebugBar.utils.makecsscls('phpdebugbar-');
-    let csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
+(function () {
+    const css = PhpDebugBar.utils.makecsscls('phpdebugbar-');
+    const csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
 
     /**
      * Widget for displaying sql queries.
@@ -9,15 +8,18 @@
      * Options:
      *  - data
      */
-    const QueriesWidget = PhpDebugBar.Widgets.LaravelQueriesWidget = PhpDebugBar.Widget.extend({
+    class LaravelQueriesWidget extends PhpDebugBar.Widget {
+        constructor() {
+            super();
+            this.duplicateQueries = new Set();
+            this.hiddenConnections = new Set();
+        }
 
-        className: csscls('sqlqueries'),
+        get className() {
+            return csscls('sqlqueries');
+        }
 
-        duplicateQueries: new Set(),
-
-        hiddenConnections: new Set(),
-
-        copyToClipboard: function (code) {
+        copyToClipboard(code) {
             if (document.selection) {
                 const range = document.body.createTextRange();
                 range.moveToElementText(code);
@@ -29,95 +31,132 @@
                 window.getSelection().addRange(range);
             }
 
-            var isCopied = false;
+            let isCopied = false;
             try {
                 isCopied = document.execCommand('copy');
                 console.log('Query copied to the clipboard');
             } catch (err) {
-                alert('Oops, unable to copy');
+                console.error('Oops, unable to copy');
             }
 
             window.getSelection().removeAllRanges();
 
             return isCopied;
-        },
+        }
 
-        explainMysql: function ($element, statement, rows, visual) {
+        explainMysql(element, statement, rows, visual) {
             const headings = [];
             for (const key in rows[0]) {
-                headings.push($('<th/>').text(key));
+                const th = document.createElement('th');
+                th.textContent = key;
+                headings.push(th);
             }
 
             const values = [];
             for (const row of rows) {
-                const $tr = $('<tr/>');
+                const tr = document.createElement('tr');
                 for (const key in row) {
-                    $tr.append($('<td/>').text(row[key]));
+                    const td = document.createElement('td');
+                    td.textContent = row[key];
+                    tr.appendChild(td);
                 }
-                values.push($tr);
+                values.push(tr);
             }
 
-            const $table = $('<table><thead></thead><tbody></tbody></table>').addClass(csscls('explain'));
-            $table.find('thead').append($('<tr/>').append(headings));
-            $table.find('tbody').append(values);
+            const table = document.createElement('table');
+            table.className = csscls('explain');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+            const headerRow = document.createElement('tr');
+            headings.forEach(th => headerRow.appendChild(th));
+            thead.appendChild(headerRow);
+            values.forEach(tr => tbody.appendChild(tr));
+            table.appendChild(thead);
+            table.appendChild(tbody);
 
-            $element.append($table);
+            element.appendChild(table);
             if (visual) {
-                $element.append(this.explainVisual(statement, visual.confirm));
+                element.appendChild(this.explainVisual(statement, visual.confirm));
             }
-        },
+        }
 
-        explainPgsql: function ($element, statement, rows, visual) {
-            const $ul = $('<ul />').addClass(csscls('table-list'));
-            const $li = $('<li />').addClass(csscls('table-list-item'));
+        explainPgsql(element, statement, rows, visual) {
+            const ul = document.createElement('ul');
+            ul.className = csscls('table-list');
 
             for (const row of rows) {
-                $ul.append($li.clone().html($('<span/>').text(row).text().replaceAll(' ', '&nbsp;')));
+                const li = document.createElement('li');
+                li.className = csscls('table-list-item');
+                const span = document.createElement('span');
+                span.textContent = row;
+                li.innerHTML = span.textContent.replaceAll(' ', '&nbsp;');
+                ul.appendChild(li);
             }
 
-            $element.append([$ul, this.explainVisual(statement, visual.confirm)]);
-        },
+            element.appendChild(ul);
+            element.appendChild(this.explainVisual(statement, visual.confirm));
+        }
 
-        explainVisual: function (statement, confirmMessage) {
-            const $explainLink = $('<a href="#" target="_blank" rel="noopener"/>')
-                .addClass(csscls('visual-link'));
-            const $explainButton = $('<a>Visual Explain</a>')
-                .addClass(csscls('visual-explain'))
-                .on('click', () => {
-                    if (!confirm(confirmMessage)) return;
-                    fetch(statement.explain.url, {
-                        method: "POST",
-                        body: JSON.stringify({
-                            connection: statement.explain.connection,
-                            query: statement.explain.query,
-                            bindings: statement.bindings,
-                            hash: statement.explain.hash,
-                            mode: 'visual',
-                        }),
-                    }).then(response => {
-                        response.json()
-                            .then(json => {
-                                if (!response.ok) return alert(json.message);
-                                $explainLink.attr('href', json.data).text(json.data);
-                                window.open(json.data, '_blank', 'noopener');
-                            })
-                            .catch(err => alert(`Response body could not be parsed. (${err})`));
-                    }).catch(e => {
-                        alert(e.message);
-                    });
+        explainVisual(statement, confirmMessage) {
+            const explainLink = document.createElement('a');
+            explainLink.href = '#';
+            explainLink.target = '_blank';
+            explainLink.rel = 'noopener';
+            explainLink.className = csscls('visual-link');
+
+            const explainButton = document.createElement('a');
+            explainButton.textContent = 'Visual Explain';
+            explainButton.className = csscls('visual-explain');
+            explainButton.addEventListener('click', () => {
+                // eslint-disable-next-line no-alert
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                fetch(statement.explain.url, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        connection: statement.explain.connection,
+                        query: statement.explain.query,
+                        bindings: statement.bindings,
+                        hash: statement.explain.hash,
+                        mode: 'visual'
+                    })
+                }).then((response) => {
+                    response.json()
+                        .then((json) => {
+                            if (!response.ok) {
+                                // eslint-disable-next-line no-alert
+                                return alert(json.message);
+                            }
+                            explainLink.href = json.data;
+                            explainLink.textContent = json.data;
+                            window.open(json.data, '_blank', 'noopener');
+                        })
+                        .catch(err => {
+                            // eslint-disable-next-line no-alert
+                            alert(`Response body could not be parsed. (${err})`);
+                        });
+                }).catch((e) => {
+                    // eslint-disable-next-line no-alert
+                    alert(e.message);
                 });
+            });
 
-            return $('<div/>').append([$explainButton, $explainLink]);
-        },
+            const container = document.createElement('div');
+            container.appendChild(explainButton);
+            container.appendChild(explainLink);
+            return container;
+        }
 
-        identifyDuplicates: function(statements) {
-            if (! Array.isArray(statements)) statements = [];
+        identifyDuplicates(statements) {
+            if (!Array.isArray(statements))
+                statements = [];
 
             const makeStatementHash = (statement) => {
                 return [
                     statement.sql,
                     statement.connection,
-                    JSON.stringify(statement.bindings),
+                    JSON.stringify(statement.bindings)
                 ].join('::');
             };
 
@@ -134,35 +173,38 @@
                     this.duplicateQueries.add(statement);
                 }
             }
-        },
+        }
 
-        render: function () {
-            const $status = $('<div />').addClass(csscls('status')).appendTo(this.$el);
+        render() {
+            const status = document.createElement('div');
+            status.className = csscls('status');
+            this.el.appendChild(status);
 
-            const $list = new PhpDebugBar.Widgets.ListWidget({
-                itemRenderer: this.renderQuery.bind(this),
+            const list = new PhpDebugBar.Widgets.ListWidget({
+                itemRenderer: this.renderQuery.bind(this)
             });
-            this.$el.append($list.$el);
+            this.el.appendChild(list.el);
 
             this.bindAttr('data', function (data) {
                 this.identifyDuplicates(data.statements);
 
-                this.renderStatus($status, data);
-                $list.set('data', data.statements);
+                this.renderStatus(status, data);
+                list.set('data', data.statements);
             });
-        },
+        }
 
-        renderStatus: function ($status, data) {
-            $status.empty();
+        renderStatus(status, data) {
+            status.innerHTML = '';
 
             const connections = new Set();
             for (const statement of data.statements) {
                 connections.add(statement.connection);
             }
 
-            const $text = $('<span />').text(`${data.nb_statements} ${data.nb_statements == 1 ? 'statement was' : 'statements were'} executed`);
+            const text = document.createElement('span');
+            text.textContent = `${data.nb_statements} ${data.nb_statements === 1 ? 'statement was' : 'statements were'} executed`;
             if (data.nb_excluded_statements) {
-                $text.append(`, ${data.nb_excluded_statements} ${data.nb_excluded_statements == 1 ? 'has' : 'have'} been excluded`);
+                text.textContent += `, ${data.nb_excluded_statements} ${data.nb_excluded_statements === 1 ? 'has' : 'have'} been excluded`;
             }
             if (data.nb_failed_statements > 0 || this.duplicateQueries.size > 0) {
                 const details = [];
@@ -170,244 +212,318 @@
                     details.push(`${data.nb_failed_statements} failed`);
                 }
                 if (this.duplicateQueries.size > 0) {
-                    details.push(`${this.duplicateQueries.size} ${this.duplicateQueries.size == 1 ? 'duplicate' : 'duplicates'}`);
+                    details.push(`${this.duplicateQueries.size} ${this.duplicateQueries.size === 1 ? 'duplicate' : 'duplicates'}`);
                 }
-                $text.append(` (${details.join(', ')})`);
+                text.textContent += ` (${details.join(', ')})`;
             }
-            $status.append($text);
+            status.appendChild(text);
 
             const filters = [];
             if (this.duplicateQueries.size > 0) {
-                filters.push($('<a />')
-                    .text('Show only duplicates')
-                    .addClass(csscls('duplicates'))
-                    .click((event) => {
-                        if ($(event.target).text() === 'Show only duplicates') {
-                            $(event.target).text('Show All');
-                            this.$el.find('[data-duplicate=false]').hide();
-                        } else {
-                            $(event.target).text('Show only duplicates');
-                            this.$el.find('[data-duplicate]').show();
-                        }
-                    })
-                );
+                const duplicatesLink = document.createElement('a');
+                duplicatesLink.textContent = 'Show only duplicates';
+                duplicatesLink.className = csscls('duplicates');
+                duplicatesLink.addEventListener('click', (event) => {
+                    if (event.target.textContent === 'Show only duplicates') {
+                        event.target.textContent = 'Show All';
+                        this.el.querySelectorAll('[data-duplicate="false"]').forEach(el => el.style.display = 'none');
+                    } else {
+                        event.target.textContent = 'Show only duplicates';
+                        this.el.querySelectorAll('[data-duplicate]').forEach(el => el.style.display = '');
+                    }
+                });
+                filters.push(duplicatesLink);
             }
             if (connections.size > 1) {
                 for (const connection of connections.values()) {
-                    filters.push($('<a />')
-                        .addClass(csscls('connection'))
-                        .text(connection)
-                        .attr({'data-filter': connection, 'data-active': true})
-                        .on('click', (event) => {
-                            if ($(event.target).attr('data-active') === 'true') {
-                                $(event.target).attr('data-active', false).css('opacity', 0.3);
-                                this.hiddenConnections.add($(event.target).attr('data-filter'));
-                            } else {
-                                $(event.target).attr('data-active', true).css('opacity', 1.0);
-                                this.hiddenConnections.delete($(event.target).attr('data-filter'));
-                            }
+                    const connectionLink = document.createElement('a');
+                    connectionLink.className = csscls('connection');
+                    connectionLink.textContent = connection;
+                    connectionLink.setAttribute('data-filter', connection);
+                    connectionLink.setAttribute('data-active', 'true');
+                    connectionLink.addEventListener('click', (event) => {
+                        if (event.target.getAttribute('data-active') === 'true') {
+                            event.target.setAttribute('data-active', 'false');
+                            event.target.style.opacity = '0.3';
+                            this.hiddenConnections.add(event.target.getAttribute('data-filter'));
+                        } else {
+                            event.target.setAttribute('data-active', 'true');
+                            event.target.style.opacity = '1.0';
+                            this.hiddenConnections.delete(event.target.getAttribute('data-filter'));
+                        }
 
-                            this.$el.find(`[data-connection]`).show();
-                            for (const hiddenConnection of this.hiddenConnections) {
-                                this.$el.find(`[data-connection="${hiddenConnection}"]`).hide();
-                            }
-                        })
-                    );
+                        this.el.querySelectorAll('[data-connection]').forEach(el => el.style.display = '');
+                        for (const hiddenConnection of this.hiddenConnections) {
+                            this.el.querySelectorAll(`[data-connection="${hiddenConnection}"]`).forEach(el => el.style.display = 'none');
+                        }
+                    });
+                    filters.push(connectionLink);
                 }
             }
-            $status.append(filters);
+            filters.forEach(filter => status.appendChild(filter));
 
             if (data.accumulated_duration_str) {
-                $status.append($('<span title="Accumulated duration" />').addClass(csscls('duration')).text(data.accumulated_duration_str));
+                const duration = document.createElement('span');
+                duration.title = 'Accumulated duration';
+                duration.className = csscls('duration');
+                duration.textContent = data.accumulated_duration_str;
+                status.appendChild(duration);
             }
             if (data.memory_usage_str) {
-                $status.append($('<span title="Memory usage" />').addClass(csscls('memory')).text(data.memory_usage_str));
+                const memory = document.createElement('span');
+                memory.title = 'Memory usage';
+                memory.className = csscls('memory');
+                memory.textContent = data.memory_usage_str;
+                status.appendChild(memory);
             }
-        },
+        }
 
-        renderQuery: function ($li, statement) {
+        renderQuery(li, statement) {
             if (statement.type === 'transaction') {
-                $li.attr('data-connection', statement.connection)
-                    .attr('data-duplicate', false)
-                    .append($('<strong />').addClass(csscls('sql name')).text(statement.sql));
+                li.setAttribute('data-connection', statement.connection);
+                li.setAttribute('data-duplicate', false);
+                const strong = document.createElement('strong');
+                strong.className = csscls('sql name');
+                strong.textContent = statement.sql;
+                li.appendChild(strong);
             } else {
                 if (statement.slow) {
-                    $li.addClass(csscls('sql-slow'));
+                    li.classList.add(csscls('sql-slow'));
                 }
-                const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql')),
-                    duplicated = this.duplicateQueries.has(statement);
-                $li.attr('data-connection', statement.connection)
-                    .attr('data-duplicate', duplicated)
-                    .toggleClass(csscls('sql-duplicate'), duplicated)
-                    .append($code);
+                const code = document.createElement('code');
+                code.innerHTML = PhpDebugBar.Widgets.highlight(statement.sql, 'sql');
+                code.className = csscls('sql');
+                const duplicated = this.duplicateQueries.has(statement);
+                li.setAttribute('data-connection', statement.connection);
+                li.setAttribute('data-duplicate', duplicated);
+                if (duplicated) {
+                    li.classList.add(csscls('sql-duplicate'));
+                }
+                li.appendChild(code);
 
                 if (statement.show_copy) {
-                    $('<span title="Copy to clipboard" />')
-                        .addClass(csscls('copy-clipboard'))
-                        .css('cursor', 'pointer')
-                        .on('click', (event) => {
-                            event.stopPropagation();
-                            if (this.copyToClipboard($code.get(0))) {
-                                $(event.target).addClass(csscls('copy-clipboard-check'));
-                                setTimeout(function(){
-                                    $(event.target).removeClass(csscls('copy-clipboard-check'));
-                                }, 2000)
-                            }
-                        }).prependTo($li);
+                    const copySpan = document.createElement('span');
+                    copySpan.title = 'Copy to clipboard';
+                    copySpan.className = csscls('copy-clipboard');
+                    copySpan.style.cursor = 'pointer';
+                    copySpan.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        if (this.copyToClipboard(code)) {
+                            event.target.classList.add(csscls('copy-clipboard-check'));
+                            setTimeout(() => {
+                                event.target.classList.remove(csscls('copy-clipboard-check'));
+                            }, 2000);
+                        }
+                    });
+                    li.insertBefore(copySpan, li.firstChild);
                 }
             }
 
             if (statement.width_percent) {
-                $('<div />').addClass(csscls('bg-measure')).append(
-                    $('<div />').addClass(csscls('value')).css({
-                        left: `${statement.start_percent}%`,
-                        width: `${Math.max(statement.width_percent, 0.01)}%`,
-                    })
-                ).appendTo($li);
+                const bgMeasure = document.createElement('div');
+                bgMeasure.className = csscls('bg-measure');
+                const value = document.createElement('div');
+                value.className = csscls('value');
+                value.style.left = `${statement.start_percent}%`;
+                value.style.width = `${Math.max(statement.width_percent, 0.01)}%`;
+                bgMeasure.appendChild(value);
+                li.appendChild(bgMeasure);
             }
 
             if ('is_success' in statement && !statement.is_success) {
-                $li.addClass(csscls('error')).prepend($('<span />').addClass(csscls('error')).text(`[${statement.error_code}] ${statement.error_message}`));
+                li.classList.add(csscls('error'));
+                const errorSpan = document.createElement('span');
+                errorSpan.className = csscls('error');
+                errorSpan.textContent = `[${statement.error_code}] ${statement.error_message}`;
+                li.insertBefore(errorSpan, li.firstChild);
             }
             if (statement.duration_str) {
-                $li.prepend($('<span title="Duration" />').addClass(csscls('duration')).text(statement.duration_str));
+                const duration = document.createElement('span');
+                duration.title = 'Duration';
+                duration.className = csscls('duration');
+                duration.textContent = statement.duration_str;
+                li.insertBefore(duration, li.firstChild);
             }
             if (statement.memory_str) {
-                $li.prepend($('<span title="Memory usage" />').addClass(csscls('memory')).text(statement.memory_str));
+                const memory = document.createElement('span');
+                memory.title = 'Memory usage';
+                memory.className = csscls('memory');
+                memory.textContent = statement.memory_str;
+                li.insertBefore(memory, li.firstChild);
             }
             if (statement.connection) {
-                $li.prepend($('<span title="Connection" />').addClass(csscls('database')).text(statement.connection));
+                const database = document.createElement('span');
+                database.title = 'Connection';
+                database.className = csscls('database');
+                database.textContent = statement.connection;
+                li.insertBefore(database, li.firstChild);
             }
             if (statement.xdebug_link) {
-                $('<span title="Filename" />')
-                    .addClass(csscls('filename'))
-                    .text(statement.xdebug_link.filename + '#' + (statement.xdebug_link.line || '?'))
-                    .append($('<a/>')
-                        .attr('href', statement.xdebug_link.url)
-                        .addClass(csscls('editor-link'))
-                        .on('click', event => {
-                            event.stopPropagation();
-                            if (statement.xdebug_link.ajax) {
-                                event.preventDefault();
-                                fetch(statement.xdebug_link.url);
-                            }
-                        })
-                    ).prependTo($li);
+                const filename = document.createElement('span');
+                filename.title = 'Filename';
+                filename.className = csscls('filename');
+                filename.textContent = `${statement.xdebug_link.filename}#${statement.xdebug_link.line || '?'}`;
+                const link = document.createElement('a');
+                link.href = statement.xdebug_link.url;
+                link.className = csscls('editor-link');
+                link.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (statement.xdebug_link.ajax) {
+                        event.preventDefault();
+                        fetch(statement.xdebug_link.url);
+                    }
+                });
+                filename.appendChild(link);
+                li.insertBefore(filename, li.firstChild);
             }
 
-            const $details = $('<table></table>').addClass(csscls('params'))
-            if (statement.bindings && !$.isEmptyObject(statement.bindings)) {
-                $details.append(this.renderDetailStrings('Bindings', 'thumb-tack', statement.bindings, true));
+            const details = document.createElement('table');
+            details.className = csscls('params');
+
+            const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
+
+            if (statement.bindings && !isEmptyObject(statement.bindings)) {
+                details.appendChild(this.renderDetailStrings('Bindings', 'thumb-tack', statement.bindings, true));
             }
-            if (statement.hints && !$.isEmptyObject(statement.hints)) {
-                $details.append(this.renderDetailStrings('Hints', 'question-circle', statement.hints));
+            if (statement.hints && !isEmptyObject(statement.hints)) {
+                details.appendChild(this.renderDetailStrings('Hints', 'question-circle', statement.hints));
             }
-            if (statement.backtrace && !$.isEmptyObject(statement.backtrace)) {
-                $details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
+            if (statement.backtrace && !isEmptyObject(statement.backtrace)) {
+                details.appendChild(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
             }
             if (statement.explain && ['mariadb', 'mysql'].includes(statement.explain.driver)) {
-                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
+                details.appendChild(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
             }
             if (statement.explain && statement.explain.driver === 'pgsql') {
-                $details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainPgsql.bind(this)));
+                details.appendChild(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainPgsql.bind(this)));
             }
 
-            if($details.children().length) {
-                $li.addClass(csscls('expandable'))
-                    .on('click', (event) => {
-                        if (window.getSelection().type == "Range") {
-                            return;
-                        }
+            if (details.children.length > 0) {
+                li.classList.add(csscls('expandable'));
+                li.addEventListener('click', (event) => {
+                    if (window.getSelection().type === 'Range') {
+                        return;
+                    }
 
-                        if ($(event.target).closest(`.${csscls('params')}`).length) {
-                            return;
-                        }
+                    if (event.target.closest(`.${csscls('params')}`)) {
+                        return;
+                    }
 
-                        if ($li.find(`.${csscls('params')}:visible`).length) {
-                            $li.find(`.${csscls('params')}`).css('display', 'none');
-                        } else {
-                            $li.find(`.${csscls('params')}`).css('display', 'table');
-                        }
-                    });
+                    const paramsTable = li.querySelector(`.${csscls('params')}`);
+                    if (paramsTable && paramsTable.style.display !== 'none') {
+                        paramsTable.style.display = 'none';
+                    } else if (paramsTable) {
+                        paramsTable.style.display = 'table';
+                    }
+                });
             }
 
-            $li.append($details);
-        },
+            li.appendChild(details);
+        }
 
-        renderDetail: function (caption, icon, $value) {
-           return $('<tr />').append(
-                $('<td />').addClass(csscls('name')).html(caption + ((icon || '') && `<i class="${css('text-muted fa fa-'+icon)}" />`)),
-                $('<td />').addClass(csscls('value')).append($value),
-            );
-        },
+        renderDetail(caption, icon, value) {
+            const tr = document.createElement('tr');
+            const tdName = document.createElement('td');
+            tdName.className = csscls('name');
+            tdName.innerHTML = caption + ((icon || '') ? `<i class="${css(`text-muted fa fa-${icon}`)}" />` : '');
+            const tdValue = document.createElement('td');
+            tdValue.className = csscls('value');
+            if (typeof value === 'string') {
+                tdValue.textContent = value;
+            } else {
+                tdValue.appendChild(value);
+            }
+            tr.appendChild(tdName);
+            tr.appendChild(tdValue);
+            return tr;
+        }
 
-        renderDetailStrings: function (caption, icon, values, showLineNumbers = false) {
-            const $ul = $('<ul />').addClass(csscls('table-list'));
-            const $li = $('<li />').addClass(csscls('table-list-item'));
-            const $muted = $('<span />').addClass(css('text-muted'));
+        renderDetailStrings(caption, icon, values, showLineNumbers = false) {
+            const ul = document.createElement('ul');
+            ul.className = csscls('table-list');
 
-            $.each(values, (i, value) => {
+            Object.entries(values).forEach(([i, value]) => {
+                const li = document.createElement('li');
+                li.className = csscls('table-list-item');
+
                 if (showLineNumbers) {
-                    $ul.append($li.clone().append([$muted.clone().text(`${i}:`), '&nbsp;', $('<span/>').text(value)]));
+                    const muted = document.createElement('span');
+                    muted.className = css('text-muted');
+                    muted.textContent = `${i}:`;
+                    li.appendChild(muted);
+                    li.innerHTML += '&nbsp;';
+                    const span = document.createElement('span');
+                    span.textContent = value;
+                    li.appendChild(span);
                 } else {
                     if (caption === 'Hints') {
-                        $ul.append($li.clone().append(value));
+                        li.innerHTML = value;
                     } else {
-                        $ul.append($li.clone().text(value));
+                        li.textContent = value;
                     }
                 }
+                ul.appendChild(li);
             });
 
-            return this.renderDetail(caption, icon, $ul);
-        },
+            return this.renderDetail(caption, icon, ul);
+        }
 
-        renderDetailBacktrace: function (caption, icon, traces) {
-            const $muted = $('<span />').addClass(css('text-muted'));
-
+        renderDetailBacktrace(caption, icon, traces) {
             const values = [];
             for (const trace of traces.values()) {
-                const $span = $('<span/>').text(trace.name || trace.file);
+                let text = trace.name || trace.file;
                 if (trace.namespace) {
-                    $span.prepend(`${trace.namespace}::`);
+                    text = `${trace.namespace}::${text}`;
                 }
                 if (trace.line) {
-                    $span.append($muted.clone().text(`:${trace.line}`));
+                    text += `:${trace.line}`;
                 }
-
-                values.push($span.text());
+                values.push(text);
             }
 
             return this.renderDetailStrings(caption, icon, values);
-        },
+        }
 
-        renderDetailExplain: function (caption, icon, statement, explainFn) {
-            const $btn = $('<button/>')
-                .text('Run EXPLAIN')
-                .addClass(csscls('explain-btn'))
-                .on('click', () => {
-                    fetch(statement.explain.url, {
-                        method: "POST",
-                        body: JSON.stringify({
-                            connection: statement.explain.connection,
-                            query: statement.explain.query,
-                            bindings: statement.bindings,
-                            hash: statement.explain.hash,
-                        }),
-                    }).then(response => {
-                        response.json()
-                            .then(json => {
-                                if (!response.ok) return alert(json.message);
-                                $detail.find(`.${csscls('value')}`).children().remove();
-                                explainFn($detail.find(`.${csscls('value')}`), statement, json.data, json.visual);
-                            })
-                            .catch(err => alert(`Response body could not be parsed. (${err})`));
-                    }).catch(e => {
-                        alert(e.message);
-                    });
+        renderDetailExplain(caption, icon, statement, explainFn) {
+            const btn = document.createElement('button');
+            btn.textContent = 'Run EXPLAIN';
+            btn.className = csscls('explain-btn');
+
+            const detail = this.renderDetail(caption, icon, btn);
+
+            btn.addEventListener('click', () => {
+                fetch(statement.explain.url, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        connection: statement.explain.connection,
+                        query: statement.explain.query,
+                        bindings: statement.bindings,
+                        hash: statement.explain.hash
+                    })
+                }).then((response) => {
+                    response.json()
+                        .then((json) => {
+                            if (!response.ok) {
+                                // eslint-disable-next-line no-alert
+                                return alert(json.message);
+                            }
+                            const valueCell = detail.querySelector(`.${csscls('value')}`);
+                            valueCell.innerHTML = '';
+                            explainFn(valueCell, statement, json.data, json.visual);
+                        })
+                        .catch(err => {
+                            // eslint-disable-next-line no-alert
+                            alert(`Response body could not be parsed. (${err})`);
+                        });
+                }).catch((e) => {
+                    // eslint-disable-next-line no-alert
+                    alert(e.message);
                 });
-            const $detail = this.renderDetail(caption, icon, $btn);
+            });
 
-            return $detail;
-        },
-    });
-})(PhpDebugBar.$);
+            return detail;
+        }
+    }
+
+    PhpDebugBar.Widgets.LaravelQueriesWidget = LaravelQueriesWidget;
+})();

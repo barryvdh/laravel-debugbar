@@ -55,10 +55,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}' data-turbolinks-eval='false' data-turbo-eval='false'>";
         $html .= "<script{$nonce} src='{$jsRoute}' data-turbolinks-eval='false' data-turbo-eval='false'></script>";
 
-        if ($this->isJqueryNoConflictEnabled()) {
-            $html .= "<script{$nonce} data-turbo-eval='false'>jQuery.noConflict(true);</script>" . "\n";
-        }
-
         $inlineHtml = $this->getInlineHtml();
         if ($nonce != '') {
             $inlineHtml = preg_replace("/<(script|style)>/", "<$1{$nonce}>", $inlineHtml);
