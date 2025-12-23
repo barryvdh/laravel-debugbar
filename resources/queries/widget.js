@@ -383,19 +383,19 @@
             const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
 
             if (statement.bindings && !isEmptyObject(statement.bindings)) {
-                details.appendChild(this.renderDetailStrings('Bindings', 'thumb-tack', statement.bindings, true));
+                details.appendChild(this.renderDetailStrings('Bindings', 'pin', statement.bindings, true));
             }
             if (statement.hints && !isEmptyObject(statement.hints)) {
-                details.appendChild(this.renderDetailStrings('Hints', 'question-circle', statement.hints));
+                details.appendChild(this.renderDetailStrings('Hints', 'help-circle', statement.hints));
             }
             if (statement.backtrace && !isEmptyObject(statement.backtrace)) {
-                details.appendChild(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
+                details.appendChild(this.renderDetailBacktrace('Backtrace', 'list', statement.backtrace));
             }
             if (statement.explain && ['mariadb', 'mysql'].includes(statement.explain.driver)) {
-                details.appendChild(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
+                details.appendChild(this.renderDetailExplain('Performance', 'gauge', statement, this.explainMysql.bind(this)));
             }
             if (statement.explain && statement.explain.driver === 'pgsql') {
-                details.appendChild(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainPgsql.bind(this)));
+                details.appendChild(this.renderDetailExplain('Performance', 'gauge', statement, this.explainPgsql.bind(this)));
             }
 
             if (details.children.length > 0) {
@@ -425,7 +425,16 @@
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
             tdName.className = csscls('name');
-            tdName.innerHTML = caption + ((icon || '') ? `<i class="${css(`text-muted fa fa-${icon}`)}" />` : '');
+
+            if (icon) {
+                const iconSpan = document.createElement('span');
+                iconSpan.className = `${css('icon')} ${css(`icon-${icon}`)}`;
+                tdName.textContent = caption + ' ';
+                tdName.appendChild(iconSpan);
+            } else {
+                tdName.textContent = caption;
+            }
+
             const tdValue = document.createElement('td');
             tdValue.className = csscls('value');
             if (typeof value === 'string') {

@@ -482,11 +482,20 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
-    font-family: PhpDebugbarFontAwesome;
-    content: "\f005";
-    color: #333;
-    font-size: 15px !important;
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
     margin-right: 8px;
+    background-color: #333;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-image: var(--debugbar-icon-star);
+    mask-image: var(--debugbar-icon-star);
     float: left;
 }
 
@@ -499,13 +508,15 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-info:before {
-    content: "\f05a";
-    color: #5896e2;
+    background-color: #5896e2;
+    -webkit-mask-image: var(--debugbar-icon-info-circle);
+    mask-image: var(--debugbar-icon-info-circle);
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-success:before {
-    content: "\f058";
-    color: #45ab45;
+    background-color: #45ab45;
+    -webkit-mask-image: var(--debugbar-icon-circle-check);
+    mask-image: var(--debugbar-icon-circle-check);
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error {
@@ -547,10 +558,19 @@ div.phpdebugbar-panel div.phpdebugbar-widgets-status > * {
 }
 
 div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before {
-    font-family: PhpDebugbarFontAwesome;
-    content: "\f05a";
-    color: var(--debugbar-icons);
-    font-size: 14px;
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: var(--debugbar-icons);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-image: var(--debugbar-icon-info-circle);
+    mask-image: var(--debugbar-icon-info-circle);
     position: relative;
     top: 1px;
     margin-right: 8px;
@@ -754,10 +774,21 @@ div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-visual-link {
 }
 
 div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-visual-explain:after {
-    content: "\f08e";
-    font-family: PhpDebugbarFontAwesome;
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-image: var(--debugbar-icon-external-link);
+    mask-image: var(--debugbar-icon-external-link);
     margin-left: 4px;
-    font-size: 12px;
+    vertical-align: middle;
 }
 
 div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-expandable {
