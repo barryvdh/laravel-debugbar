@@ -56,10 +56,11 @@ return [
     |
     | Choose your preferred editor to use when clicking file name.
     |
-    | Supported: "phpstorm", "vscode", "vscode-insiders", "vscode-remote",
-    |            "vscode-insiders-remote", "vscodium", "textmate", "emacs",
-    |            "sublime", "atom", "nova", "macvim", "idea", "netbeans",
-    |            "xdebug", "espresso"
+    | Supported: "sublime", "textmate", "emacs", "macvim", "codelite",
+    |            "phpstorm", "phpstorm-remote", "idea", "idea-remote",
+    |            "vscode", "vscode-insiders", "vscode-remote", "vscode-insiders-remote",
+    |            "vscodium", "nova", "xdebug", "atom", "espresso",
+    |            "netbeans", "cursor", "windsurf", "zed", "antigravity"
     |
     */
 
@@ -139,8 +140,18 @@ return [
      | When enabled, the Debugbar shows deprecated warnings for Symfony components
      | in the Messages tab.
      |
+     | You can set a custom error reporting level to filter which errors are
+     | handled. For example, to exclude deprecation warnings:
+     |   E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED
+     |
+     | To exclude notices, strict warnings, and deprecations:
+     |   E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED
+     |
+     | Defaults to E_ALL (all errors).
+     |
      */
     'error_handler' => env('DEBUGBAR_ERROR_HANDLER', false),
+    'error_level' => env('DEBUGBAR_ERROR_LEVEL', E_ALL),
 
     /*
      |--------------------------------------------------------------------------
