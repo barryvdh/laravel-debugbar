@@ -410,10 +410,9 @@
                     }
 
                     const paramsTable = li.querySelector(`.${csscls('params')}`);
-                    if (paramsTable && paramsTable.style.display !== 'none') {
-                        paramsTable.style.display = 'none';
-                    } else if (paramsTable) {
-                        paramsTable.style.display = 'table';
+                    if (paramsTable) {
+                        const isVisible = paramsTable.style.display === 'table';
+                        paramsTable.style.display = isVisible ? 'none' : 'table';
                     }
                 });
             }
