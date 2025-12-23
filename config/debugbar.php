@@ -139,8 +139,18 @@ return [
      | When enabled, the Debugbar shows deprecated warnings for Symfony components
      | in the Messages tab.
      |
+     | You can set a custom error reporting level to filter which errors are
+     | handled. For example, to exclude deprecation warnings:
+     |   E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED
+     |
+     | To exclude notices, strict warnings, and deprecations:
+     |   E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED
+     |
+     | Defaults to E_ALL (all errors).
+     |
      */
     'error_handler' => env('DEBUGBAR_ERROR_HANDLER', false),
+    'error_level' => env('DEBUGBAR_ERROR_LEVEL', E_ALL),
 
     /*
      |--------------------------------------------------------------------------
