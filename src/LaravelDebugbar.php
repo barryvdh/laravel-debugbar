@@ -181,7 +181,11 @@ class LaravelDebugbar extends DebugBar
 
         // Set custom error handler
         if ($config->get('debugbar.error_handler', false)) {
-            $this->prevErrorHandler = set_error_handler([$this, 'handleError']);
+            // Get the error_level config, default to E_ALL
+            $errorLevel = $config->get('debugbar.error_level', E_ALL);
+
+            // set error handler with configured error reporting level
+            $this->prevErrorHandler = set_error_handler([$this, 'handleError'], $errorLevel);
         }
 
         $this->selectStorage($this);
