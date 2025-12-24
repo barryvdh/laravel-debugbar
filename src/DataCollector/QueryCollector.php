@@ -467,7 +467,7 @@ class QueryCollector extends PDOCollector
                 'slow' => $this->slowThreshold && $this->slowThreshold <= $query['time'],
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
-                'filename' => $this->getDataFormatter()->formatSource($source, true),
+                'filename' => $source ? $this->getDataFormatter()->formatSource($source, true) : null,
                 'source' => $source,
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
