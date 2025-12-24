@@ -13,17 +13,15 @@ use Illuminate\View\View;
 
 class ViewCollector extends TemplateCollector
 {
-    public function getName()
+    public function getName(): string
     {
         return 'views';
     }
 
     /**
      * Add a View instance to the Collector
-     *
-     * @param \Illuminate\View\View $view
      */
-    public function addView(View $view)
+    public function addView(View $view): void
     {
         $name = $view->getName();
         $type = null;
@@ -64,7 +62,7 @@ class ViewCollector extends TemplateCollector
         }
     }
 
-    private function getInertiaView(string $name, array $data, ?string $path)
+    private function getInertiaView(string $name, array $data, ?string $path): array
     {
         if (isset($data['page']) && is_array($data['page'])) {
             $data = $data['page'];
@@ -87,7 +85,7 @@ class ViewCollector extends TemplateCollector
         return [$name, $type ?? '', $data, $path];
     }
 
-    public function addInertiaAjaxView(array $data)
+    public function addInertiaAjaxView(array $data): void
     {
         list($name, $type, $data, $path) = $this->getInertiaView('', $data, '');
 

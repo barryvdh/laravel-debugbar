@@ -20,7 +20,7 @@ class LaravelCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         return [
             "version" => Str::of($this->laravel->version())->explode('.')->first() . '.x',
@@ -40,7 +40,7 @@ class LaravelCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'laravel';
     }
@@ -48,7 +48,7 @@ class LaravelCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "version" => [

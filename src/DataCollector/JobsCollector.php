@@ -27,7 +27,7 @@ class JobsCollector extends DataCollector implements DataCollectorInterface, Ren
         });
     }
 
-    public function collect()
+    public function collect(): array
     {
         ksort($this->jobs, SORT_NUMERIC);
 
@@ -37,7 +37,7 @@ class JobsCollector extends DataCollector implements DataCollectorInterface, Ren
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'jobs';
     }
@@ -45,7 +45,7 @@ class JobsCollector extends DataCollector implements DataCollectorInterface, Ren
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "jobs" => [

@@ -69,7 +69,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
         });
     }
 
-    public function collect()
+    public function collect(): array
     {
         return ['data' => $this->data, 'count' => count($this->data)];
     }
@@ -77,7 +77,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'livewire';
     }
@@ -85,7 +85,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "livewire" => [

@@ -30,7 +30,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
         });
     }
 
-    public function collect()
+    public function collect(): array
     {
         ksort($this->models, SORT_NUMERIC);
 
@@ -40,7 +40,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'models';
     }
@@ -48,7 +48,7 @@ class ModelsCollector extends DataCollector implements DataCollectorInterface, R
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "models" => [

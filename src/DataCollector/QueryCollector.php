@@ -13,25 +13,22 @@ use Illuminate\Support\Str;
  */
 class QueryCollector extends PDOCollector
 {
-    protected $timeCollector;
-    protected $queries = [];
-    protected $queryCount = 0;
-    protected $transactionEventsCount = 0;
-    protected $infoStatements = 0;
-    protected $softLimit = null;
-    protected $hardLimit = null;
-    protected $lastMemoryUsage;
-    protected $renderSqlWithParams = false;
-    protected $findSource = false;
-    protected $middleware = [];
-    protected $durationBackground = true;
-    protected $explainQuery = false;
-    protected $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
-    protected $showHints = false;
-    protected $showCopyButton = false;
-    protected $reflection = [];
-    protected $excludePaths = [];
-    protected $backtraceExcludePaths = [
+    protected array $queries = [];
+    protected int $queryCount = 0;
+    protected int $transactionEventsCount = 0;
+    protected int $infoStatements = 0;
+    protected ?int $softLimit = null;
+    protected ?int $hardLimit = null;
+    protected ?int $lastMemoryUsage = null;
+    protected bool $findSource = false;
+    protected array $middleware = [];
+    protected bool $explainQuery = false;
+    protected array $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
+    protected bool $showHints = false;
+    protected bool $showCopyButton = false;
+    protected array $reflection = [];
+    protected array $excludePaths = [];
+    protected array $backtraceExcludePaths = [
         '/vendor/laravel/framework/src/Illuminate/Support',
         '/vendor/laravel/framework/src/Illuminate/Database',
         '/vendor/laravel/framework/src/Illuminate/Events',
@@ -40,12 +37,10 @@ class QueryCollector extends PDOCollector
         '/vendor/barryvdh/laravel-debugbar',
     ];
 
-    /**
-     * @param TimeDataCollector $timeCollector
-     */
     public function __construct(?TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
+        parent::__construct(null, $timeCollector);
     }
 
     /**
@@ -61,93 +56,72 @@ class QueryCollector extends PDOCollector
 
     /**
      * Renders the SQL of traced statements with params embedded
-     *
-     * @param boolean $enabled
-     * @param string $quotationChar NOT USED
      */
-    public function setRenderSqlWithParams($enabled = true, $quotationChar = "'")
+    public function setRenderSqlWithParams(bool $enabled = true, string $quotationChar = "'"): void
     {
         $this->renderSqlWithParams = $enabled;
     }
 
     /**
      * Show or hide the hints in the parameters
-     *
-     * @param boolean $enabled
      */
-    public function setShowHints($enabled = true)
+    public function setShowHints(bool $enabled = true): void
     {
         $this->showHints = $enabled;
     }
 
     /**
      * Show or hide copy button next to the queries
-     *
-     * @param boolean $enabled
      */
-    public function setShowCopyButton($enabled = true)
+    public function setShowCopyButton(bool $enabled = true): void
     {
         $this->showCopyButton = $enabled;
     }
 
     /**
      * Enable/disable finding the source
-     *
-     * @param bool|int $value
-     * @param array $middleware
      */
-    public function setFindSource($value, array $middleware)
+    public function setFindSource(bool|int $value, array $middleware): void
     {
         $this->findSource = $value;
         $this->middleware = $middleware;
     }
 
-    public function mergeExcludePaths(array $excludePaths)
+    public function mergeExcludePaths(array $excludePaths): void
     {
         $this->excludePaths = array_merge($this->excludePaths, $excludePaths);
     }
 
     /**
      * Set additional paths to exclude from the backtrace
-     *
-     * @param array $excludePaths Array of file paths to exclude from backtrace
      */
-    public function mergeBacktraceExcludePaths(array $excludePaths)
+    public function mergeBacktraceExcludePaths(array $excludePaths): void
     {
         $this->backtraceExcludePaths = array_merge($this->backtraceExcludePaths, $excludePaths);
     }
 
     /**
      * Enable/disable the shaded duration background on queries
-     *
-     * @param  bool $enabled
      */
-    public function setDurationBackground($enabled = true)
+    public function setDurationBackground(bool $enabled = true): void
     {
         $this->durationBackground = $enabled;
     }
 
     /**
      * Enable/disable the EXPLAIN queries
-     *
-     * @param  bool $enabled
-     * @param  array|null $types Array of types to explain queries (select/insert/update/delete)
      */
-    public function setExplainSource($enabled, $types)
+    public function setExplainSource(bool $enabled, ?array $types): void
     {
         $this->explainQuery = $enabled;
     }
 
-    public function startMemoryUsage()
+    public function startMemoryUsage(): void
     {
         $this->lastMemoryUsage = memory_get_usage(false);
     }
 
-    /**
-     *
-     * @param \Illuminate\Database\Events\QueryExecuted $query
-     */
-    public function addQuery($query)
+    public function addQuery(mixed $query): void
     {
         $this->queryCount++;
 
@@ -209,11 +183,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Mimic mysql_real_escape_string
-     *
-     * @param string $value
-     * @return string
      */
-    protected function emulateQuote($value)
+    protected function emulateQuote(string $value): string
     {
         $search = ["\\",  "\x00", "\n",  "\r",  "'",  '"', "\x1a"];
         $replace = ["\\\\","\\0","\\n", "\\r", "\'", '\"', "\\Z"];
@@ -229,12 +200,8 @@ class QueryCollector extends PDOCollector
      * @package xplain (https://github.com/rap2hpoutre/mysql-xplain-xplain)
      * @author e-doceo
      * @copyright 2014
-     * @version $Id$
-     * @access public
-     * @param string $query
-     * @return string[]
      */
-    protected function performQueryAnalysis($query)
+    protected function performQueryAnalysis(string $query): array
     {
         // @codingStandardsIgnoreStart
         $hints = [];
@@ -266,10 +233,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Use a backtrace to search for the origins of the query.
-     *
-     * @return array
      */
-    protected function findSource()
+    protected function findSource(): array
     {
         $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT, app('config')->get('debugbar.debug_backtrace_limit', 50));
 
@@ -284,12 +249,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Parse a trace element from the backtrace stack.
-     *
-     * @param  int    $index
-     * @param  array  $trace
-     * @return object|bool
      */
-    protected function parseTrace($index, array $trace)
+    protected function parseTrace(int $index, array $trace): object|bool
     {
         $frame = (object) [
             'index' => $index,
@@ -350,11 +311,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Check if the given file is to be excluded from analysis
-     *
-     * @param string $file
-     * @return bool
      */
-    protected function fileIsInExcludedPath($file)
+    protected function fileIsInExcludedPath(string $file): bool
     {
         $normalizedPath = str_replace('\\', '/', $file);
 
@@ -369,11 +327,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Find the middleware alias from the file.
-     *
-     * @param  string $file
-     * @return string|null
      */
-    protected function findMiddlewareFromFile($file)
+    protected function findMiddlewareFromFile(string $file): ?string
     {
         $filename = pathinfo($file, PATHINFO_FILENAME);
 
@@ -382,15 +337,14 @@ class QueryCollector extends PDOCollector
                 return $alias;
             }
         }
+
+        return null;
     }
 
     /**
      * Find the template name from the hash.
-     *
-     * @param  string $hash
-     * @return null|array
      */
-    protected function findViewFromHash($hash)
+    protected function findViewFromHash(string $hash): ?array
     {
         $finder = app('view')->getFinder();
 
@@ -413,11 +367,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Get the filename/line from a Twig template trace
-     *
-     * @param array $trace
-     * @return array The file and line
      */
-    protected function getTwigInfo($trace)
+    protected function getTwigInfo(array $trace): array
     {
         $file = $trace['object']->getTemplateName();
 
@@ -434,11 +385,8 @@ class QueryCollector extends PDOCollector
 
     /**
      * Collect a database transaction event.
-     * @param  string $event
-     * @param \Illuminate\Database\Connection $connection
-     * @return array
      */
-    public function collectTransactionEvent($event, $connection)
+    public function collectTransactionEvent(string $event, mixed $connection): void
     {
         $this->transactionEventsCount++;
         $source = [];
@@ -468,7 +416,7 @@ class QueryCollector extends PDOCollector
     /**
      * Reset the queries.
      */
-    public function reset()
+    public function reset(): void
     {
         $this->queries = [];
         $this->queryCount = 0;
@@ -478,7 +426,7 @@ class QueryCollector extends PDOCollector
     /**
      * {@inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $totalTime = 0;
         $totalMemory = 0;
@@ -603,7 +551,7 @@ class QueryCollector extends PDOCollector
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'queries';
     }
@@ -611,7 +559,7 @@ class QueryCollector extends PDOCollector
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "queries" => [
@@ -627,7 +575,7 @@ class QueryCollector extends PDOCollector
         ];
     }
 
-    private function getSqlQueryToDisplay(array $query): string
+    protected function getSqlQueryToDisplay(array $query): string
     {
         $sql = $query['query'];
         if ($query['type'] === 'query' && $this->renderSqlWithParams && $query['connection']->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists($query['connection']->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {

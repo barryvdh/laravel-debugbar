@@ -56,7 +56,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'request';
     }
@@ -64,7 +64,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         $widgets = [
             "request" => [
@@ -99,7 +99,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $request = $this->request;
         $response = $this->response;
@@ -212,7 +212,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         ];
     }
 
-    protected function getRouteInformation($route)
+    protected function getRouteInformation(mixed $route): array
     {
         if (!is_a($route, 'Illuminate\Routing\Route')) {
             return [];
@@ -287,7 +287,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         return array_filter($result);
     }
 
-    private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
+    protected function getCookieHeader(string $name, ?string $value, int $expires, string $path, ?string $domain, bool $secure, bool $httponly): string
     {
         $cookie = sprintf('%s=%s', $name, urlencode($value ?? ''));
 

@@ -30,17 +30,16 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     /**
      * Set the URL Generator
      *
-     * @param \Illuminate\Routing\UrlGenerator $url
      * @deprecated
      */
-    public function setUrlGenerator($url)
+    public function setUrlGenerator(UrlGenerator $url): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renderHead()
+    public function renderHead(): string
     {
         $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
@@ -65,7 +64,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         return $html;
     }
 
-    protected function getInlineHtml()
+    protected function getInlineHtml(): string
     {
         $html = '';
 
@@ -81,9 +80,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Get the last modified time of any assets.
      *
      * @param string $type 'js' or 'css'
-     * @return int
      */
-    protected function getModifiedTime($type)
+    protected function getModifiedTime(string $type): int
     {
         $files = $this->getAssets($type);
 
@@ -101,9 +99,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Return assets as a string
      *
      * @param string $type 'js' or 'css'
-     * @return string
      */
-    public function dumpAssetsToString($type)
+    public function dumpAssetsToString(string $type): string
     {
         $files = $this->getAssets($type);
 
@@ -117,12 +114,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
     /**
      * Makes a URI relative to another
-     *
-     * @param string|array $uri
-     * @param string $root
-     * @return string
      */
-    protected function makeUriRelativeTo($uri, $root)
+    protected function makeUriRelativeTo(string|array|null $uri, string $root): string|array
     {
         if (!$root) {
             return $uri;

@@ -25,7 +25,7 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): mixed
     {
         $store = $this->manager->store(Config::get('pennant.default'));
 
@@ -35,7 +35,7 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'pennant';
     }
@@ -43,7 +43,7 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "pennant" => [
