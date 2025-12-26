@@ -636,6 +636,11 @@ class LaravelDebugbar extends DebugBar
         $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
         $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
 
+        // Set position configuration for draggable/floating support
+        $position = $config->get('debugbar.position', 'bottom');
+        $floatingOptions = $config->get('debugbar.floating', []);
+        $renderer->setPositionOptions($position, $floatingOptions);
+
         $this->booted = true;
     }
 
