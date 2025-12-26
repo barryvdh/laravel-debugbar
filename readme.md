@@ -199,6 +199,41 @@ Make sure you only do this on local development, because otherwise other people 
 In general, Debugbar should only be used locally or at least restricted by IP.
 It's possible to pass a callback, which will receive the Request object, so you can determine access to the OpenHandler storage.
 
+## Floating/Draggable Position
+
+By default, the Debugbar is fixed to the bottom of the screen. You can enable a floating/draggable mode that allows you to drag the Debugbar anywhere on the screen.
+
+To enable floating mode, set the `position` option in your `config/debugbar.php`:
+
+```php
+'position' => 'floating',
+```
+
+### Floating Options
+
+When using floating mode, you can configure additional options:
+
+```php
+'floating' => [
+    'initial_x' => null,           // Initial X position (null = auto, bottom-right)
+    'initial_y' => null,           // Initial Y position (null = auto, bottom-right)
+    'remember_position' => true,   // Persist position in localStorage across page reloads
+],
+```
+
+### Features
+
+- **Drag anywhere**: Click and drag the Debugbar header to move it anywhere on screen
+- **Touch support**: Works on mobile devices with touch events
+- **Position persistence**: When `remember_position` is enabled, your position is saved in localStorage
+- **Viewport constraints**: The Debugbar stays within the visible viewport
+- **Works with minimize/maximize**: Fully compatible with the Debugbar's minimize/maximize functionality
+
+### Available Positions
+
+- `bottom` (default): Fixed to the bottom of the screen
+- `floating`: Draggable anywhere on the screen (can snap to edges)
+
 ## Twig Integration
 
 Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/TwigBridge](https://github.com/rcrowe/TwigBridge) 0.6.x

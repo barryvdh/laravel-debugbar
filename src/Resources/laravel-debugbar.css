@@ -763,3 +763,212 @@ div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-
 div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-params {
     cursor: default;
 }
+
+/* ============================================
+   Floating/Draggable Position Styles (GPU-Optimized)
+   ============================================ */
+
+/**
+ * Floating state - GPU-accelerated for smooth 60fps dragging
+ */
+div.phpdebugbar.phpdebugbar-floating {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    max-width: calc(100vw - 20px);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--debugbar-border);
+    border-top: 3px solid var(--debugbar-red-vivid);
+    /* GPU layer promotion for smooth transforms */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* Contain layout to prevent affecting other elements */
+    contain: layout style;
+}
+
+/* Box shadow on pseudo-element for cheaper animation (opacity only) */
+div.phpdebugbar.phpdebugbar-floating::before,
+div.phpdebugbar.phpdebugbar-floating::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+div.phpdebugbar.phpdebugbar-floating::before {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    opacity: 1;
+}
+
+div.phpdebugbar.phpdebugbar-floating::after {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+}
+
+/* Dark mode shadows */
+div.phpdebugbar.phpdebugbar-floating[data-theme='dark']::before {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+div.phpdebugbar.phpdebugbar-floating[data-theme='dark']::after {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/**
+ * Drag handle styling
+ */
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-drag-handle {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging .phpdebugbar-drag-handle {
+    cursor: grabbing;
+}
+
+/**
+ * CRITICAL: Disable ALL transitions during drag for maximum performance
+ * Uses transform: translate3d() for GPU-accelerated movement
+ */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging {
+    will-change: transform;
+    opacity: 0.92;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging,
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging *,
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging::before,
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging::after {
+    transition: none !important;
+}
+
+/* Swap shadow opacity during drag (cheap - opacity only) */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging::before {
+    opacity: 0;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-dragging::after {
+    opacity: 1;
+}
+
+/**
+ * Interactive elements - simplified selector with :is()
+ */
+div.phpdebugbar.phpdebugbar-floating :is(
+    .phpdebugbar-tab,
+    .phpdebugbar-close-btn,
+    .phpdebugbar-minimize-btn,
+    .phpdebugbar-restore-btn,
+    .phpdebugbar-open-btn,
+    a, button, select, input
+) {
+    cursor: pointer;
+}
+
+/**
+ * Minimized state
+ */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-minimized {
+    width: auto;
+    min-width: 200px;
+}
+
+div.phpdebugbar.phpdebugbar-floating div.phpdebugbar-resize-handle {
+    display: block !important;
+}
+
+/* Remove will-change when not dragging (free GPU memory) */
+div.phpdebugbar.phpdebugbar-floating:not(.phpdebugbar-dragging):not(.phpdebugbar-snapping) {
+    will-change: auto;
+}
+
+/* ============================================
+   Snap Preview Zone Styles (GPU-Optimized)
+   ============================================ */
+
+.phpdebugbar-snap-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 2147483645;
+    background: rgba(59, 130, 246, 0.08);
+    border: 2px dashed rgba(59, 130, 246, 0.4);
+    border-radius: 6px;
+    opacity: 0;
+    /* GPU acceleration - opacity only transition */
+    transform: translate3d(0, 0, 0);
+    will-change: opacity;
+    backface-visibility: hidden;
+    transition: opacity 0.1s ease-out;
+}
+
+.phpdebugbar-snap-preview.phpdebugbar-snap-preview-active {
+    opacity: 1;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .phpdebugbar-snap-preview {
+        background: rgba(96, 165, 250, 0.1);
+        border-color: rgba(96, 165, 250, 0.5);
+    }
+}
+
+div.phpdebugbar[data-theme='dark'] ~ .phpdebugbar-snap-preview,
+.phpdebugbar-snap-preview[data-theme='dark'] {
+    background: rgba(96, 165, 250, 0.1);
+    border-color: rgba(96, 165, 250, 0.5);
+}
+
+/**
+ * Snapping animation - only enabled when not dragging
+ */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapping:not(.phpdebugbar-dragging) {
+    transition: left 0.2s cubic-bezier(0.2, 0, 0, 1),
+                top 0.2s cubic-bezier(0.2, 0, 0, 1),
+                width 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/**
+ * Snapped state styles
+ */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom,
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top {
+    border-radius: 0;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-left {
+    border-radius: 0 4px 4px 0;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-right {
+    border-radius: 4px 0 0 4px;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top-left {
+    border-radius: 0 0 4px 0;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top-right {
+    border-radius: 0 0 0 4px;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom-left {
+    border-radius: 0 4px 0 0;
+}
+
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom-right {
+    border-radius: 4px 0 0 0;
+}
+
+div.phpdebugbar[data-positionMode="bottom"] {
+    top: auto;
+    bottom: 0;
+}

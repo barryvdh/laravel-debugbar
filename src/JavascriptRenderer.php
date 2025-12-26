@@ -4,7 +4,6 @@ namespace Barryvdh\Debugbar;
 
 use DebugBar\DebugBar;
 use DebugBar\JavascriptRenderer as BaseJavascriptRenderer;
-use Illuminate\Routing\UrlGenerator;
 
 /**
  * {@inheritdoc}
@@ -15,6 +14,13 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     protected $ajaxHandlerBindToJquery = false;
     protected $ajaxHandlerBindToXHR = true;
 
+    /**
+     * Position configuration for floating debugbar
+     *
+     * @var array
+     */
+    protected $positionConfig = [];
+
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
@@ -22,8 +28,38 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
         $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
         $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
+        $this->jsFiles['laravel-draggable'] = __DIR__ . '/Resources/draggable.js';
 
         $this->setTheme(config('debugbar.theme', 'auto'));
+    }
+
+    /**
+     * Set the position configuration for the debugbar
+     *
+     * @param string $position Position setting: 'bottom' or 'floating'
+     * @param array $floatingOptions Options for floating mode
+     * @return void
+     */
+    public function setPositionOptions(string $position = 'bottom', array $floatingOptions = []): void
+    {
+        $this->positionConfig = [
+            'position' => $position,
+            'floating' => array_merge([
+                'initial_x' => null,
+                'initial_y' => null,
+                'remember_position' => true,
+            ], $floatingOptions),
+        ];
+    }
+
+    /**
+     * Get the position configuration
+     *
+     * @return array
+     */
+    public function getPositionConfig(): array
+    {
+        return $this->positionConfig;
     }
 
     /**
@@ -52,6 +88,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $nonce = $this->getNonceAttribute();
 
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}' data-turbolinks-eval='false' data-turbo-eval='false'>";
+        $html .= $this->getPreloadInlineHtml($nonce);
+
         $html .= "<script{$nonce} src='{$jsRoute}' data-turbolinks-eval='false' data-turbo-eval='false'></script>";
 
         if ($this->isJqueryNoConflictEnabled()) {
@@ -64,6 +102,20 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         }
         $html .= $inlineHtml;
 
+
+        return $html;
+    }
+
+    protected function getPreloadInlineHtml(string $nonce): string
+    {
+        $html = '';
+
+        if (!empty($this->positionConfig)) {
+            $configJson = json_encode($this->positionConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+            $html .= "<script{$nonce}>window.phpdebugbar_position_config = {$configJson};</script>";
+        }
+
+        $html .= "<script{$nonce}>(function(){try{var s=JSON.parse(localStorage.getItem('phpdebugbar-settings')||'{}');var c=window.phpdebugbar_position_config||{};if((s.positionMode||c.position)==='floating'){var st=document.createElement('style');st.id='phpdebugbar-fouc-fix';st.textContent='div.phpdebugbar:not(.phpdebugbar-ready){opacity:0!important}';(document.head||document.documentElement).appendChild(st);}}catch(e){}})();</script>";
 
         return $html;
     }
