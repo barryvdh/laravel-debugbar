@@ -1,5 +1,25 @@
 # Changelog
 
+## v3.16.3 - 2025-12-26
+
+### What's Changed
+
+* Update symfony/finder version constraint to include 8 by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1830
+* Allow Symfony v8 by @jnoordsij in https://github.com/barryvdh/laravel-debugbar/pull/1827
+* Add error_level config option to filter error handler reporting (#1373) by @elliota43 in https://github.com/barryvdh/laravel-debugbar/pull/1825
+* Add support for Cursor, Windsurf, and additional editor configurations by @nguyentranchung in https://github.com/barryvdh/laravel-debugbar/pull/1823
+* Don't create <a> tags with the onclick attribute by @PeterMead in https://github.com/barryvdh/laravel-debugbar/pull/1820
+* docs: Add conditional check for Debugbar alias registration by @erhanurgun in https://github.com/barryvdh/laravel-debugbar/pull/1829
+
+### New Contributors
+
+* @elliota43 made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1825
+* @nguyentranchung made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1823
+* @PeterMead made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1820
+* @erhanurgun made their first contribution in https://github.com/barryvdh/laravel-debugbar/pull/1829
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v3.16.2...v3.16.3
+
 ## v3.16.2 - 2025-12-16
 
 ### What's Changed
