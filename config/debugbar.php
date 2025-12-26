@@ -193,7 +193,7 @@ return [
         'logs'            => env('DEBUGBAR_COLLECTORS_LOGS', false),            // Add the latest log messages
         'files'           => env('DEBUGBAR_COLLECTORS_FILES', false),           // Show the included files
         'config'          => env('DEBUGBAR_COLLECTORS_CONFIG', false),          // Display config settings
-        'cache'           => env('DEBUGBAR_COLLECTORS_CACHE', false),           // Display cache events
+        'cache'           => env('DEBUGBAR_COLLECTORS_CACHE', true),           // Display cache events
         'models'          => env('DEBUGBAR_COLLECTORS_MODELS', true),           // Display models
         'livewire'        => env('DEBUGBAR_COLLECTORS_LIVEWIRE', true),         // Display Livewire (when available)
         'jobs'            => env('DEBUGBAR_COLLECTORS_JOBS', false),            // Display dispatched jobs

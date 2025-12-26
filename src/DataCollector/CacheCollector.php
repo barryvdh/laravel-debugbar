@@ -68,10 +68,15 @@ class CacheCollector extends TimeDataCollector
         }
 
         if (!empty($params['key'] ?? null) && in_array($label, ['hit', 'written'])) {
-            $params['delete'] = route('debugbar.cache.delete', [
+            $deleteParams = [
                 'key' => urlencode($params['key']),
                 'tags' => !empty($params['tags']) ? json_encode($params['tags']) : '',
-            ]);
+            ];
+            $params['delete'] = [
+                'action' => 'delete',
+                'payload' => $deleteParams,
+                'signature' => $this->getSignature('delete', $deleteParams),
+            ];
         }
 
         $time = microtime(true);

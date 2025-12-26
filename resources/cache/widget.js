@@ -19,17 +19,18 @@
         onForgetClick(e, el) {
             e.stopPropagation();
 
-            fetch(el.getAttribute('data-url'), {
-                method: 'DELETE'
-            }).then((response) => {
-                if (response.ok) {
-                    el.style.transition = 'opacity 200ms';
-                    el.style.opacity = '0';
-                    setTimeout(() => el.remove(), 200);
-                }
-            }).catch((err) => {
-                console.error('Failed to forget cache key:', err);
-            });
+            const openhandler = this.debugbar.getOpenHandler();
+            if (openhandler) {
+                const params = JSON.parse(el.getAttribute('data-params'));
+                openhandler.executeAction('cache', params.action, params.signature, params.payload,  (response) => {
+                    if (response.ok) {
+                        el.style.transition = 'opacity 200ms';
+                        el.style.opacity = '0';
+                        setTimeout(() => el.remove(), 200);
+                    }
+                });
+            }
+
         }
 
         render() {
@@ -58,7 +59,7 @@
                                 const forgetLink = document.createElement('a');
                                 forgetLink.className = csscls('forget');
                                 forgetLink.textContent = 'forget';
-                                forgetLink.setAttribute('data-url', measure.params.delete);
+                                forgetLink.setAttribute('data-params', measure.params.delete);
                                 forgetLink.addEventListener('click', (e) => {
                                     this.onForgetClick(e, forgetLink);
                                 }, { once: true });

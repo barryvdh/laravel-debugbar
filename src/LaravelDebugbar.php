@@ -32,6 +32,7 @@ use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\QueryFormatter;
+use DebugBar\DataHasher;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\PhpHttpDriver;
@@ -172,6 +173,8 @@ class LaravelDebugbar extends DebugBar
 
         /** @var \Illuminate\Config\Repository $config */
         $config = $app['config'];
+
+        $this->setDataHasher(new DataHasher($config->get('app.key')));
 
         /** @var \Illuminate\Events\Dispatcher|null $events */
         $events = isset($app['events']) ? $app['events'] : null;
