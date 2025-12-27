@@ -24,7 +24,7 @@ class FilesCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $files = $this->getIncludedFiles();
         $compiled = $this->getCompiledFiles();
@@ -67,20 +67,16 @@ class FilesCollector extends DataCollector implements Renderable
 
     /**
      * Get the files included on load.
-     *
-     * @return array
      */
-    protected function getIncludedFiles()
+    protected function getIncludedFiles(): array
     {
         return get_included_files();
     }
 
     /**
      * Get the files that are going to be compiled, so they aren't as important.
-     *
-     * @return array
      */
-    protected function getCompiledFiles()
+    protected function getCompiledFiles(): array
     {
         if ($this->app && class_exists('Illuminate\Foundation\Console\OptimizeCommand')) {
             $reflector = new \ReflectionClass('Illuminate\Foundation\Console\OptimizeCommand');
@@ -97,11 +93,8 @@ class FilesCollector extends DataCollector implements Renderable
 
     /**
      * Remove the basePath from the paths, so they are relative to the base
-     *
-     * @param $path
-     * @return string
      */
-    protected function stripBasePath($path)
+    protected function stripBasePath(string $path): string
     {
         return ltrim(str_replace($this->basePath, '', $path), '/');
     }
@@ -109,12 +102,12 @@ class FilesCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         $name = $this->getName();
         return [
             "$name" => [
-                "icon" => "files-o",
+                "icon" => "files",
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
                 "map" => "$name.messages",
                 "default" => "{}"
@@ -129,7 +122,7 @@ class FilesCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'files';
     }

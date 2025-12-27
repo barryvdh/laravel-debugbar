@@ -1,0 +1,33 @@
+{
+  "name": "php-debugbar",
+  "version": "1.0.0",
+  "description": "[![Latest Stable Version](https://img.shields.io/packagist/v/php-debugbar/php-debugbar?label=Stable)](https://packagist.org/packages/php-debugbar/php-debugbar) [![Total Downloads](https://img.shields.io/packagist/dt/maximebf/debugbar?label=Downloads)](https://packagist.org/packages/php-debugbar/php-debugbar) [![License](https://img.shields.io/badge/Licence-MIT-4d9283)](https://packagist.org/packages/php-debugbar/php-debugbar) [![Tests](https://github.com/maximebf/php-debugbar/actions/workflows/run-tests.yml/badge.svg)](https://github.com/php-debugbar/php-debugbar/actions/workflows/run-tests.yml)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:icons",
+    "build:icons": "node build/build-icons.js",
+    "lint": "eslint resources/**/*.js",
+    "lint:fix": "eslint resources/**/*.js --fix",
+    "lint:report": "eslint resources/**/*.js --output-file eslint-report.txt --format unix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.7.1",
+    "@eslint/js": "^9.39.2",
+    "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-jquery": "^1.5.1",
+    "globals": "^16.5.0"
+  },
+  "dependencies": {
+    "@tabler/icons": "^3.36.0"
+  }
+}

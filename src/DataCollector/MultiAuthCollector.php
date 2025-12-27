@@ -40,18 +40,16 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
     /**
      * Set to show the users name/email
-     * @param bool $showName
      */
-    public function setShowName($showName)
+    public function setShowName(bool $showName): void
     {
         $this->showName = (bool) $showName;
     }
 
     /**
      * Set to hide the guards tab, and show only name
-     * @param bool $showGuardsData
      */
-    public function setShowGuardsData($showGuardsData)
+    public function setShowGuardsData(bool $showGuardsData): void
     {
         $this->showGuardsData = (bool) $showGuardsData;
     }
@@ -59,7 +57,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /**
      * @{inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $data = [
             'guards' => [],
@@ -86,7 +84,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         foreach ($data['guards'] as $key => $var) {
             if (!is_string($data['guards'][$key])) {
-                $data['guards'][$key] = $this->formatVar($var);
+                $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
             }
         }
 
@@ -98,7 +96,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         return $data;
     }
 
-    private function hasUser(Guard $guard)
+    private function hasUser(Guard $guard): bool
     {
         if (method_exists($guard, 'hasUser')) {
             return $guard->hasUser();
@@ -109,10 +107,8 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
     /**
      * Get displayed user information
-     * @param \Illuminate\Auth\UserInterface $user
-     * @return array
      */
-    protected function getUserInformation($user = null)
+    protected function getUserInformation(mixed $user = null): array
     {
         // Defaults
         if (is_null($user)) {
@@ -147,7 +143,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /**
      * @{inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'auth';
     }
@@ -155,7 +151,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /**
      * @{inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         $widgets = [];
 

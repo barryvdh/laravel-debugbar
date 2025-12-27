@@ -2,7 +2,7 @@
 
 namespace Barryvdh\Debugbar\Tests\DataFormatter;
 
-use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
+use DebugBar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Tests\TestCase;
 
 class QueryFormatterTest extends TestCase

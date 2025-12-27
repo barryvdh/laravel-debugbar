@@ -6,15 +6,15 @@ use DebugBar\Storage\StorageInterface;
 
 class SocketStorage implements StorageInterface
 {
-    protected $hostname;
-    protected $port;
-    protected $socket;
+    protected string $hostname;
+    protected int $port;
+    protected object $socket;
 
     /**
      * @param string $hostname The hostname to use for the socket
      * @param int $port The port to use for the socket
      */
-    public function __construct($hostname, $port)
+    public function __construct(string $hostname, int $port)
     {
         $this->hostname = $hostname;
         $this->port = $port;
@@ -23,12 +23,12 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    public function save($id, $data)
+    public function save(string $id, array $data): void
     {
         $socketIsFresh = !$this->socket;
 
         if (!$this->socket = $this->socket ?: $this->createSocket()) {
-            return false;
+            return;
         }
 
         $encodedPayload = json_encode([
@@ -43,7 +43,7 @@ class SocketStorage implements StorageInterface
         set_error_handler([self::class, 'nullErrorHandler']);
         try {
             if (-1 !== stream_socket_sendto($this->socket, $encodedPayload)) {
-                return true;
+                return;
             }
             if (!$socketIsFresh) {
                 stream_socket_shutdown($this->socket, \STREAM_SHUT_RDWR);
@@ -51,19 +51,19 @@ class SocketStorage implements StorageInterface
                 $this->socket = $this->createSocket();
             }
             if (-1 !== stream_socket_sendto($this->socket, $encodedPayload)) {
-                return true;
+                return;
             }
         } finally {
             restore_error_handler();
         }
     }
 
-    private static function nullErrorHandler($t, $m)
+    private static function nullErrorHandler($t, $m): void
     {
         // no-op
     }
 
-    protected function createSocket()
+    protected function createSocket(): false|object
     {
         set_error_handler([self::class, 'nullErrorHandler']);
         try {
@@ -76,23 +76,23 @@ class SocketStorage implements StorageInterface
     /**
      * @inheritDoc
      */
-    public function get($id)
+    public function get(string $id): array
     {
-        //
+        return [];
     }
 
     /**
      * @inheritDoc
      */
-    public function find(array $filters = [], $max = 20, $offset = 0)
+    public function find(array $filters = [], int $max = 20, int $offset = 0): array
     {
-        //
+        return [];
     }
 
     /**
      * @inheritDoc
      */
-    public function clear()
+    public function clear(): void
     {
         //
     }

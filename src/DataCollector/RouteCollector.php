@@ -30,7 +30,7 @@ class RouteCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $route = $this->router->current();
         return $this->getRouteInformation($route);
@@ -38,11 +38,8 @@ class RouteCollector extends DataCollector implements Renderable
 
     /**
      * Get the route information for a given route.
-     *
-     * @param  \Illuminate\Routing\Route $route
-     * @return array
      */
-    protected function getRouteInformation($route)
+    protected function getRouteInformation(mixed $route): array
     {
         if (!is_a($route, 'Illuminate\Routing\Route')) {
             return [];
@@ -81,7 +78,7 @@ class RouteCollector extends DataCollector implements Renderable
             unset($result['uses']);
         } elseif ($uses instanceof \Closure) {
             $reflector = new \ReflectionFunction($uses);
-            $result['uses'] = $this->formatVar($uses);
+            $result['uses'] = $this->getDataFormatter()->formatVar($uses);
         } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
             if (class_exists($controller) && method_exists($controller, 'render')) {
                 $reflector = new \ReflectionMethod($controller, 'render');
@@ -117,11 +114,8 @@ class RouteCollector extends DataCollector implements Renderable
 
     /**
      * Get middleware
-     *
-     * @param  \Illuminate\Routing\Route $route
-     * @return string
      */
-    protected function getMiddleware($route)
+    protected function getMiddleware(mixed $route): string
     {
         return implode(', ', array_map(function ($middleware) {
             return $middleware instanceof Closure ? 'Closure' : $middleware;
@@ -131,7 +125,7 @@ class RouteCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'route';
     }
@@ -139,11 +133,11 @@ class RouteCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         $widgets = [
             "route" => [
-                "icon" => "share",
+                "icon" => "share-3",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "route",
                 "default" => "{}"
@@ -154,11 +148,8 @@ class RouteCollector extends DataCollector implements Renderable
 
     /**
      * Display the route information on the console.
-     *
-     * @param  array $routes
-     * @return void
      */
-    protected function displayRoutes(array $routes)
+    protected function displayRoutes(array $routes): void
     {
         $this->table->setHeaders($this->headers)->setRows($routes);
 

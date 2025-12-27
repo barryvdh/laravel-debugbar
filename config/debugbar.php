@@ -94,18 +94,17 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Vendors
+     | Assets
      |--------------------------------------------------------------------------
      |
      | Vendor files are included by default, but can be set to false.
      | This can also be set to 'js' or 'css', to only include javascript or css vendor files.
-     | Vendor files are for css: font-awesome (including fonts) and highlight.js (css files)
-     | and for js: jquery and highlight.js
+     | Vendor files are for css: (none)
+     | and for js: highlight.js
      | So if you want syntax highlighting, set it to true.
-     | jQuery is set to not conflict with existing jQuery scripts.
      |
      */
-
+    'use_dist_files' => env('DEBUGBAR_USE_DIST_FILES', true),
     'include_vendors' => env('DEBUGBAR_INCLUDE_VENDORS', true),
 
     /*

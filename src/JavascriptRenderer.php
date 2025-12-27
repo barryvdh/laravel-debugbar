@@ -11,17 +11,18 @@ use Illuminate\Routing\UrlGenerator;
  */
 class JavascriptRenderer extends BaseJavascriptRenderer
 {
-    // Use XHR handler by default, instead of jQuery
-    protected $ajaxHandlerBindToJquery = false;
-    protected $ajaxHandlerBindToXHR = true;
 
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
 
-        $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
-        $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
-        $this->jsFiles['laravel-queries'] = __DIR__ . '/Resources/queries/widget.js';
+        $resourceDir = __DIR__ . '/../resources';
+
+        $this->additionalAssets[] = [
+            'base_path' => $resourceDir,
+            'css' => ['laravel-debugbar.css', 'laravel-icons.css'],
+            'js' => ['cache/widget.js', 'queries/widget.js'],
+        ];
 
         $this->setTheme(config('debugbar.theme', 'auto'));
     }
@@ -29,17 +30,16 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     /**
      * Set the URL Generator
      *
-     * @param \Illuminate\Routing\UrlGenerator $url
      * @deprecated
      */
-    public function setUrlGenerator($url)
+    public function setUrlGenerator(UrlGenerator $url): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renderHead()
+    public function renderHead(): string
     {
         $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
@@ -54,10 +54,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}' data-turbolinks-eval='false' data-turbo-eval='false'>";
         $html .= "<script{$nonce} src='{$jsRoute}' data-turbolinks-eval='false' data-turbo-eval='false'></script>";
 
-        if ($this->isJqueryNoConflictEnabled()) {
-            $html .= "<script{$nonce} data-turbo-eval='false'>jQuery.noConflict(true);</script>" . "\n";
-        }
-
         $inlineHtml = $this->getInlineHtml();
         if ($nonce != '') {
             $inlineHtml = preg_replace("/<(script|style)>/", "<$1{$nonce}>", $inlineHtml);
@@ -68,7 +64,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         return $html;
     }
 
-    protected function getInlineHtml()
+    protected function getInlineHtml(): string
     {
         $html = '';
 
@@ -84,9 +80,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Get the last modified time of any assets.
      *
      * @param string $type 'js' or 'css'
-     * @return int
      */
-    protected function getModifiedTime($type)
+    protected function getModifiedTime(string $type): int
     {
         $files = $this->getAssets($type);
 
@@ -104,9 +99,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Return assets as a string
      *
      * @param string $type 'js' or 'css'
-     * @return string
      */
-    public function dumpAssetsToString($type)
+    public function dumpAssetsToString(string $type): string
     {
         $files = $this->getAssets($type);
 
@@ -120,12 +114,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
     /**
      * Makes a URI relative to another
-     *
-     * @param string|array $uri
-     * @param string $root
-     * @return string
      */
-    protected function makeUriRelativeTo($uri, $root)
+    protected function makeUriRelativeTo(string|array|null $uri, string $root): string|array
     {
         if (!$root) {
             return $uri;

@@ -2,8 +2,8 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataFormatter\SimpleFormatter;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -17,14 +17,9 @@ use Illuminate\Support\Str;
  */
 class GateCollector extends MessagesCollector
 {
-    /** @var int */
-    protected $backtraceLimit = 15;
+    protected array $reflection = [];
 
-    /** @var array */
-    protected $reflection = [];
-
-    /** @var \Illuminate\Routing\Router */
-    protected $router;
+    protected Router $router;
 
     /**
      * @param Gate $gate
@@ -42,7 +37,7 @@ class GateCollector extends MessagesCollector
     /**
      * {@inheritDoc}
      */
-    protected function customizeMessageHtml($messageHtml, $message)
+    protected function customizeMessageHtml(?string $messageHtml, mixed $message): ?string
     {
         $pos = strpos((string) $messageHtml, 'array:5');
         if ($pos !== false) {
@@ -55,7 +50,7 @@ class GateCollector extends MessagesCollector
         return parent::customizeMessageHtml($messageHtml, $message);
     }
 
-    public function addCheck($user, $ability, $result, $arguments = [])
+    public function addCheck(mixed $user, string $ability, mixed $result, array $arguments = []): void
     {
         $userKey = 'user';
         $userId = null;
@@ -94,12 +89,7 @@ class GateCollector extends MessagesCollector
         ], $label, false);
     }
 
-    /**
-     * @param array $stacktrace
-     *
-     * @return array
-     */
-    protected function getStackTraceItem($stacktrace)
+    protected function getStackTraceItem(array $stacktrace): array
     {
         foreach ($stacktrace as $i => $trace) {
             if (!isset($trace['file'])) {
@@ -128,11 +118,8 @@ class GateCollector extends MessagesCollector
 
     /**
      * Find the route action file
-     *
-     * @param  array $trace
-     * @return array
      */
-    protected function findControllerFromDispatcher($trace)
+    protected function findControllerFromDispatcher(array $trace): array
     {
         /** @var \Closure|string|array $action */
         $action = $this->router->current()->getAction('uses');
@@ -154,11 +141,8 @@ class GateCollector extends MessagesCollector
 
     /**
      * Find the template name from the hash.
-     *
-     * @param  string $hash
-     * @return null|array
      */
-    protected function findViewFromHash($hash)
+    protected function findViewFromHash(string $hash): ?string
     {
         $finder = app('view')->getFinder();
 
