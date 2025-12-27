@@ -108,7 +108,7 @@ class LaravelDebugbar extends DebugBar
      */
     protected $prevErrorHandler = null;
 
-    protected ?string $editorTemplateLink = null;
+    protected ?string $editorTemplate = null;
     protected array $remoteServerReplacements = [];
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
@@ -176,8 +176,8 @@ class LaravelDebugbar extends DebugBar
         /** @var \Illuminate\Events\Dispatcher|null $events */
         $events = isset($app['events']) ? $app['events'] : null;
 
-        $this->editorTemplateLink = $config->get('debugbar.editor') ?: null;
-        $this->remoteServerReplacements = $this->getRemoteServerReplacements();
+        $this->editorTemplate = $config->get('debugbar.editor') ?: null;
+        $this->remotePathReplacements = $this->getRemoteServerReplacements();
 
         // Set custom error handler
         if ($config->get('debugbar.error_handler', false)) {
@@ -642,31 +642,6 @@ class LaravelDebugbar extends DebugBar
     public function shouldCollect(string $name, bool $default = false): bool
     {
         return $this->app['config']->get('debugbar.collectors.' . $name, $default);
-    }
-
-    /**
-     * Adds a data collector
-     *
-     * @param DataCollectorInterface $collector
-     *
-     * @throws DebugBarException
-     * @return $this
-     */
-    public function addCollector(DataCollectorInterface $collector): static
-    {
-        parent::addCollector($collector);
-
-        if (method_exists($collector, 'useHtmlVarDumper')) {
-            $collector->useHtmlVarDumper();
-        }
-        if (method_exists($collector, 'setEditorLinkTemplate') && $this->editorTemplateLink) {
-            $collector->setEditorLinkTemplate($this->editorTemplateLink);
-        }
-        if (method_exists($collector, 'addXdebugReplacements') && $this->remoteServerReplacements) {
-            $collector->addXdebugReplacements($this->remoteServerReplacements);
-        }
-
-        return $this;
     }
 
     /**
