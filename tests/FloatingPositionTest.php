@@ -219,4 +219,15 @@ class FloatingPositionTest extends TestCase
         // But should indicate 'bottom' position
         $this->assertTrue(Str::contains($content, '"position":"bottom"'));
     }
+
+    public function testFloatingClosedStateCssStylesExist()
+    {
+        $cssPath = __DIR__ . '/../src/Resources/laravel-debugbar.css';
+        $cssContent = file_get_contents($cssPath);
+
+        // Check for floating closed state CSS rules
+        // These ensure the closed floating debugbar shows only a small icon
+        $this->assertTrue(Str::contains($cssContent, '.phpdebugbar-floating.phpdebugbar-closed'));
+        $this->assertTrue(Str::contains($cssContent, '.phpdebugbar-floating.phpdebugbar-closed > a.phpdebugbar-restore-btn'));
+    }
 }

@@ -237,19 +237,43 @@ class FloatingDebugbarBrowserTest extends BrowserTestCase
                 ->waitFor('.phpdebugbar.phpdebugbar-floating')
                 ->pause(200);
 
-            $browser->script("
-                if (window.phpdebugbar_draggable) {
-                    window.phpdebugbar_draggable.snapTo('bottom');
+            $debug = $browser->script("
+                var d = window.phpdebugbar_draggable;
+                var zones = Object.keys(d.constructor.toString().match(/SNAP_ZONES/g) || []);
+                return {
+                    hasSnapTo: typeof d.snapTo === 'function',
+                    optionsEnableSnapping: d.options.enableSnapping
                 }
-            ");
+            ")[0];
+
+            $this->assertTrue($debug['hasSnapTo'], 'snapTo method should exist');
+            $this->assertTrue($debug['optionsEnableSnapping'], 'snapping should be enabled');
+
+            $snapResult = $browser->script("
+                var d = window.phpdebugbar_draggable;
+                window._snapDebug = { before: { isSnapped: d.isSnapped, width: document.querySelector('.phpdebugbar').style.width }};
+                d.snapTo('bottom');
+                window._snapDebug.immediateAfter = { isSnapped: d.isSnapped, width: document.querySelector('.phpdebugbar').style.width };
+                return window._snapDebug;
+            ")[0];
 
             $browser->pause(400);
 
-            $width = $browser->script(
-                'return document.querySelector(".phpdebugbar").style.width'
-            )[0];
+            $state = $browser->script("
+                var db = document.querySelector('.phpdebugbar');
+                window._snapDebug.afterPause = {
+                    isSnapped: window.phpdebugbar_draggable.isSnapped,
+                    snapZone: window.phpdebugbar_draggable.currentSnapZone,
+                    width: db.style.width,
+                    isMinimized: db.classList.contains('phpdebugbar-minimized'),
+                    classes: db.className
+                };
+                return window._snapDebug;
+            ")[0];
 
-            $this->assertEquals('100%', $width, 'Debugbar should snap to full width at bottom');
+            $this->assertTrue($state['afterPause']['isSnapped'], 'Should be snapped. Debug: ' . json_encode($state));
+            $this->assertEquals('bottom', $state['afterPause']['snapZone'], 'Should be snapped to bottom');
+            $this->assertEquals('100%', $state['afterPause']['width'], 'Width should be 100%');
         });
     }
 
