@@ -341,6 +341,34 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Debugbar Position
+     |--------------------------------------------------------------------------
+     |
+     | Controls where the debugbar appears on the page.
+     | Possible values: bottom, top, floating
+     |
+     | When set to 'floating', the debugbar can be dragged anywhere on the screen.
+     */
+    'position' => 'bottom',
+
+    /*
+     |--------------------------------------------------------------------------
+     | Floating Position Options
+     |--------------------------------------------------------------------------
+     |
+     | When position is set to 'floating', these options control the behavior.
+     |
+     | 'initial_x' and 'initial_y' set the starting position (null = auto position at bottom-right)
+     | 'remember_position' persists the position in localStorage across page reloads
+     */
+    'floating' => [
+        'initial_x' => env('DEBUGBAR_FLOATING_X'),
+        'initial_y' => env('DEBUGBAR_FLOATING_Y'),
+        'remember_position' => env('DEBUGBAR_FLOATING_REMEMBER', true),
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | Backtrace stack limit
      |--------------------------------------------------------------------------
      |
