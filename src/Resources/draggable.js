@@ -5,6 +5,7 @@
     const SETTINGS_KEY = 'phpdebugbar-settings';
     const SNAP_CHECK_THRESHOLD = 10;
     const MUTATION_OBSERVER_MAX_COUNT = 100;
+    const DRAG_THRESHOLD = 5;
 
     function getEventCoordinates(e) {
         const touch = e.touches?.[0] || e.changedTouches?.[0];
@@ -32,58 +33,19 @@
     })();
 
     const SNAP_ZONES = {
-        topLeft: {
-            name: 'Top Left',
-            detect: (x, y, w, h, vw, vh, dist) => x <= dist && y <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: 0, y: 0, width: vw / 2, height: vh / 2 }),
-            priority: 0
-        },
-        topRight: {
-            name: 'Top Right',
-            detect: (x, y, w, h, vw, vh, dist) => vw - (x + w) <= dist && y <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: vw / 2, y: 0, width: vw / 2, height: vh / 2 }),
-            priority: 0
-        },
-        bottomLeft: {
-            name: 'Bottom Left',
-            detect: (x, y, w, h, vw, vh, dist) => x <= dist && vh - (y + h) <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: 0, y: vh / 2, width: vw / 2, height: vh / 2 }),
-            priority: 0
-        },
-        bottomRight: {
-            name: 'Bottom Right',
-            detect: (x, y, w, h, vw, vh, dist) => vw - (x + w) <= dist && vh - (y + h) <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: vw / 2, y: vh / 2, width: vw / 2, height: vh / 2 }),
-            priority: 0
-        },
         bottom: {
             name: 'Bottom',
             detect: (x, y, w, h, vw, vh, dist) => vh - (y + h) <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: 0, y: vh - h, width: vw, height: h }),
-            priority: 1
+            getPosition: (w, h, vw, vh) => ({ x: 0, y: vh - h, width: vw, height: h })
         },
         top: {
             name: 'Top',
             detect: (x, y, w, h, vw, vh, dist) => y <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: 0, y: 0, width: vw, height: h }),
-            priority: 1
-        },
-        left: {
-            name: 'Left Half',
-            detect: (x, y, w, h, vw, vh, dist) => x <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: 0, y: 0, width: vw / 2, height: vh }),
-            priority: 2
-        },
-        right: {
-            name: 'Right Half',
-            detect: (x, y, w, h, vw, vh, dist) => vw - (x + w) <= dist,
-            getPosition: (w, h, vw, vh) => ({ x: vw / 2, y: 0, width: vw / 2, height: vh }),
-            priority: 2
+            getPosition: (w, h, vw, vh) => ({ x: 0, y: 0, width: vw, height: h })
         }
     };
 
-    const SORTED_ZONE_ENTRIES = Object.entries(SNAP_ZONES)
-        .sort((a, b) => a[1].priority - b[1].priority);
+    const SNAP_ZONE_ENTRIES = Object.entries(SNAP_ZONES);
 
     class SnapPreview {
         constructor() {
@@ -139,6 +101,7 @@
             }, options);
 
             this.isDragging = false;
+            this.dragOccurred = false;
             this.startX = 0;
             this.startY = 0;
             this.currentX = 0;
@@ -154,12 +117,26 @@
             this.cachedViewportHeight = 0;
             this.lastSnapCheckX = 0;
             this.lastSnapCheckY = 0;
+            this.restoreBtn = null;
+
+            // Resize state
+            this.isResizing = false;
+            this.resizeEdge = null;
+            this.resizeStartX = 0;
+            this.resizeStartY = 0;
+            this.resizeStartWidth = 0;
+            this.resizeStartHeight = 0;
+            this.resizeStartLeft = 0;
+            this.resizeStartTop = 0;
 
             this.snapPreview = new SnapPreview();
             this.boundStartDrag = this.startDrag.bind(this);
             this.boundDrag = this.drag.bind(this);
             this.boundEndDrag = this.endDrag.bind(this);
             this.boundResize = this.throttle(this.handleResize.bind(this), 100);
+            this.boundStartResize = this.startResize.bind(this);
+            this.boundDoResize = this.doResize.bind(this);
+            this.boundEndResize = this.endResize.bind(this);
 
             this.init();
         }
@@ -188,8 +165,148 @@
             this.dragHandle.addEventListener('touchstart', this.boundStartDrag, { passive: false });
             window.addEventListener('resize', this.boundResize, { passive: true });
 
+            // Allow dragging from the restore button when debugbar is closed
+            this.restoreBtn = this.debugbar.querySelector(':scope > a.phpdebugbar-restore-btn');
+            if (this.restoreBtn) {
+                this.restoreBtn.classList.add('phpdebugbar-drag-handle');
+                this.restoreBtn.addEventListener('mousedown', this.boundStartDrag);
+                this.restoreBtn.addEventListener('touchstart', this.boundStartDrag, { passive: false });
+                // Prevent click if drag occurred
+                this.restoreBtn.addEventListener('click', (e) => {
+                    if (this.dragOccurred) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.dragOccurred = false;
+                    }
+                }, true);
+            }
+
+            this.setupResizeHandles();
+            this.watchMinimizeState();
             this.loadPosition();
             this.reveal();
+        }
+
+        setupResizeHandles() {
+            // Create resize handles for edges
+            const edges = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
+            edges.forEach(edge => {
+                const handle = document.createElement('div');
+                handle.className = `phpdebugbar-resize-edge phpdebugbar-resize-${edge}`;
+                handle.dataset.edge = edge;
+                handle.addEventListener('mousedown', this.boundStartResize);
+                handle.addEventListener('touchstart', this.boundStartResize, { passive: false });
+                this.debugbar.appendChild(handle);
+            });
+        }
+
+        startResize(e) {
+            if (this.isSnapped) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const coords = getEventCoordinates(e);
+            const rect = this.debugbar.getBoundingClientRect();
+
+            this.isResizing = true;
+            this.resizeEdge = e.target.dataset.edge;
+            this.resizeStartX = coords.x;
+            this.resizeStartY = coords.y;
+            this.resizeStartWidth = rect.width;
+            this.resizeStartHeight = rect.height;
+            this.resizeStartLeft = rect.left;
+            this.resizeStartTop = rect.top;
+
+            this.debugbar.classList.add('phpdebugbar-resizing');
+
+            document.addEventListener('mousemove', this.boundDoResize);
+            document.addEventListener('mouseup', this.boundEndResize);
+            document.addEventListener('touchmove', this.boundDoResize, { passive: false });
+            document.addEventListener('touchend', this.boundEndResize);
+        }
+
+        doResize(e) {
+            if (!this.isResizing) return;
+            e.preventDefault();
+
+            const coords = getEventCoordinates(e);
+            const deltaX = coords.x - this.resizeStartX;
+            const deltaY = coords.y - this.resizeStartY;
+
+            let newWidth = this.resizeStartWidth;
+            let newHeight = this.resizeStartHeight;
+            let newLeft = this.resizeStartLeft;
+            let newTop = this.resizeStartTop;
+
+            const minWidth = 300;
+            const minHeight = 150;
+
+            // Handle horizontal resize
+            if (this.resizeEdge.includes('e')) {
+                newWidth = Math.max(minWidth, this.resizeStartWidth + deltaX);
+            }
+            if (this.resizeEdge.includes('w')) {
+                const widthDelta = Math.min(deltaX, this.resizeStartWidth - minWidth);
+                newWidth = this.resizeStartWidth - widthDelta;
+                newLeft = this.resizeStartLeft + widthDelta;
+            }
+
+            // Handle vertical resize
+            if (this.resizeEdge.includes('s')) {
+                newHeight = Math.max(minHeight, this.resizeStartHeight + deltaY);
+            }
+            if (this.resizeEdge.includes('n')) {
+                const heightDelta = Math.min(deltaY, this.resizeStartHeight - minHeight);
+                newHeight = this.resizeStartHeight - heightDelta;
+                newTop = this.resizeStartTop + heightDelta;
+            }
+
+            this.debugbar.style.width = newWidth + 'px';
+            this.debugbar.style.height = newHeight + 'px';
+            this.debugbar.style.left = newLeft + 'px';
+            this.debugbar.style.top = newTop + 'px';
+        }
+
+        endResize() {
+            if (!this.isResizing) return;
+
+            this.isResizing = false;
+            this.resizeEdge = null;
+            this.debugbar.classList.remove('phpdebugbar-resizing');
+
+            document.removeEventListener('mousemove', this.boundDoResize);
+            document.removeEventListener('mouseup', this.boundEndResize);
+            document.removeEventListener('touchmove', this.boundDoResize);
+            document.removeEventListener('touchend', this.boundEndResize);
+
+            // Save dimensions
+            if (this.options.remember_position) {
+                this.savePosition();
+            }
+        }
+
+        watchMinimizeState() {
+            let wasClosed = this.debugbar.classList.contains('phpdebugbar-closed');
+
+            const observer = new MutationObserver(() => {
+                const isClosed = this.debugbar.classList.contains('phpdebugbar-closed');
+
+                if (isClosed && !wasClosed) {
+                    // When snapped, keep all styles - CSS !important handles closed appearance
+                    // When reopened, the snap state and full-width will be restored
+                    if (!this.isSnapped) {
+                        // Only clear dimension styles for floating (non-snapped) mode
+                        this.debugbar.style.width = '';
+                        this.debugbar.style.maxWidth = '';
+                        this.debugbar.style.height = '';
+                    }
+                }
+
+                wasClosed = isClosed;
+            });
+
+            observer.observe(this.debugbar, { attributes: true, attributeFilter: ['class'] });
         }
 
         reveal() {
@@ -207,7 +324,7 @@
             const vh = this.cachedViewportHeight;
             const dist = this.options.snapDistance;
 
-            for (const [key, zone] of SORTED_ZONE_ENTRIES) {
+            for (const [key, zone] of SNAP_ZONE_ENTRIES) {
                 if (zone.detect(x, y, w, h, vw, vh, dist)) {
                     return key;
                 }
@@ -217,45 +334,32 @@
 
         startDrag(e) {
             const target = e.target;
-            if (target.closest('.phpdebugbar-tab') ||
+            const isRestoreBtn = target.closest('.phpdebugbar-restore-btn');
+
+            // Allow drag from restore button, but exclude other interactive elements
+            if (!isRestoreBtn && (
+                target.closest('.phpdebugbar-tab') ||
                 target.closest('.phpdebugbar-close-btn') ||
                 target.closest('.phpdebugbar-minimize-btn') ||
-                target.closest('.phpdebugbar-restore-btn') ||
                 target.closest('.phpdebugbar-open-btn') ||
                 target.closest('.phpdebugbar-tab-settings') ||
                 target.closest('.phpdebugbar-tab-history') ||
                 target.closest('a') ||
                 target.closest('button') ||
                 target.closest('select') ||
-                target.closest('input')) {
+                target.closest('input'))) {
                 return;
             }
 
             e.preventDefault();
-            this.isDragging = true;
-            this.debugbar.classList.add('phpdebugbar-dragging');
-
-            if (this.isSnapped) {
-                this.unsnap();
-            }
-
-            const rect = this.debugbar.getBoundingClientRect();
-            this.cachedWidth = rect.width;
-            this.cachedHeight = rect.height;
-            this.cachedViewportWidth = window.innerWidth;
-            this.cachedViewportHeight = window.innerHeight;
 
             const coords = getEventCoordinates(e);
-            this.startX = coords.x - rect.left;
-            this.startY = coords.y - rect.top;
-            this.currentX = rect.left;
-            this.currentY = rect.top;
-            this.lastSnapCheckX = rect.left;
-            this.lastSnapCheckY = rect.top;
+            const rect = this.debugbar.getBoundingClientRect();
 
-            this.debugbar.style.left = '0';
-            this.debugbar.style.top = '0';
-            this.debugbar.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+            this.dragPending = true;
+            this.isDragging = false;
+            this.dragStartCoords = { x: coords.x, y: coords.y };
+            this.dragStartRect = rect;
 
             document.addEventListener('mousemove', this.boundDrag);
             document.addEventListener('mouseup', this.boundEndDrag);
@@ -264,11 +368,50 @@
             document.addEventListener('touchcancel', this.boundEndDrag);
         }
 
+        activateDrag() {
+            const rect = this.dragStartRect;
+
+            this.isDragging = true;
+            this.dragOccurred = true;
+            this.debugbar.classList.add('phpdebugbar-dragging');
+
+            if (this.isSnapped) {
+                this.unsnap();
+            }
+
+            this.cachedWidth = rect.width;
+            this.cachedHeight = rect.height;
+            this.cachedViewportWidth = window.innerWidth;
+            this.cachedViewportHeight = window.innerHeight;
+
+            this.startX = this.dragStartCoords.x - rect.left;
+            this.startY = this.dragStartCoords.y - rect.top;
+            this.currentX = rect.left;
+            this.currentY = rect.top;
+            this.lastSnapCheckX = rect.left;
+            this.lastSnapCheckY = rect.top;
+
+            this.debugbar.style.left = '0';
+            this.debugbar.style.top = '0';
+            this.debugbar.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px, 0)`;
+        }
+
         drag(e) {
-            if (!this.isDragging) return;
-            e.preventDefault();
+            if (!this.dragPending && !this.isDragging) return;
 
             const coords = getEventCoordinates(e);
+
+            if (this.dragPending && !this.isDragging) {
+                const dx = Math.abs(coords.x - this.dragStartCoords.x);
+                const dy = Math.abs(coords.y - this.dragStartCoords.y);
+                if (dx < DRAG_THRESHOLD && dy < DRAG_THRESHOLD) {
+                    return;
+                }
+                this.activateDrag();
+            }
+
+            e.preventDefault();
+
             let newX = coords.x - this.startX;
             let newY = coords.y - this.startY;
 
@@ -325,7 +468,16 @@
         }
 
         endDrag() {
-            if (!this.isDragging) return;
+            document.removeEventListener('mousemove', this.boundDrag);
+            document.removeEventListener('mouseup', this.boundEndDrag);
+            document.removeEventListener('touchmove', this.boundDrag);
+            document.removeEventListener('touchend', this.boundEndDrag);
+            document.removeEventListener('touchcancel', this.boundEndDrag);
+
+            if (!this.isDragging) {
+                this.dragPending = false;
+                return;
+            }
 
             if (this.rafId) {
                 cancelAnimationFrame(this.rafId);
@@ -333,13 +485,8 @@
             }
 
             this.isDragging = false;
+            this.dragPending = false;
             this.debugbar.classList.remove('phpdebugbar-dragging');
-
-            document.removeEventListener('mousemove', this.boundDrag);
-            document.removeEventListener('mouseup', this.boundEndDrag);
-            document.removeEventListener('touchmove', this.boundDrag);
-            document.removeEventListener('touchend', this.boundEndDrag);
-            document.removeEventListener('touchcancel', this.boundEndDrag);
 
             this.snapPreview.hide();
             this.debugbar.style.transform = '';
@@ -358,11 +505,6 @@
             const zone = SNAP_ZONES[zoneName];
             if (!zone) return;
 
-            const rect = this.debugbar.getBoundingClientRect();
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            const targetPos = zone.getPosition(rect.width, rect.height, vw, vh);
-
             this.debugbar.classList.add('phpdebugbar-snapping');
 
             if (zoneName === 'bottom' || zoneName === 'top') {
@@ -373,9 +515,21 @@
 
             this.debugbar.style.transition = `left ${this.options.snapAnimationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
                                               top ${this.options.snapAnimationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                                              bottom ${this.options.snapAnimationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
                                               width ${this.options.snapAnimationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
 
-            this.applyPosition(targetPos.x, targetPos.y);
+            // Use bottom:0 for bottom snap so debugbar expands upward when maximized
+            if (zoneName === 'bottom') {
+                this.debugbar.style.left = '0';
+                this.debugbar.style.top = 'auto';
+                this.debugbar.style.bottom = '0';
+                this.debugbar.style.right = 'auto';
+            } else if (zoneName === 'top') {
+                this.debugbar.style.left = '0';
+                this.debugbar.style.top = '0';
+                this.debugbar.style.bottom = 'auto';
+                this.debugbar.style.right = 'auto';
+            }
 
             let cleaned = false;
             const cleanup = () => {
@@ -407,6 +561,8 @@
             this.debugbar.style.width = '';
             this.debugbar.style.maxWidth = '';
             this.debugbar.style.borderRadius = '';
+            this.debugbar.style.bottom = '';
+            this.debugbar.style.top = '';
             this.isSnapped = false;
             this.currentSnapZone = null;
         }
@@ -426,21 +582,18 @@
         handleResize() {
             if (!this.debugbar.classList.contains('phpdebugbar-floating')) return;
 
+            // Snapped positions (bottom:0 or top:0) auto-adjust to viewport, no action needed
             if (this.isSnapped && this.currentSnapZone) {
-                const zone = SNAP_ZONES[this.currentSnapZone];
-                if (zone) {
-                    const rect = this.debugbar.getBoundingClientRect();
-                    const targetPos = zone.getPosition(rect.width, rect.height, window.innerWidth, window.innerHeight);
-                    this.applyPosition(targetPos.x, targetPos.y);
-                }
-            } else {
-                const rect = this.debugbar.getBoundingClientRect();
-                const constrained = this.getConstrainedPosition(rect.left, rect.top);
-                if (rect.left !== constrained.x || rect.top !== constrained.y) {
-                    this.applyPosition(constrained.x, constrained.y);
-                    if (this.options.remember_position) {
-                        this.savePosition();
-                    }
+                return;
+            }
+
+            // For floating (non-snapped), constrain position to viewport
+            const rect = this.debugbar.getBoundingClientRect();
+            const constrained = this.getConstrainedPosition(rect.left, rect.top);
+            if (rect.left !== constrained.x || rect.top !== constrained.y) {
+                this.applyPosition(constrained.x, constrained.y);
+                if (this.options.remember_position) {
+                    this.savePosition();
                 }
             }
         }
@@ -456,9 +609,12 @@
 
         savePosition() {
             try {
+                const rect = this.debugbar.getBoundingClientRect();
                 localStorage.setItem(this.options.storage_key, JSON.stringify({
                     x: this.currentX,
                     y: this.currentY,
+                    width: rect.width,
+                    height: rect.height,
                     snapped: this.isSnapped,
                     snapZone: this.currentSnapZone,
                     timestamp: Date.now()
@@ -480,6 +636,11 @@
                         } else if (position.x !== undefined && position.y !== undefined) {
                             const constrained = this.getConstrainedPosition(position.x, position.y);
                             this.applyPosition(constrained.x, constrained.y);
+                            // Restore dimensions if saved
+                            if (position.width && position.height) {
+                                this.debugbar.style.width = position.width + 'px';
+                                this.debugbar.style.height = position.height + 'px';
+                            }
                             loaded = true;
                         }
                     }
@@ -510,20 +671,16 @@
             this.applyPosition(constrained.x, constrained.y);
         }
 
-        resetPosition() {
-            try {
-                localStorage.removeItem(this.options.storage_key);
-            } catch (e) {}
-            this.unsnap();
-            this.setInitialPosition();
-        }
-
         destroy() {
             this.snapPreview.destroy();
             window.removeEventListener('resize', this.boundResize);
             if (this.dragHandle) {
                 this.dragHandle.removeEventListener('mousedown', this.boundStartDrag);
                 this.dragHandle.removeEventListener('touchstart', this.boundStartDrag);
+            }
+            if (this.restoreBtn) {
+                this.restoreBtn.removeEventListener('mousedown', this.boundStartDrag);
+                this.restoreBtn.removeEventListener('touchstart', this.boundStartDrag);
             }
             if (this.rafId) {
                 cancelAnimationFrame(this.rafId);
@@ -668,6 +825,7 @@
 
         const $select = $('<select />')
             .append($('<option value="bottom">Bottom (Fixed)</option>'))
+            .append($('<option value="top">Top (Fixed)</option>'))
             .append($('<option value="floating">Floating (Draggable)</option>'))
             .val(currentMode)
             .on('change', function() {
@@ -705,10 +863,7 @@
         const wasFloating = debugbarEl.classList.contains('phpdebugbar-floating');
 
         debugbarEl.classList.remove('phpdebugbar-floating', 'phpdebugbar-ready',
-            'phpdebugbar-snapped-bottom', 'phpdebugbar-snapped-top',
-            'phpdebugbar-snapped-left', 'phpdebugbar-snapped-right',
-            'phpdebugbar-snapped-top-left', 'phpdebugbar-snapped-top-right',
-            'phpdebugbar-snapped-bottom-left', 'phpdebugbar-snapped-bottom-right');
+            'phpdebugbar-snapped-bottom', 'phpdebugbar-snapped-top');
 
         debugbarEl.style.cssText = '';
 

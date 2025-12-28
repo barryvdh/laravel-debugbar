@@ -874,15 +874,85 @@ div.phpdebugbar.phpdebugbar-floating :is(
 }
 
 /**
- * Minimized state
+ * Closed state (clicking Laravel logo icon) - collapse to just the restore button
+ * Override inline dimension styles from snapping/resizing
  */
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-minimized {
-    width: auto;
-    min-width: 200px;
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-closed {
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    border-radius: 4px !important;
+    border-top: 1px solid var(--debugbar-border) !important;
 }
+
+/* Show the external restore button when closed (override JS inline display:none) */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-closed > a.phpdebugbar-restore-btn {
+    display: block !important;
+}
+
+/**
+ * Minimized state (clicking down arrow) - keep header visible but hide body
+ * Preserves snap width (100%) when snapped to top/bottom
+ */
 
 div.phpdebugbar.phpdebugbar-floating div.phpdebugbar-resize-handle {
     display: block !important;
+}
+
+/**
+ * Resize handles for floating mode (edges and corners)
+ */
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-edge {
+    position: absolute;
+    z-index: 10;
+}
+
+/* Hide resize handles when snapped */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom .phpdebugbar-resize-edge,
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top .phpdebugbar-resize-edge {
+    display: none;
+}
+
+/* Edge handles */
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-n {
+    top: -4px; left: 8px; right: 8px; height: 8px;
+    cursor: ns-resize;
+}
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-s {
+    bottom: -4px; left: 8px; right: 8px; height: 8px;
+    cursor: ns-resize;
+}
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-e {
+    right: -4px; top: 8px; bottom: 8px; width: 8px;
+    cursor: ew-resize;
+}
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-w {
+    left: -4px; top: 8px; bottom: 8px; width: 8px;
+    cursor: ew-resize;
+}
+
+/* Corner handles */
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-ne {
+    top: -4px; right: -4px; width: 12px; height: 12px;
+    cursor: nesw-resize;
+}
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-nw {
+    top: -4px; left: -4px; width: 12px; height: 12px;
+    cursor: nwse-resize;
+}
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-se {
+    bottom: -4px; right: -4px; width: 12px; height: 12px;
+    cursor: nwse-resize;
+}
+div.phpdebugbar.phpdebugbar-floating .phpdebugbar-resize-sw {
+    bottom: -4px; left: -4px; width: 12px; height: 12px;
+    cursor: nesw-resize;
+}
+
+/* Resizing state */
+div.phpdebugbar.phpdebugbar-floating.phpdebugbar-resizing {
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 /* Remove will-change when not dragging (free GPU memory) */
@@ -937,38 +1007,20 @@ div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapping:not(.phpdebugbar-dragg
 }
 
 /**
- * Snapped state styles
+ * Snapped state styles (bottom and top only)
  */
 div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom,
 div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top {
     border-radius: 0;
 }
 
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-left {
-    border-radius: 0 4px 4px 0;
-}
-
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-right {
-    border-radius: 4px 0 0 4px;
-}
-
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top-left {
-    border-radius: 0 0 4px 0;
-}
-
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-top-right {
-    border-radius: 0 0 0 4px;
-}
-
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom-left {
-    border-radius: 0 4px 0 0;
-}
-
-div.phpdebugbar.phpdebugbar-floating.phpdebugbar-snapped-bottom-right {
-    border-radius: 4px 0 0 0;
-}
 
 div.phpdebugbar[data-positionMode="bottom"] {
     top: auto;
     bottom: 0;
+}
+
+div.phpdebugbar[data-positionMode="top"] {
+    top: 0;
+    bottom: auto;
 }
