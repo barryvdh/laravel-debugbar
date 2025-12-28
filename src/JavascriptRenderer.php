@@ -36,7 +36,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     /**
      * Set the position configuration for the debugbar
      *
-     * @param string $position Position setting: 'bottom' or 'floating'
+     * @param string $position Position setting: 'bottom', 'top', or 'floating'
      * @param array $floatingOptions Options for floating mode
      * @return void
      */

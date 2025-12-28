@@ -345,7 +345,7 @@ return [
      |--------------------------------------------------------------------------
      |
      | Controls where the debugbar appears on the page.
-     | Possible values: bottom, floating
+     | Possible values: bottom, top, floating
      |
      | When set to 'floating', the debugbar can be dragged anywhere on the screen.
      */
