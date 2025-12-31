@@ -9,14 +9,14 @@
      *  - data
      */
     class LaravelQueriesWidget extends PhpDebugBar.Widget {
+        get className() {
+            return csscls('sqlqueries');
+        }
+
         constructor() {
             super();
             this.duplicateQueries = new Set();
             this.hiddenConnections = new Set();
-        }
-
-        get className() {
-            return csscls('sqlqueries');
         }
 
         copyToClipboard(code) {
@@ -36,7 +36,7 @@
                 isCopied = document.execCommand('copy');
                 console.log('Query copied to the clipboard');
             } catch (err) {
-                console.error('Oops, unable to copy');
+                alert('Oops, unable to copy'); // eslint-disable-line no-alert
             }
 
             window.getSelection().removeAllRanges();
@@ -58,43 +58,41 @@
                 for (const key in row) {
                     const td = document.createElement('td');
                     td.textContent = row[key];
-                    tr.appendChild(td);
+                    tr.append(td);
                 }
                 values.push(tr);
             }
 
             const table = document.createElement('table');
-            table.className = csscls('explain');
+            table.classList.add(csscls('explain'));
             const thead = document.createElement('thead');
             const tbody = document.createElement('tbody');
             const headerRow = document.createElement('tr');
-            headings.forEach(th => headerRow.appendChild(th));
-            thead.appendChild(headerRow);
-            values.forEach(tr => tbody.appendChild(tr));
-            table.appendChild(thead);
-            table.appendChild(tbody);
+            headerRow.append(...headings);
+            thead.append(headerRow);
+            tbody.append(...values);
+            table.append(thead, tbody);
 
-            element.appendChild(table);
+            element.append(table);
             if (visual) {
-                element.appendChild(this.explainVisual(statement, visual.confirm));
+                element.append(this.explainVisual(statement, visual.confirm));
             }
         }
 
         explainPgsql(element, statement, rows, visual) {
             const ul = document.createElement('ul');
-            ul.className = csscls('table-list');
+            ul.classList.add(csscls('table-list'));
 
             for (const row of rows) {
                 const li = document.createElement('li');
-                li.className = csscls('table-list-item');
+                li.classList.add(csscls('table-list-item'));
                 const span = document.createElement('span');
                 span.textContent = row;
                 li.innerHTML = span.textContent.replaceAll(' ', '&nbsp;');
-                ul.appendChild(li);
+                ul.append(li);
             }
 
-            element.appendChild(ul);
-            element.appendChild(this.explainVisual(statement, visual.confirm));
+            element.append(ul, this.explainVisual(statement, visual.confirm));
         }
 
         explainVisual(statement, confirmMessage) {
@@ -102,16 +100,14 @@
             explainLink.href = '#';
             explainLink.target = '_blank';
             explainLink.rel = 'noopener';
-            explainLink.className = csscls('visual-link');
+            explainLink.classList.add(csscls('visual-link'));
 
             const explainButton = document.createElement('a');
             explainButton.textContent = 'Visual Explain';
-            explainButton.className = csscls('visual-explain');
+            explainButton.classList.add(csscls('visual-explain'));
             explainButton.addEventListener('click', () => {
-                // eslint-disable-next-line no-alert
-                if (!confirm(confirmMessage)) {
+                if (!confirm(confirmMessage)) // eslint-disable-line no-alert
                     return;
-                }
                 fetch(statement.explain.url, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -124,28 +120,21 @@
                 }).then((response) => {
                     response.json()
                         .then((json) => {
-                            if (!response.ok) {
-                                // eslint-disable-next-line no-alert
-                                return alert(json.message);
-                            }
+                            if (!response.ok)
+                                return alert(json.message); // eslint-disable-line no-alert
                             explainLink.href = json.data;
                             explainLink.textContent = json.data;
                             window.open(json.data, '_blank', 'noopener');
                         })
-                        .catch(err => {
-                            // eslint-disable-next-line no-alert
-                            alert(`Response body could not be parsed. (${err})`);
-                        });
+                        .catch(err => alert(`Response body could not be parsed. (${err})`)); // eslint-disable-line no-alert
                 }).catch((e) => {
-                    // eslint-disable-next-line no-alert
-                    alert(e.message);
+                    alert(e.message); // eslint-disable-line no-alert
                 });
             });
 
-            const container = document.createElement('div');
-            container.appendChild(explainButton);
-            container.appendChild(explainLink);
-            return container;
+            const div = document.createElement('div');
+            div.append(explainButton, explainLink);
+            return div;
         }
 
         identifyDuplicates(statements) {
@@ -177,13 +166,13 @@
 
         render() {
             const status = document.createElement('div');
-            status.className = csscls('status');
-            this.el.appendChild(status);
+            status.classList.add(csscls('status'));
+            this.el.append(status);
 
             const list = new PhpDebugBar.Widgets.ListWidget({
                 itemRenderer: this.renderQuery.bind(this)
             });
-            this.el.appendChild(list.el);
+            this.el.append(list.el);
 
             this.bindAttr('data', function (data) {
                 this.identifyDuplicates(data.statements);
@@ -202,9 +191,9 @@
             }
 
             const text = document.createElement('span');
-            text.textContent = `${data.nb_statements} ${data.nb_statements === 1 ? 'statement was' : 'statements were'} executed`;
+            let textContent = `${data.nb_statements} ${data.nb_statements === 1 ? 'statement was' : 'statements were'} executed`;
             if (data.nb_excluded_statements) {
-                text.textContent += `, ${data.nb_excluded_statements} ${data.nb_excluded_statements === 1 ? 'has' : 'have'} been excluded`;
+                textContent += `, ${data.nb_excluded_statements} ${data.nb_excluded_statements === 1 ? 'has' : 'have'} been excluded`;
             }
             if (data.nb_failed_statements > 0 || this.duplicateQueries.size > 0) {
                 const details = [];
@@ -214,19 +203,20 @@
                 if (this.duplicateQueries.size > 0) {
                     details.push(`${this.duplicateQueries.size} ${this.duplicateQueries.size === 1 ? 'duplicate' : 'duplicates'}`);
                 }
-                text.textContent += ` (${details.join(', ')})`;
+                textContent += ` (${details.join(', ')})`;
             }
-            status.appendChild(text);
+            text.textContent = textContent;
+            status.append(text);
 
             const filters = [];
             if (this.duplicateQueries.size > 0) {
                 const duplicatesLink = document.createElement('a');
                 duplicatesLink.textContent = 'Show only duplicates';
-                duplicatesLink.className = csscls('duplicates');
+                duplicatesLink.classList.add(csscls('duplicates'));
                 duplicatesLink.addEventListener('click', (event) => {
                     if (event.target.textContent === 'Show only duplicates') {
                         event.target.textContent = 'Show All';
-                        this.el.querySelectorAll('[data-duplicate="false"]').forEach(el => el.style.display = 'none');
+                        this.el.querySelectorAll('[data-duplicate=false]').forEach(el => el.style.display = 'none');
                     } else {
                         event.target.textContent = 'Show only duplicates';
                         this.el.querySelectorAll('[data-duplicate]').forEach(el => el.style.display = '');
@@ -237,7 +227,7 @@
             if (connections.size > 1) {
                 for (const connection of connections.values()) {
                     const connectionLink = document.createElement('a');
-                    connectionLink.className = csscls('connection');
+                    connectionLink.classList.add(csscls('connection'));
                     connectionLink.textContent = connection;
                     connectionLink.setAttribute('data-filter', connection);
                     connectionLink.setAttribute('data-active', 'true');
@@ -260,53 +250,53 @@
                     filters.push(connectionLink);
                 }
             }
-            filters.forEach(filter => status.appendChild(filter));
+            status.append(...filters);
 
             if (data.accumulated_duration_str) {
                 const duration = document.createElement('span');
                 duration.title = 'Accumulated duration';
-                duration.className = csscls('duration');
+                duration.classList.add(csscls('duration'));
                 duration.textContent = data.accumulated_duration_str;
-                status.appendChild(duration);
+                status.append(duration);
             }
             if (data.memory_usage_str) {
                 const memory = document.createElement('span');
                 memory.title = 'Memory usage';
-                memory.className = csscls('memory');
+                memory.classList.add(csscls('memory'));
                 memory.textContent = data.memory_usage_str;
-                status.appendChild(memory);
+                status.append(memory);
             }
         }
 
         renderQuery(li, statement) {
             if (statement.type === 'transaction') {
                 li.setAttribute('data-connection', statement.connection);
-                li.setAttribute('data-duplicate', false);
+                li.setAttribute('data-duplicate', 'false');
                 const strong = document.createElement('strong');
-                strong.className = csscls('sql name');
+                strong.classList.add(csscls('sql'), csscls('name'));
                 strong.textContent = statement.sql;
-                li.appendChild(strong);
+                li.append(strong);
             } else {
                 if (statement.slow) {
                     li.classList.add(csscls('sql-slow'));
                 }
                 const code = document.createElement('code');
                 code.innerHTML = PhpDebugBar.Widgets.highlight(statement.sql, 'sql');
-                code.className = csscls('sql');
+                code.classList.add(csscls('sql'));
                 const duplicated = this.duplicateQueries.has(statement);
                 li.setAttribute('data-connection', statement.connection);
                 li.setAttribute('data-duplicate', duplicated);
                 if (duplicated) {
                     li.classList.add(csscls('sql-duplicate'));
                 }
-                li.appendChild(code);
+                li.append(code);
 
                 if (statement.show_copy) {
-                    const copySpan = document.createElement('span');
-                    copySpan.title = 'Copy to clipboard';
-                    copySpan.className = csscls('copy-clipboard');
-                    copySpan.style.cursor = 'pointer';
-                    copySpan.addEventListener('click', (event) => {
+                    const copyIcon = document.createElement('span');
+                    copyIcon.title = 'Copy to clipboard';
+                    copyIcon.classList.add(csscls('copy-clipboard'));
+                    copyIcon.style.cursor = 'pointer';
+                    copyIcon.addEventListener('click', (event) => {
                         event.stopPropagation();
                         if (this.copyToClipboard(code)) {
                             event.target.classList.add(csscls('copy-clipboard-check'));
@@ -315,57 +305,57 @@
                             }, 2000);
                         }
                     });
-                    li.insertBefore(copySpan, li.firstChild);
+                    li.prepend(copyIcon);
                 }
             }
 
             if (statement.width_percent) {
                 const bgMeasure = document.createElement('div');
-                bgMeasure.className = csscls('bg-measure');
+                bgMeasure.classList.add(csscls('bg-measure'));
                 const value = document.createElement('div');
-                value.className = csscls('value');
+                value.classList.add(csscls('value'));
                 value.style.left = `${statement.start_percent}%`;
                 value.style.width = `${Math.max(statement.width_percent, 0.01)}%`;
-                bgMeasure.appendChild(value);
-                li.appendChild(bgMeasure);
+                bgMeasure.append(value);
+                li.append(bgMeasure);
             }
 
             if ('is_success' in statement && !statement.is_success) {
                 li.classList.add(csscls('error'));
                 const errorSpan = document.createElement('span');
-                errorSpan.className = csscls('error');
+                errorSpan.classList.add(csscls('error'));
                 errorSpan.textContent = `[${statement.error_code}] ${statement.error_message}`;
-                li.insertBefore(errorSpan, li.firstChild);
+                li.prepend(errorSpan);
             }
             if (statement.duration_str) {
                 const duration = document.createElement('span');
                 duration.title = 'Duration';
-                duration.className = csscls('duration');
+                duration.classList.add(csscls('duration'));
                 duration.textContent = statement.duration_str;
-                li.insertBefore(duration, li.firstChild);
+                li.prepend(duration);
             }
             if (statement.memory_str) {
                 const memory = document.createElement('span');
                 memory.title = 'Memory usage';
-                memory.className = csscls('memory');
+                memory.classList.add(csscls('memory'));
                 memory.textContent = statement.memory_str;
-                li.insertBefore(memory, li.firstChild);
+                li.prepend(memory);
             }
             if (statement.connection) {
                 const database = document.createElement('span');
                 database.title = 'Connection';
-                database.className = csscls('database');
+                database.classList.add(csscls('database'));
                 database.textContent = statement.connection;
-                li.insertBefore(database, li.firstChild);
+                li.prepend(database);
             }
             if (statement.xdebug_link) {
                 const filename = document.createElement('span');
                 filename.title = 'Filename';
-                filename.className = csscls('filename');
+                filename.classList.add(csscls('filename'));
                 filename.textContent = `${statement.xdebug_link.filename}#${statement.xdebug_link.line || '?'}`;
                 const link = document.createElement('a');
                 link.href = statement.xdebug_link.url;
-                link.className = csscls('editor-link');
+                link.classList.add(csscls('editor-link'));
                 link.addEventListener('click', (event) => {
                     event.stopPropagation();
                     if (statement.xdebug_link.ajax) {
@@ -373,32 +363,35 @@
                         fetch(statement.xdebug_link.url);
                     }
                 });
-                filename.appendChild(link);
-                li.insertBefore(filename, li.firstChild);
+                filename.append(link);
+                li.prepend(filename);
             }
 
             const details = document.createElement('table');
-            details.className = csscls('params');
+            details.classList.add(csscls('params'));
+            details.style.display = 'none';
 
-            const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
+            const isEmptyObject = (obj) => {
+                return !obj || (typeof obj === 'object' && Object.keys(obj).length === 0);
+            };
 
             if (statement.bindings && !isEmptyObject(statement.bindings)) {
-                details.appendChild(this.renderDetailStrings('Bindings', 'pin', statement.bindings, true));
+                details.append(this.renderDetailStrings('Bindings', 'thumb-tack', statement.bindings, true));
             }
             if (statement.hints && !isEmptyObject(statement.hints)) {
-                details.appendChild(this.renderDetailStrings('Hints', 'help-circle', statement.hints));
+                details.append(this.renderDetailStrings('Hints', 'question-circle', statement.hints));
             }
             if (statement.backtrace && !isEmptyObject(statement.backtrace)) {
-                details.appendChild(this.renderDetailBacktrace('Backtrace', 'list', statement.backtrace));
+                details.append(this.renderDetailBacktrace('Backtrace', 'list-ul', statement.backtrace));
             }
             if (statement.explain && ['mariadb', 'mysql'].includes(statement.explain.driver)) {
-                details.appendChild(this.renderDetailExplain('Performance', 'gauge', statement, this.explainMysql.bind(this)));
+                details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainMysql.bind(this)));
             }
             if (statement.explain && statement.explain.driver === 'pgsql') {
-                details.appendChild(this.renderDetailExplain('Performance', 'gauge', statement, this.explainPgsql.bind(this)));
+                details.append(this.renderDetailExplain('Performance', 'tachometer', statement, this.explainPgsql.bind(this)));
             }
 
-            if (details.children.length > 0) {
+            if (details.children.length) {
                 li.classList.add(csscls('expandable'));
                 li.addEventListener('click', (event) => {
                     if (window.getSelection().type === 'Range') {
@@ -410,59 +403,48 @@
                     }
 
                     const paramsTable = li.querySelector(`.${csscls('params')}`);
-                    if (paramsTable) {
-                        const isVisible = paramsTable.style.display === 'table';
-                        paramsTable.style.display = isVisible ? 'none' : 'table';
+                    if (paramsTable && paramsTable.style.display !== 'none') {
+                        paramsTable.style.display = 'none';
+                    } else if (paramsTable) {
+                        paramsTable.style.display = 'table';
                     }
                 });
             }
 
-            li.appendChild(details);
+            li.append(details);
         }
 
         renderDetail(caption, icon, value) {
             const tr = document.createElement('tr');
-            const tdName = document.createElement('td');
-            tdName.className = csscls('name');
-
-            if (icon) {
-                const iconSpan = document.createElement('span');
-                iconSpan.className = `${css('icon')} ${css(`icon-${icon}`)}`;
-                tdName.textContent = caption + ' ';
-                tdName.appendChild(iconSpan);
-            } else {
-                tdName.textContent = caption;
-            }
-
-            const tdValue = document.createElement('td');
-            tdValue.className = csscls('value');
+            const nameTd = document.createElement('td');
+            nameTd.classList.add(csscls('name'));
+            nameTd.innerHTML = caption + (icon ? `<i class="${css('text-muted')} fa fa-${icon}" />` : '');
+            const valueTd = document.createElement('td');
+            valueTd.classList.add(csscls('value'));
             if (typeof value === 'string') {
-                tdValue.textContent = value;
+                valueTd.innerHTML = value;
             } else {
-                tdValue.appendChild(value);
+                valueTd.append(value);
             }
-            tr.appendChild(tdName);
-            tr.appendChild(tdValue);
+            tr.append(nameTd, valueTd);
             return tr;
         }
 
         renderDetailStrings(caption, icon, values, showLineNumbers = false) {
             const ul = document.createElement('ul');
-            ul.className = csscls('table-list');
+            ul.classList.add(csscls('table-list'));
 
             Object.entries(values).forEach(([i, value]) => {
                 const li = document.createElement('li');
-                li.className = csscls('table-list-item');
+                li.classList.add(csscls('table-list-item'));
 
                 if (showLineNumbers) {
                     const muted = document.createElement('span');
-                    muted.className = css('text-muted');
+                    muted.classList.add(css('text-muted'));
                     muted.textContent = `${i}:`;
-                    li.appendChild(muted);
-                    li.innerHTML += '&nbsp;';
-                    const span = document.createElement('span');
-                    span.textContent = value;
-                    li.appendChild(span);
+                    const valueSpan = document.createElement('span');
+                    valueSpan.textContent = value;
+                    li.append(muted, '\u00A0', valueSpan);
                 } else {
                     if (caption === 'Hints') {
                         li.innerHTML = value;
@@ -470,7 +452,7 @@
                         li.textContent = value;
                     }
                 }
-                ul.appendChild(li);
+                ul.append(li);
             });
 
             return this.renderDetail(caption, icon, ul);
@@ -484,7 +466,7 @@
                     text = `${trace.namespace}::${text}`;
                 }
                 if (trace.line) {
-                    text += `:${trace.line}`;
+                    text = `${text}:${trace.line}`;
                 }
                 values.push(text);
             }
@@ -495,7 +477,7 @@
         renderDetailExplain(caption, icon, statement, explainFn) {
             const btn = document.createElement('button');
             btn.textContent = 'Run EXPLAIN';
-            btn.className = csscls('explain-btn');
+            btn.classList.add(csscls('explain-btn'));
 
             const detail = this.renderDetail(caption, icon, btn);
 
@@ -511,21 +493,15 @@
                 }).then((response) => {
                     response.json()
                         .then((json) => {
-                            if (!response.ok) {
-                                // eslint-disable-next-line no-alert
-                                return alert(json.message);
-                            }
+                            if (!response.ok)
+                                return alert(json.message); // eslint-disable-line no-alert
                             const valueCell = detail.querySelector(`.${csscls('value')}`);
                             valueCell.innerHTML = '';
                             explainFn(valueCell, statement, json.data, json.visual);
                         })
-                        .catch(err => {
-                            // eslint-disable-next-line no-alert
-                            alert(`Response body could not be parsed. (${err})`);
-                        });
+                        .catch(err => alert(`Response body could not be parsed. (${err})`)); // eslint-disable-line no-alert
                 }).catch((e) => {
-                    // eslint-disable-next-line no-alert
-                    alert(e.message);
+                    alert(e.message); // eslint-disable-line no-alert
                 });
             });
 
