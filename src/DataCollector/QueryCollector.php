@@ -189,7 +189,7 @@ class QueryCollector extends PDOCollector
         $search = ["\\",  "\x00", "\n",  "\r",  "'",  '"', "\x1a"];
         $replace = ["\\\\","\\0","\\n", "\\r", "\'", '\"', "\\Z"];
 
-        return "'" . str_replace($search, $replace, (string) $value) . "'";
+        return "'" . str_replace($search, $replace, $value) . "'";
     }
 
     /**
@@ -606,7 +606,7 @@ class QueryCollector extends PDOCollector
                         : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
 
                     // Mimic bindValue and only quote non-integer and non-float data types
-                    if (!is_int($binding) && !is_float($binding)) {
+                    if (!is_int($binding) && !is_float($binding) && !is_null($binding)) {
                         if ($pdo) {
                             try {
                                 $binding = $pdo->quote((string) $binding);
@@ -618,7 +618,7 @@ class QueryCollector extends PDOCollector
                         }
                     }
 
-                    $sql = preg_replace($regex, addcslashes($binding, '$'), $sql, 1);
+                    $sql = preg_replace($regex, addcslashes($binding ?? 'NULL', '$'), $sql, 1);
                 }
             }
         }
