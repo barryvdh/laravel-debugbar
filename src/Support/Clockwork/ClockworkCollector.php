@@ -56,9 +56,9 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
     /**
      * {@inheritDoc}
      */
-    public function getWidgets(): ?array
+    public function getWidgets(): array
     {
-        return null;
+        return [];
     }
 
     /**
