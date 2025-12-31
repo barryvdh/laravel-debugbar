@@ -56,7 +56,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'request';
     }
@@ -64,7 +64,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         $widgets = [
             "request" => [
@@ -82,7 +82,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         if (Config::get('debugbar.options.request.label', true)) {
             $widgets['currentrequest'] = [
-                "icon" => "share",
+                "icon" => "share-3",
                 "map" => "request.data.uri",
                 "link" => "request",
                 "default" => ""
@@ -99,7 +99,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $request = $this->request;
         $response = $this->response;
@@ -128,8 +128,8 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $data = [
             'status' => $statusCode . ' ' . (isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : ''),
-            'duration' => $startTime ? $this->formatDuration(microtime(true) - $startTime) : null,
-            'peak_memory' => $this->formatBytes(memory_get_peak_usage(true), 1),
+            'duration' => $startTime ? $this->getDataFormatter()->formatDuration(microtime(true) - $startTime) : null,
+            'peak_memory' => $this->getDataFormatter()->formatBytes(memory_get_peak_usage(true), 1),
         ];
 
         if ($request instanceof Request) {
@@ -212,7 +212,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         ];
     }
 
-    protected function getRouteInformation($route)
+    protected function getRouteInformation(mixed $route): array
     {
         if (!is_a($route, 'Illuminate\Routing\Route')) {
             return [];
@@ -251,7 +251,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             unset($result['uses']);
         } elseif ($uses instanceof \Closure) {
             $reflector = new \ReflectionFunction($uses);
-            $result['uses'] = $this->formatVar($uses);
+            $result['uses'] = $this->getDataFormatter()->formatVar($uses);
         } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
             if (class_exists($controller) && method_exists($controller, 'render')) {
                 $reflector = new \ReflectionMethod($controller, 'render');
@@ -287,7 +287,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         return array_filter($result);
     }
 
-    private function getCookieHeader($name, $value, $expires, $path, $domain, $secure, $httponly)
+    protected function getCookieHeader(string $name, ?string $value, int $expires, string $path, ?string $domain, bool $secure, bool $httponly): string
     {
         $cookie = sprintf('%s=%s', $name, urlencode($value ?? ''));
 

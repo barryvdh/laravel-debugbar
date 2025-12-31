@@ -48,7 +48,7 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'clockwork';
     }
@@ -56,15 +56,15 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
-        return null;
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $request = $this->request;
         $response = $this->response;

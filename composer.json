@@ -17,8 +17,8 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "php-debugbar/php-debugbar": "^2.2.4",
+        "php": "^8.2",
+        "php-debugbar/php-debugbar": "^3.0",
         "illuminate/routing": "^10|^11|^12",
         "illuminate/session": "^10|^11|^12",
         "illuminate/support": "^10|^11|^12",
@@ -47,7 +47,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "3.16-dev"
+            "dev-master": "4.0-dev"
         },
         "laravel": {
             "providers": [

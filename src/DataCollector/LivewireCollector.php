@@ -45,7 +45,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->id;
 
-            $this->data[$key] = $this->formatVar($data);
+            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
         });
 
         Livewire::listen('render', function (Component $component) use ($request) {
@@ -65,11 +65,11 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->getId();
 
-            $this->data[$key] = $this->formatVar($data);
+            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
         });
     }
 
-    public function collect()
+    public function collect(): array
     {
         return ['data' => $this->data, 'count' => count($this->data)];
     }
@@ -77,7 +77,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'livewire';
     }
@@ -85,11 +85,11 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "livewire" => [
-                "icon" => "bolt",
+                "icon" => "brand-livewire",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "livewire.data",
                 "default" => "{}"

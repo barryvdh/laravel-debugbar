@@ -16,7 +16,6 @@ use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
-use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Storage\SocketStorage;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
@@ -32,6 +31,7 @@ use DebugBar\DataCollector\ObjectCountCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataFormatter\QueryFormatter;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\PhpHttpDriver;
@@ -108,7 +108,7 @@ class LaravelDebugbar extends DebugBar
      */
     protected $prevErrorHandler = null;
 
-    protected ?string $editorTemplateLink = null;
+    protected ?string $editorTemplate = null;
     protected array $remoteServerReplacements = [];
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
@@ -137,7 +137,7 @@ class LaravelDebugbar extends DebugBar
      *
      * @return HttpDriverInterface
      */
-    public function getHttpDriver()
+    public function getHttpDriver(): HttpDriverInterface
     {
         if ($this->httpDriver === null) {
             $this->httpDriver = $this->app->make(SymfonyHttpDriver::class);
@@ -149,7 +149,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Enable the Debugbar and boot, if not already booted.
      */
-    public function enable()
+    public function enable(): void
     {
         $this->enabled = true;
 
@@ -161,7 +161,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Boot the debugbar (add collectors, renderer and listener)
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->booted) {
             return;
@@ -176,8 +176,8 @@ class LaravelDebugbar extends DebugBar
         /** @var \Illuminate\Events\Dispatcher|null $events */
         $events = isset($app['events']) ? $app['events'] : null;
 
-        $this->editorTemplateLink = $config->get('debugbar.editor') ?: null;
-        $this->remoteServerReplacements = $this->getRemoteServerReplacements();
+        $this->editorTemplate = $config->get('debugbar.editor') ?: null;
+        $this->remotePathReplacements = $this->getRemoteServerReplacements();
 
         // Set custom error handler
         if ($config->get('debugbar.error_handler', false)) {
@@ -635,51 +635,19 @@ class LaravelDebugbar extends DebugBar
         $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
         $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
         $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
-
+        $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
         $this->booted = true;
     }
 
-    public function shouldCollect($name, $default = false)
+    public function shouldCollect(string $name, bool $default = false): bool
     {
         return $this->app['config']->get('debugbar.collectors.' . $name, $default);
     }
 
     /**
-     * Adds a data collector
-     *
-     * @param DataCollectorInterface $collector
-     *
-     * @throws DebugBarException
-     * @return $this
-     */
-    public function addCollector(DataCollectorInterface $collector)
-    {
-        parent::addCollector($collector);
-
-        if (method_exists($collector, 'useHtmlVarDumper')) {
-            $collector->useHtmlVarDumper();
-        }
-        if (method_exists($collector, 'setEditorLinkTemplate') && $this->editorTemplateLink) {
-            $collector->setEditorLinkTemplate($this->editorTemplateLink);
-        }
-        if (method_exists($collector, 'addXdebugReplacements') && $this->remoteServerReplacements) {
-            $collector->addXdebugReplacements($this->remoteServerReplacements);
-        }
-
-        return $this;
-    }
-
-    /**
      * Handle silenced errors
-     *
-     * @param $level
-     * @param $message
-     * @param string $file
-     * @param int $line
-     * @param array $context
-     * @throws \ErrorException
      */
-    public function handleError($level, $message, $file = '', $line = 0, $context = [])
+    public function handleError(int $level, string $message, string $file = '', int $line = 0, array $context = []): mixed
     {
         if ($this->hasCollector('exceptions')) {
             $this['exceptions']->addWarning($level, $message, $file, $line);
@@ -691,7 +659,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         if (! $this->prevErrorHandler) {
-            return;
+            return null;
         }
 
         return call_user_func($this->prevErrorHandler, $level, $message, $file, $line, $context);
@@ -701,11 +669,9 @@ class LaravelDebugbar extends DebugBar
      * Starts a measure
      *
      * @param string $name Internal name, used to stop the measure
-     * @param string $label Public name
-     * @param string|null $collector
-     * @param string|null $group
+     * @param string|null $label Public name
      */
-    public function startMeasure($name, $label = null, $collector = null, $group = null)
+    public function startMeasure(string $name, ?string $label = null, ?string $collector = null, ?string $group = null): void
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector */
@@ -716,10 +682,8 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Stops a measure
-     *
-     * @param string $name
      */
-    public function stopMeasure($name)
+    public function stopMeasure(string $name): void
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector $collector */
@@ -735,20 +699,17 @@ class LaravelDebugbar extends DebugBar
     /**
      * Adds an exception to be profiled in the debug bar
      *
-     * @param Exception $e
      * @deprecated in favor of addThrowable
      */
-    public function addException(Exception $e)
+    public function addException(Exception $e): void
     {
-        return $this->addThrowable($e);
+        $this->addThrowable($e);
     }
 
     /**
      * Adds an exception to be profiled in the debug bar
-     *
-     * @param Throwable $e
      */
-    public function addThrowable($e)
+    public function addThrowable(Throwable $e): void
     {
         if ($this->hasCollector('exceptions')) {
             /** @var \DebugBar\DataCollector\ExceptionsCollector $collector */
@@ -777,11 +738,11 @@ class LaravelDebugbar extends DebugBar
     /**
      * Returns a JavascriptRenderer for this instance
      *
-     * @param string $baseUrl
-     * @param string $basePath
+     * @param string|null $baseUrl
+     * @param string|null $basePath
      * @return JavascriptRenderer
      */
-    public function getJavascriptRenderer($baseUrl = null, $basePath = null)
+    public function getJavascriptRenderer(?string $baseUrl = null, ?string $basePath = null): JavascriptRenderer
     {
         if ($this->jsRenderer === null) {
             $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);
@@ -791,12 +752,8 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Modify the response and inject the debugbar (or data in headers)
-     *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  \Symfony\Component\HttpFoundation\Response $response
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function modifyResponse(Request $request, Response $response)
+    public function modifyResponse(Request $request, Response $response): Response
     {
         /** @var Application $app */
         $app = $this->app;
@@ -923,9 +880,8 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Check if the Debugbar is enabled
-     * @return boolean
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         if ($this->enabled === null) {
             /** @var \Illuminate\Config\Repository $config */
@@ -944,20 +900,13 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Check if this is a request to the Debugbar OpenHandler
-     *
-     * @return bool
      */
-    protected function isDebugbarRequest()
+    protected function isDebugbarRequest(): bool
     {
         return $this->app['request']->is($this->app['config']->get('debugbar.route_prefix') . '*');
     }
 
-    /**
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  \Symfony\Component\HttpFoundation\Response $response
-     * @return bool
-     */
-    protected function isJsonRequest(Request $request, Response $response)
+    protected function isJsonRequest(Request $request, Response $response): bool
     {
         // If XmlHttpRequest, Live or HTMX, return true
         if (
@@ -988,7 +937,7 @@ class LaravelDebugbar extends DebugBar
      *
      * @return array
      */
-    public function collect()
+    public function collect(): array
     {
         /** @var Request $request */
         $request = $this->app['request'];
@@ -1028,10 +977,9 @@ class LaravelDebugbar extends DebugBar
     /**
      * Injects the web debug toolbar into the given Response.
      *
-     * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
      * Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
      */
-    public function injectDebugbar(Response $response)
+    public function injectDebugbar(Response $response): void
     {
         /** @var \Illuminate\Config\Repository $config */
         $config = $this->app['config'];
@@ -1086,10 +1034,8 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Checks if there is stacked data in the session
-     *
-     * @return boolean
      */
-    public function hasStackedData()
+    public function hasStackedData(): bool
     {
         return count($this->getStackedData(false)) > 0;
     }
@@ -1097,10 +1043,9 @@ class LaravelDebugbar extends DebugBar
     /**
      * Returns the data stacked in the session
      *
-     * @param boolean $delete Whether to delete the data in the session
-     * @return array
+     * @param bool $delete Whether to delete the data in the session
      */
-    public function getStackedData($delete = true): array
+    public function getStackedData(bool $delete = true): array
     {
         $this->stackedData = array_merge($this->stackedData, parent::getStackedData($delete));
 
@@ -1110,22 +1055,15 @@ class LaravelDebugbar extends DebugBar
     /**
      * Disable the Debugbar
      */
-    public function disable()
+    public function disable(): void
     {
         $this->enabled = false;
     }
 
     /**
      * Adds a measure
-     *
-     * @param string $label
-     * @param float $start
-     * @param float $end
-     * @param array|null $params
-     * @param string|null $collector
-     * @param string|null $group
      */
-    public function addMeasure($label, $start, $end, $params = [], $collector = null, $group = null)
+    public function addMeasure(string $label, float $start, float $end, array $params = [], ?string $collector = null, ?string $group = null): void
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector */
@@ -1136,14 +1074,8 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Utility function to measure the execution of a Closure
-     *
-     * @param string $label
-     * @param \Closure $closure
-     * @param string|null $collector
-     * @param string|null $group
-     * @return mixed
      */
-    public function measure($label, \Closure $closure, $collector = null, $group = null)
+    public function measure(string $label, \Closure $closure, ?string $collector = null, ?string $group = null): mixed
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector  */
@@ -1157,13 +1089,11 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Collect data in a CLI request
-     *
-     * @return array
      */
-    public function collectConsole()
+    public function collectConsole(): ?array
     {
         if (!$this->isEnabled()) {
-            return;
+            return null;
         }
 
         $this->data = [
@@ -1200,12 +1130,8 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Magic calls for adding messages
-     *
-     * @param string $method
-     * @param array $args
-     * @return mixed|void
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args): void
     {
         $messageLevels = ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'];
         if (in_array($method, $messageLevels)) {
@@ -1219,11 +1145,8 @@ class LaravelDebugbar extends DebugBar
      * Adds a message to the MessagesCollector
      *
      * A message can be anything from an object to a string
-     *
-     * @param mixed $message
-     * @param string $label
      */
-    public function addMessage($message, $label = 'info')
+    public function addMessage(mixed $message, string $label = 'info'): void
     {
         if ($this->hasCollector('messages')) {
             /** @var \DebugBar\DataCollector\MessagesCollector $collector */
@@ -1234,25 +1157,18 @@ class LaravelDebugbar extends DebugBar
 
     /**
      * Check the version of Laravel
-     *
-     * @param string $version
-     * @param string $operator (default: '>=')
-     * @return boolean
      */
-    protected function checkVersion($version, $operator = ">=")
+    protected function checkVersion(string $version, string $operator = ">="): bool
     {
         return version_compare($this->version, $version, $operator);
     }
 
-    protected function isLumen()
+    protected function isLumen(): bool
     {
         return $this->is_lumen;
     }
 
-    /**
-     * @param DebugBar $debugbar
-     */
-    protected function selectStorage(DebugBar $debugbar)
+    protected function selectStorage(DebugBar $debugbar): void
     {
         /** @var \Illuminate\Config\Repository $config */
         $config = $this->app['config'];
@@ -1294,7 +1210,7 @@ class LaravelDebugbar extends DebugBar
         }
     }
 
-    protected function addClockworkHeaders(Response $response)
+    protected function addClockworkHeaders(Response $response): void
     {
         $prefix = $this->app['config']->get('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
@@ -1306,9 +1222,8 @@ class LaravelDebugbar extends DebugBar
      * Add Server-Timing headers for the TimeData collector
      *
      * @see https://www.w3.org/TR/server-timing/
-     * @param Response $response
      */
-    protected function addServerTimingHeaders(Response $response)
+    protected function addServerTimingHeaders(Response $response): void
     {
         if ($this->hasCollector('time')) {
             $collector = $this->getCollector('time');
@@ -1322,10 +1237,7 @@ class LaravelDebugbar extends DebugBar
         }
     }
 
-    /**
-     * @return array
-     */
-    private function getRemoteServerReplacements()
+    private function getRemoteServerReplacements(): array
     {
         $localPath = $this->app['config']->get('debugbar.local_sites_path') ?: base_path();
         $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
@@ -1333,11 +1245,7 @@ class LaravelDebugbar extends DebugBar
         return array_fill_keys($remotePaths, $localPath);
     }
 
-    /**
-     * @return \Monolog\Logger
-     * @throws Exception
-     */
-    private function getMonologLogger()
+    private function getMonologLogger(): \Monolog\Logger
     {
         $logger = $this->app['log']->getLogger();
 

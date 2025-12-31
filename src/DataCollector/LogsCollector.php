@@ -11,7 +11,7 @@ class LogsCollector extends MessagesCollector
 {
     protected $lines = 124;
 
-    public function __construct($path = null, $name = 'logs')
+    public function __construct(string|array|null $path = null, string $name = 'logs')
     {
         parent::__construct($name);
 
@@ -28,12 +28,8 @@ class LogsCollector extends MessagesCollector
     /**
      * get logs apache in app/storage/logs
      * only 24 last of current day
-     *
-     * @param string $path
-     *
-     * @return array
      */
-    public function getStorageLogs($path)
+    public function getStorageLogs(string $path): void
     {
         if (!file_exists($path)) {
             return;
@@ -57,11 +53,8 @@ class LogsCollector extends MessagesCollector
     /**
      * By Ain Tohvri (ain)
      * http://tekkie.flashbit.net/php/tail-functionality-in-php
-     * @param string $file
-     * @param int $lines
-     * @return array
      */
-    protected function tailFile($file, $lines)
+    protected function tailFile(string $file, int $lines): array
     {
         $handle = fopen($file, "r");
         $linecounter = $lines;
@@ -94,11 +87,8 @@ class LogsCollector extends MessagesCollector
     /**
      * Search a string for log entries
      * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
-     *
-     * @param $file
-     * @return array
      */
-    public function getLogs($file)
+    public function getLogs(string $file): array
     {
         $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\](?:(?!\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\])[\s\S])*/";
 
@@ -122,10 +112,7 @@ class LogsCollector extends MessagesCollector
         return $log;
     }
 
-    /**
-     * @return array
-     */
-    public function getMessages()
+    public function getMessages(): array
     {
         return array_reverse(parent::getMessages());
     }
@@ -133,11 +120,8 @@ class LogsCollector extends MessagesCollector
     /**
      * Get the log levels from psr/log.
      * Based on https://github.com/mikemand/logviewer/blob/master/src/Kmd/Logviewer/Logviewer.php by mikemand
-     *
-     * @access public
-     * @return array
      */
-    public function getLevels()
+    public function getLevels(): array
     {
         $class = new ReflectionClass(new LogLevel());
         return $class->getConstants();
