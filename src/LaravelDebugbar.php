@@ -563,9 +563,6 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollectorException('Cannot add LogsCollector', $e);
             }
         }
-        if ($this->shouldCollect('files', false)) {
-            $this->addCollector(new FilesCollector($app));
-        }
 
         if ($this->shouldCollect('auth', false)) {
             try {
@@ -697,11 +694,10 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Adds an exception to be profiled in the debug bar
+     * Alias for addThrowable
      *
-     * @deprecated in favor of addThrowable
      */
-    public function addException(Exception $e): void
+    public function addException(Throwable $e): void
     {
         $this->addThrowable($e);
     }
