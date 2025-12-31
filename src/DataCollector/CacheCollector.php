@@ -42,14 +42,14 @@ class CacheCollector extends TimeDataCollector
         KeyForgetFailed::class => ['forget_failed', ForgettingKey::class],
     ];
 
-    public function __construct($requestStartTime, $collectValues)
+    public function __construct(float $requestStartTime, bool $collectValues)
     {
         parent::__construct($requestStartTime);
 
         $this->collectValues = $collectValues;
     }
 
-    public function onCacheEvent($event)
+    public function onCacheEvent(mixed $event): void
     {
         $class = get_class($event);
         $params = get_object_vars($event);
@@ -80,20 +80,20 @@ class CacheCollector extends TimeDataCollector
         $this->addMeasure($label . "\t" . ($params['key'] ?? ''), $startTime, $time, $params);
     }
 
-    public function onStartCacheEvent($event)
+    public function onStartCacheEvent(mixed $event): void
     {
         $startHashKey = $this->getEventHash(get_class($event), get_object_vars($event));
         $this->eventStarts[$startHashKey] = microtime(true);
     }
 
-    private function getEventHash(string $class, array $params): string
+    protected function getEventHash(string $class, array $params): string
     {
         unset($params['value']);
 
         return $class . ':' . substr(hash('sha256', json_encode($params)), 0, 12);
     }
 
-    public function subscribe(Dispatcher $dispatcher)
+    public function subscribe(Dispatcher $dispatcher): void
     {
         foreach (array_keys($this->classMap) as $eventClass) {
             $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
@@ -109,7 +109,7 @@ class CacheCollector extends TimeDataCollector
         }
     }
 
-    public function collect()
+    public function collect(): array
     {
         $data = parent::collect();
         $data['nb_measures'] = $data['count'] = count($data['measures']);
@@ -117,16 +117,16 @@ class CacheCollector extends TimeDataCollector
         return $data;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'cache';
     }
 
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
           'cache' => [
-            'icon' => 'clipboard',
+            'icon' => 'clipboard-text',
             'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
             'map' => 'cache',
             'default' => '{}',

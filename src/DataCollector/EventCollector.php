@@ -22,15 +22,16 @@ class EventCollector extends TimeDataCollector
     /** @var bool */
     protected $collectValues;
 
-    public function __construct($requestStartTime = null, $collectValues = false, $excludedEvents = [])
+    public function __construct(?float $requestStartTime = null, bool $collectValues = false, array $excludedEvents = [])
     {
         parent::__construct($requestStartTime);
         $this->collectValues = $collectValues;
         $this->excludedEvents = $excludedEvents;
         $this->setDataFormatter(new SimpleFormatter());
+
     }
 
-    public function onWildcardEvent($name = null, $data = [])
+    public function onWildcardEvent(?string $name = null, array $data = []): void
     {
         $currentTime = microtime(true);
         $eventClass = explode(':', $name)[0];
@@ -86,13 +87,13 @@ class EventCollector extends TimeDataCollector
         $this->addMeasure($name, $currentTime, $currentTime, $params, null, $eventClass);
     }
 
-    public function subscribe(Dispatcher $events)
+    public function subscribe(Dispatcher $events): void
     {
         $this->events = $events;
         $events->listen('*', [$this, 'onWildcardEvent']);
     }
 
-    protected function prepareParams($params)
+    protected function prepareParams(array $params): array
     {
         $data = [];
         foreach ($params as $key => $value) {
@@ -105,7 +106,7 @@ class EventCollector extends TimeDataCollector
         return $data;
     }
 
-    public function collect()
+    public function collect(): array
     {
         $data = parent::collect();
         $data['nb_measures'] = $data['count'] = count($data['measures']);
@@ -113,12 +114,12 @@ class EventCollector extends TimeDataCollector
         return $data;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'event';
     }
 
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
           "events" => [
