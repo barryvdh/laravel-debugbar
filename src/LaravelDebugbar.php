@@ -1022,17 +1022,7 @@ class LaravelDebugbar extends DebugBar
             $renderer->setOpenHandlerUrl($openHandlerUrl);
         }
 
-        $head = $renderer->renderHead();
-        $widget = $renderer->render();
-
-        // Try to put the js/css directly before the </head>
-        $pos = stripos($content, '</head>');
-        if (false !== $pos) {
-            $content = substr($content, 0, $pos) . $head . substr($content, $pos);
-        } else {
-            // Append the head before the widget
-            $widget = $head . $widget;
-        }
+        $widget = "<!-- Laravel Debugbar Widget -->\n" . $renderer->renderHead() . $renderer->render();
 
         // Try to put the widget at the end, directly before the </body>
         $pos = strripos($content, '</body>');
