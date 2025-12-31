@@ -28,15 +28,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     }
 
     /**
-     * Set the URL Generator
-     *
-     * @deprecated
-     */
-    public function setUrlGenerator(UrlGenerator $url): void
-    {
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function renderHead(): string
