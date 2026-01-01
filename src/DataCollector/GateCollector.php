@@ -9,7 +9,6 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Router;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Illuminate\Support\Str;
 
 /**
@@ -75,7 +74,7 @@ class GateCollector extends MessagesCollector
                 } else {
                     $target = get_class($model);
                 }
-            } else if (is_string($arguments[0])) {
+            } elseif (is_string($arguments[0])) {
                 $target = $arguments[0];
             }
         }

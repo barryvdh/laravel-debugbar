@@ -6,7 +6,6 @@ use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class EventCollector extends TimeDataCollector
 {
@@ -64,7 +63,7 @@ class EventCollector extends TimeDataCollector
                 // Format the listener to readable format
                 $listener = get_class($class) . '@' . $method;
 
-            // Handle closures
+                // Handle closures
             } elseif ($listener instanceof \Closure) {
                 $reflector = new \ReflectionFunction($listener);
 

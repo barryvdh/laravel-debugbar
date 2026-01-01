@@ -4,7 +4,6 @@ namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\DataCollector\CacheCollector;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
-use Barryvdh\Debugbar\DataCollector\FilesCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\LivewireCollector;
@@ -23,7 +22,6 @@ use Barryvdh\Debugbar\Support\RequestIdGenerator;
 use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
-use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
@@ -234,17 +232,17 @@ class LaravelDebugbar extends DebugBar
             $this->startMeasure('application', 'Application', 'time');
 
             if ($events) {
-                 $events->listen(\Illuminate\Routing\Events\Routing::class, function() {
-                     $this->startMeasure('Routing');
-                 });
-                 $events->listen(\Illuminate\Routing\Events\RouteMatched::class, function() {
-                     $this->stopMeasure('Routing');
-                 });
+                $events->listen(\Illuminate\Routing\Events\Routing::class, function () {
+                    $this->startMeasure('Routing');
+                });
+                $events->listen(\Illuminate\Routing\Events\RouteMatched::class, function () {
+                    $this->stopMeasure('Routing');
+                });
 
-                $events->listen(\Illuminate\Routing\Events\PreparingResponse::class, function() {
+                $events->listen(\Illuminate\Routing\Events\PreparingResponse::class, function () {
                     $this->startMeasure('Preparing Response');
                 });
-                $events->listen(\Illuminate\Routing\Events\ResponsePrepared::class, function() {
+                $events->listen(\Illuminate\Routing\Events\ResponsePrepared::class, function () {
                     $this->stopMeasure('Preparing Response');
                 });
             }
@@ -522,7 +520,7 @@ class LaravelDebugbar extends DebugBar
 
                 if ($this->hasCollector('time') && $config->get('debugbar.options.mail.timeline')) {
                     $transport = $app['mailer']->getSymfonyTransport();
-                    $app['mailer']->setSymfonyTransport(new class ($transport, $this) extends AbstractTransport{
+                    $app['mailer']->setSymfonyTransport(new class ($transport, $this) extends AbstractTransport {
                         private $originalTransport;
                         private $laravelDebugbar;
 
@@ -586,7 +584,7 @@ class LaravelDebugbar extends DebugBar
 
                 if ($config->get('debugbar.options.gate.trace', false)) {
                     $this['gate']->collectFileTrace(true);
-                    $this['gate']->addBacktraceExcludePaths($config->get('debugbar.options.gate.exclude_paths',[]));
+                    $this['gate']->addBacktraceExcludePaths($config->get('debugbar.options.gate.exclude_paths', []));
                 }
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add GateCollector', $e);

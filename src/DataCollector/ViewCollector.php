@@ -2,13 +2,7 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
-use DebugBar\DataCollector\AssetProvider;
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TemplateCollector;
-use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ViewCollector extends TemplateCollector

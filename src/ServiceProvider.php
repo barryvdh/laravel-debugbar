@@ -5,12 +5,8 @@ namespace Barryvdh\Debugbar;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Router;
-use Illuminate\Session\CookieSessionHandler;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
 

@@ -122,7 +122,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         $statusCode = $response->getStatusCode();
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START :  $request->server->get('REQUEST_TIME_FLOAT');
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START : $request->server->get('REQUEST_TIME_FLOAT');
         $query = $request->getQueryString();
         $htmlData = [];
 
@@ -226,7 +226,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $result = array_merge($result, $action);
         $uses = $action['uses'] ?? null;
-        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
         if (request()->hasHeader('X-Livewire')) {
             try {
@@ -306,10 +306,10 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             }
 
             $cookie .= '; expires=' . substr(
-                    \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
-                    0,
-                    -5
-                );
+                \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
+                0,
+                -5
+            );
         }
 
         if ($domain) {

@@ -6,7 +6,6 @@ use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Based on Illuminate\Foundation\Console\RoutesCommand for Taylor Otwell
@@ -53,7 +52,7 @@ class RouteCollector extends DataCollector implements Renderable
 
         $result = array_merge($result, $action);
         $uses = $action['uses'] ?? null;
-        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
         if (request()->hasHeader('X-Livewire')) {
             try {

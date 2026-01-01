@@ -5,7 +5,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Barryvdh\Debugbar\Support\Explain;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -141,7 +140,7 @@ class QueryCollector extends PDOCollector
         try {
             $pdo = $query->connection->getPdo();
 
-            if(! ($pdo instanceof \PDO)) {
+            if (! ($pdo instanceof \PDO)) {
                 $pdo = null;
             }
         } catch (\Throwable $e) {
@@ -512,7 +511,7 @@ class QueryCollector extends PDOCollector
                 'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.soft/hard_limit)',
                 'type' => 'info',
             ];
-            $this->infoStatements+= 2;
+            $this->infoStatements += 2;
         } elseif ($this->hardLimit && $this->queryCount > $this->hardLimit) {
             array_unshift($statements, [
                 'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown.. Limits can be raised in the config (debugbar.options.db.hard_limit)',
@@ -522,7 +521,7 @@ class QueryCollector extends PDOCollector
                 'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.hard_limit)',
                 'type' => 'info',
             ];
-            $this->infoStatements+= 2;
+            $this->infoStatements += 2;
         } elseif ($this->softLimit && $this->queryCount > $this->softLimit) {
             array_unshift($statements, [
                 'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limits can be raised in the config (debugbar.options.db.soft_limit)',

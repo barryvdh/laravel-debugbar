@@ -9,7 +9,6 @@ use Illuminate\Database\Connection;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
-
     /**
      * Define environment setup.
      *

@@ -3,7 +3,6 @@
 namespace Barryvdh\Debugbar\Controllers;
 
 use Barryvdh\Debugbar\Support\Clockwork\Converter;
-use DebugBar\DebugBarException;
 use DebugBar\OpenHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
