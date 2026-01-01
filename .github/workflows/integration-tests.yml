@@ -7,8 +7,6 @@ on:
     pull_request:
         branches:
             - "*"
-    schedule:
-        - cron: '0 0 * * *'
 
 jobs:
     php-laravel-integration-tests:

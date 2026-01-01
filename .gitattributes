@@ -7,3 +7,4 @@
 .gitignore export-ignore
 changelog.md export-ignore
 phpunit.xml.dist export-ignore
+/phpstan.neon.dist  export-ignore

@@ -1,0 +1,45 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+        paths:
+            - '**.php'
+    pull_request:
+        branches:
+            - "*"
+        paths:
+            - '**.php'
+
+permissions:
+    contents: write
+
+jobs:
+    cs-fix:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 15
+        env:
+            COMPOSER_NO_INTERACTION: 1
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.4
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install dependencies
+              run: composer update --prefer-dist --no-progress
+
+            - name: Fix Code Style
+              run: vendor/bin/pint
+
+            - name: Commit changes
+              uses: stefanzweifel/git-auto-commit-action@v7
+              with:
+                  commit_message: Fix CS
