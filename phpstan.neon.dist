@@ -11,4 +11,3 @@ parameters:
         - 'src/Controllers/TelescopeController.php'
         - 'src/DataCollector/LivewireCollector.php'
         - 'src/DataCollector/PennantCollector.php'
-        - 'src/LumenServiceProvider.php'
