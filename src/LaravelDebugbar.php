@@ -68,28 +68,24 @@ class LaravelDebugbar extends DebugBar
     /**
      * The Laravel application instance.
      *
-     * @var \Illuminate\Foundation\Application
      */
     protected \Illuminate\Foundation\Application $app;
 
     /**
      * Normalized Laravel Version
      *
-     * @var string
      */
     protected string $version;
 
     /**
      * True when booted.
      *
-     * @var bool
      */
     protected ?bool $booted = false;
 
     /**
      * True when enabled, false disabled on null for still unknown
      *
-     * @var bool
      */
     protected ?bool $enabled = null;
 
