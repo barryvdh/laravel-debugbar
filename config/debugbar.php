@@ -43,12 +43,10 @@ return [
     'storage' => [
         'enabled'    => env('DEBUGBAR_STORAGE_ENABLED', true),
         'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
-        'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, socket, custom
+        'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, custom
         'path'       => env('DEBUGBAR_STORAGE_PATH', storage_path('debugbar')), // For file driver
         'connection' => env('DEBUGBAR_STORAGE_CONNECTION'), // Leave null for default connection (Redis/PDO)
         'provider'   => env('DEBUGBAR_STORAGE_PROVIDER', ''), // Instance of StorageInterface for custom driver
-        'hostname'   => env('DEBUGBAR_STORAGE_HOSTNAME', '127.0.0.1'), // Hostname to use with the "socket" driver
-        'port'       => env('DEBUGBAR_STORAGE_PORT', 2304), // Port to use with the "socket" driver
     ],
 
     /*
