@@ -147,7 +147,6 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        /** @var Application $app */
         $app = $this->app;
 
         /** @var \Illuminate\Config\Repository $config */
@@ -742,8 +741,7 @@ class LaravelDebugbar extends DebugBar
      * Modify the response and inject the debugbar (or data in headers)
      */
     public function modifyResponse(Request $request, Response $response): Response
-    {
-        /** @var Application $app */
+    {   
         $app = $this->app;
         if (!$this->isEnabled() || !$this->booted || $this->isDebugbarRequest() || $this->responseIsModified) {
             return $response;
