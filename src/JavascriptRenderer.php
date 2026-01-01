@@ -21,7 +21,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $this->additionalAssets[] = [
             'base_path' => $resourceDir,
             'css' => ['laravel-debugbar.css', 'laravel-icons.css'],
-            'js' => ['cache/widget.js', 'queries/widget.js'],
         ];
 
         $this->setTheme(config('debugbar.theme', 'auto'));
