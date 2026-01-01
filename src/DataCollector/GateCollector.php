@@ -40,7 +40,7 @@ class GateCollector extends MessagesCollector
         $pos = strpos((string) $messageHtml, 'array:5');
         if ($pos !== false) {
 
-            $name = $message['ability'] . ' ' . $message['target'] ?? '';
+            $name = $message['ability'] . ' ' . ($message['target'] ?? '');
 
             $messageHtml = substr_replace($messageHtml, $name, $pos, 7);
         }

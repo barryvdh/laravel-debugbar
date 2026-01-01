@@ -49,7 +49,7 @@ class RouteCollector extends DataCollector implements Renderable
         $action = $route->getAction();
 
         $result = [
-            'uri' => $uri ?: '-',
+            'uri' => $uri,
         ];
 
         $result = array_merge($result, $action);

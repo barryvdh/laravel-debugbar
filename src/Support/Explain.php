@@ -87,6 +87,7 @@ class Explain
         return match ($connection->getDriverName()) {
             'mysql' => $this->generateVisualExplainMysql($connection, $sql, $bindings),
             'pgsql' => $this->generateVisualExplainPgsql($connection, $sql, $bindings),
+            default => throw new Exception("Visual explain not available for driver '{$connection->getDriverName()}'."),
         };
     }
 

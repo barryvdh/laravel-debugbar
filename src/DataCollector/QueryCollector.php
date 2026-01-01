@@ -22,7 +22,7 @@ class QueryCollector extends PDOCollector
     protected ?int $softLimit = null;
     protected ?int $hardLimit = null;
     protected ?int $lastMemoryUsage = null;
-    protected bool $findSource = false;
+    protected bool|int $findSource = false;
     protected array $middleware = [];
     protected bool $explainQuery = false;
     protected array $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
@@ -344,7 +344,7 @@ class QueryCollector extends PDOCollector
         $filename = pathinfo($file, PATHINFO_FILENAME);
 
         foreach ($this->middleware as $alias => $class) {
-            if (!is_null($class) && !is_null($filename) && str_contains($class, $filename)) {
+            if (!is_null($class) && str_contains($class, $filename)) {
                 return $alias;
             }
         }
