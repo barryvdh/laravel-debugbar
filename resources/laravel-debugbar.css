@@ -481,15 +481,6 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     display: inline-flex;
 }
 
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value:before {
-    content: "";
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    margin-right: 8px;
-    float: left;
-}
-
 table.phpdebugbar-widgets-tablevar td {
     border: 0;
 }
