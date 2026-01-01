@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Controllers;
 
 use Barryvdh\Debugbar\Support\Clockwork\Converter;
@@ -12,7 +14,6 @@ class OpenHandlerController extends BaseController
     /**
      * Check if the storage is open for inspecting.
      *
-     * @param Request $request
      * @return bool
      */
     protected function isStorageOpen(Request $request)
@@ -69,8 +70,6 @@ class OpenHandlerController extends BaseController
     /**
      * Return Clockwork output
      *
-     * @param $id
-     * @return mixed
      * @throws \DebugBar\DebugBarException
      */
     public function clockwork(Request $request, $id)

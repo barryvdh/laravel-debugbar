@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -15,7 +17,7 @@ class TestCase extends Orchestra
     /**
      * Get package providers.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return array
      */
@@ -27,7 +29,7 @@ class TestCase extends Orchestra
     /**
      * Get package aliases.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return array
      */
@@ -39,7 +41,7 @@ class TestCase extends Orchestra
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return void
      */
@@ -54,9 +56,6 @@ class TestCase extends Orchestra
         $this->addViewPaths();
     }
 
-    /**
-     * @param Router $router
-     */
     protected function addWebRoutes(Router $router)
     {
         $router->get('web/plain', function () {
@@ -79,16 +78,13 @@ class TestCase extends Orchestra
             return '{"foo":"bar"}';
         });
 
-        $router->get('web/show', [ MockController::class, 'show' ]);
+        $router->get('web/show', [MockController::class, 'show']);
 
         $router->get('web/view', MockViewComponent::class);
 
         $router->post('web/mw')->middleware(MockMiddleware::class);
     }
 
-    /**
-     * @param Router $router
-     */
     protected function addApiRoutes(Router $router)
     {
         $router->get('api/ping', [

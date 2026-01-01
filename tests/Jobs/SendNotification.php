@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;

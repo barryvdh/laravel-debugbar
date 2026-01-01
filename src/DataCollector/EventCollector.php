@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
@@ -53,7 +55,7 @@ class EventCollector extends TimeDataCollector
         foreach ($this->events->getListeners($name) as $i => $listener) {
             // Check if it's an object + method name
             if (is_array($listener) && count($listener) > 1 && is_object($listener[0])) {
-                list($class, $method) = $listener;
+                [$class, $method] = $listener;
 
                 // Skip this class itself
                 if ($class instanceof static) {

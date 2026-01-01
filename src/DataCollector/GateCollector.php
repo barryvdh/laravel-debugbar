@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
@@ -20,9 +22,6 @@ class GateCollector extends MessagesCollector
 
     protected Router $router;
 
-    /**
-     * @param Gate $gate
-     */
     public function __construct(Gate $gate, Router $router)
     {
         parent::__construct('gate');

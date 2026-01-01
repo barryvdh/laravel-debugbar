@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 if (!function_exists('debugbar')) {
     /**
      * Get the Debugbar instance
      *
-     * @return \Barryvdh\Debugbar\LaravelDebugbar
      */
     function debugbar(): \Barryvdh\Debugbar\LaravelDebugbar
     {
@@ -30,7 +31,7 @@ if (!function_exists('start_measure')) {
     /**
      * Starts a measure
      *
-     * @param string $name Internal name, used to stop the measure
+     * @param string $name  Internal name, used to stop the measure
      * @param string $label Public name
      */
     function start_measure($name, $label = null): void
@@ -56,8 +57,8 @@ if (!function_exists('add_measure')) {
      * Adds a measure
      *
      * @param string $label
-     * @param float $start
-     * @param float $end
+     * @param float  $start
+     * @param float  $end
      */
     function add_measure($label, $start, $end): void
     {

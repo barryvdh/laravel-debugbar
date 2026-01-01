@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
@@ -18,7 +20,7 @@ class SessionCollector extends DataCollector implements DataCollectorInterface, 
      * Create a new SessionCollector
      *
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface|\Illuminate\Contracts\Session\Session $session
-     * @param array $hiddens
+     * @param array                                                                                            $hiddens
      */
     public function __construct($session, $hiddens = [])
     {

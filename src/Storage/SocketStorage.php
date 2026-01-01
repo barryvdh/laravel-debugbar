@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Storage;
 
 use DebugBar\Storage\StorageInterface;
@@ -12,7 +14,7 @@ class SocketStorage implements StorageInterface
 
     /**
      * @param string $hostname The hostname to use for the socket
-     * @param int $port The port to use for the socket
+     * @param int    $port     The port to use for the socket
      */
     public function __construct(string $hostname, int $port)
     {

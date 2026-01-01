@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Support\Clockwork;
 
 use DebugBar\DataCollector\DataCollector;
@@ -26,10 +28,10 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
     /**
      * Create a new SymfonyRequestCollector
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Request $response
+     * @param \Symfony\Component\HttpFoundation\Request                  $request
+     * @param \Symfony\Component\HttpFoundation\Request                  $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param array $hiddens
+     * @param array                                                      $hiddens
      */
     public function __construct($request, $response, $session = null, $hiddens = [])
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use Laravel\Lumen\Application;
@@ -59,7 +61,7 @@ class LumenServiceProvider extends ServiceProvider
     /**
      * Register the Debugbar Middleware
      *
-     * @param  string $middleware
+     * @param string $middleware
      */
     protected function registerMiddleware($middleware)
     {

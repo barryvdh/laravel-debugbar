@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Middleware;
 
 use Closure;
@@ -18,7 +20,6 @@ class DebugbarEnabled
     /**
      * Create a new middleware instance.
      *
-     * @param  LaravelDebugbar $debugbar
      */
     public function __construct(LaravelDebugbar $debugbar)
     {
@@ -28,9 +29,7 @@ class DebugbarEnabled
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
-     * @return mixed
+     * @param Request $request
      */
     public function handle($request, Closure $next)
     {

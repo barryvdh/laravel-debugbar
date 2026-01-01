@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\DataCollector\CacheCollector;
@@ -133,7 +135,6 @@ class LaravelDebugbar extends DebugBar
      *
      * If no http driver where defined, a PhpHttpDriver is automatically created
      *
-     * @return HttpDriverInterface
      */
     public function getHttpDriver(): HttpDriverInterface
     {
@@ -172,7 +173,7 @@ class LaravelDebugbar extends DebugBar
         $config = $app['config'];
 
         /** @var \Illuminate\Events\Dispatcher|null $events */
-        $events = isset($app['events']) ? $app['events'] : null;
+        $events = $app['events'] ?? null;
 
         $this->editorTemplate = $config->get('debugbar.editor') ?: null;
         $this->remotePathReplacements = $this->getRemoteServerReplacements();
@@ -661,7 +662,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Starts a measure
      *
-     * @param string $name Internal name, used to stop the measure
+     * @param string      $name  Internal name, used to stop the measure
      * @param string|null $label Public name
      */
     public function startMeasure(string $name, ?string $label = null, ?string $collector = null, ?string $group = null): void
@@ -713,8 +714,6 @@ class LaravelDebugbar extends DebugBar
     /**
      * Register collector exceptions
      *
-     * @param string $message
-     * @param Exception $exception
      */
     protected function addCollectorException(string $message, Exception $exception)
     {
@@ -730,9 +729,6 @@ class LaravelDebugbar extends DebugBar
     /**
      * Returns a JavascriptRenderer for this instance
      *
-     * @param string|null $baseUrl
-     * @param string|null $basePath
-     * @return JavascriptRenderer
      */
     public function getJavascriptRenderer(?string $baseUrl = null, ?string $basePath = null): JavascriptRenderer
     {
@@ -927,7 +923,6 @@ class LaravelDebugbar extends DebugBar
     /**
      * Collects the data from the collectors
      *
-     * @return array
      */
     public function collect(): array
     {
@@ -1085,7 +1080,7 @@ class LaravelDebugbar extends DebugBar
                 'utime' => microtime(true),
                 'method' => 'CLI',
                 'uri' => isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : null,
-                'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null,
+                'ip' => $_SERVER['SSH_CLIENT'] ?? null,
             ],
         ];
 

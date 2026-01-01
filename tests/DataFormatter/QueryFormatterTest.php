@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataFormatter;
 
 use DebugBar\DataFormatter\QueryFormatter;

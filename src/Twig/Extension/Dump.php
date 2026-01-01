@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\DumpTwigExtension;

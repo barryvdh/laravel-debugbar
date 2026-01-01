@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Closure;
@@ -70,7 +72,7 @@ class RouteCollector extends DataCollector implements Renderable
         }
 
         if (str_contains($controller, '@')) {
-            list($controller, $method) = explode('@', $controller);
+            [$controller, $method] = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }

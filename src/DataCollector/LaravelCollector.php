@@ -1,18 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 
 class LaravelCollector extends DataCollector implements Renderable
 {
-    /**
-     * @param Application $app
-     */
     public function __construct(protected ApplicationContract $laravel) {}
 
     /**
@@ -33,7 +31,6 @@ class LaravelCollector extends DataCollector implements Renderable
             ],
         ];
     }
-
 
     /**
      * {@inheritDoc}

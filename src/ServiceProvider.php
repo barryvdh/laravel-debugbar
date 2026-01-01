@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
@@ -90,7 +92,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Register the Debugbar Middleware
      *
-     * @param  string $middleware
+     * @param string $middleware
      */
     protected function registerMiddleware($middleware)
     {

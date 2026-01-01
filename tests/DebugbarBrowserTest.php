@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests;
 
 use Illuminate\Routing\Router;
@@ -12,7 +14,7 @@ class DebugbarBrowserTest extends BrowserTestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return void
      */
@@ -39,9 +41,6 @@ class DebugbarBrowserTest extends BrowserTestCase
         \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
 
-    /**
-     * @param Router $router
-     */
     protected function addWebRoutes(Router $router)
     {
         $router->get('web/redirect', [
@@ -106,9 +105,6 @@ class DebugbarBrowserTest extends BrowserTestCase
         ]);
     }
 
-    /**
-     * @param Router $router
-     */
     protected function addApiRoutes(Router $router)
     {
         $router->get('api/ping', [

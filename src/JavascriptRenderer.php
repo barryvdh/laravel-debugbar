@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use DebugBar\DebugBar;
@@ -48,7 +50,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             $inlineHtml = preg_replace("/<(script|style)>/", "<$1{$nonce}>", $inlineHtml);
         }
         $html .= $inlineHtml;
-
 
         return $html;
     }

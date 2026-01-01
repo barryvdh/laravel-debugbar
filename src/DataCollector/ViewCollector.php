@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TemplateCollector;
@@ -23,7 +25,7 @@ class ViewCollector extends TemplateCollector
         $path = $view->getPath();
 
         if (class_exists('\Inertia\Inertia')) {
-            list($name, $type, $data, $path) = $this->getInertiaView($name, $data, $path);
+            [$name, $type, $data, $path] = $this->getInertiaView($name, $data, $path);
         }
 
         if (is_object($path)) {
@@ -81,7 +83,7 @@ class ViewCollector extends TemplateCollector
 
     public function addInertiaAjaxView(array $data): void
     {
-        list($name, $type, $data, $path) = $this->getInertiaView('', $data, '');
+        [$name, $type, $data, $path] = $this->getInertiaView('', $data, '');
 
         if (! $name) {
             return;

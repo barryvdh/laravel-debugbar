@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
@@ -35,11 +37,11 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * Create a new SymfonyRequestCollector
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param \Symfony\Component\HttpFoundation\Request                  $request
+     * @param \Symfony\Component\HttpFoundation\Response                 $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param string|null $currentRequestId
-     * @param array $hiddens
+     * @param string|null                                                $currentRequestId
+     * @param array                                                      $hiddens
      */
     public function __construct($request, $response, $session = null, $currentRequestId = null, $hiddens = [])
     {
@@ -127,7 +129,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         $htmlData = [];
 
         $data = [
-            'status' => $statusCode . ' ' . (isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : ''),
+            'status' => $statusCode . ' ' . (Response::$statusTexts[$statusCode] ?? ''),
             'duration' => $startTime ? $this->getDataFormatter()->formatDuration(microtime(true) - $startTime) : null,
             'peak_memory' => $this->getDataFormatter()->formatBytes(memory_get_peak_usage(true), 1),
         ];
@@ -244,7 +246,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         if (str_contains($controller, '@')) {
-            list($controller, $method) = explode('@', $controller);
+            [$controller, $method] = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }
