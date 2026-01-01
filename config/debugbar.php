@@ -190,7 +190,7 @@ return [
         'symfony_request' => env('DEBUGBAR_COLLECTORS_SYMFONY_REQUEST', true),  // Only one can be enabled..
         'mail'            => env('DEBUGBAR_COLLECTORS_MAIL', true),             // Catch mail messages
         'laravel'         => env('DEBUGBAR_COLLECTORS_LARAVEL', true),          // Laravel version and environment
-        'events'          => env('DEBUGBAR_COLLECTORS_EVENTS', false),          // All events fired
+        'events'          => env('DEBUGBAR_COLLECTORS_EVENTS', true),          // All events fired
         'default_request' => env('DEBUGBAR_COLLECTORS_DEFAULT_REQUEST', false), // Regular or special Symfony request logger
         'logs'            => env('DEBUGBAR_COLLECTORS_LOGS', false),            // Add the latest log messages
         'config'          => env('DEBUGBAR_COLLECTORS_CONFIG', false),          // Display config settings

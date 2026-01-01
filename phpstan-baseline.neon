@@ -1,28 +1,10 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Instantiated class Laravel\\Telescope\\Storage\\EntryQueryOptions not found\.$#'
+			message: '#^Call to method getClass\(\) on an unknown class Livewire\\Mechanisms\\ComponentRegistry\.$#'
 			identifier: class.notFound
 			count: 1
-			path: src/Controllers/TelescopeController.php
-
-		-
-			message: '#^Parameter \$storage of method Barryvdh\\Debugbar\\Controllers\\TelescopeController\:\:show\(\) has invalid type Laravel\\Telescope\\Contracts\\EntriesRepository\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Controllers/TelescopeController.php
-
-		-
-			message: '#^Call to static method listen\(\) on an unknown class Livewire\\Livewire\.$#'
-			identifier: class.notFound
-			count: 2
-			path: src/DataCollector/LivewireCollector.php
-
-		-
-			message: '#^Parameter \$component of anonymous function has invalid type Livewire\\Component\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/DataCollector/LivewireCollector.php
+			path: src/DataCollector/RequestCollector.php
 
 		-
 			message: '#^Call to static method make\(\) on an unknown class Laravel\\Telescope\\IncomingEntry\.$#'
@@ -37,7 +19,19 @@ parameters:
 			path: src/DataCollector/RequestCollector.php
 
 		-
+			message: '#^Call to method getClass\(\) on an unknown class Livewire\\Mechanisms\\ComponentRegistry\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/DataCollector/RouteCollector.php
+
+		-
 			message: '#^Class Livewire\\Mechanisms\\ComponentRegistry not found\.$#'
 			identifier: class.notFound
 			count: 1
 			path: src/DataCollector/RouteCollector.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Mime\\RawMessage\:\:getSubject\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/LaravelDebugbar.php

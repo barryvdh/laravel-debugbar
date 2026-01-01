@@ -111,12 +111,11 @@ class LaravelDebugbar extends DebugBar
     protected array $remoteServerReplacements = [];
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
-    /**
-     * @param Application $app
-     */
-    public function __construct($app = null)
+
+    public function __construct(?\Illuminate\Foundation\Application $app = null)
     {
         if (!$app) {
+            /** @var \Illuminate\Foundation\Application $app */
             $app = app();   //Fallback when $app is not given
         }
         $this->app = $app;
@@ -290,8 +289,9 @@ class LaravelDebugbar extends DebugBar
                 $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
                 $collectData = $config->get('debugbar.options.events.data', false);
                 $excludedEvents = $config->get('debugbar.options.events.excluded', []);
-                $this->addCollector(new EventCollector($startTime, $collectData, $excludedEvents));
-                $events->subscribe($this['event']);
+                $eventCollector = new EventCollector($startTime, $collectData, $excludedEvents);
+                $this->addCollector($eventCollector);
+                $eventCollector->subscribe($events);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add EventCollector', $e);
             }
@@ -747,7 +747,7 @@ class LaravelDebugbar extends DebugBar
      * Returns a JavascriptRenderer for this instance
      *
      */
-    public function getJavascriptRenderer(?string $baseUrl = null, ?string $basePath = null): JavascriptRenderer
+    public function getJavascriptRenderer(?string $baseUrl = null, ?string $basePath = null): \DebugBar\JavascriptRenderer|JavascriptRenderer
     {
         if ($this->jsRenderer === null) {
             $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);

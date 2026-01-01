@@ -6,12 +6,11 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\SimpleFormatter;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
 
 class EventCollector extends TimeDataCollector
 {
-    /** @var \Illuminate\Events\Dispatcher */
     protected ?Dispatcher $events;
 
     protected array $excludedEvents;
