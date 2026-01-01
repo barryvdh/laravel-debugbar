@@ -96,7 +96,6 @@ class LaravelDebugbar extends DebugBar
     protected $prevErrorHandler = null;
 
     protected ?string $editorTemplate = null;
-    protected array $remoteServerReplacements = [];
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
@@ -741,7 +740,7 @@ class LaravelDebugbar extends DebugBar
      * Modify the response and inject the debugbar (or data in headers)
      */
     public function modifyResponse(Request $request, Response $response): Response
-    {   
+    {
         $app = $this->app;
         if (!$this->isEnabled() || !$this->booted || $this->isDebugbarRequest() || $this->responseIsModified) {
             return $response;

@@ -8,7 +8,6 @@ use DebugBar\HttpDriverInterface;
 use Illuminate\Contracts\Session\Session as SessionContract;
 use Illuminate\Session\SessionManager;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * HTTP driver for Symfony Request/Session
