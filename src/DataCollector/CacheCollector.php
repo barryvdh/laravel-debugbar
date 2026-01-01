@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\DataCollector;
 
+use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\HasDataFormatter;
 use Illuminate\Cache\Events\{
@@ -22,7 +23,7 @@ use Illuminate\Cache\Events\{
 };
 use Illuminate\Events\Dispatcher;
 
-class CacheCollector extends TimeDataCollector
+class CacheCollector extends TimeDataCollector implements AssetProvider
 {
     use HasDataFormatter;
 
@@ -137,6 +138,14 @@ class CacheCollector extends TimeDataCollector
                 'map' => 'cache.nb_measures',
                 'default' => 'null',
             ],
+        ];
+    }
+
+    public function getAssets(): array
+    {
+        return [
+            'base_path' => __DIR__ . '/../../resources',
+            'js' => 'cache/widget.js',
         ];
     }
 }

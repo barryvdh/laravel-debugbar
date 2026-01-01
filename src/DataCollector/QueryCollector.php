@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Barryvdh\Debugbar\Support\Explain;
+use DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
+use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\QueryFormatter;
 use Illuminate\Support\Str;
@@ -13,7 +16,7 @@ use Illuminate\Support\Str;
 /**
  * Collects data about SQL statements executed with PDO
  */
-class QueryCollector extends PDOCollector
+class QueryCollector  extends DataCollector implements Renderable, AssetProvider
 {
     protected array $queries = [];
     protected int $queryCount = 0;
@@ -40,11 +43,14 @@ class QueryCollector extends PDOCollector
     ];
 
     protected ?QueryFormatter $queryFormatter = null;
+    protected ?TimeDataCollector $timeCollector;
+    protected bool $renderSqlWithParams = false;
+    protected bool $durationBackground = false;
+    protected ?float $slowThreshold = null;
 
     public function __construct(?TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
-        parent::__construct(null, $timeCollector);
     }
 
     public function getQueryFormatter(): QueryFormatter
@@ -68,7 +74,7 @@ class QueryCollector extends PDOCollector
     /**
      * Renders the SQL of traced statements with params embedded
      */
-    public function setRenderSqlWithParams(bool $enabled = true, string $quotationChar = "'"): void
+    public function setRenderSqlWithParams(bool $enabled = true): void
     {
         $this->renderSqlWithParams = $enabled;
     }
@@ -114,9 +120,24 @@ class QueryCollector extends PDOCollector
     /**
      * Enable/disable the shaded duration background on queries
      */
-    public function setDurationBackground(bool $enabled = true): void
+    public function setDurationBackground(bool $enabled): void
     {
         $this->durationBackground = $enabled;
+    }
+
+    /**
+     * Highlights queries that exceed the threshold
+     *
+     * @param int|float $threshold miliseconds value
+     */
+    public function setSlowThreshold(int|float $threshold): void
+    {
+        $this->slowThreshold = $threshold / 1000;
+    }
+
+    public function isSqlRenderedWithParams(): bool
+    {
+        return $this->renderSqlWithParams;
     }
 
     /**
@@ -637,5 +658,13 @@ class QueryCollector extends PDOCollector
         }
 
         return $this->getQueryFormatter()->formatSql($sql);
+    }
+
+    public function getAssets(): array
+    {
+        return [
+            'base_path' => __DIR__ . '/../../resources',
+            'js' => 'queries/widget.js',
+        ];
     }
 }
