@@ -72,12 +72,12 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "request.data",
                 "order" => -100,
-                "default" => "{}"
+                "default" => "{}",
             ],
             'request:badge' => [
                 "map" => "request.badge",
-                "default" => "null"
-            ]
+                "default" => "null",
+            ],
         ];
 
         if (Config::get('debugbar.options.request.label', true)) {
@@ -85,11 +85,11 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "icon" => "share-3",
                 "map" => "request.data.uri",
                 "link" => "request",
-                "default" => ""
+                "default" => "",
             ];
             $widgets['currentrequest:tooltip'] = [
                 "map" => "request.tooltip",
-                "default" => "{}"
+                "default" => "{}",
             ];
         }
 
@@ -114,7 +114,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 $cookie->getPath(),
                 $cookie->getDomain(),
                 $cookie->isSecure(),
-                $cookie->isHttpOnly()
+                $cookie->isHttpOnly(),
             );
         }
         if (count($cookies) > 0) {
@@ -150,7 +150,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $data += [
             'response' => $response->headers->get('Content-Type') ? $response->headers->get(
-                'Content-Type'
+                'Content-Type',
             ) : 'text/html',
             'request_format' => $request->getRequestFormat(),
             'request_query' => $request->query->all(),
@@ -306,7 +306,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             $cookie .= '; expires=' . substr(
                 \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
                 0,
-                -5
+                -5,
             );
         }
 

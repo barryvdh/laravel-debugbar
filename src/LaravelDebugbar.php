@@ -225,7 +225,7 @@ class LaravelDebugbar extends DebugBar
                 $app->booted(
                     function () use ($startTime) {
                         $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
-                    }
+                    },
                 );
             }
 
@@ -264,7 +264,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->addCollector(new ExceptionsCollector());
                 $this['exceptions']->setChainExceptions(
-                    $config->get('debugbar.options.exceptions.chain', true)
+                    $config->get('debugbar.options.exceptions.chain', true),
                 );
             } catch (Exception $e) {
             }
@@ -305,7 +305,7 @@ class LaravelDebugbar extends DebugBar
                     'composing:*',
                     function ($event, $params) {
                         $this['views']->addView($params[0]);
-                    }
+                    },
                 );
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add ViewCollector', $e);
@@ -341,9 +341,9 @@ class LaravelDebugbar extends DebugBar
                             $logger->addMessage(
                                 '[' . date('H:i:s') . '] ' . "LOG.{$log->level}: " . $logMessage,
                                 $log->level,
-                                false
+                                false,
                             );
-                        }
+                        },
                     );
                 } else {
                     $this->addCollector(new MonologCollector($this->getMonologLogger()));
@@ -415,7 +415,7 @@ class LaravelDebugbar extends DebugBar
                         if (!$onlyThreshold || !$threshold || $query->time > $threshold) {
                             $this['queries']->addQuery($query);
                         }
-                    }
+                    },
                 );
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot listen to Queries', $e);
@@ -426,42 +426,42 @@ class LaravelDebugbar extends DebugBar
                     \Illuminate\Database\Events\TransactionBeginning::class,
                     function ($transaction) {
                         $this['queries']->collectTransactionEvent('Begin Transaction', $transaction->connection);
-                    }
+                    },
                 );
 
                 $events->listen(
                     \Illuminate\Database\Events\TransactionCommitted::class,
                     function ($transaction) {
                         $this['queries']->collectTransactionEvent('Commit Transaction', $transaction->connection);
-                    }
+                    },
                 );
 
                 $events->listen(
                     \Illuminate\Database\Events\TransactionRolledBack::class,
                     function ($transaction) {
                         $this['queries']->collectTransactionEvent('Rollback Transaction', $transaction->connection);
-                    }
+                    },
                 );
 
                 $events->listen(
                     'connection.*.beganTransaction',
                     function ($event, $params) {
                         $this['queries']->collectTransactionEvent('Begin Transaction', $params[0]);
-                    }
+                    },
                 );
 
                 $events->listen(
                     'connection.*.committed',
                     function ($event, $params) {
                         $this['queries']->collectTransactionEvent('Commit Transaction', $params[0]);
-                    }
+                    },
                 );
 
                 $events->listen(
                     'connection.*.rollingBack',
                     function ($event, $params) {
                         $this['queries']->collectTransactionEvent('Rollback Transaction', $params[0]);
-                    }
+                    },
                 );
 
                 $events->listen(
@@ -473,7 +473,7 @@ class LaravelDebugbar extends DebugBar
                                 $this['queries']->startMemoryUsage();
                             });
                         }
-                    }
+                    },
                 );
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot listen transactions to Queries', $e);
@@ -536,12 +536,10 @@ class LaravelDebugbar extends DebugBar
                                 function () use ($message, $envelope) {
                                     return $this->originalTransport->send($message, $envelope);
                                 },
-                                'mail'
+                                'mail',
                             );
                         }
-                        protected function doSend(SentMessage $message): void
-                        {
-                        }
+                        protected function doSend(SentMessage $message): void {}
                         public function __toString(): string
                         {
                             return $this->originalTransport->__toString();
@@ -568,10 +566,10 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector(new MultiAuthCollector($app['auth'], $guards));
 
                 $this['auth']->setShowName(
-                    $config->get('debugbar.options.auth.show_name')
+                    $config->get('debugbar.options.auth.show_name'),
                 );
                 $this['auth']->setShowGuardsData(
-                    $config->get('debugbar.options.auth.show_guards', true)
+                    $config->get('debugbar.options.auth.show_guards', true),
                 );
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add AuthCollector', $e);
@@ -724,8 +722,8 @@ class LaravelDebugbar extends DebugBar
             new Exception(
                 $message . ' on Laravel Debugbar: ' . $exception->getMessage(),
                 (int) $exception->getCode(),
-                $exception
-            )
+                $exception,
+            ),
         );
     }
 
@@ -797,7 +795,7 @@ class LaravelDebugbar extends DebugBar
 
         $requestHiddens = array_merge(
             $app['config']->get('debugbar.options.symfony_request.hiddens', []),
-            array_map(fn ($key) => 'session_attributes.' . $key, $sessionHiddens)
+            array_map(fn($key) => 'session_attributes.' . $key, $sessionHiddens),
         );
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
@@ -904,9 +902,9 @@ class LaravelDebugbar extends DebugBar
     {
         // If XmlHttpRequest, Live or HTMX, return true
         if (
-            $request->isXmlHttpRequest() ||
-            $request->headers->has('X-Livewire') ||
-            ($request->headers->has('Hx-Request') && $request->headers->has('Hx-Target'))
+            $request->isXmlHttpRequest()
+            || $request->headers->has('X-Livewire')
+            || ($request->headers->has('Hx-Request') && $request->headers->has('Hx-Target'))
         ) {
             return true;
         }
@@ -943,8 +941,8 @@ class LaravelDebugbar extends DebugBar
                 'utime' => microtime(true),
                 'method' => $request->getMethod(),
                 'uri' => $request->getRequestUri(),
-                'ip' => $request->getClientIp()
-            ]
+                'ip' => $request->getClientIp(),
+            ],
         ];
 
         foreach ($this->collectors as $name => $collector) {
@@ -958,7 +956,7 @@ class LaravelDebugbar extends DebugBar
                 if (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
                     $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
                 }
-            }
+            },
         );
 
         if ($this->storage !== null) {
@@ -1087,8 +1085,8 @@ class LaravelDebugbar extends DebugBar
                 'utime' => microtime(true),
                 'method' => 'CLI',
                 'uri' => isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : null,
-                'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null
-            ]
+                'ip' => isset($_SERVER['SSH_CLIENT']) ? $_SERVER['SSH_CLIENT'] : null,
+            ],
         ];
 
         foreach ($this->collectors as $name => $collector) {
@@ -1102,7 +1100,7 @@ class LaravelDebugbar extends DebugBar
                 if (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
                     $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
                 }
-            }
+            },
         );
 
         if ($this->storage !== null) {
@@ -1214,7 +1212,7 @@ class LaravelDebugbar extends DebugBar
 
             $headers = [];
             foreach ($collector->collect()['measures'] as $m) {
-                $headers[] = sprintf('app;desc="%s";dur=%F', str_replace(array("\n", "\r"), ' ', str_replace('"', "'", $m['label'])), $m['duration'] * 1000);
+                $headers[] = sprintf('app;desc="%s";dur=%F', str_replace(["\n", "\r"], ' ', str_replace('"', "'", $m['label'])), $m['duration'] * 1000);
             }
 
             $response->headers->set('Server-Timing', $headers, false);

@@ -47,7 +47,7 @@ class RouteCollector extends DataCollector implements Renderable
         $action = $route->getAction();
 
         $result = [
-           'uri' => $uri ?: '-',
+            'uri' => $uri ?: '-',
         ];
 
         $result = array_merge($result, $action);
@@ -139,8 +139,8 @@ class RouteCollector extends DataCollector implements Renderable
                 "icon" => "share-3",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "route",
-                "default" => "{}"
-            ]
+                "default" => "{}",
+            ],
         ];
         return $widgets;
     }

@@ -26,7 +26,7 @@ class ModelsCollectorTest extends TestCase
 
         $this->assertEquals(
             ['data' => $data, 'key_map' => [], 'count' => 0, 'is_counter' => true],
-            $collector->collect()
+            $collector->collect(),
         );
 
         User::create([
@@ -50,7 +50,7 @@ class ModelsCollectorTest extends TestCase
                 'key_map' => [
                 ],
             ],
-            $collector->collect()
+            $collector->collect(),
         );
 
         $user = User::first();
@@ -58,7 +58,7 @@ class ModelsCollectorTest extends TestCase
         $data[User::class]['retrieved'] = 1;
         $this->assertEquals(
             ['data' => $data, 'key_map' => [], 'count' => 3, 'is_counter' => true],
-            $collector->collect()
+            $collector->collect(),
         );
 
         $user->update(['name' => 'Jane Doe']);
@@ -71,7 +71,7 @@ class ModelsCollectorTest extends TestCase
                 'is_counter' => true,
                 'key_map' => [],
             ],
-            $collector->collect()
+            $collector->collect(),
         );
 
         Person::all();
@@ -79,7 +79,7 @@ class ModelsCollectorTest extends TestCase
         $data[Person::class] = ['retrieved' => 2];
         $this->assertEquals(
             ['data' => $data, 'key_map' => [], 'count' => 6, 'is_counter' => true],
-            $collector->collect()
+            $collector->collect(),
         );
 
         $user->delete();
@@ -91,9 +91,9 @@ class ModelsCollectorTest extends TestCase
                 'count' => 7,
                 'is_counter' => true,
                 'key_map' => [
-                ]
+                ],
             ],
-            $collector->collect()
+            $collector->collect(),
         );
     }
 }

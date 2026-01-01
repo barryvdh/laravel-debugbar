@@ -47,7 +47,7 @@ class DebugbarViewEngine implements Engine
         if (str_starts_with($shortPath, $basePath)) {
             $shortPath = ltrim(
                 str_replace('\\', '/', substr($shortPath, strlen($basePath))),
-                '/'
+                '/',
             );
         }
 

@@ -47,25 +47,25 @@ class DebugbarBrowserTest extends BrowserTestCase
         $router->get('web/redirect', [
             'uses' => function () {
                 return redirect($this->applicationBaseUrl() . '/web/plain');
-            }
+            },
         ]);
 
         $router->get('web/plain', [
             'uses' => function () {
                 return 'PONG';
-            }
+            },
         ]);
 
         $router->get('web/html', [
             'uses' => function () {
                 return '<html><head></head><body>HTMLPONG</body></html>';
-            }
+            },
         ]);
 
         $router->get('web/ajax', [
             'uses' => function () {
                 return view('ajax');
-            }
+            },
         ]);
 
         $router->get('web/custom-prototype', [
@@ -81,7 +81,7 @@ class DebugbarBrowserTest extends BrowserTestCase
                 );
                 event(new QueryExecuted('SELECT * FROM users WHERE username = ?', ['debuguser'], 0, $connection));
                 return view('custom-prototype');
-            }
+            },
         ]);
 
         $router->get('web/query/{num?}', [
@@ -102,7 +102,7 @@ class DebugbarBrowserTest extends BrowserTestCase
                     event($executedQuery);
                 }
                 return 'PONG';
-            }
+            },
         ]);
     }
 
@@ -114,7 +114,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $router->get('api/ping', [
             'uses' => function () {
                 return response()->json(['status' => 'pong']);
-            }
+            },
         ]);
     }
 

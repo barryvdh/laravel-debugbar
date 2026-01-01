@@ -32,7 +32,7 @@ class LumenServiceProvider extends ServiceProvider
                         $debugBar->addMeasure('Booting', $startTime, microtime(true), [], 'time');
                     }
                 }
-            }
+            },
         );
     }
 

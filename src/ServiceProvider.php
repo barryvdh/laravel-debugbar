@@ -24,7 +24,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->alias(
             DataFormatter::class,
-            DataFormatterInterface::class
+            DataFormatterInterface::class,
         );
 
         $this->app->singleton(LaravelDebugbar::class, function ($app) {
@@ -41,7 +41,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'command.debugbar.clear',
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
-            }
+            },
         );
 
         Collection::macro('debug', function () {

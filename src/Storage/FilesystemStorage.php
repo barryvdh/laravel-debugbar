@@ -69,7 +69,7 @@ class FilesystemStorage implements StorageInterface
     {
         foreach (
             Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
-                $this->dirname
+                $this->dirname,
             ) as $file
         ) {
             $this->files->delete($file->getRealPath());

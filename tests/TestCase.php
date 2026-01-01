@@ -94,7 +94,7 @@ class TestCase extends Orchestra
         $router->get('api/ping', [
             'uses' => function () {
                 return response()->json(['status' => 'pong']);
-            }
+            },
         ]);
     }
 

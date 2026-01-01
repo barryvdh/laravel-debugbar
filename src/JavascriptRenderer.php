@@ -35,7 +35,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         ]));
 
         $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [
-            'v' => $this->getModifiedTime('js')
+            'v' => $this->getModifiedTime('js'),
         ]));
 
         $nonce = $this->getNonceAttribute();

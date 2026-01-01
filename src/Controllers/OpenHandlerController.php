@@ -53,7 +53,7 @@ class OpenHandlerController extends BaseController
                     'method' => 'ERROR',
                     'uri' => '!! To enable public access to previous requests, set debugbar.storage.open to true in your config, or enable DEBUGBAR_OPEN_STORAGE if you did not publish the config. !!',
                     'utime' => microtime(true),
-                ]
+                ],
             ];
         }
 
@@ -61,8 +61,8 @@ class OpenHandlerController extends BaseController
             $data,
             200,
             [
-                'Content-Type' => 'application/json'
-            ]
+                'Content-Type' => 'application/json',
+            ],
         );
     }
 

@@ -105,7 +105,7 @@ class Converter
                     'bindings' => $statement['params'],
                     'duration' => $statement['duration'] * 1000,
                     'time' => $statement['start'] ?? null,
-                    'connection' => $statement['connection']
+                    'connection' => $statement['connection'],
                 ];
             }
 

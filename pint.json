@@ -1,5 +1,5 @@
 {
-    "preset": "psr12",
+    "preset": "per",
     "exclude": [
         "config"
     ]

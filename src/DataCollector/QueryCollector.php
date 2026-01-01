@@ -266,9 +266,9 @@ class QueryCollector extends PDOCollector
         }
 
         if (
-            isset($trace['class']) &&
-            isset($trace['file']) &&
-            !$this->fileIsInExcludedPath($trace['file'])
+            isset($trace['class'])
+            && isset($trace['file'])
+            && !$this->fileIsInExcludedPath($trace['file'])
         ) {
             $frame->file = $trace['file'];
 
@@ -506,7 +506,7 @@ class QueryCollector extends PDOCollector
 
         if ($this->softLimit && $this->hardLimit && ($this->queryCount > $this->softLimit && $this->queryCount > $this->hardLimit)) {
             array_unshift($statements, [
-                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit .  ' are ignored. Limits can be raised in the config (debugbar.options.db.soft/hard_limit).',
+                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit . ' are ignored. Limits can be raised in the config (debugbar.options.db.soft/hard_limit).',
                 'type' => 'info',
             ]);
             $statements[] = [
@@ -544,7 +544,7 @@ class QueryCollector extends PDOCollector
             'accumulated_duration_str' => $this->getDataFormatter()->formatDuration($totalTime),
             'memory_usage' => $totalMemory,
             'memory_usage_str' => $totalMemory ? $this->getDataFormatter()->formatBytes($totalMemory) : null,
-            'statements' => $statements
+            'statements' => $statements,
         ];
         return $data;
     }
@@ -567,12 +567,12 @@ class QueryCollector extends PDOCollector
                 "icon" => "database",
                 "widget" => "PhpDebugBar.Widgets.LaravelQueriesWidget",
                 "map" => "queries",
-                "default" => "[]"
+                "default" => "[]",
             ],
             "queries:badge" => [
                 "map" => "queries.nb_statements",
-                "default" => 0
-            ]
+                "default" => 0,
+            ],
         ];
     }
 

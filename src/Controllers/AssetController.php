@@ -22,7 +22,7 @@ class AssetController extends BaseController
             200,
             [
                 'Content-Type' => 'text/javascript',
-            ]
+            ],
         );
 
         return $this->cacheResponse($response);
@@ -44,7 +44,7 @@ class AssetController extends BaseController
             200,
             [
                 'Content-Type' => 'text/css',
-            ]
+            ],
         );
 
         return $this->cacheResponse($response);

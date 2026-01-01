@@ -17,8 +17,8 @@ class QueryFormatterTest extends TestCase
                 "Another ' string",
                 [
                     'nested',
-                    'array'
-                ]
+                    'array',
+                ],
             ],
         ];
 
@@ -36,7 +36,7 @@ class QueryFormatterTest extends TestCase
 
         $bindings = [
             'some string',
-            $object
+            $object,
         ];
 
         $queryFormatter = new QueryFormatter();

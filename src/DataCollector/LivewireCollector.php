@@ -88,12 +88,12 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
                 "icon" => "brand-livewire",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "livewire.data",
-                "default" => "{}"
+                "default" => "{}",
             ],
             'livewire:badge' => [
                 'map' => 'livewire.count',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ];
     }
 }
