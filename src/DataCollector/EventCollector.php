@@ -2,8 +2,8 @@
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataFormatter\SimpleFormatter;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
 

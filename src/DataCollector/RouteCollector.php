@@ -144,14 +144,4 @@ class RouteCollector extends DataCollector implements Renderable
         ];
         return $widgets;
     }
-
-    /**
-     * Display the route information on the console.
-     */
-    protected function displayRoutes(array $routes): void
-    {
-        $this->table->setHeaders($this->headers)->setRows($routes);
-
-        $this->table->render($this->getOutput());
-    }
 }

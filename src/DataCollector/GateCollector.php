@@ -160,5 +160,7 @@ class GateCollector extends MessagesCollector
                 return $path;
             }
         }
+
+        return null;
     }
 }

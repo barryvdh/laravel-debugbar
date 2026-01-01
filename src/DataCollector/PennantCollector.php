@@ -25,7 +25,7 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritdoc}
      */
-    public function collect(): mixed
+    public function collect(): array
     {
         $store = $this->manager->store(Config::get('pennant.default'));
 

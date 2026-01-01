@@ -1,12 +1,10 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 1
     paths:
         - src
     tmpDir: build/phpstan
-    ignoreErrors:
-        -
-            message: '#Parameter \$storage of method Barryvdh\\Debugbar\\Controllers\\TelescopeController::show\(\) has invalid type Laravel\\Telescope\\Contracts\\EntriesRepository\.#'
-            path: src/Controllers/TelescopeController.php
-        -
-            message: '#Instantiated class Laravel\\Telescope\\Storage\\EntryQueryOptions not found\.#'
-            path: src/Controllers/TelescopeController.php
+    excludePaths:
+        - 'src/Twig'

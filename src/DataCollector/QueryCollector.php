@@ -362,6 +362,8 @@ class QueryCollector extends PDOCollector
                 return [$name, $path];
             }
         }
+
+        return null;
     }
 
     /**

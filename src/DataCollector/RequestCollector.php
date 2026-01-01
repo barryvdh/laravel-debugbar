@@ -299,9 +299,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             } else {
                 $expires = strtotime($expires);
                 if (false === $expires || -1 == $expires) {
-                    throw new \InvalidArgumentException(
-                        sprintf('The "expires" cookie parameter is not valid.', $expires)
-                    );
+                    throw new \InvalidArgumentException('The "expires" cookie parameter is not valid.');
                 }
             }
 
