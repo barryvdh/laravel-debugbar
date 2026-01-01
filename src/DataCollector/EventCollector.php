@@ -11,17 +11,12 @@ use Illuminate\Support\Str;
 
 class EventCollector extends TimeDataCollector
 {
-    /** @var Dispatcher */
-    protected $events;
+    /** @var \Illuminate\Events\Dispatcher */
+    protected ?Dispatcher $events;
 
-    /** @var Dispatcher */
-    protected $excludedEvents;
+    protected array $excludedEvents;
 
-    /** @var integer */
-    protected $previousTime;
-
-    /** @var bool */
-    protected $collectValues;
+    protected bool $collectValues;
 
     public function __construct(?float $requestStartTime = null, bool $collectValues = false, array $excludedEvents = [])
     {
@@ -29,7 +24,6 @@ class EventCollector extends TimeDataCollector
         $this->collectValues = $collectValues;
         $this->excludedEvents = $excludedEvents;
         $this->setDataFormatter(new SimpleFormatter());
-
     }
 
     public function onWildcardEvent(?string $name = null, array $data = []): void

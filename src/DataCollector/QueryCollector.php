@@ -7,6 +7,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Barryvdh\Debugbar\Support\Explain;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DataFormatter\QueryFormatter;
 use Illuminate\Support\Str;
 
 /**
@@ -38,10 +39,20 @@ class QueryCollector extends PDOCollector
         '/vendor/barryvdh/laravel-debugbar',
     ];
 
+    protected ?QueryFormatter $queryFormatter = null;
+
     public function __construct(?TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
         parent::__construct(null, $timeCollector);
+    }
+
+    public function getQueryFormatter(): QueryFormatter
+    {
+        if ($this->queryFormatter === null) {
+            $this->queryFormatter = new QueryFormatter();
+        }
+        return $this->queryFormatter;
     }
 
     /**
@@ -469,7 +480,7 @@ class QueryCollector extends PDOCollector
                 'slow' => $this->slowThreshold && $this->slowThreshold <= $query['time'],
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
-                'filename' => $source ? $this->getDataFormatter()->formatSource($source, true) : null,
+                'filename' => $source ? $this->getQueryFormatter()->formatSource($source, true) : null,
                 'source' => $source,
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
@@ -583,18 +594,18 @@ class QueryCollector extends PDOCollector
         if ($query['type'] === 'query' && $this->renderSqlWithParams && $query['connection']->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists($query['connection']->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
             try {
                 $sql = $query['connection']->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
-                return $this->getDataFormatter()->formatSql($sql);
+                return $this->getQueryFormatter()->formatSql($sql);
             } catch (\Throwable $e) {
                 // Continue using the old substitute
             }
         }
 
         if ($query['type'] === 'query' && $this->renderSqlWithParams) {
-            $bindings = $this->getDataFormatter()->checkBindings($query['bindings']);
+            $bindings = $this->getQueryFormatter()->checkBindings($query['bindings']);
             if (!empty($bindings)) {
                 $pdo = null;
                 try {
-                    $pdo = $query->connection->getPdo();
+                    $pdo = $query['connection']->getPdo();
                 } catch (\Throwable) {
                     // ignore error for non-pdo laravel drivers
                 }
@@ -625,6 +636,6 @@ class QueryCollector extends PDOCollector
             }
         }
 
-        return $this->getDataFormatter()->formatSql($sql);
+        return $this->getQueryFormatter()->formatSql($sql);
     }
 }

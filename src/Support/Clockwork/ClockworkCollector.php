@@ -7,7 +7,10 @@ namespace Barryvdh\Debugbar\Support\Clockwork;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  *
@@ -16,25 +19,19 @@ use Illuminate\Support\Arr;
  */
 class ClockworkCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var \Symfony\Component\HttpFoundation\Request $request */
-    protected $request;
-    /** @var  \Symfony\Component\HttpFoundation\Request $response */
-    protected $response;
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-    protected $session;
-    /** @var array */
-    protected $hiddens;
+    protected Request $request;
+    protected Response $response;
+    protected ?SessionManager $session;
+    protected ?string $currentRequestId = null;
+    protected array $hiddens = [];
 
-    /**
-     * Create a new SymfonyRequestCollector
-     *
-     * @param \Symfony\Component\HttpFoundation\Request                  $request
-     * @param \Symfony\Component\HttpFoundation\Request                  $response
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param array                                                      $hiddens
-     */
-    public function __construct($request, $response, $session = null, $hiddens = [])
-    {
+
+    public function __construct(
+        Request $request,
+        Response $response,
+        ?SessionManager $session = null,
+        array $hiddens = []
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;

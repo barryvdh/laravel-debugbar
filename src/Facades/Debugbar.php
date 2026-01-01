@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\Facades;
 
+use Barryvdh\Debugbar\LaravelDebugbar;
 use DebugBar\DataCollector\DataCollectorInterface;
 
 /**

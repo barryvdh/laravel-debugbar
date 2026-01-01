@@ -7,13 +7,14 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Http\Request;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -23,28 +24,19 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RequestCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var \Symfony\Component\HttpFoundation\Request $request */
-    protected $request;
-    /** @var  \Symfony\Component\HttpFoundation\Response $response */
-    protected $response;
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-    protected $session;
-    /** @var string|null */
-    protected $currentRequestId;
-    /** @var array */
-    protected $hiddens;
+    protected Request $request;
+    protected Response $response;
+    protected ?SessionManager $session;
+    protected ?string $currentRequestId = null;
+    protected array $hiddens = [];
 
-    /**
-     * Create a new SymfonyRequestCollector
-     *
-     * @param \Symfony\Component\HttpFoundation\Request                  $request
-     * @param \Symfony\Component\HttpFoundation\Response                 $response
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param string|null                                                $currentRequestId
-     * @param array                                                      $hiddens
-     */
-    public function __construct($request, $response, $session = null, $currentRequestId = null, $hiddens = [])
-    {
+    public function __construct(
+        Request $request,
+        Response $response,
+        ?SessionManager $session = null,
+        ?string $currentRequestId = null,
+        array $hiddens = []
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
@@ -134,7 +126,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             'peak_memory' => $this->getDataFormatter()->formatBytes(memory_get_peak_usage(true), 1),
         ];
 
-        if ($request instanceof Request) {
+        if ($request instanceof \Illuminate\Http\Request) {
 
             if ($route = $request->route()) {
                 $htmlData += $this->getRouteInformation($route);
@@ -195,13 +187,13 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $tooltip = [
             'status' => $data['status'],
-            'full_url' => Str::limit($request->fullUrl(), 100),
         ];
 
-        if ($this->request instanceof Request) {
+        if ($this->request instanceof \Illuminate\Http\Request) {
             $tooltip += [
-                'action_name' => optional($this->request->route())->getName(),
-                'controller_action' => optional($this->request->route())->getActionName(),
+                'full_url' => Str::limit($this->request->fullUrl(), 100),
+                'action_name' => $this->request->route()?->getName(),
+                'controller_action' => $this->request->route()?->getActionName(),
             ];
         }
 
