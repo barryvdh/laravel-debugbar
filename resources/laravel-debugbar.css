@@ -487,15 +487,6 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
     width: 15px;
     height: 15px;
     margin-right: 8px;
-    background-color: #333;
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-    -webkit-mask-image: var(--debugbar-icon-star);
-    mask-image: var(--debugbar-icon-star);
     float: left;
 }
 
