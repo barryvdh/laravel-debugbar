@@ -98,22 +98,6 @@ Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
     ],
 ```
 
-### Lumen:
-
-For Lumen, register a different Provider in `bootstrap/app.php`:
-
-```php
-if (env('APP_DEBUG')) {
- $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
-}
-```
-
-To change the configuration, copy the file to your config folder and enable it:
-
-```php
-$app->configure('debugbar');
-```
-
 ## Usage
 
 You can now add messages using the Facade (when added), using the PSR-3 levels (debug, info, notice, warning, error, critical, alert, emergency):
