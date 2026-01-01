@@ -413,7 +413,7 @@ class LaravelDebugbar extends DebugBar
 
             try {
                 $events->listen(
-                    function (\Illuminate\Database\Events\QueryExecuted $query) use($queryCollector) {
+                    function (\Illuminate\Database\Events\QueryExecuted $query) use ($queryCollector) {
                         if (!app(static::class)->shouldCollect('db', true)) {
                             return; // Issue 776 : We've turned off collecting after the listener was attached
                         }
@@ -433,7 +433,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $events->listen(
                     \Illuminate\Database\Events\TransactionBeginning::class,
-                    function ($transaction) use($queryCollector) {
+                    function ($transaction) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Begin Transaction', $transaction->connection);
                     },
                 );
@@ -447,38 +447,38 @@ class LaravelDebugbar extends DebugBar
 
                 $events->listen(
                     \Illuminate\Database\Events\TransactionRolledBack::class,
-                    function ($transaction) use($queryCollector) {
+                    function ($transaction) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Rollback Transaction', $transaction->connection);
                     },
                 );
 
                 $events->listen(
                     'connection.*.beganTransaction',
-                    function ($event, $params) use($queryCollector) {
+                    function ($event, $params) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Begin Transaction', $params[0]);
                     },
                 );
 
                 $events->listen(
                     'connection.*.committed',
-                    function ($event, $params) use($queryCollector) {
+                    function ($event, $params) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Commit Transaction', $params[0]);
                     },
                 );
 
                 $events->listen(
                     'connection.*.rollingBack',
-                    function ($event, $params) use($queryCollector) {
+                    function ($event, $params) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Rollback Transaction', $params[0]);
                     },
                 );
 
                 $events->listen(
-                    function (\Illuminate\Database\Events\ConnectionEstablished $event) use($queryCollector) {
+                    function (\Illuminate\Database\Events\ConnectionEstablished $event) use ($queryCollector) {
                         $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
 
                         if (app('config')->get('debugbar.options.db.memory_usage')) {
-                            $event->connection->beforeExecuting(function () use($queryCollector) {
+                            $event->connection->beforeExecuting(function () use ($queryCollector) {
                                 $queryCollector->startMemoryUsage();
                             });
                         }
@@ -497,7 +497,7 @@ class LaravelDebugbar extends DebugBar
                 $modelsCollector->setKeyMap(array_combine($eventList, array_map('ucfirst', $eventList)));
                 $modelsCollector->collectCountSummary(true);
                 foreach ($eventList as $event) {
-                    $events->listen("eloquent.{$event}: *", function ($event, $models) use($modelsCollector) {
+                    $events->listen("eloquent.{$event}: *", function ($event, $models) use ($modelsCollector) {
                         $event = explode(': ', $event);
                         $count = count(array_filter($models));
                         $modelsCollector->countClass($event[1], $count, explode('.', $event[0])[1]);
@@ -617,7 +617,7 @@ class LaravelDebugbar extends DebugBar
             try {
                 $jobs = new ObjectCountCollector('jobs', 'briefcase');
                 $this->addCollector($jobs);
-                $events->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) use($jobs) {
+                $events->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) use ($jobs) {
                     $jobs->countClass($event->job);
                 });
             } catch (Exception $e) {

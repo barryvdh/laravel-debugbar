@@ -25,7 +25,6 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
     protected ?string $currentRequestId = null;
     protected array $hiddens = [];
 
-
     public function __construct(
         Request $request,
         Response $response,
