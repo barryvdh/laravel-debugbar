@@ -28,9 +28,9 @@
         "mockery/mockery": "^1.3.3",
         "orchestra/testbench-dusk": "^7|^8|^9|^10",
         "phpunit/phpunit": "^9.5.10|^10|^11",
-        "larastan/larastan": "^3.8",
-        "phpstan/phpstan-phpunit": "^2.0",
-        "laravel/pint": "^1.26"
+        "larastan/larastan": "^3",
+        "phpstan/phpstan-phpunit": "^2",
+        "laravel/pint": "^1"
     },
     "autoload": {
         "psr-4": {
