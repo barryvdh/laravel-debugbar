@@ -67,37 +67,26 @@ class LaravelDebugbar extends DebugBar
     /**
      * The Laravel application instance.
      *
-     * @var \Illuminate\Foundation\Application
      */
-    protected $app;
+    protected \Illuminate\Foundation\Application $app;
 
     /**
      * Normalized Laravel Version
      *
-     * @var string
      */
-    protected $version;
+    protected string $version;
 
     /**
      * True when booted.
      *
-     * @var bool
      */
-    protected $booted = false;
+    protected ?bool $booted = false;
 
     /**
      * True when enabled, false disabled on null for still unknown
      *
-     * @var bool
      */
-    protected $enabled = null;
-
-    /**
-     * True when this is a Lumen application
-     *
-     * @var bool
-     */
-    protected $is_lumen = false;
+    protected ?bool $enabled = null;
 
     /**
      * Laravel default error handler
@@ -119,12 +108,7 @@ class LaravelDebugbar extends DebugBar
         }
         $this->app = $app;
         $this->version = $app->version();
-        $this->is_lumen = Str::contains($this->version, 'Lumen');
-        if ($this->is_lumen) {
-            $this->version = Str::betweenFirst($app->version(), '(', ')');
-        } else {
-            $this->setRequestIdGenerator(new RequestIdGenerator());
-        }
+        $this->setRequestIdGenerator(new RequestIdGenerator());
     }
 
     /**
@@ -224,7 +208,7 @@ class LaravelDebugbar extends DebugBar
                 $timeCollector->showMemoryUsage();
             }
 
-            if ($startTime && !$this->isLumen()) {
+            if ($startTime) {
                 $app->booted(
                     function () use ($startTime) {
                         $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
@@ -319,7 +303,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if (!$this->isLumen() && $this->shouldCollect('route')) {
+        if ($this->shouldCollect('route')) {
             try {
                 $this->addCollector($app->make(RouteCollector::class));
             } catch (Exception $e) {
@@ -327,7 +311,7 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
-        if (!$this->isLumen() && $this->shouldCollect('log', true)) {
+        if ($this->shouldCollect('log', true)) {
             try {
                 if ($this->hasCollector('messages')) {
                     $logger = new MessagesCollector('log');
@@ -383,7 +367,7 @@ class LaravelDebugbar extends DebugBar
             }
 
             if ($dbBacktrace = $config->get('debugbar.options.db.backtrace')) {
-                $middleware = ! $this->is_lumen ? $app['router']->getMiddleware() : [];
+                $middleware = $app['router']->getMiddleware();
                 $queryCollector->setFindSource($dbBacktrace, $middleware);
             }
 
@@ -1156,11 +1140,6 @@ class LaravelDebugbar extends DebugBar
     protected function checkVersion(string $version, string $operator = ">="): bool
     {
         return version_compare($this->version, $version, $operator);
-    }
-
-    protected function isLumen(): bool
-    {
-        return $this->is_lumen;
     }
 
     protected function selectStorage(DebugBar $debugbar): void
