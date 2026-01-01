@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\DebugTwigExtension;
@@ -16,7 +18,6 @@ class Debug extends DebugTwigExtension
     /**
      * Create a new debug extension.
      *
-     * @param \Illuminate\Foundation\Application $app
      */
     public function __construct(Application $app)
     {

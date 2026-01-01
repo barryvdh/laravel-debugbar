@@ -1,21 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 
 class LaravelCollector extends DataCollector implements Renderable
 {
-    /**
-     * @param Application $app
-     */
-    public function __construct(protected ApplicationContract $laravel)
-    {
-    }
+    public function __construct(protected ApplicationContract $laravel) {}
 
     /**
      * {@inheritDoc}
@@ -32,10 +28,9 @@ class LaravelCollector extends DataCollector implements Renderable
                 'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
                 'Timezone' => config('app.timezone'),
                 'Locale' => config('app.locale'),
-            ]
+            ],
         ];
     }
-
 
     /**
      * {@inheritDoc}
@@ -54,11 +49,11 @@ class LaravelCollector extends DataCollector implements Renderable
             "version" => [
                 "icon" => "brand-laravel",
                 "map" => "laravel.version",
-                "default" => ""
+                "default" => "",
             ],
             "version:tooltip" => [
                 "map" => "laravel.tooltip",
-                "default" => "{}"
+                "default" => "{}",
             ],
         ];
     }

@@ -6,3 +6,4 @@ composer.lock
 .phpunit*
 /tests/Browser
 /node_modules
+/build/phpstan

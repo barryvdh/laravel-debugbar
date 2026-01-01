@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
@@ -23,7 +25,7 @@ class QueryCollectorTest extends TestCase
             "SELECT ('[1, 2, 3]'::jsonb ?? ?) as a, ('[4, 5, 6]'::jsonb ??| ?) as b, 'hello world ? example ??' as c",
             [3, '{4}'],
             0,
-            $this->app['db']->connection()
+            $this->app['db']->connection(),
         ));
 
         tap($collector->collect(), function (array $collection) {
@@ -32,9 +34,8 @@ class QueryCollectorTest extends TestCase
             tap(Arr::first($collection['statements']), function (array $statement) {
                 $this->assertEquals([3, '{4}'], $statement['bindings']);
                 $this->assertEquals(<<<SQL
-SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ? example ??' as c
-SQL
-                    , $statement['sql']);
+                    SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ? example ??' as c
+                    SQL, $statement['sql']);
             });
         });
     }
@@ -49,13 +50,13 @@ SQL
             "SELECT a FROM b WHERE c = ? AND d = ? AND e = ?",
             ['$10', '$2y$10_DUMMY_BCRYPT_HASH', '$_$$_$$$_$2_$3'],
             0,
-            $this->app['db']->connection()
+            $this->app['db']->connection(),
         ));
 
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
             $this->assertEquals(
                 "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
-                $statement['sql']
+                $statement['sql'],
             );
         });
     }
@@ -75,13 +76,13 @@ SQL
         tap(Arr::first($collector->collect()['statements']), function (array $statement) {
             $this->assertEquals(
                 "SELECT a FROM b WHERE c = '$10' AND d = '$2y$10_DUMMY_BCRYPT_HASH' AND e = '\$_$\$_$$\$_$2_$3'",
-                $statement['sql']
+                $statement['sql'],
             );
 
             $this->assertTrue(@file_exists($statement['backtrace'][1]->file));
             $this->assertEquals(
                 realpath(__DIR__ . '/../resources/views/query.blade.php'),
-                realpath($statement['backtrace'][1]->file)
+                realpath($statement['backtrace'][1]->file),
             );
         });
     }

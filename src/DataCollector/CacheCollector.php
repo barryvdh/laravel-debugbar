@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
@@ -100,8 +102,8 @@ class CacheCollector extends TimeDataCollector
         }
 
         $startEvents = array_unique(array_filter(array_map(
-            fn ($values) => $values[1] ?? null,
-            array_values($this->classMap)
+            fn($values) => $values[1] ?? null,
+            array_values($this->classMap),
         )));
 
         foreach ($startEvents as $eventClass) {
@@ -125,16 +127,16 @@ class CacheCollector extends TimeDataCollector
     public function getWidgets(): array
     {
         return [
-          'cache' => [
-            'icon' => 'clipboard-text',
-            'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
-            'map' => 'cache',
-            'default' => '{}',
-          ],
-          'cache:badge' => [
-            'map' => 'cache.nb_measures',
-            'default' => 'null',
-          ],
+            'cache' => [
+                'icon' => 'clipboard-text',
+                'widget' => 'PhpDebugBar.Widgets.LaravelCacheWidget',
+                'map' => 'cache',
+                'default' => '{}',
+            ],
+            'cache:badge' => [
+                'map' => 'cache.nb_measures',
+                'default' => 'null',
+            ],
         ];
     }
 }

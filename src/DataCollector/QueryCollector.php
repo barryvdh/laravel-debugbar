@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Barryvdh\Debugbar\Support\Explain;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Support\Facades\DB;
+use DebugBar\DataFormatter\QueryFormatter;
 use Illuminate\Support\Str;
 
 /**
@@ -20,7 +22,7 @@ class QueryCollector extends PDOCollector
     protected ?int $softLimit = null;
     protected ?int $hardLimit = null;
     protected ?int $lastMemoryUsage = null;
-    protected bool $findSource = false;
+    protected bool|int $findSource = false;
     protected array $middleware = [];
     protected bool $explainQuery = false;
     protected array $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
@@ -37,16 +39,25 @@ class QueryCollector extends PDOCollector
         '/vendor/barryvdh/laravel-debugbar',
     ];
 
+    protected ?QueryFormatter $queryFormatter = null;
+
     public function __construct(?TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
         parent::__construct(null, $timeCollector);
     }
 
+    public function getQueryFormatter(): QueryFormatter
+    {
+        if ($this->queryFormatter === null) {
+            $this->queryFormatter = new QueryFormatter();
+        }
+        return $this->queryFormatter;
+    }
+
     /**
      * @param int|null $softLimit After the soft limit, no parameters/backtrace are captured
      * @param int|null $hardLimit After the hard limit, queries are ignored
-     * @return void
      */
     public function setLimits(?int $softLimit, ?int $hardLimit): void
     {
@@ -141,7 +152,7 @@ class QueryCollector extends PDOCollector
         try {
             $pdo = $query->connection->getPdo();
 
-            if(! ($pdo instanceof \PDO)) {
+            if (! ($pdo instanceof \PDO)) {
                 $pdo = null;
             }
         } catch (\Throwable $e) {
@@ -198,6 +209,7 @@ class QueryCollector extends PDOCollector
      * Perform simple regex analysis on the code
      *
      * @package xplain (https://github.com/rap2hpoutre/mysql-xplain-xplain)
+     *
      * @author e-doceo
      * @copyright 2014
      */
@@ -213,7 +225,7 @@ class QueryCollector extends PDOCollector
                 You can <a href="https://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work" target="_blank">read this</a>
                 or <a href="https://stackoverflow.com/questions/1244555/how-can-i-optimize-mysqls-order-by-rand-function" target="_blank">this</a>';
         }
-        if (strpos($query, '!=') !== false) {
+        if (str_contains($query, '!=')) {
             $hints[] = 'The <code>!=</code> operator is not standard. Use the <code>&lt;&gt;</code> operator to test for inequality instead.';
         }
         if (stripos($query, 'WHERE') === false && preg_match('/^(SELECT) /i', $query)) {
@@ -267,15 +279,15 @@ class QueryCollector extends PDOCollector
         }
 
         if (
-            isset($trace['class']) &&
-            isset($trace['file']) &&
-            !$this->fileIsInExcludedPath($trace['file'])
+            isset($trace['class'])
+            && isset($trace['file'])
+            && !$this->fileIsInExcludedPath($trace['file'])
         ) {
             $frame->file = $trace['file'];
 
             if (isset($trace['object']) && is_a($trace['object'], '\Twig\Template')) {
-                list($frame->file, $frame->line) = $this->getTwigInfo($trace);
-            } elseif (strpos($frame->file, storage_path()) !== false) {
+                [$frame->file, $frame->line] = $this->getTwigInfo($trace);
+            } elseif (str_contains($frame->file, storage_path())) {
                 $hash = pathinfo($frame->file, PATHINFO_FILENAME);
 
                 if ($frame->name = $this->findViewFromHash($hash)) {
@@ -288,7 +300,7 @@ class QueryCollector extends PDOCollector
                 $frame->namespace = 'view';
 
                 return $frame;
-            } elseif (strpos($frame->file, 'Middleware') !== false) {
+            } elseif (str_contains($frame->file, 'Middleware')) {
                 $frame->name = $this->findMiddlewareFromFile($frame->file);
 
                 if ($frame->name) {
@@ -305,7 +317,6 @@ class QueryCollector extends PDOCollector
             return $frame;
         }
 
-
         return false;
     }
 
@@ -317,7 +328,7 @@ class QueryCollector extends PDOCollector
         $normalizedPath = str_replace('\\', '/', $file);
 
         foreach ($this->backtraceExcludePaths as $excludedPath) {
-            if (strpos($normalizedPath, $excludedPath) !== false) {
+            if (str_contains($normalizedPath, $excludedPath)) {
                 return true;
             }
         }
@@ -333,7 +344,7 @@ class QueryCollector extends PDOCollector
         $filename = pathinfo($file, PATHINFO_FILENAME);
 
         foreach ($this->middleware as $alias => $class) {
-            if (!is_null($class) && !is_null($filename) && strpos($class, $filename) !== false) {
+            if (!is_null($class) && str_contains($class, $filename)) {
                 return $alias;
             }
         }
@@ -363,6 +374,8 @@ class QueryCollector extends PDOCollector
                 return [$name, $path];
             }
         }
+
+        return null;
     }
 
     /**
@@ -467,7 +480,7 @@ class QueryCollector extends PDOCollector
                 'slow' => $this->slowThreshold && $this->slowThreshold <= $query['time'],
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
-                'filename' => $source ? $this->getDataFormatter()->formatSource($source, true) : null,
+                'filename' => $source ? $this->getQueryFormatter()->formatSource($source, true) : null,
                 'source' => $source,
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
@@ -505,14 +518,14 @@ class QueryCollector extends PDOCollector
 
         if ($this->softLimit && $this->hardLimit && ($this->queryCount > $this->softLimit && $this->queryCount > $this->hardLimit)) {
             array_unshift($statements, [
-                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit .  ' are ignored. Limits can be raised in the config (debugbar.options.db.soft/hard_limit).',
+                'sql' => '# Query soft and hard limit for Debugbar are reached. Only the first ' . $this->softLimit . ' queries show details. Queries after the first ' . $this->hardLimit . ' are ignored. Limits can be raised in the config (debugbar.options.db.soft/hard_limit).',
                 'type' => 'info',
             ]);
             $statements[] = [
                 'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.soft/hard_limit)',
                 'type' => 'info',
             ];
-            $this->infoStatements+= 2;
+            $this->infoStatements += 2;
         } elseif ($this->hardLimit && $this->queryCount > $this->hardLimit) {
             array_unshift($statements, [
                 'sql' => '# Query hard limit for Debugbar is reached after ' . $this->hardLimit . ' queries, additional ' . ($this->queryCount - $this->hardLimit) . ' queries are not shown.. Limits can be raised in the config (debugbar.options.db.hard_limit)',
@@ -522,7 +535,7 @@ class QueryCollector extends PDOCollector
                 'sql' => '... ' . ($this->queryCount - $this->hardLimit) . ' additional queries are executed but now shown because of Debugbar query limits. Limits can be raised in the config (debugbar.options.db.hard_limit)',
                 'type' => 'info',
             ];
-            $this->infoStatements+= 2;
+            $this->infoStatements += 2;
         } elseif ($this->softLimit && $this->queryCount > $this->softLimit) {
             array_unshift($statements, [
                 'sql' => '# Query soft limit for Debugbar is reached after ' . $this->softLimit . ' queries, additional ' . ($this->queryCount - $this->softLimit) . ' queries only show the query. Limits can be raised in the config (debugbar.options.db.soft_limit)',
@@ -543,7 +556,7 @@ class QueryCollector extends PDOCollector
             'accumulated_duration_str' => $this->getDataFormatter()->formatDuration($totalTime),
             'memory_usage' => $totalMemory,
             'memory_usage_str' => $totalMemory ? $this->getDataFormatter()->formatBytes($totalMemory) : null,
-            'statements' => $statements
+            'statements' => $statements,
         ];
         return $data;
     }
@@ -566,12 +579,12 @@ class QueryCollector extends PDOCollector
                 "icon" => "database",
                 "widget" => "PhpDebugBar.Widgets.LaravelQueriesWidget",
                 "map" => "queries",
-                "default" => "[]"
+                "default" => "[]",
             ],
             "queries:badge" => [
                 "map" => "queries.nb_statements",
-                "default" => 0
-            ]
+                "default" => 0,
+            ],
         ];
     }
 
@@ -581,18 +594,18 @@ class QueryCollector extends PDOCollector
         if ($query['type'] === 'query' && $this->renderSqlWithParams && $query['connection']->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists($query['connection']->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
             try {
                 $sql = $query['connection']->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
-                return $this->getDataFormatter()->formatSql($sql);
+                return $this->getQueryFormatter()->formatSql($sql);
             } catch (\Throwable $e) {
                 // Continue using the old substitute
             }
         }
 
         if ($query['type'] === 'query' && $this->renderSqlWithParams) {
-            $bindings = $this->getDataFormatter()->checkBindings($query['bindings']);
+            $bindings = $this->getQueryFormatter()->checkBindings($query['bindings']);
             if (!empty($bindings)) {
                 $pdo = null;
                 try {
-                    $pdo = $query->connection->getPdo();
+                    $pdo = $query['connection']->getPdo();
                 } catch (\Throwable) {
                     // ignore error for non-pdo laravel drivers
                 }
@@ -623,6 +636,6 @@ class QueryCollector extends PDOCollector
             }
         }
 
-        return $this->getDataFormatter()->formatSql($sql);
+        return $this->getQueryFormatter()->formatSql($sql);
     }
 }

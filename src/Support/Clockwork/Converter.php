@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Support\Clockwork;
 
 class Converter
@@ -7,7 +9,8 @@ class Converter
     /**
      * Convert the phpdebugbar data to Clockwork format.
      *
-     * @param  array $data
+     * @param array $data
+     *
      * @return array
      */
     public function convert($data)
@@ -72,14 +75,14 @@ class Converter
 
             $output['controller'] = preg_replace('/<a\b[^>]*>(.*?)<\/a>/i', '', (string) $controller) ?: null;
 
-            list($method, $uri) = explode(' ', $route['uri'], 2);
+            [$method, $uri] = explode(' ', $route['uri'], 2);
 
             $output['routes'][] = [
                 'action' => $output['controller'],
-                'after' => isset($route['after']) ? $route['after'] : null,
-                'before' => isset($route['before']) ? $route['before'] : null,
+                'after' => $route['after'] ?? null,
+                'before' => $route['before'] ?? null,
                 'method' => $method,
-                'name' => isset($route['as']) ? $route['as'] : null,
+                'name' => $route['as'] ?? null,
                 'uri' => $uri,
             ];
         }
@@ -105,7 +108,7 @@ class Converter
                     'bindings' => $statement['params'],
                     'duration' => $statement['duration'] * 1000,
                     'time' => $statement['start'] ?? null,
-                    'connection' => $statement['connection']
+                    'connection' => $statement['connection'],
                 ];
             }
 

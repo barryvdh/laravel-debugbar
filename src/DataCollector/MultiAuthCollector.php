@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Auth\Recaller;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Str;
@@ -30,7 +30,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
     /**
      * @param \Illuminate\Auth\AuthManager $auth
-     * @param array $guards
+     * @param array                        $guards
      */
     public function __construct($auth, $guards)
     {

@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Http\Request;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,28 +24,19 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RequestCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var \Symfony\Component\HttpFoundation\Request $request */
-    protected $request;
-    /** @var  \Symfony\Component\HttpFoundation\Response $response */
-    protected $response;
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-    protected $session;
-    /** @var string|null */
-    protected $currentRequestId;
-    /** @var array */
-    protected $hiddens;
+    protected Request $request;
+    protected Response $response;
+    protected ?SessionManager $session;
+    protected ?string $currentRequestId = null;
+    protected array $hiddens = [];
 
-    /**
-     * Create a new SymfonyRequestCollector
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param string|null $currentRequestId
-     * @param array $hiddens
-     */
-    public function __construct($request, $response, $session = null, $currentRequestId = null, $hiddens = [])
-    {
+    public function __construct(
+        Request $request,
+        Response $response,
+        ?SessionManager $session = null,
+        ?string $currentRequestId = null,
+        array $hiddens = []
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
@@ -72,12 +66,12 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "request.data",
                 "order" => -100,
-                "default" => "{}"
+                "default" => "{}",
             ],
             'request:badge' => [
                 "map" => "request.badge",
-                "default" => "null"
-            ]
+                "default" => "null",
+            ],
         ];
 
         if (Config::get('debugbar.options.request.label', true)) {
@@ -85,11 +79,11 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 "icon" => "share-3",
                 "map" => "request.data.uri",
                 "link" => "request",
-                "default" => ""
+                "default" => "",
             ];
             $widgets['currentrequest:tooltip'] = [
                 "map" => "request.tooltip",
-                "default" => "{}"
+                "default" => "{}",
             ];
         }
 
@@ -114,7 +108,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
                 $cookie->getPath(),
                 $cookie->getDomain(),
                 $cookie->isSecure(),
-                $cookie->isHttpOnly()
+                $cookie->isHttpOnly(),
             );
         }
         if (count($cookies) > 0) {
@@ -122,17 +116,17 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         $statusCode = $response->getStatusCode();
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START :  $request->server->get('REQUEST_TIME_FLOAT');
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START : $request->server->get('REQUEST_TIME_FLOAT');
         $query = $request->getQueryString();
         $htmlData = [];
 
         $data = [
-            'status' => $statusCode . ' ' . (isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : ''),
+            'status' => $statusCode . ' ' . (Response::$statusTexts[$statusCode] ?? ''),
             'duration' => $startTime ? $this->getDataFormatter()->formatDuration(microtime(true) - $startTime) : null,
             'peak_memory' => $this->getDataFormatter()->formatBytes(memory_get_peak_usage(true), 1),
         ];
 
-        if ($request instanceof Request) {
+        if ($request instanceof \Illuminate\Http\Request) {
 
             if ($route = $request->route()) {
                 $htmlData += $this->getRouteInformation($route);
@@ -150,7 +144,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $data += [
             'response' => $response->headers->get('Content-Type') ? $response->headers->get(
-                'Content-Type'
+                'Content-Type',
             ) : 'text/html',
             'request_format' => $request->getRequestFormat(),
             'request_query' => $request->query->all(),
@@ -193,13 +187,13 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $tooltip = [
             'status' => $data['status'],
-            'full_url' => Str::limit($request->fullUrl(), 100),
         ];
 
-        if ($this->request instanceof Request) {
+        if ($this->request instanceof \Illuminate\Http\Request) {
             $tooltip += [
-                'action_name' => optional($this->request->route())->getName(),
-                'controller_action' => optional($this->request->route())->getActionName(),
+                'full_url' => Str::limit($this->request->fullUrl(), 100),
+                'action_name' => $this->request->route()?->getName(),
+                'controller_action' => $this->request->route()?->getActionName(),
             ];
         }
 
@@ -226,7 +220,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 
         $result = array_merge($result, $action);
         $uses = $action['uses'] ?? null;
-        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
         if (request()->hasHeader('X-Livewire')) {
             try {
@@ -244,7 +238,7 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
         }
 
         if (str_contains($controller, '@')) {
-            list($controller, $method) = explode('@', $controller);
+            [$controller, $method] = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }
@@ -297,19 +291,17 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
             } elseif ($expires instanceof \DateTime) {
                 $expires = $expires->getTimestamp();
             } else {
-                $expires = strtotime($expires);
+                $expires = strtotime((string) $expires);
                 if (false === $expires || -1 == $expires) {
-                    throw new \InvalidArgumentException(
-                        sprintf('The "expires" cookie parameter is not valid.', $expires)
-                    );
+                    throw new \InvalidArgumentException('The "expires" cookie parameter is not valid.');
                 }
             }
 
             $cookie .= '; expires=' . substr(
-                    \DateTime::createFromFormat('U', $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
-                    0,
-                    -5
-                );
+                \DateTime::createFromFormat('U', (string) $expires, new \DateTimeZone('UTC'))->format('D, d-M-Y H:i:s T'),
+                0,
+                -5,
+            );
         }
 
         if ($domain) {

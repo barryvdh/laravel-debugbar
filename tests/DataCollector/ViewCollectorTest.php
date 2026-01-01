@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
@@ -18,13 +20,13 @@ class ViewCollectorTest extends TestCase
         /** @var \Barryvdh\Debugbar\DataCollector\ViewCollector $collector */
         $collector = debugbar()->getCollector('views');
         $collector->addView(
-            view('dashboard')
+            view('dashboard'),
         );
 
         tap(Arr::first($collector->collect()['templates']), function (array $template) {
             $this->assertEquals(
                 'phpstorm://open?file=' . urlencode(str_replace('\\', '/', realpath(__DIR__ . '/../resources/views/dashboard.blade.php'))) . '&line=1',
-                $template['xdebug_link']['url']
+                $template['xdebug_link']['url'],
             );
         });
     }

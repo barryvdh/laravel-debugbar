@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Support;
 
 use Exception;
@@ -85,6 +87,7 @@ class Explain
         return match ($connection->getDriverName()) {
             'mysql' => $this->generateVisualExplainMysql($connection, $sql, $bindings),
             'pgsql' => $this->generateVisualExplainPgsql($connection, $sql, $bindings),
+            default => throw new Exception("Visual explain not available for driver '{$connection->getDriverName()}'."),
         };
     }
 
@@ -97,7 +100,7 @@ class Explain
             'bindings' => $bindings,
             'version' => $connection->selectOne("SELECT VERSION()")->{'VERSION()'},
             'explain_json' => $connection->selectOne("EXPLAIN FORMAT=JSON {$query}", $bindings)->EXPLAIN,
-            'explain_tree' => rescue(fn () => $connection->selectOne("EXPLAIN FORMAT=TREE {$query}", $bindings)->EXPLAIN, report: false),
+            'explain_tree' => rescue(fn() => $connection->selectOne("EXPLAIN FORMAT=TREE {$query}", $bindings)->EXPLAIN, report: false),
         ])->throw()->json('url');
     }
 

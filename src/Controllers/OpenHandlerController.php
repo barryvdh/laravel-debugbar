@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Controllers;
 
 use Barryvdh\Debugbar\Support\Clockwork\Converter;
-use DebugBar\DebugBarException;
 use DebugBar\OpenHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,7 +14,6 @@ class OpenHandlerController extends BaseController
     /**
      * Check if the storage is open for inspecting.
      *
-     * @param Request $request
      * @return bool
      */
     protected function isStorageOpen(Request $request)
@@ -54,7 +54,7 @@ class OpenHandlerController extends BaseController
                     'method' => 'ERROR',
                     'uri' => '!! To enable public access to previous requests, set debugbar.storage.open to true in your config, or enable DEBUGBAR_OPEN_STORAGE if you did not publish the config. !!',
                     'utime' => microtime(true),
-                ]
+                ],
             ];
         }
 
@@ -62,16 +62,14 @@ class OpenHandlerController extends BaseController
             $data,
             200,
             [
-                'Content-Type' => 'application/json'
-            ]
+                'Content-Type' => 'application/json',
+            ],
         );
     }
 
     /**
      * Return Clockwork output
      *
-     * @param $id
-     * @return mixed
      * @throws \DebugBar\DebugBarException
      */
     public function clockwork(Request $request, $id)

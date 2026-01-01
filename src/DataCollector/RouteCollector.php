@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Based on Illuminate\Foundation\Console\RoutesCommand for Taylor Otwell
@@ -48,12 +49,12 @@ class RouteCollector extends DataCollector implements Renderable
         $action = $route->getAction();
 
         $result = [
-           'uri' => $uri ?: '-',
+            'uri' => $uri,
         ];
 
         $result = array_merge($result, $action);
         $uses = $action['uses'] ?? null;
-        $controller = is_string($action['controller'] ?? null) ? $action['controller'] :  '';
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
         if (request()->hasHeader('X-Livewire')) {
             try {
@@ -71,7 +72,7 @@ class RouteCollector extends DataCollector implements Renderable
         }
 
         if (str_contains($controller, '@')) {
-            list($controller, $method) = explode('@', $controller);
+            [$controller, $method] = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }
@@ -140,19 +141,9 @@ class RouteCollector extends DataCollector implements Renderable
                 "icon" => "share-3",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "route",
-                "default" => "{}"
-            ]
+                "default" => "{}",
+            ],
         ];
         return $widgets;
-    }
-
-    /**
-     * Display the route information on the console.
-     */
-    protected function displayRoutes(array $routes): void
-    {
-        $this->table->setHeaders($this->headers)->setRows($routes);
-
-        $this->table->render($this->getOutput());
     }
 }

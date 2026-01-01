@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests;
 
 use Barryvdh\Debugbar\LaravelDebugbar;
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 
 class DebugbarTest extends TestCase
@@ -12,7 +12,7 @@ class DebugbarTest extends TestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return void
      */
@@ -22,9 +22,9 @@ class DebugbarTest extends TestCase
 
         // Force the Debugbar to Enable on test/cli applications
         $app->resolving(LaravelDebugbar::class, function ($debugbar) {
-                $refObject = new \ReflectionObject($debugbar);
-                $refProperty = $refObject->getProperty('enabled');
-                $refProperty->setValue($debugbar, true);
+            $refObject = new \ReflectionObject($debugbar);
+            $refProperty = $refObject->getProperty('enabled');
+            $refProperty->setValue($debugbar, true);
         });
     }
 
