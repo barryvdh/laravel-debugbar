@@ -663,8 +663,11 @@ class QueryCollector  extends DataCollector implements Renderable, AssetProvider
     public function getAssets(): array
     {
         return [
-            'base_path' => __DIR__ . '/../../resources',
-            'js' => 'queries/widget.js',
+            'js' => [
+                __DIR__ . '/../../resources/queries/widget.js',
+//                'widgets/sqlqueries/widget.js',
+            ],
+            'css' => 'widgets/sqlqueries/widget.css',
         ];
     }
 }

@@ -144,8 +144,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
     public function getAssets(): array
     {
         return [
-            'base_path' => __DIR__ . '/../../resources',
-            'js' => 'cache/widget.js',
+            'js' => __DIR__ . '/../../resources/cache/widget.js',
         ];
     }
 }
