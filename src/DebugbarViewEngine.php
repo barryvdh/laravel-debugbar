@@ -23,10 +23,6 @@ class DebugbarViewEngine implements Engine
      */
     protected $exclude_paths;
 
-    /**
-     * @param  Engine  $engine
-     * @param  LaravelDebugbar  $laravelDebugbar
-     */
     public function __construct(Engine $engine, LaravelDebugbar $laravelDebugbar)
     {
         $this->engine = $engine;
@@ -35,8 +31,8 @@ class DebugbarViewEngine implements Engine
     }
 
     /**
-     * @param  string  $path
-     * @param  array  $data
+     * @param string $path
+     *
      * @return string
      */
     public function get($path, array $data = [])
@@ -47,7 +43,7 @@ class DebugbarViewEngine implements Engine
         if (str_starts_with($shortPath, $basePath)) {
             $shortPath = ltrim(
                 str_replace('\\', '/', substr($shortPath, strlen($basePath))),
-                '/'
+                '/',
             );
         }
 
@@ -64,9 +60,6 @@ class DebugbarViewEngine implements Engine
 
     /**
      * NOTE: This is done to support other Engine swap (example: Livewire).
-     * @param $name
-     * @param $arguments
-     * @return mixed
      */
     public function __call($name, $arguments)
     {

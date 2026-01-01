@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Middleware;
 
 use Closure;
@@ -36,8 +38,6 @@ class InjectDebugbar
     /**
      * Create a new middleware instance.
      *
-     * @param  Container $container
-     * @param  LaravelDebugbar $debugbar
      */
     public function __construct(Container $container, LaravelDebugbar $debugbar)
     {
@@ -49,9 +49,7 @@ class InjectDebugbar
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
-     * @return mixed
+     * @param Request $request
      */
     public function handle($request, Closure $next)
     {
@@ -79,9 +77,8 @@ class InjectDebugbar
      *
      * (Copy from Illuminate\Routing\Pipeline by Taylor Otwell)
      *
-     * @param $passable
-     * @param  Throwable $e
-     * @return mixed
+     * @param Throwable $e
+     *
      * @throws Exception
      */
     protected function handleException($passable, $e)
@@ -100,7 +97,8 @@ class InjectDebugbar
     /**
      * Determine if the request has a URI that should be ignored.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return bool
      */
     protected function inExceptArray($request)

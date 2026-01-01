@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use DebugBar\DebugBar;
 use DebugBar\JavascriptRenderer as BaseJavascriptRenderer;
-use Illuminate\Routing\UrlGenerator;
 
 /**
  * {@inheritdoc}
  */
 class JavascriptRenderer extends BaseJavascriptRenderer
 {
-
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
@@ -37,7 +37,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         ]));
 
         $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [
-            'v' => $this->getModifiedTime('js')
+            'v' => $this->getModifiedTime('js'),
         ]));
 
         $nonce = $this->getNonceAttribute();
@@ -50,7 +50,6 @@ class JavascriptRenderer extends BaseJavascriptRenderer
             $inlineHtml = preg_replace("/<(script|style)>/", "<$1{$nonce}>", $inlineHtml);
         }
         $html .= $inlineHtml;
-
 
         return $html;
     }

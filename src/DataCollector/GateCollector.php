@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
@@ -9,7 +11,6 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Router;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Illuminate\Support\Str;
 
 /**
@@ -21,9 +22,6 @@ class GateCollector extends MessagesCollector
 
     protected Router $router;
 
-    /**
-     * @param Gate $gate
-     */
     public function __construct(Gate $gate, Router $router)
     {
         parent::__construct('gate');
@@ -42,7 +40,7 @@ class GateCollector extends MessagesCollector
         $pos = strpos((string) $messageHtml, 'array:5');
         if ($pos !== false) {
 
-            $name = $message['ability'] .' ' . $message['target'] ?? '';
+            $name = $message['ability'] . ' ' . ($message['target'] ?? '');
 
             $messageHtml = substr_replace($messageHtml, $name, $pos, 7);
         }
@@ -75,7 +73,7 @@ class GateCollector extends MessagesCollector
                 } else {
                     $target = get_class($model);
                 }
-            } else if (is_string($arguments[0])) {
+            } elseif (is_string($arguments[0])) {
                 $target = $arguments[0];
             }
         }
@@ -161,5 +159,7 @@ class GateCollector extends MessagesCollector
                 return $path;
             }
         }
+
+        return null;
     }
 }

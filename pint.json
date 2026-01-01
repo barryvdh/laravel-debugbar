@@ -1,0 +1,25 @@
+{
+    "preset": "per",
+    "rules": {
+        "@autoPHPMigration": true,
+        "@autoPHPUnitMigration:risky": true,
+        "array_push": true,
+        "modernize_strpos": true,
+        "modernize_types_casting": true,
+        "trim_array_spaces": true,
+        "no_short_bool_cast": true,
+        "cast_spaces": true,
+        "no_leading_namespace_whitespace": true,
+        "no_unused_imports": true,
+        "single_space_after_construct": true,
+        "no_unneeded_curly_braces": true,
+        "no_useless_else": true,
+        "no_useless_return": true,
+        "no_extra_blank_lines": true,
+        "no_superfluous_phpdoc_tags": true,
+        "no_empty_phpdoc": true,
+        "phpdoc_align": true,
+        "phpdoc_separation": true,
+        "declare_strict_types": true
+    }
+}

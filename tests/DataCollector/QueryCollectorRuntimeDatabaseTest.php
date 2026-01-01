@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
 use Illuminate\Database\Connection;
-use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Arr;
 
 class QueryCollectorRuntimeDatabaseTest extends TestCase
 {

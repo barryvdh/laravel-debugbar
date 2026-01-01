@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Router;
-use Illuminate\Session\CookieSessionHandler;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Collection;
 
@@ -28,7 +26,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->alias(
             DataFormatter::class,
-            DataFormatterInterface::class
+            DataFormatterInterface::class,
         );
 
         $this->app->singleton(LaravelDebugbar::class, function ($app) {
@@ -45,7 +43,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'command.debugbar.clear',
             function ($app) {
                 return new Console\ClearCommand($app['debugbar']);
-            }
+            },
         );
 
         Collection::macro('debug', function () {
@@ -94,7 +92,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Register the Debugbar Middleware
      *
-     * @param  string $middleware
+     * @param string $middleware
      */
     protected function registerMiddleware($middleware)
     {

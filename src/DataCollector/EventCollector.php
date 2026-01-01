@@ -1,26 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Contracts\Events\Dispatcher;
+use DebugBar\DataFormatter\SimpleFormatter;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class EventCollector extends TimeDataCollector
 {
-    /** @var Dispatcher */
-    protected $events;
+    protected ?Dispatcher $events;
 
-    /** @var Dispatcher */
-    protected $excludedEvents;
+    protected array $excludedEvents;
 
-    /** @var integer */
-    protected $previousTime;
-
-    /** @var bool */
-    protected $collectValues;
+    protected bool $collectValues;
 
     public function __construct(?float $requestStartTime = null, bool $collectValues = false, array $excludedEvents = [])
     {
@@ -28,7 +23,6 @@ class EventCollector extends TimeDataCollector
         $this->collectValues = $collectValues;
         $this->excludedEvents = $excludedEvents;
         $this->setDataFormatter(new SimpleFormatter());
-
     }
 
     public function onWildcardEvent(?string $name = null, array $data = []): void
@@ -54,7 +48,7 @@ class EventCollector extends TimeDataCollector
         foreach ($this->events->getListeners($name) as $i => $listener) {
             // Check if it's an object + method name
             if (is_array($listener) && count($listener) > 1 && is_object($listener[0])) {
-                list($class, $method) = $listener;
+                [$class, $method] = $listener;
 
                 // Skip this class itself
                 if ($class instanceof static) {
@@ -64,7 +58,7 @@ class EventCollector extends TimeDataCollector
                 // Format the listener to readable format
                 $listener = get_class($class) . '@' . $method;
 
-            // Handle closures
+                // Handle closures
             } elseif ($listener instanceof \Closure) {
                 $reflector = new \ReflectionFunction($listener);
 
@@ -122,16 +116,16 @@ class EventCollector extends TimeDataCollector
     public function getWidgets(): array
     {
         return [
-          "events" => [
-            "icon" => "tasks",
-            "widget" => "PhpDebugBar.Widgets.TimelineWidget",
-            "map" => "event",
-            "default" => "{}",
-          ],
-          'events:badge' => [
-            'map' => 'event.nb_measures',
-            'default' => 0,
-          ],
+            "events" => [
+                "icon" => "tasks",
+                "widget" => "PhpDebugBar.Widgets.TimelineWidget",
+                "map" => "event",
+                "default" => "{}",
+            ],
+            'events:badge' => [
+                'map' => 'event.nb_measures',
+                'default' => 0,
+            ],
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\Jobs\OrderShipped;
@@ -42,9 +44,9 @@ class JobsCollectorTest extends TestCase
                 'data' => $data,
                 'count' => 0,
                 'is_counter' => true,
-                'key_map' => []
+                'key_map' => [],
             ],
-            $collector->collect()
+            $collector->collect(),
         );
 
         OrderShipped::dispatch(1);
@@ -55,9 +57,9 @@ class JobsCollectorTest extends TestCase
                 'data' => $data,
                 'count' => 1,
                 'is_counter' => true,
-                'key_map' => []
+                'key_map' => [],
             ],
-            $collector->collect()
+            $collector->collect(),
         );
 
         dispatch(new SendNotification());
@@ -70,16 +72,15 @@ class JobsCollectorTest extends TestCase
                 'data' => $data,
                 'count' => 4,
                 'is_counter' => true,
-                'key_map' => []
+                'key_map' => [],
             ],
-            $collector->collect()
+            $collector->collect(),
         );
     }
 
     protected function createJobsTable()
     {
-        (new class extends Migration
-        {
+        (new class extends Migration {
             public function up()
             {
                 if (Schema::hasTable('jobs')) {

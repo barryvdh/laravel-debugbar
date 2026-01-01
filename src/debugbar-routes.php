@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $routeConfig = [
     'namespace' => 'Barryvdh\Debugbar\Controllers',
     'prefix' => app('config')->get('debugbar.route_prefix'),

@@ -1,14 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
-use DebugBar\DataCollector\AssetProvider;
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TemplateCollector;
-use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ViewCollector extends TemplateCollector
@@ -29,7 +25,7 @@ class ViewCollector extends TemplateCollector
         $path = $view->getPath();
 
         if (class_exists('\Inertia\Inertia')) {
-            list($name, $type, $data, $path) = $this->getInertiaView($name, $data, $path);
+            [$name, $type, $data, $path] = $this->getInertiaView($name, $data, $path);
         }
 
         if (is_object($path)) {
@@ -72,7 +68,7 @@ class ViewCollector extends TemplateCollector
             $name = $data['component'];
             $data = $data['props'];
 
-            if ($files = glob(resource_path(config('debugbar.options.views.inertia_pages') .'/'. $name . '.*'))) {
+            if ($files = glob(resource_path(config('debugbar.options.views.inertia_pages') . '/' . $name . '.*'))) {
                 $path = $files[0];
                 $type = pathinfo($path, PATHINFO_EXTENSION);
 
@@ -87,7 +83,7 @@ class ViewCollector extends TemplateCollector
 
     public function addInertiaAjaxView(array $data): void
     {
-        list($name, $type, $data, $path) = $this->getInertiaView('', $data, '');
+        [$name, $type, $data, $path] = $this->getInertiaView('', $data, '');
 
         if (! $name) {
             return;

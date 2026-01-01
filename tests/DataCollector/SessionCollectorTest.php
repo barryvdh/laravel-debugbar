@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
@@ -19,7 +21,7 @@ class SessionCollectorTest extends TestCase
         /** @var \Barryvdh\Debugbar\DataCollector\SessionCollector $collector */
         $collector = new SessionCollector(
             $this->app->make(SessionManager::class),
-            $this->app['config']->get('debugbar.options.session.hiddens', [])
+            $this->app['config']->get('debugbar.options.session.hiddens', []),
         );
 
         $this->assertEmpty($collector->collect());

@@ -1,0 +1,37 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to method getClass\(\) on an unknown class Livewire\\Mechanisms\\ComponentRegistry\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/DataCollector/RequestCollector.php
+
+		-
+			message: '#^Call to static method make\(\) on an unknown class Laravel\\Telescope\\IncomingEntry\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/DataCollector/RequestCollector.php
+
+		-
+			message: '#^Class Livewire\\Mechanisms\\ComponentRegistry not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/DataCollector/RequestCollector.php
+
+		-
+			message: '#^Call to method getClass\(\) on an unknown class Livewire\\Mechanisms\\ComponentRegistry\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/DataCollector/RouteCollector.php
+
+		-
+			message: '#^Class Livewire\\Mechanisms\\ComponentRegistry not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/DataCollector/RouteCollector.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Mime\\RawMessage\:\:getSubject\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/LaravelDebugbar.php

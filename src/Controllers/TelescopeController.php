@@ -1,14 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Controllers;
 
-use Barryvdh\Debugbar\Support\Clockwork\Converter;
-use DebugBar\OpenHandler;
-use Illuminate\Http\Response;
 use Laravel\Telescope\Contracts\EntriesRepository;
-use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Storage\EntryQueryOptions;
-use Laravel\Telescope\Telescope;
 
 class TelescopeController extends BaseController
 {

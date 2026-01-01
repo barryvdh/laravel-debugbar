@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Storage;
 
 use DebugBar\Storage\StorageInterface;
@@ -17,8 +19,8 @@ class FilesystemStorage implements StorageInterface
     protected int $gc_probability = 5;   // Probability of GC being run on a save request. (5/100)
 
     /**
-     * @param \Illuminate\Filesystem\Filesystem $files The filesystem
-     * @param string $dirname Directories where to store files
+     * @param \Illuminate\Filesystem\Filesystem $files   The filesystem
+     * @param string                            $dirname Directories where to store files
      */
     public function __construct(Filesystem $files, string $dirname)
     {
@@ -32,7 +34,7 @@ class FilesystemStorage implements StorageInterface
     public function save(string $id, array $data): void
     {
         if (!$this->files->isDirectory($this->dirname)) {
-            if ($this->files->makeDirectory($this->dirname, 0777, true)) {
+            if ($this->files->makeDirectory($this->dirname, 0o777, true)) {
                 $this->files->put($this->dirname . '.gitignore', "*\n!.gitignore\n");
             } else {
                 throw new \Exception("Cannot create directory '$this->dirname'..");
@@ -54,8 +56,6 @@ class FilesystemStorage implements StorageInterface
     /**
      * Create the filename for the data, based on the id.
      *
-     * @param $id
-     * @return string
      */
     public function makeFilename(string $id): string
     {
@@ -69,7 +69,7 @@ class FilesystemStorage implements StorageInterface
     {
         foreach (
             Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
-                $this->dirname
+                $this->dirname,
             ) as $file
         ) {
             $this->files->delete($file->getRealPath());
@@ -96,7 +96,7 @@ class FilesystemStorage implements StorageInterface
     {
         // Sort by modified time, newest first
         $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
-            return strcmp($b->getMTime(), $a->getMTime());
+            return $b->getMTime() <=> $a->getMTime();
         };
 
         // Loop through .json files, filter the metadata and stop when max is found.
@@ -123,9 +123,6 @@ class FilesystemStorage implements StorageInterface
     /**
      * Filter the metadata for matches.
      *
-     * @param $meta
-     * @param $filters
-     * @return bool
      */
     protected function filter(array $meta, array $filters): bool
     {

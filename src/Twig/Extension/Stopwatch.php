@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\MeasureTwigExtension;
@@ -20,7 +22,6 @@ class Stopwatch extends MeasureTwigExtension
     /**
      * Create a new time measure extension.
      *
-     * @param \Illuminate\Foundation\Application $app
      */
     public function __construct(Application $app)
     {
@@ -30,7 +31,6 @@ class Stopwatch extends MeasureTwigExtension
 
         parent::__construct(null, 'stopwatch');
     }
-
 
     public function getDebugbar()
     {

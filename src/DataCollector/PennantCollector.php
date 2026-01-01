@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
@@ -25,7 +27,7 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
     /**
      * {@inheritdoc}
      */
-    public function collect(): mixed
+    public function collect(): array
     {
         $store = $this->manager->store(Config::get('pennant.default'));
 
@@ -50,8 +52,8 @@ class PennantCollector extends DataCollector implements DataCollectorInterface, 
                 "icon" => "flag",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "pennant",
-                "default" => "{}"
-            ]
+                "default" => "{}",
+            ],
         ];
     }
 }

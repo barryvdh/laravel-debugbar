@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Fluent;
-use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Livewire\Component;
 
@@ -92,12 +90,12 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
                 "icon" => "brand-livewire",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "livewire.data",
-                "default" => "{}"
+                "default" => "{}",
             ],
             'livewire:badge' => [
                 'map' => 'livewire.count',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ];
     }
 }
