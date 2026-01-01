@@ -96,7 +96,6 @@ class LaravelDebugbar extends DebugBar
     protected $prevErrorHandler = null;
 
     protected ?string $editorTemplate = null;
-    protected array $remoteServerReplacements = [];
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
@@ -147,7 +146,6 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        /** @var Application $app */
         $app = $this->app;
 
         /** @var \Illuminate\Config\Repository $config */
@@ -743,7 +741,6 @@ class LaravelDebugbar extends DebugBar
      */
     public function modifyResponse(Request $request, Response $response): Response
     {
-        /** @var Application $app */
         $app = $this->app;
         if (!$this->isEnabled() || !$this->booted || $this->isDebugbarRequest() || $this->responseIsModified) {
             return $response;
