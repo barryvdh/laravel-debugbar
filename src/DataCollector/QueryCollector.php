@@ -7,7 +7,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Barryvdh\Debugbar\Support\Explain;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\QueryFormatter;
@@ -16,7 +15,7 @@ use Illuminate\Support\Str;
 /**
  * Collects data about SQL statements executed with PDO
  */
-class QueryCollector  extends DataCollector implements Renderable, AssetProvider
+class QueryCollector extends DataCollector implements Renderable, AssetProvider
 {
     protected array $queries = [];
     protected int $queryCount = 0;
@@ -665,7 +664,7 @@ class QueryCollector  extends DataCollector implements Renderable, AssetProvider
         return [
             'js' => [
                 __DIR__ . '/../../resources/queries/widget.js',
-//                'widgets/sqlqueries/widget.js',
+                //                'widgets/sqlqueries/widget.js',
             ],
             'css' => 'widgets/sqlqueries/widget.css',
         ];
