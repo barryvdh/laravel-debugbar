@@ -38,7 +38,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $kernel->pushMiddleware(\Illuminate\Session\Middleware\StartSession::class);
         $kernel->pushMiddleware(\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class);
 
-        \Orchestra\Testbench\Dusk\Options::withoutUI();
+        //        \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
 
     protected function addWebRoutes(Router $router)
@@ -187,10 +187,6 @@ class DebugbarBrowserTest extends BrowserTestCase
 
     public function testDatabaseCollectsQueries()
     {
-        if (version_compare($this->app->version(), '10', '<')) {
-            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
-        }
-
         $this->browse(function (Browser $browser) {
             $browser->visit('web/query')
                 ->waitFor('.phpdebugbar')
@@ -199,11 +195,11 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
                 ->waitForText('executed')
-                ->assertSee('1 statement was executed')
+                ->waitForText('1 statements were executed')
                 ->with('.phpdebugbar-widgets-sqlqueries', function ($queriesPane) {
                     $queriesPane->assertSee('SELECT * FROM users')
-                        ->click('.phpdebugbar-widgets-expandable:nth-child(2)')
-                        ->assertSee('Bindings')
+                        ->click('.phpdebugbar-widgets-list-item:nth-child(2)')
+                        ->assertSee('Params')
                         ->assertSee('debuguser')
                         ->assertSee('Backtrace')
                         ->assertSee('LaravelDebugbar.php:');
@@ -226,11 +222,11 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
                 ->waitForText('executed')
-                ->assertSee('1 statement was executed')
+                ->assertSee('1 statements were executed')
                 ->with('.phpdebugbar-widgets-sqlqueries', function ($queriesPane) {
                     $queriesPane->assertSee('SELECT * FROM users')
-                        ->click('.phpdebugbar-widgets-expandable:nth-child(2)')
-                        ->assertSee('Bindings')
+                        ->click('.phpdebugbar-widgets-list-item:nth-child(2)')
+                        ->assertSee('Params')
                         ->assertSee('debuguser')
                         ->assertSee('Backtrace')
                         ->assertSee('LaravelDebugbar.php:');
@@ -241,10 +237,6 @@ class DebugbarBrowserTest extends BrowserTestCase
 
     public function testDatabaseCollectsQueriesWithSoftLimit()
     {
-        if (version_compare($this->app->version(), '10', '<')) {
-            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
-        }
-
         $this->browse(function (Browser $browser) {
             $browser->visit('web/query/200')
                 ->waitFor('.phpdebugbar')
@@ -253,7 +245,7 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
                 ->waitForText('executed')
-                ->waitForText('200 statements were executed (100 duplicates)')
+                ->waitForText('200 statements were executed, 100 of which were duplicates, 100 unique.')
                 ->waitForText('Query soft limit for Debugbar is reached after 100 queries, additional 100 queries only show the query.')
                 ->screenshotElement('.phpdebugbar', 'queries-expanded');
         });
@@ -261,10 +253,6 @@ class DebugbarBrowserTest extends BrowserTestCase
 
     public function testDatabaseCollectsQueriesWithHardLimit()
     {
-        if (version_compare($this->app->version(), '10', '<')) {
-            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
-        }
-
         $this->browse(function (Browser $browser) {
             $browser->visit('web/query/600')
                 ->waitFor('.phpdebugbar')
@@ -273,7 +261,7 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
                 ->waitForText('executed')
-                ->waitForText('600 statements were executed, 100 have been excluded (400 duplicates)')
+                ->waitForText('600 statements were executed, 400 of which were duplicates, 200 unique.')
                 ->waitForText('Query soft and hard limit for Debugbar are reached. Only the first 100 queries show details. Queries after the first 500 are ignored. ')
                 ->screenshotElement('.phpdebugbar', 'queries-expanded');
         });
