@@ -489,8 +489,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             $statements[] = [
                 'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
-                'params' => [],
-                'bindings' => $query['bindings'] ?? [],
+                'params' => $query['bindings'] ?? [],
                 'hints' => $query['hints'],
                 'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
@@ -663,8 +662,8 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     {
         return [
             'js' => [
+                'widgets/sqlqueries/widget.js',
                 __DIR__ . '/../../resources/queries/widget.js',
-                //                'widgets/sqlqueries/widget.js',
             ],
             'css' => 'widgets/sqlqueries/widget.css',
         ];
