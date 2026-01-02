@@ -10,6 +10,8 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\QueryFormatter;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Str;
 
 /**
@@ -28,8 +30,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     protected array $middleware = [];
     protected bool $explainQuery = false;
     protected array $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
-    protected bool $showHints = false;
-    protected bool $showCopyButton = false;
     protected array $reflection = [];
     protected array $excludePaths = [];
     protected array $backtraceExcludePaths = [
@@ -76,22 +76,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     public function setRenderSqlWithParams(bool $enabled = true): void
     {
         $this->renderSqlWithParams = $enabled;
-    }
-
-    /**
-     * Show or hide the hints in the parameters
-     */
-    public function setShowHints(bool $enabled = true): void
-    {
-        $this->showHints = $enabled;
-    }
-
-    /**
-     * Show or hide copy button next to the queries
-     */
-    public function setShowCopyButton(bool $enabled = true): void
-    {
-        $this->showCopyButton = $enabled;
     }
 
     /**
@@ -152,7 +136,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         $this->lastMemoryUsage = memory_get_usage(false);
     }
 
-    public function addQuery(mixed $query): void
+    public function addQuery(QueryExecuted $query): void
     {
         $this->queryCount++;
 
@@ -166,18 +150,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         $time = $query->time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
-        $hints = $this->performQueryAnalysis($sql);
-
-        $pdo = null;
-        try {
-            $pdo = $query->connection->getPdo();
-
-            if (! ($pdo instanceof \PDO)) {
-                $pdo = null;
-            }
-        } catch (\Throwable $e) {
-            // ignore error for non-pdo laravel drivers
-        }
 
         $source = [];
 
@@ -203,64 +175,11 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             'source' => $source,
             'connection' => $query->connection,
             'driver' => $query->connection->getConfig('driver'),
-            'hints' => ($this->showHints && !$limited) ? $hints : null,
-            'show_copy' => $this->showCopyButton,
         ];
 
         if ($this->timeCollector !== null) {
             $this->timeCollector->addMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'db', 'Database Query');
         }
-    }
-
-    /**
-     * Mimic mysql_real_escape_string
-     */
-    protected function emulateQuote(string $value): string
-    {
-        $search = ["\\",  "\x00", "\n",  "\r",  "'",  '"', "\x1a"];
-        $replace = ["\\\\","\\0","\\n", "\\r", "\'", '\"', "\\Z"];
-
-        return "'" . str_replace($search, $replace, $value) . "'";
-    }
-
-    /**
-     * Explainer::performQueryAnalysis()
-     *
-     * Perform simple regex analysis on the code
-     *
-     * @package xplain (https://github.com/rap2hpoutre/mysql-xplain-xplain)
-     *
-     * @author e-doceo
-     * @copyright 2014
-     */
-    protected function performQueryAnalysis(string $query): array
-    {
-        // @codingStandardsIgnoreStart
-        $hints = [];
-        if (preg_match('/^\\s*SELECT\\s*`?[a-zA-Z0-9]*`?\\.?\\*/i', $query)) {
-            $hints[] = 'Use <code>SELECT *</code> only if you need all columns from table';
-        }
-        if (preg_match('/ORDER BY RAND()/i', $query)) {
-            $hints[] = '<code>ORDER BY RAND()</code> is slow, try to avoid if you can.
-                You can <a href="https://stackoverflow.com/questions/2663710/how-does-mysqls-order-by-rand-work" target="_blank">read this</a>
-                or <a href="https://stackoverflow.com/questions/1244555/how-can-i-optimize-mysqls-order-by-rand-function" target="_blank">this</a>';
-        }
-        if (str_contains($query, '!=')) {
-            $hints[] = 'The <code>!=</code> operator is not standard. Use the <code>&lt;&gt;</code> operator to test for inequality instead.';
-        }
-        if (stripos($query, 'WHERE') === false && preg_match('/^(SELECT) /i', $query)) {
-            $hints[] = 'The <code>SELECT</code> statement has no <code>WHERE</code> clause and could examine many more rows than intended';
-        }
-        if (preg_match('/LIMIT\\s/i', $query) && stripos($query, 'ORDER BY') === false) {
-            $hints[] = '<code>LIMIT</code> without <code>ORDER BY</code> causes non-deterministic results, depending on the query execution plan';
-        }
-        if (preg_match('/LIKE\\s[\'"](%.*?)[\'"]/i', $query, $matches)) {
-            $hints[] = 'An argument has a leading wildcard character: <code>' . $matches[1] . '</code>.
-                The predicate with this argument is not sargable and cannot use an index if one exists.';
-        }
-        return $hints;
-
-        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -441,8 +360,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             'source' => $source,
             'connection' => $connection,
             'driver' => $connection->getConfig('driver'),
-            'hints' => null,
-            'show_copy' => false,
         ];
     }
 
@@ -490,8 +407,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
                 'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
                 'params' => $query['bindings'] ?? [],
-                'hints' => $query['hints'],
-                'show_copy' => $query['show_copy'],
                 'backtrace' => array_values($query['source']),
                 'start' => $query['start'] ?? null,
                 'duration' => $query['time'],
