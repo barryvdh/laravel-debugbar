@@ -929,8 +929,8 @@ class LaravelDebugbar extends DebugBar
             $first = $content[0];
             $last  = $content[strlen($content) - 1];
             if (
-                ($first === '{' && $last === '}') ||
-                ($first === '[' && $last === ']')
+                ($first === '{' && $last === '}')
+                || ($first === '[' && $last === ']')
             ) {
                 // Must contain a colon or comma
                 return strpbrk($content, ':,') !== false;
