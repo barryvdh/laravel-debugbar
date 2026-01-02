@@ -191,6 +191,14 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         $sources = [];
 
         foreach ($stack as $index => $trace) {
+            if (($trace['class'] ?? null) == 'Yajra\DataTables\Services\DataTable') {
+                $reflector = new \ReflectionClass(get_class($trace['object']));
+                $sources[] = $this->parseTrace($index, [
+                    'class' => $reflector->getName(),
+                    'file' => $reflector->getFileName(),
+                ]);
+            }
+
             $sources[] = $this->parseTrace($index, $trace);
         }
 
