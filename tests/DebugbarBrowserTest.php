@@ -38,7 +38,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $kernel->pushMiddleware(\Illuminate\Session\Middleware\StartSession::class);
         $kernel->pushMiddleware(\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class);
 
-//        \Orchestra\Testbench\Dusk\Options::withoutUI();
+        //        \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
 
     protected function addWebRoutes(Router $router)
