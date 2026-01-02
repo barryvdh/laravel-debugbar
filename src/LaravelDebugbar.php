@@ -913,29 +913,29 @@ class LaravelDebugbar extends DebugBar
         return false;
     }
 
-    /**
-     * @param  \Symfony\Component\HttpFoundation\Response $response
-     * @return bool
-     */
-    protected function isJsonResponse(Response $response)
+    protected function isJsonResponse(Response $response): bool
     {
         if ($response->headers->get('Content-Type') == 'application/json') {
             return true;
         }
 
         $content = $response->getContent();
-
-        if (is_string($content)) {            
-            if (function_exists('json_validate')) {
-                return json_validate($content);
+        if (is_string($content)) {
+            $content = trim($content);
+            if ($content === '') {
+                return false;
             }
 
-            // PHP <= 8.2 check
-            json_decode($content, true);
-
-            return json_last_error() === JSON_ERROR_NONE;
-        } elseif (is_array($content)) {
-            return true;
+            // Quick check to see if it looks like JSON
+            $first = $content[0];
+            $last  = $content[strlen($content) - 1];
+            if (
+                ($first === '{' && $last === '}') ||
+                ($first === '[' && $last === ']')
+            ) {
+                // Must contain a colon or comma
+                return strpbrk($content, ':,') !== false;
+            }
         }
 
         return false;
