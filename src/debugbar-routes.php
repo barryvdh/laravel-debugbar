@@ -12,7 +12,7 @@ use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 $routeConfig = [
     'prefix' => app('config')->get('debugbar.route_prefix'),
     'domain' => app('config')->get('debugbar.route_domain'),
-   'middleware' => array_merge(app('config')->get('debugbar.route_middleware', []), [DebugbarEnabled::class]),
+    'middleware' => array_merge(app('config')->get('debugbar.route_middleware', []), [DebugbarEnabled::class]),
 ];
 
 app('router')->group($routeConfig, function ($router) {
