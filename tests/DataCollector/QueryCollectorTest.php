@@ -32,7 +32,7 @@ class QueryCollectorTest extends TestCase
             $this->assertEquals(1, $collection['nb_statements']);
 
             tap(Arr::first($collection['statements']), function (array $statement) {
-                $this->assertEquals([3, '{4}'], $statement['bindings']);
+                $this->assertEquals([3, '{4}'], $statement['params']);
                 $this->assertEquals(<<<SQL
                     SELECT ('[1, 2, 3]'::jsonb ? 3) as a, ('[4, 5, 6]'::jsonb ?| '{4}') as b, 'hello world ? example ??' as c
                     SQL, $statement['sql']);

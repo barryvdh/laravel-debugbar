@@ -12,5 +12,7 @@ It should not impact your application, unless you are using custom collectors
  - Lumen support (no longer maintained)
  - FileCollector (no longer useful)
 
+### Other changes
+ - The Query Collector now extends the php-debugbar widget. The bindings parameter has been removed in favor of 'params'.
 
 

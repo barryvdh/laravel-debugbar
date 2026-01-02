@@ -620,39 +620,14 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         }
 
         if ($query['type'] === 'query' && $this->renderSqlWithParams) {
-            $bindings = $this->getQueryFormatter()->checkBindings($query['bindings']);
-            if (!empty($bindings)) {
-                $pdo = null;
-                try {
-                    $pdo = $query['connection']->getPdo();
-                } catch (\Throwable) {
-                    // ignore error for non-pdo laravel drivers
-                }
-
-                foreach ($bindings as $key => $binding) {
-                    // This regex matches placeholders only, not the question marks,
-                    // nested in quotes, while we iterate through the bindings
-                    // and substitute placeholders by suitable values.
-                    $regex = is_numeric($key)
-                        ? "/(?<!\?)\?(?=(?:[^'\\\']*'[^'\\']*')*[^'\\\']*$)(?!\?)/"
-                        : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
-
-                    // Mimic bindValue and only quote non-integer and non-float data types
-                    if (!is_int($binding) && !is_float($binding) && !is_null($binding)) {
-                        if ($pdo) {
-                            try {
-                                $binding = $pdo->quote((string) $binding);
-                            } catch (\Exception $e) {
-                                $binding = $this->emulateQuote($binding);
-                            }
-                        } else {
-                            $binding = $this->emulateQuote($binding);
-                        }
-                    }
-
-                    $sql = preg_replace($regex, addcslashes($binding ?? 'NULL', '$'), $sql, 1);
-                }
+            $pdo = null;
+            try {
+                $pdo = $query['connection']->getPdo();
+            } catch (\Throwable) {
+                // ignore error for non-pdo laravel drivers
             }
+
+            $sql = $this->getQueryFormatter()->formatSqlWithBindings($sql, $query['bindings'], $pdo);
         }
 
         return $this->getQueryFormatter()->formatSql($sql);
