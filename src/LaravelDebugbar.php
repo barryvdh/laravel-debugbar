@@ -382,14 +382,6 @@ class LaravelDebugbar extends DebugBar
                 $queryCollector->setExplainSource(true, $types);
             }
 
-            if ($config->get('debugbar.options.db.hints', true)) {
-                $queryCollector->setShowHints(true);
-            }
-
-            if ($config->get('debugbar.options.db.show_copy', false)) {
-                $queryCollector->setShowCopyButton(true);
-            }
-
             $this->addCollector($queryCollector);
 
             try {
