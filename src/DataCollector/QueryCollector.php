@@ -282,7 +282,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         $filename = pathinfo($file, PATHINFO_FILENAME);
 
         foreach ($this->middleware as $alias => $class) {
-            if (!is_null($class) && str_contains($class, $filename)) {
+            if (is_string($class) && str_contains($class, $filename)) {
                 return $alias;
             }
         }
