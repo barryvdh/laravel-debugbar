@@ -846,6 +846,7 @@ class LaravelDebugbar extends DebugBar
             && !$this->isJsonRequest($request, $response)
             && $response->getContent() !== false
             && in_array($request->getRequestFormat(), [null, 'html'], true)
+            && !$this->isJsonResponse($response)
         ) {
             try {
                 $this->injectDebugbar($response);
@@ -906,6 +907,34 @@ class LaravelDebugbar extends DebugBar
         $content = $response->getContent();
         if (is_string($content) && strlen($content) > 0 && in_array($content[0], ['{', '['], true)) {
             return true;
+        }
+
+        return false;
+    }
+
+    protected function isJsonResponse(Response $response): bool
+    {
+        if ($response->headers->get('Content-Type') == 'application/json') {
+            return true;
+        }
+
+        $content = $response->getContent();
+        if (is_string($content)) {
+            $content = trim($content);
+            if ($content === '') {
+                return false;
+            }
+
+            // Quick check to see if it looks like JSON
+            $first = $content[0];
+            $last  = $content[strlen($content) - 1];
+            if (
+                ($first === '{' && $last === '}') ||
+                ($first === '[' && $last === ']')
+            ) {
+                // Must contain a colon or comma
+                return strpbrk($content, ':,') !== false;
+            }
         }
 
         return false;
