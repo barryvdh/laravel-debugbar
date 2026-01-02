@@ -1,83 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use DebugBar\DebugBar;
 use DebugBar\JavascriptRenderer as BaseJavascriptRenderer;
-use Illuminate\Routing\UrlGenerator;
 
 /**
  * {@inheritdoc}
  */
 class JavascriptRenderer extends BaseJavascriptRenderer
 {
-    // Use XHR handler by default, instead of jQuery
-    protected $ajaxHandlerBindToJquery = false;
-    protected $ajaxHandlerBindToXHR = true;
-
     public function __construct(DebugBar $debugBar, $baseUrl = null, $basePath = null)
     {
         parent::__construct($debugBar, $baseUrl, $basePath);
 
-        $this->cssFiles['laravel'] = __DIR__ . '/Resources/laravel-debugbar.css';
-        $this->cssVendors['fontawesome'] = __DIR__ . '/Resources/vendor/font-awesome/style.css';
-        $this->jsFiles['laravel-sql'] = __DIR__ . '/Resources/sqlqueries/widget.js';
-        $this->jsFiles['laravel-cache'] = __DIR__ . '/Resources/cache/widget.js';
-        $this->jsFiles['laravel-view'] = __DIR__ . '/Resources/templates/widget.js';
+        $resourceDir = __DIR__ . '/../resources';
 
-        $theme = config('debugbar.theme', 'auto');
-        switch ($theme) {
-            case 'dark':
-                $this->cssFiles['laravel-dark'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
-                break;
-            case 'auto':
-                $this->cssFiles['laravel-dark-0'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-start.css';
-                $this->cssFiles['laravel-dark-1'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode.css';
-                $this->cssFiles['laravel-dark-2'] = __DIR__ . '/Resources/laravel-debugbar-dark-mode-media-end.css';
-        }
-    }
+        $this->additionalAssets[] = [
+            'base_path' => $resourceDir,
+            'css' => ['laravel-debugbar.css', 'laravel-icons.css'],
+        ];
 
-    /**
-     * Set the URL Generator
-     *
-     * @param \Illuminate\Routing\UrlGenerator $url
-     * @deprecated
-     */
-    public function setUrlGenerator($url)
-    {
+        $this->setTheme(config('debugbar.theme', 'auto'));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renderHead()
+    public function renderHead(): string
     {
-        $cssRoute = route('debugbar.assets.css', [
+        $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
             'v' => $this->getModifiedTime('css'),
-            'theme' => config('debugbar.theme', 'auto'),
-        ]);
+        ]));
 
-        $jsRoute = route('debugbar.assets.js', [
-            'v' => $this->getModifiedTime('js')
-        ]);
+        $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [
+            'v' => $this->getModifiedTime('js'),
+        ]));
 
-        $cssRoute = preg_replace('/\Ahttps?:/', '', $cssRoute);
-        $jsRoute  = preg_replace('/\Ahttps?:/', '', $jsRoute);
+        $nonce = $this->getNonceAttribute();
 
         $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}' data-turbolinks-eval='false' data-turbo-eval='false'>";
-        $html .= "<script src='{$jsRoute}' data-turbolinks-eval='false' data-turbo-eval='false'></script>";
+        $html .= "<script{$nonce} src='{$jsRoute}' data-turbolinks-eval='false' data-turbo-eval='false'></script>";
 
-        if ($this->isJqueryNoConflictEnabled()) {
-            $html .= '<script data-turbo-eval="false">jQuery.noConflict(true);</script>' . "\n";
+        $inlineHtml = $this->getInlineHtml();
+        if ($nonce != '') {
+            $inlineHtml = preg_replace("/<(script|style)>/", "<$1{$nonce}>", $inlineHtml);
         }
-
-        $html .= $this->getInlineHtml();
-
+        $html .= $inlineHtml;
 
         return $html;
     }
 
-    protected function getInlineHtml()
+    protected function getInlineHtml(): string
     {
         $html = '';
 
@@ -93,9 +69,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Get the last modified time of any assets.
      *
      * @param string $type 'js' or 'css'
-     * @return int
      */
-    protected function getModifiedTime($type)
+    protected function getModifiedTime(string $type): int
     {
         $files = $this->getAssets($type);
 
@@ -113,9 +88,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      * Return assets as a string
      *
      * @param string $type 'js' or 'css'
-     * @return string
      */
-    public function dumpAssetsToString($type)
+    public function dumpAssetsToString(string $type): string
     {
         $files = $this->getAssets($type);
 
@@ -129,12 +103,8 @@ class JavascriptRenderer extends BaseJavascriptRenderer
 
     /**
      * Makes a URI relative to another
-     *
-     * @param string|array $uri
-     * @param string $root
-     * @return string
      */
-    protected function makeUriRelativeTo($uri, $root)
+    protected function makeUriRelativeTo(string|array|null $uri, string $root): string|array
     {
         if (!$root) {
             return $uri;

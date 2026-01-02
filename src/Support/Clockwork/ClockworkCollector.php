@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Support\Clockwork;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Illuminate\Session\SessionManager;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -14,31 +19,33 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ClockworkCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var \Symfony\Component\HttpFoundation\Request $request */
-    protected $request;
-    /** @var  \Symfony\Component\HttpFoundation\Request $response */
-    protected $response;
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-    protected $session;
+    protected Request $request;
+    protected Response $response;
+    protected ?SessionManager $session;
+    protected ?string $currentRequestId = null;
+    protected array $hiddens = [];
 
-    /**
-     * Create a new SymfonyRequestCollector
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Request $response
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     */
-    public function __construct($request, $response, $session = null)
-    {
+    public function __construct(
+        Request $request,
+        Response $response,
+        ?SessionManager $session = null,
+        array $hiddens = []
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->session = $session;
+        $this->hiddens = array_merge($hiddens, [
+            'request_request.password',
+            'request_request.PHP_AUTH_PW',
+            'request_request.php-auth-pw',
+            'request_headers.php-auth-pw.0',
+        ]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'clockwork';
     }
@@ -46,15 +53,15 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
-        return null;
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $request = $this->request;
         $response = $this->response;
@@ -70,19 +77,27 @@ class ClockworkCollector extends DataCollector implements DataCollectorInterface
         ];
 
         if ($this->session) {
-            $sessionAttributes = [];
-            foreach ($this->session->all() as $key => $value) {
-                $sessionAttributes[$key] = $value;
+            $data['sessionData'] = $this->session->all();
+        }
+
+        if (isset($data['headers']['authorization'][0])) {
+            $data['headers']['authorization'][0] = substr($data['headers']['authorization'][0], 0, 12) . '******';
+        }
+
+        $keyAlias = [
+            'request_query' => 'getData',
+            'request_request' => 'postData',
+            'request_headers' => 'headers',
+            'request_cookies' => 'cookies',
+            'session_attributes' => 'sessionData',
+        ];
+        foreach ($this->hiddens as $key) {
+            $key = explode('.', $key);
+            $key[0] = $keyAlias[$key[0]] ?? $key[0];
+            $key = implode('.', $key);
+            if (Arr::has($data, $key)) {
+                Arr::set($data, $key, '******');
             }
-            $data['sessionData'] = $sessionAttributes;
-        }
-
-        if (isset($data['postData']['php-auth-pw'])) {
-            $data['postData']['php-auth-pw'] = '******';
-        }
-
-        if (isset($data['postData']['PHP_AUTH_PW'])) {
-            $data['postData']['PHP_AUTH_PW'] = '******';
         }
 
         return $data;

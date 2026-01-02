@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -13,7 +15,7 @@ class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
     /**
      * Get package providers.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return array
      */
@@ -25,7 +27,7 @@ class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
     /**
      * Get package aliases.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return array
      */

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataFormatter;
 
-use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
+use DebugBar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Tests\TestCase;
 
 class QueryFormatterTest extends TestCase
@@ -17,8 +19,8 @@ class QueryFormatterTest extends TestCase
                 "Another ' string",
                 [
                     'nested',
-                    'array'
-                ]
+                    'array',
+                ],
             ],
         ];
 
@@ -36,7 +38,7 @@ class QueryFormatterTest extends TestCase
 
         $bindings = [
             'some string',
-            $object
+            $object,
         ];
 
         $queryFormatter = new QueryFormatter();

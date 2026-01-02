@@ -1,183 +1,94 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
-use DebugBar\Bridge\Twig\TwigCollector;
+use DebugBar\DataCollector\TemplateCollector;
 use Illuminate\View\View;
-use InvalidArgumentException;
 
-class ViewCollector extends TwigCollector
+class ViewCollector extends TemplateCollector
 {
-    protected $name;
-    protected $templates = [];
-    protected $collect_data;
-    protected $exclude_paths;
-
-    /**
-     * A list of known editor strings.
-     *
-     * @var array
-     */
-    protected $editors = [
-        'sublime' => 'subl://open?url=file://%file&line=%line',
-        'textmate' => 'txmt://open?url=file://%file&line=%line',
-        'emacs' => 'emacs://open?url=file://%file&line=%line',
-        'macvim' => 'mvim://open/?url=file://%file&line=%line',
-        'phpstorm' => 'phpstorm://open?file=%file&line=%line',
-        'idea' => 'idea://open?file=%file&line=%line',
-        'vscode' => 'vscode://file/%file:%line',
-        'vscode-insiders' => 'vscode-insiders://file/%file:%line',
-        'vscode-remote' => 'vscode://vscode-remote/%file:%line',
-        'vscode-insiders-remote' => 'vscode-insiders://vscode-remote/%file:%line',
-        'vscodium' => 'vscodium://file/%file:%line',
-        'nova' => 'nova://core/open/file?filename=%file&line=%line',
-        'xdebug' => 'xdebug://%file@%line',
-        'atom' => 'atom://core/open/file?filename=%file&line=%line',
-        'espresso' => 'x-espresso://open?filepath=%file&lines=%line',
-        'netbeans' => 'netbeans://open/?f=%file:%line',
-    ];
-
-    /**
-     * Create a ViewCollector
-     *
-     * @param bool $collectData Collects view data when tru
-     * @param string[] $excludePaths Paths to exclude from collection
-     */
-    public function __construct($collectData = true, $excludePaths = [])
-    {
-        $this->setDataFormatter(new SimpleFormatter());
-        $this->collect_data = $collectData;
-        $this->templates = [];
-        $this->exclude_paths = $excludePaths;
-    }
-
-    public function getName()
+    public function getName(): string
     {
         return 'views';
     }
 
-    public function getWidgets()
-    {
-        return [
-            'views' => [
-                'icon' => 'leaf',
-                'widget' => 'PhpDebugBar.Widgets.LaravelViewTemplatesWidget',
-                'map' => 'views',
-                'default' => '[]'
-            ],
-            'views:badge' => [
-                'map' => 'views.nb_templates',
-                'default' => 0
-            ]
-        ];
-    }
-
-    /**
-     * Get the editor href for a given file and line, if available.
-     *
-     * @param string $filePath
-     * @param int    $line
-     *
-     * @throws InvalidArgumentException If editor resolver does not return a string
-     *
-     * @return null|string
-     */
-    protected function getEditorHref($filePath, $line)
-    {
-        if (empty(config('debugbar.editor'))) {
-            return null;
-        }
-
-        if (empty($this->editors[config('debugbar.editor')])) {
-            throw new InvalidArgumentException(
-                'Unknown editor identifier: ' . config('debugbar.editor') . '. Known editors:' .
-                implode(', ', array_keys($this->editors))
-            );
-        }
-
-        $filePath = $this->replaceSitesPath($filePath);
-
-        $url = str_replace(['%file', '%line'], [$filePath, $line], $this->editors[config('debugbar.editor')]);
-
-        return $url;
-    }
-
     /**
      * Add a View instance to the Collector
-     *
-     * @param \Illuminate\View\View $view
      */
-    public function addView(View $view)
+    public function addView(View $view): void
     {
         $name = $view->getName();
+        $type = null;
+        $data = $view->getData();
         $path = $view->getPath();
 
-        if (!is_object($path)) {
-            if ($path) {
-                $path = ltrim(str_replace(base_path(), '', realpath($path)), '/');
-            }
+        if (class_exists('\Inertia\Inertia')) {
+            [$name, $type, $data, $path] = $this->getInertiaView($name, $data, $path);
+        }
 
-            if (substr($path, -10) == '.blade.php') {
-                $type = 'blade';
-            } else {
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-            }
-        } else {
+        if (is_object($path)) {
             $type = get_class($view);
-            $path = '';
+            $path = null;
         }
 
-        foreach ($this->exclude_paths as $excludePath) {
-            if (strpos($path, $excludePath) !== false) {
-                return;
+        if ($path) {
+            if (!$type) {
+                if (substr($path, -10) == '.blade.php') {
+                    $type = 'blade';
+                } else {
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                }
+            }
+
+            $shortPath = $this->normalizeFilePath($path);
+            foreach ($this->exclude_paths as $excludePath) {
+                if (str_starts_with($shortPath, $excludePath)) {
+                    return;
+                }
             }
         }
 
-        if (!$this->collect_data) {
-            $params = array_keys($view->getData());
-        } else {
-            $data = [];
-            foreach ($view->getData() as $key => $value) {
-                $data[$key] = $this->getDataFormatter()->formatVar($value);
+        $this->addTemplate($name, $data, $type, $path);
+
+        if ($this->timeCollector !== null) {
+            $time = microtime(true);
+            $this->timeCollector->addMeasure('View: ' . $name, $time, $time, [], 'views', 'View');
+        }
+    }
+
+    private function getInertiaView(string $name, array $data, ?string $path): array
+    {
+        if (isset($data['page']) && is_array($data['page'])) {
+            $data = $data['page'];
+        }
+
+        if (isset($data['props'], $data['component'])) {
+            $name = $data['component'];
+            $data = $data['props'];
+
+            if ($files = glob(resource_path(config('debugbar.options.views.inertia_pages') . '/' . $name . '.*'))) {
+                $path = $files[0];
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+
+                if (in_array($type, ['js', 'jsx'])) {
+                    $type = 'react';
+                }
             }
-            $params = $data;
         }
 
-        $template = [
-            'name' => $path ? sprintf('%s (%s)', $name, $path) : $name,
-            'param_count' => count($params),
-            'params' => $params,
-            'type' => $type,
-            'editorLink' => $this->getEditorHref($view->getPath(), 0),
-        ];
+        return [$name, $type ?? '', $data, $path];
+    }
 
-        if ($this->getXdebugLink($path)) {
-            $template['xdebug_link'] = $this->getXdebugLink(realpath($view->getPath()));
+    public function addInertiaAjaxView(array $data): void
+    {
+        [$name, $type, $data, $path] = $this->getInertiaView('', $data, '');
+
+        if (! $name) {
+            return;
         }
 
-        $this->templates[] = $template;
-    }
-
-    public function collect()
-    {
-        $templates = $this->templates;
-
-        return [
-            'nb_templates' => count($templates),
-            'templates' => $templates,
-        ];
-    }
-
-    /**
-     * Replace remote path
-     *
-     * @param string $filePath
-     *
-     * @return string
-     */
-    protected function replaceSitesPath($filePath)
-    {
-        return str_replace(config('debugbar.remote_sites_path'), config('debugbar.local_sites_path'), $filePath);
+        $this->addTemplate($name, $data, $type, $path);
     }
 }

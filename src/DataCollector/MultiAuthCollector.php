@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Auth\Recaller;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Str;
@@ -25,9 +25,12 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /** @var bool */
     protected $showName = false;
 
+    /** @var bool */
+    protected $showGuardsData = true;
+
     /**
      * @param \Illuminate\Auth\AuthManager $auth
-     * @param array $guards
+     * @param array                        $guards
      */
     public function __construct($auth, $guards)
     {
@@ -37,17 +40,24 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
     /**
      * Set to show the users name/email
-     * @param bool $showName
      */
-    public function setShowName($showName)
+    public function setShowName(bool $showName): void
     {
         $this->showName = (bool) $showName;
     }
 
     /**
+     * Set to hide the guards tab, and show only name
+     */
+    public function setShowGuardsData(bool $showGuardsData): void
+    {
+        $this->showGuardsData = (bool) $showGuardsData;
+    }
+
+    /**
      * @{inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $data = [
             'guards' => [],
@@ -74,24 +84,22 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         foreach ($data['guards'] as $key => $var) {
             if (!is_string($data['guards'][$key])) {
-                $data['guards'][$key] = $this->formatVar($var);
+                $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
             }
         }
 
         $data['names'] = rtrim($names, ', ');
+        if (!$this->showGuardsData) {
+            unset($data['guards']);
+        }
 
         return $data;
     }
 
-    private function hasUser(Guard $guard)
+    private function hasUser(Guard $guard): bool
     {
         if (method_exists($guard, 'hasUser')) {
             return $guard->hasUser();
-        }
-
-        // For Laravel 5.5
-        if (method_exists($guard, 'alreadyAuthenticated')) {
-            return $guard->alreadyAuthenticated();
         }
 
         return false;
@@ -99,10 +107,8 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
     /**
      * Get displayed user information
-     * @param \Illuminate\Auth\UserInterface $user
-     * @return array
      */
-    protected function getUserInformation($user = null)
+    protected function getUserInformation(mixed $user = null): array
     {
         // Defaults
         if (is_null($user)) {
@@ -113,14 +119,16 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         // The default auth identifer is the ID number, which isn't all that
-        // useful. Try username and email.
-        $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->id;
-        if (is_numeric($identifier)) {
+        // useful. Try username, email and name.
+        $identifier = $user instanceof Authenticatable ? $user->getAuthIdentifier() : $user->getKey();
+        if (is_numeric($identifier) || Str::isUuid($identifier) || Str::isUlid($identifier)) {
             try {
                 if (isset($user->username)) {
                     $identifier = $user->username;
                 } elseif (isset($user->email)) {
                     $identifier = $user->email;
+                } elseif (isset($user->name)) {
+                    $identifier = Str::limit($user->name, 24);
                 }
             } catch (\Throwable $e) {
             }
@@ -135,7 +143,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /**
      * @{inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'auth';
     }
@@ -143,16 +151,18 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /**
      * @{inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
-        $widgets = [
-            "auth" => [
+        $widgets = [];
+
+        if ($this->showGuardsData) {
+            $widgets["auth"] = [
                 "icon" => "lock",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "auth.guards",
-                "default" => "{}"
-            ]
-        ];
+                "default" => "{}",
+            ];
+        }
 
         if ($this->showName) {
             $widgets['auth.name'] = [

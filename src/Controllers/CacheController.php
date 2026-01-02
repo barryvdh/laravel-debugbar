@@ -1,8 +1,8 @@
 <?php
 
-namespace Barryvdh\Debugbar\Controllers;
+declare(strict_types=1);
 
-use Illuminate\Http\Response;
+namespace Barryvdh\Debugbar\Controllers;
 
 class CacheController extends BaseController
 {

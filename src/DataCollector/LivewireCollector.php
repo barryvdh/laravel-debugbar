@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Fluent;
-use Illuminate\Support\Str;
 use Livewire\Livewire;
+use Livewire\Component;
 
 /**
  * Collector for Models.
@@ -27,7 +26,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             /** @var \Livewire\Component $component */
             $component = $view->getData()['_instance'];
 
-            // Create an unique name for each compoent
+            // Create a unique name for each component
             $key = $component->getName() . ' #' . $component->id;
 
             $data = [
@@ -44,11 +43,31 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->id;
 
-            $this->data[$key] = $this->formatVar($data);
+            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
+        });
+
+        Livewire::listen('render', function (Component $component) use ($request) {
+            // Create an unique name for each compoent
+            $key = $component->getName() . ' #' . $component->getId();
+
+            $data = [
+                'data' => $component->all(),
+            ];
+
+            if ($request->request->get('id') == $component->getId()) {
+                $data['oldData'] = $request->request->get('data');
+                $data['actionQueue'] = $request->request->get('actionQueue');
+            }
+
+            $data['name'] = $component->getName();
+            $data['component'] = get_class($component);
+            $data['id'] = $component->getId();
+
+            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
         });
     }
 
-    public function collect()
+    public function collect(): array
     {
         return ['data' => $this->data, 'count' => count($this->data)];
     }
@@ -56,7 +75,7 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'livewire';
     }
@@ -64,19 +83,19 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             "livewire" => [
-                "icon" => "bolt",
+                "icon" => "brand-livewire",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => "livewire.data",
-                "default" => "{}"
+                "default" => "{}",
             ],
             'livewire:badge' => [
                 'map' => 'livewire.count',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ];
     }
 }

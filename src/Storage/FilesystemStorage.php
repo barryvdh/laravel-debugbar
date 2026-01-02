@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Storage;
 
 use DebugBar\Storage\StorageInterface;
@@ -11,16 +13,16 @@ use Symfony\Component\Finder\Finder;
  */
 class FilesystemStorage implements StorageInterface
 {
-    protected $dirname;
-    protected $files;
-    protected $gc_lifetime = 24;     // Hours to keep collected data;
-    protected $gc_probability = 5;   // Probability of GC being run on a save request. (5/100)
+    protected string $dirname;
+    protected Filesystem $files;
+    protected int $gc_lifetime = 24;     // Hours to keep collected data;
+    protected int $gc_probability = 5;   // Probability of GC being run on a save request. (5/100)
 
     /**
-     * @param \Illuminate\Filesystem\Filesystem $files The filesystem
-     * @param string $dirname Directories where to store files
+     * @param \Illuminate\Filesystem\Filesystem $files   The filesystem
+     * @param string                            $dirname Directories where to store files
      */
-    public function __construct($files, $dirname)
+    public function __construct(Filesystem $files, string $dirname)
     {
         $this->files = $files;
         $this->dirname = rtrim($dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -29,10 +31,10 @@ class FilesystemStorage implements StorageInterface
     /**
      * {@inheritDoc}
      */
-    public function save($id, $data)
+    public function save(string $id, array $data): void
     {
         if (!$this->files->isDirectory($this->dirname)) {
-            if ($this->files->makeDirectory($this->dirname, 0777, true)) {
+            if ($this->files->makeDirectory($this->dirname, 0o777, true)) {
                 $this->files->put($this->dirname . '.gitignore', "*\n!.gitignore\n");
             } else {
                 throw new \Exception("Cannot create directory '$this->dirname'..");
@@ -54,22 +56,20 @@ class FilesystemStorage implements StorageInterface
     /**
      * Create the filename for the data, based on the id.
      *
-     * @param $id
-     * @return string
      */
-    public function makeFilename($id)
+    public function makeFilename(string $id): string
     {
         return $this->dirname . basename($id) . ".json";
     }
 
     /**
-     * Delete files older then a certain age (gc_lifetime)
+     * Delete files older than a certain age (gc_lifetime)
      */
-    protected function garbageCollect()
+    protected function garbageCollect(): void
     {
         foreach (
             Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
-                $this->dirname
+                $this->dirname,
             ) as $file
         ) {
             $this->files->delete($file->getRealPath());
@@ -79,19 +79,24 @@ class FilesystemStorage implements StorageInterface
     /**
      * {@inheritDoc}
      */
-    public function get($id)
+    public function get(string $id): array
     {
-        return json_decode($this->files->get($this->makeFilename($id)), true);
+        $fileName = $this->makeFilename($id);
+        if (!$this->files->exists($fileName)) {
+            return [];
+        }
+
+        return json_decode($this->files->get($fileName), true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function find(array $filters = [], $max = 20, $offset = 0)
+    public function find(array $filters = [], int $max = 20, int $offset = 0): array
     {
         // Sort by modified time, newest first
         $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
-            return strcmp($b->getMTime(), $a->getMTime());
+            return $b->getMTime() <=> $a->getMTime();
         };
 
         // Loop through .json files, filter the metadata and stop when max is found.
@@ -118,11 +123,8 @@ class FilesystemStorage implements StorageInterface
     /**
      * Filter the metadata for matches.
      *
-     * @param $meta
-     * @param $filters
-     * @return bool
      */
-    protected function filter($meta, $filters)
+    protected function filter(array $meta, array $filters): bool
     {
         foreach ($filters as $key => $value) {
             if (!isset($meta[$key]) || fnmatch($value, $meta[$key]) === false) {
@@ -135,7 +137,7 @@ class FilesystemStorage implements StorageInterface
     /**
      * {@inheritDoc}
      */
-    public function clear()
+    public function clear(): void
     {
         foreach (Finder::create()->files()->name('*.json')->in($this->dirname) as $file) {
             $this->files->delete($file->getRealPath());

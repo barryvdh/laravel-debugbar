@@ -1,42 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar;
 
 use DebugBar\HttpDriverInterface;
+use Illuminate\Contracts\Session\Session as SessionContract;
+use Illuminate\Session\SessionManager;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * HTTP driver for Symfony Request/Session
+ *
  */
 class SymfonyHttpDriver implements HttpDriverInterface
 {
-    /** @var \Illuminate\Contracts\Session\Session|\Illuminate\Session\SessionManager */
-    protected $session;
+    protected SessionContract|SessionManager $session;
 
-    /** @var \Symfony\Component\HttpFoundation\Response */
-    protected $response;
+    protected ?Response $response;
 
-    public function __construct($session, $response = null)
+    public function __construct(SessionContract|SessionManager $session, ?Response $response = null)
     {
         $this->session = $session;
         $this->response = $response;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setHeaders(array $headers)
+    public function setResponse(Response $response): void
+    {
+        $this->response = $response;
+    }
+
+    public function setHeaders(array $headers): void
     {
         if (!is_null($this->response)) {
             $this->response->headers->add($headers);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isSessionStarted()
+    public function isSessionStarted(): bool
     {
         if (!$this->session->isStarted()) {
             $this->session->start();
@@ -45,10 +46,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
         return $this->session->isStarted();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setSessionValue($name, $value)
+    public function setSessionValue(string $name, mixed $value): void
     {
         $this->session->put($name, $value);
     }
@@ -56,7 +54,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function hasSessionValue($name)
+    public function hasSessionValue(string $name): bool
     {
         return $this->session->has($name);
     }
@@ -64,7 +62,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function getSessionValue($name)
+    public function getSessionValue(string $name): mixed
     {
         return $this->session->get($name);
     }
@@ -72,7 +70,7 @@ class SymfonyHttpDriver implements HttpDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function deleteSessionValue($name)
+    public function deleteSessionValue(string $name): void
     {
         $this->session->remove($name);
     }

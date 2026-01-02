@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\Models\Person;
@@ -15,11 +17,19 @@ class ModelsCollectorTest extends TestCase
     public function testItCollectsRetrievedModels()
     {
         $this->loadLaravelMigrations();
-
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\ModelsCollector $collector */
+        /** @var \DebugBar\DataCollector\ObjectCountCollector $collector */
         $collector = debugbar()->getCollector('models');
+        $collector->setXdebugLinkTemplate('');
+        $collector->collectCountSummary(false);
+        $collector->setKeyMap([]);
+        $data = [];
+
+        $this->assertEquals(
+            ['data' => $data, 'key_map' => [], 'count' => 0, 'is_counter' => true],
+            $collector->collect(),
+        );
 
         User::create([
             'name' => 'John Doe',
@@ -33,23 +43,59 @@ class ModelsCollectorTest extends TestCase
             'password' => Hash::make('password'),
         ]);
 
+        $data[User::class] = ['created' => 2];
         $this->assertEquals(
-            ['data' => [], 'count' => 0],
-            $collector->collect()
+            [
+                'data' => $data,
+                'count' => 2,
+                'is_counter' => true,
+                'key_map' => [
+                ],
+            ],
+            $collector->collect(),
         );
 
-        User::first();
+        $user = User::first();
 
+        $data[User::class]['retrieved'] = 1;
         $this->assertEquals(
-            ['data' => [User::class => 1], 'count' => 1],
-            $collector->collect()
+            ['data' => $data, 'key_map' => [], 'count' => 3, 'is_counter' => true],
+            $collector->collect(),
+        );
+
+        $user->update(['name' => 'Jane Doe']);
+
+        $data[User::class]['updated'] = 1;
+        $this->assertEquals(
+            [
+                'data' => $data,
+                'count' => 4,
+                'is_counter' => true,
+                'key_map' => [],
+            ],
+            $collector->collect(),
         );
 
         Person::all();
 
+        $data[Person::class] = ['retrieved' => 2];
         $this->assertEquals(
-            ['data' => [User::class => 1, Person::class => 2], 'count' => 3],
-            $collector->collect()
+            ['data' => $data, 'key_map' => [], 'count' => 6, 'is_counter' => true],
+            $collector->collect(),
+        );
+
+        $user->delete();
+
+        $data[User::class]['deleted'] = 1;
+        $this->assertEquals(
+            [
+                'data' => $data,
+                'count' => 7,
+                'is_counter' => true,
+                'key_map' => [
+                ],
+            ],
+            $collector->collect(),
         );
     }
 }

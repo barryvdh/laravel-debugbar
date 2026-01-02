@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
 use Closure;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 /**
  * Based on Illuminate\Foundation\Console\RoutesCommand for Taylor Otwell
@@ -25,30 +23,6 @@ class RouteCollector extends DataCollector implements Renderable
      */
     protected $router;
 
-    /**
-     * A list of known editor strings.
-     *
-     * @var array
-     */
-    protected $editors = [
-        'sublime' => 'subl://open?url=file://%file&line=%line',
-        'textmate' => 'txmt://open?url=file://%file&line=%line',
-        'emacs' => 'emacs://open?url=file://%file&line=%line',
-        'macvim' => 'mvim://open/?url=file://%file&line=%line',
-        'phpstorm' => 'phpstorm://open?file=%file&line=%line',
-        'idea' => 'idea://open?file=%file&line=%line',
-        'vscode' => 'vscode://file/%file:%line',
-        'vscode-insiders' => 'vscode-insiders://file/%file:%line',
-        'vscode-remote' => 'vscode://vscode-remote/%file:%line',
-        'vscode-insiders-remote' => 'vscode-insiders://vscode-remote/%file:%line',
-        'vscodium' => 'vscodium://file/%file:%line',
-        'nova' => 'nova://core/open/file?filename=%file&line=%line',
-        'xdebug' => 'xdebug://%file@%line',
-        'atom' => 'atom://core/open/file?filename=%file&line=%line',
-        'espresso' => 'x-espresso://open?filepath=%file&lines=%line',
-        'netbeans' => 'netbeans://open/?f=%file:%line',
-    ];
-
     public function __construct(Router $router)
     {
         $this->router = $router;
@@ -57,7 +31,7 @@ class RouteCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $route = $this->router->current();
         return $this->getRouteInformation($route);
@@ -65,11 +39,8 @@ class RouteCollector extends DataCollector implements Renderable
 
     /**
      * Get the route information for a given route.
-     *
-     * @param  \Illuminate\Routing\Route $route
-     * @return array
      */
-    protected function getRouteInformation($route)
+    protected function getRouteInformation(mixed $route): array
     {
         if (!is_a($route, 'Illuminate\Routing\Route')) {
             return [];
@@ -78,34 +49,60 @@ class RouteCollector extends DataCollector implements Renderable
         $action = $route->getAction();
 
         $result = [
-           'uri' => $uri ?: '-',
+            'uri' => $uri,
         ];
 
         $result = array_merge($result, $action);
+        $uses = $action['uses'] ?? null;
+        $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
+        if (request()->hasHeader('X-Livewire')) {
+            try {
+                $component = request('components')[0];
+                $name = json_decode($component['snapshot'], true)['memo']['name'];
+                $method = $component['calls'][0]['method'];
+                $class = app(\Livewire\Mechanisms\ComponentRegistry::class)->getClass($name);
+                if (class_exists($class) && method_exists($class, $method)) {
+                    $controller = $class . '@' . $method;
+                    $result['controller'] = ltrim($controller, '\\');
+                }
+            } catch (\Throwable $e) {
+                //
+            }
+        }
 
-        if (
-            isset($action['controller'])
-            && is_string($action['controller'])
-            && strpos($action['controller'], '@') !== false
-        ) {
-            list($controller, $method) = explode('@', $action['controller']);
+        if (str_contains($controller, '@')) {
+            [$controller, $method] = explode('@', $controller);
             if (class_exists($controller) && method_exists($controller, $method)) {
                 $reflector = new \ReflectionMethod($controller, $method);
             }
             unset($result['uses']);
-        } elseif (isset($action['uses']) && $action['uses'] instanceof \Closure) {
-            $reflector = new \ReflectionFunction($action['uses']);
-            $result['uses'] = $this->formatVar($result['uses']);
+        } elseif ($uses instanceof \Closure) {
+            $reflector = new \ReflectionFunction($uses);
+            $result['uses'] = $this->getDataFormatter()->formatVar($uses);
+        } elseif (is_string($uses) && str_contains($uses, '@__invoke')) {
+            if (class_exists($controller) && method_exists($controller, 'render')) {
+                $reflector = new \ReflectionMethod($controller, 'render');
+                $result['controller'] = $controller . '@render';
+            }
         }
 
         if (isset($reflector)) {
-            $filename = ltrim(str_replace(base_path(), '', $reflector->getFileName()), '/');
+            $filename = $this->normalizeFilePath($reflector->getFileName());
+            $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
 
-            if ($href = $this->getEditorHref($reflector->getFileName(), $reflector->getStartLine())) {
-                $result['file'] = sprintf('<a href="%s">%s:%s-%s</a>', $href, $filename, $reflector->getStartLine(), $reflector->getEndLine());
-            } else {
-                $result['file'] = sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine());
+            if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
+                $result['file'] = [
+                    'value' => $result['file'],
+                    'xdebug_link' => $link,
+                ];
+
+                if (isset($result['controller'])) {
+                    $result['controller'] = [
+                        'value' => $result['controller'],
+                        'xdebug_link' => $link,
+                    ];
+                }
             }
         }
 
@@ -113,28 +110,23 @@ class RouteCollector extends DataCollector implements Renderable
             $result['middleware'] = $middleware;
         }
 
-
-
-        return $result;
+        return array_filter($result);
     }
 
     /**
      * Get middleware
-     *
-     * @param  \Illuminate\Routing\Route $route
-     * @return string
      */
-    protected function getMiddleware($route)
+    protected function getMiddleware(mixed $route): string
     {
         return implode(', ', array_map(function ($middleware) {
             return $middleware instanceof Closure ? 'Closure' : $middleware;
-        }, $route->middleware()));
+        }, $route->gatherMiddleware()));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'route';
     }
@@ -142,79 +134,16 @@ class RouteCollector extends DataCollector implements Renderable
     /**
      * {@inheritDoc}
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         $widgets = [
             "route" => [
-                "icon" => "share",
+                "icon" => "share-3",
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "route",
-                "default" => "{}"
-            ]
+                "default" => "{}",
+            ],
         ];
-        if (Config::get('debugbar.options.route.label', true)) {
-            $widgets['currentroute'] = [
-                "icon" => "share",
-                "tooltip" => "Route",
-                "map" => "route.uri",
-                "default" => ""
-            ];
-        }
         return $widgets;
-    }
-
-    /**
-     * Display the route information on the console.
-     *
-     * @param  array $routes
-     * @return void
-     */
-    protected function displayRoutes(array $routes)
-    {
-        $this->table->setHeaders($this->headers)->setRows($routes);
-
-        $this->table->render($this->getOutput());
-    }
-
-    /**
-     * Get the editor href for a given file and line, if available.
-     *
-     * @param string $filePath
-     * @param int    $line
-     *
-     * @throws InvalidArgumentException If editor resolver does not return a string
-     *
-     * @return null|string
-     */
-    protected function getEditorHref($filePath, $line)
-    {
-        if (empty(config('debugbar.editor'))) {
-            return null;
-        }
-
-        if (empty($this->editors[config('debugbar.editor')])) {
-            throw new InvalidArgumentException(
-                'Unknown editor identifier: ' . config('debugbar.editor') . '. Known editors:' .
-                implode(', ', array_keys($this->editors))
-            );
-        }
-
-        $filePath = $this->replaceSitesPath($filePath);
-
-        $url = str_replace(['%file', '%line'], [$filePath, $line], $this->editors[config('debugbar.editor')]);
-
-        return $url;
-    }
-
-    /**
-     * Replace remote path
-     *
-     * @param string $filePath
-     *
-     * @return string
-     */
-    protected function replaceSitesPath($filePath)
-    {
-        return str_replace(config('debugbar.remote_sites_path'), config('debugbar.local_sites_path'), $filePath);
     }
 }

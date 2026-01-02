@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Console;
 
 use DebugBar\DebugBar;
@@ -27,7 +29,7 @@ class ClearCommand extends Command
                 $storage->clear();
             } catch (\InvalidArgumentException $e) {
                 // hide InvalidArgumentException if storage location does not exist
-                if (strpos($e->getMessage(), 'does not exist') === false) {
+                if (!str_contains($e->getMessage(), 'does not exist')) {
                     throw $e;
                 }
             }

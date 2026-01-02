@@ -1,38 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\DataCollector;
 
-use Barryvdh\Debugbar\DataFormatter\SimpleFormatter;
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Contracts\Events\Dispatcher;
+use DebugBar\DataFormatter\SimpleFormatter;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class EventCollector extends TimeDataCollector
 {
-    /** @var Dispatcher */
-    protected $events;
+    protected ?Dispatcher $events;
 
-    /** @var integer */
-    protected $previousTime;
+    protected array $excludedEvents;
 
-    public function __construct($requestStartTime = null)
+    protected bool $collectValues;
+
+    public function __construct(?float $requestStartTime = null, bool $collectValues = false, array $excludedEvents = [])
     {
         parent::__construct($requestStartTime);
-        $this->previousTime = microtime(true);
+        $this->collectValues = $collectValues;
+        $this->excludedEvents = $excludedEvents;
         $this->setDataFormatter(new SimpleFormatter());
     }
 
-    public function onWildcardEvent($name = null, $data = [])
+    public function onWildcardEvent(?string $name = null, array $data = []): void
     {
-        $params = $this->prepareParams($data);
         $currentTime = microtime(true);
+        $eventClass = explode(':', $name)[0];
+
+        foreach ($this->excludedEvents as $excludedEvent) {
+            if (Str::is($excludedEvent, $eventClass)) {
+                return;
+            }
+        }
+
+        if (! $this->collectValues) {
+            $this->addMeasure($name, $currentTime, $currentTime, [], null, $eventClass);
+
+            return;
+        }
+
+        $params = $this->prepareParams($data);
 
         // Find all listeners for the current event
         foreach ($this->events->getListeners($name) as $i => $listener) {
             // Check if it's an object + method name
             if (is_array($listener) && count($listener) > 1 && is_object($listener[0])) {
-                list($class, $method) = $listener;
+                [$class, $method] = $listener;
 
                 // Skip this class itself
                 if ($class instanceof static) {
@@ -42,7 +58,7 @@ class EventCollector extends TimeDataCollector
                 // Format the listener to readable format
                 $listener = get_class($class) . '@' . $method;
 
-            // Handle closures
+                // Handle closures
             } elseif ($listener instanceof \Closure) {
                 $reflector = new \ReflectionFunction($listener);
 
@@ -62,17 +78,16 @@ class EventCollector extends TimeDataCollector
 
             $params['listeners.' . $i] = $listener;
         }
-        $this->addMeasure($name, $this->previousTime, $currentTime, $params);
-        $this->previousTime = $currentTime;
+        $this->addMeasure($name, $currentTime, $currentTime, $params, null, $eventClass);
     }
 
-    public function subscribe(Dispatcher $events)
+    public function subscribe(Dispatcher $events): void
     {
         $this->events = $events;
         $events->listen('*', [$this, 'onWildcardEvent']);
     }
 
-    protected function prepareParams($params)
+    protected function prepareParams(array $params): array
     {
         $data = [];
         foreach ($params as $key => $value) {
@@ -85,32 +100,32 @@ class EventCollector extends TimeDataCollector
         return $data;
     }
 
-    public function collect()
+    public function collect(): array
     {
         $data = parent::collect();
-        $data['nb_measures'] = count($data['measures']);
+        $data['nb_measures'] = $data['count'] = count($data['measures']);
 
         return $data;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'event';
     }
 
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
-          "events" => [
-            "icon" => "tasks",
-            "widget" => "PhpDebugBar.Widgets.TimelineWidget",
-            "map" => "event",
-            "default" => "{}",
-          ],
-          'events:badge' => [
-            'map' => 'event.nb_measures',
-            'default' => 0,
-          ],
+            "events" => [
+                "icon" => "tasks",
+                "widget" => "PhpDebugBar.Widgets.TimelineWidget",
+                "map" => "event",
+                "default" => "{}",
+            ],
+            'events:badge' => [
+                'map' => 'event.nb_measures',
+                'default' => 0,
+            ],
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Barryvdh\Debugbar\Controllers;
 
 use Illuminate\Http\Response;
@@ -22,7 +24,7 @@ class AssetController extends BaseController
             200,
             [
                 'Content-Type' => 'text/javascript',
-            ]
+            ],
         );
 
         return $this->cacheResponse($response);
@@ -44,7 +46,7 @@ class AssetController extends BaseController
             200,
             [
                 'Content-Type' => 'text/css',
-            ]
+            ],
         );
 
         return $this->cacheResponse($response);
