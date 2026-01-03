@@ -6,7 +6,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\SimpleFormatter;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
 
 class EventCollector extends TimeDataCollector
