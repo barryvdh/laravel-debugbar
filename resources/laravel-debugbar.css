@@ -124,7 +124,10 @@ div.phpdebugbar-resize-handle {
     border-bottom: 0px;
     background-color: var(--debugbar-red-vivid);
 }
-
+div.phpdebugbar-resize-handle.phpdebugbar-resize-handle-bottom {
+    height: 3px;
+    margin-top: 3px;
+}
 .phpdebugbar.phpdebugbar-minimized div.phpdebugbar-resize-handle {
     cursor: default!important;
 }
@@ -132,6 +135,10 @@ div.phpdebugbar-resize-handle {
 div.phpdebugbar-closed,
 div.phpdebugbar-minimized {
     border-top-color: var(--debugbar-border);
+}
+
+.phpdebugbar.phpdebugbar-closed div.phpdebugbar-resize-handle.phpdebugbar-resize-handle-bottom {
+    display: none!important;
 }
 
 div.phpdebugbar .hljs {
