@@ -13,11 +13,13 @@ use Barryvdh\Debugbar\DataCollector\PennantCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
+use Barryvdh\Debugbar\DataProviders\AuthProvider;
 use Barryvdh\Debugbar\DataProviders\DatabaseProvider;
 use Barryvdh\Debugbar\DataProviders\EventsProvider;
 use Barryvdh\Debugbar\DataProviders\LaravelProvider;
 use Barryvdh\Debugbar\DataProviders\LivewireProvider;
 use Barryvdh\Debugbar\DataProviders\LogProvider;
+use Barryvdh\Debugbar\DataProviders\MailProvider;
 use Barryvdh\Debugbar\DataProviders\MemoryProvider;
 use Barryvdh\Debugbar\DataProviders\MessagesProvider;
 use Barryvdh\Debugbar\DataProviders\ModelsProvider;
@@ -224,78 +226,19 @@ class LaravelDebugbar extends DebugBar
             $providers[LivewireProvider::class] = [];
         }
 
-        foreach ($providers as $provider => $providerConfig) {
-            $this->app->call($provider, ['config' => $providerConfig]);
-        }
-
         if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && $events) {
-            try {
-                $mailCollector = new SymfonyMailCollector();
-                $this->addCollector($mailCollector);
-                $events->listen(function (MessageSent $event) use ($mailCollector) {
-                    $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
-                });
-
-                if ($config->get('debugbar.options.mail.show_body') || $config->get('debugbar.options.mail.full_log')) {
-                    $mailCollector->showMessageBody();
-                }
-
-                if ($this->hasCollector('time') && $config->get('debugbar.options.mail.timeline')) {
-                    $transport = $app['mailer']->getSymfonyTransport();
-                    $app['mailer']->setSymfonyTransport(new class ($transport, $this) extends AbstractTransport {
-                        private $originalTransport;
-                        private $laravelDebugbar;
-
-                        public function __construct($transport, $laravelDebugbar)
-                        {
-                            $this->originalTransport = $transport;
-                            $this->laravelDebugbar = $laravelDebugbar;
-                        }
-                        public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
-                        {
-                            return $this->laravelDebugbar['time']->measure(
-                                'mail: ' . Str::limit($message->getSubject(), 100),
-                                function () use ($message, $envelope) {
-                                    return $this->originalTransport->send($message, $envelope);
-                                },
-                                'mail',
-                            );
-                        }
-                        protected function doSend(SentMessage $message): void {}
-                        public function __toString(): string
-                        {
-                            return $this->originalTransport->__toString();
-                        }
-                    });
-                }
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add SymfonyMailCollector', $e);
-            }
-        }
-
-        if ($this->shouldCollect('logs', false)) {
-            try {
-                $file = $config->get('debugbar.options.logs.file');
-                $this->addCollector(new LogsCollector($file));
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add LogsCollector', $e);
-            }
+            $providers[MailProvider::class] = $config->get('debugbar.options.mail', []);
         }
 
         if ($this->shouldCollect('auth', false)) {
-            try {
-                $guards = $config->get('auth.guards', []);
-                $authCollector = new MultiAuthCollector($app['auth'], $guards);
-                $this->addCollector($authCollector);
+            $providers[AuthProvider::class] = $config->get('debugbar.options.auth', []);
+        }
 
-                $authCollector->setShowName(
-                    $config->get('debugbar.options.auth.show_name'),
-                );
-                $authCollector->setShowGuardsData(
-                    $config->get('debugbar.options.auth.show_guards', true),
-                );
+        foreach ($providers as $provider => $providerConfig) {
+            try {
+                $this->app->call($provider, ['config' => $providerConfig]);
             } catch (Exception $e) {
-                $this->addCollectorException('Cannot add AuthCollector', $e);
+                $this->addCollectorException('Error calling ' . class_basename($provider), $e);
             }
         }
 

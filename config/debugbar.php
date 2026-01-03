@@ -190,7 +190,6 @@ return [
         'laravel'         => env('DEBUGBAR_COLLECTORS_LARAVEL', true),          // Laravel version and environment
         'events'          => env('DEBUGBAR_COLLECTORS_EVENTS', false),          // All events fired
         'default_request' => env('DEBUGBAR_COLLECTORS_DEFAULT_REQUEST', false), // Regular or special Symfony request logger
-        'logs'            => env('DEBUGBAR_COLLECTORS_LOGS', false),            // Add the latest log messages
         'config'          => env('DEBUGBAR_COLLECTORS_CONFIG', false),          // Display config settings
         'cache'           => env('DEBUGBAR_COLLECTORS_CACHE', true),            // Display cache events
         'models'          => env('DEBUGBAR_COLLECTORS_MODELS', true),           // Display models
@@ -274,9 +273,6 @@ return [
         'events' => [
             'data' => env('DEBUGBAR_OPTIONS_EVENTS_DATA', false), // Collect events data, listeners
             'excluded' => [], // Example: ['eloquent.*', 'composing', Illuminate\Cache\Events\CacheHit::class]
-        ],
-        'logs' => [
-            'file' => env('DEBUGBAR_OPTIONS_LOGS_FILE'),
         ],
         'cache' => [
             'values' => env('DEBUGBAR_OPTIONS_CACHE_VALUES', true), // Collect cache values
