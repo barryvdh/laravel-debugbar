@@ -5,31 +5,34 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\DataCollector\CacheCollector;
-use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\GateCollector;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
-use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use Barryvdh\Debugbar\DataCollector\LogsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\PennantCollector;
-use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
-use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
+use Barryvdh\Debugbar\DataProviders\DatabaseProvider;
+use Barryvdh\Debugbar\DataProviders\EventsProvider;
+use Barryvdh\Debugbar\DataProviders\LaravelProvider;
+use Barryvdh\Debugbar\DataProviders\LivewireProvider;
+use Barryvdh\Debugbar\DataProviders\LogProvider;
+use Barryvdh\Debugbar\DataProviders\MemoryProvider;
+use Barryvdh\Debugbar\DataProviders\MessagesProvider;
+use Barryvdh\Debugbar\DataProviders\ModelsProvider;
+use Barryvdh\Debugbar\DataProviders\PhpInfoProvider;
+use Barryvdh\Debugbar\DataProviders\RouteProvider;
+use Barryvdh\Debugbar\DataProviders\TimeProvider;
+use Barryvdh\Debugbar\DataProviders\ViewsProvider;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use Barryvdh\Debugbar\Support\RequestIdGenerator;
-use DebugBar\Bridge\MonologCollector;
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\ExceptionsCollector;
-use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\ObjectCountCollector;
-use DebugBar\DataCollector\PhpInfoCollector;
-use DebugBar\DataCollector\RequestDataCollector;
-use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\PhpHttpDriver;
@@ -168,325 +171,61 @@ class LaravelDebugbar extends DebugBar
 
         $this->selectStorage($this);
 
+        $providers = [];
         if ($this->shouldCollect('phpinfo', true)) {
-            $this->addCollector(new PhpInfoCollector());
+            $providers[PhpInfoProvider::class] = [];
         }
 
         if ($this->shouldCollect('messages', true)) {
-            $messageCollector = new MessagesCollector();
-            $this->addCollector($messageCollector);
-
-            if ($config->get('debugbar.options.messages.trace', true)) {
-                $messageCollector->collectFileTrace(true);
-            }
-
-            if ($config->get('debugbar.options.messages.capture_dumps', false)) {
-                $originalHandler = \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) use (&$originalHandler) {
-                    if ($originalHandler) {
-                        $originalHandler($var);
-                    }
-
-                    self::addMessage($var);
-                });
-            }
+            $providers[MessagesProvider::class] = $config->get('debugbar.options.messages', []);
         }
 
         if ($this->shouldCollect('time', true)) {
-            $startTime = (float) $app['request']->server('REQUEST_TIME_FLOAT');
-
-            if ($this->hasCollector('time')) {
-                /** @var TimeDataCollector $timeCollector */
-                $timeCollector = $this['time'];
-            } else {
-                $timeCollector = new TimeDataCollector($startTime);
-                $this->addCollector($timeCollector);
-            }
-
-            if ($config->get('debugbar.options.time.memory_usage')) {
-                $timeCollector->showMemoryUsage();
-            }
-
-            if ($startTime) {
-                $app->booted(
-                    function () use ($startTime) {
-                        $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
-                    },
-                );
-            }
-
-            $this->startMeasure('application', 'Application', 'time');
-
-            if ($events) {
-                $events->listen(\Illuminate\Routing\Events\Routing::class, function () {
-                    $this->startMeasure('Routing');
-                });
-                $events->listen(\Illuminate\Routing\Events\RouteMatched::class, function () {
-                    $this->stopMeasure('Routing');
-                });
-
-                $events->listen(\Illuminate\Routing\Events\PreparingResponse::class, function () {
-                    $this->startMeasure('Preparing Response');
-                });
-                $events->listen(\Illuminate\Routing\Events\ResponsePrepared::class, function () {
-                    $this->stopMeasure('Preparing Response');
-                });
-            }
+            $providers[TimeProvider::class] = $config->get('debugbar.options.time', []);
         }
 
         if ($this->shouldCollect('memory', true)) {
-            $memoryCollector = new MemoryCollector();
-            $this->addCollector($memoryCollector);
-            $memoryCollector->setPrecision($config->get('debugbar.options.memory.precision', 0));
-
-            if (function_exists('memory_reset_peak_usage') && $config->get('debugbar.options.memory.reset_peak')) {
-                memory_reset_peak_usage();
-            }
-            if ($config->get('debugbar.options.memory.with_baseline')) {
-                $memoryCollector->resetMemoryBaseline();
-            }
-        }
-
-        if ($this->shouldCollect('exceptions', true)) {
-            try {
-                $exceptionCollector = new ExceptionsCollector();
-                $this->addCollector($exceptionCollector);
-                $exceptionCollector->setChainExceptions(
-                    $config->get('debugbar.options.exceptions.chain', true),
-                );
-            } catch (Exception $e) {
-            }
+            $providers[MemoryProvider::class] = $config->get('debugbar.options.memory', []);
         }
 
         if ($this->shouldCollect('laravel', false)) {
-            $this->addCollector(new LaravelCollector($app));
+            $providers[LaravelProvider::class] = [];
         }
 
         if ($this->shouldCollect('default_request', false)) {
-            $this->addCollector(new RequestDataCollector());
+            $providers[LaravelProvider::class] = [];
         }
 
         if ($this->shouldCollect('events', false) && $events) {
-            try {
-                $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
-                $collectData = $config->get('debugbar.options.events.data', false);
-                $excludedEvents = $config->get('debugbar.options.events.excluded', []);
-                $eventCollector = new EventCollector($startTime, $collectData, $excludedEvents);
-                $this->addCollector($eventCollector);
-                $eventCollector->subscribe($events);
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add EventCollector', $e);
-            }
+            $providers[EventsProvider::class] = $config->get('debugbar.options.events', []);
         }
 
         if ($this->shouldCollect('views', true) && $events) {
-            try {
-                $collectData = $config->get('debugbar.options.views.data', true);
-                $excludePaths = $config->get('debugbar.options.views.exclude_paths', []);
-                $group = $config->get('debugbar.options.views.group', true);
-                if ($this->hasCollector('time') && $config->get('debugbar.options.views.timeline', false)) {
-                    $timeCollector = $this['time'];
-                } else {
-                    $timeCollector = null;
-                }
-                $viewCollector = new ViewCollector($collectData, $excludePaths, $group, $timeCollector);
-                $this->addCollector($viewCollector);
-                $events->listen(
-                    'composing:*',
-                    function ($event, $params) use ($viewCollector) {
-                        $viewCollector->addView($params[0]);
-                    },
-                );
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add ViewCollector', $e);
-            }
+            $providers[ViewsProvider::class] = $config->get('debugbar.options.events', []);
         }
 
         if ($this->shouldCollect('route')) {
-            try {
-                $this->addCollector($app->make(RouteCollector::class));
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add RouteCollector', $e);
-            }
+            $providers[RouteProvider::class] = [];
         }
 
         if ($this->shouldCollect('log', true)) {
-            try {
-                if ($this->hasCollector('messages')) {
-                    $logger = new MessagesCollector('log');
-                    /** @var MessagesCollector $messagesCollector */
-                    $messagesCollector = $this['messages'];
-                    $messagesCollector->aggregate($logger);
-                    $app['log']->listen(
-                        function (\Illuminate\Log\Events\MessageLogged $log) use ($logger) {
-                            try {
-                                $logMessage = (string) $log->message;
-                                if (mb_check_encoding($logMessage, 'UTF-8')) {
-                                    $context = $log->context;
-                                    $logMessage .= (!empty($context) ? ' ' . json_encode($context, JSON_PRETTY_PRINT) : '');
-                                } else {
-                                    $logMessage = "[INVALID UTF-8 DATA]";
-                                }
-                            } catch (Exception $e) {
-                                $logMessage = "[Exception: " . $e->getMessage() . "]";
-                            }
-                            $logger->addMessage(
-                                '[' . date('H:i:s') . '] ' . "LOG.{$log->level}: " . $logMessage,
-                                $log->level,
-                                false,
-                            );
-                        },
-                    );
-                } else {
-                    $this->addCollector(new MonologCollector($this->getMonologLogger()));
-                }
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add LogsCollector', $e);
-            }
+            $providers[LogProvider::class] = [];
         }
 
         if ($this->shouldCollect('db', true) && isset($app['db']) && $events) {
-            if ($this->hasCollector('time') && $config->get('debugbar.options.db.timeline', false)) {
-                /** @var TimeDataCollector $timeCollector */
-                $timeCollector = $this['time'];
-            } else {
-                $timeCollector = null;
-            }
-            $queryCollector = new QueryCollector($timeCollector);
-            $queryCollector->setLimits($config->get('debugbar.options.db.soft_limit'), $config->get('debugbar.options.db.hard_limit'));
-            $queryCollector->setDurationBackground($config->get('debugbar.options.db.duration_background'));
-
-            $threshold = $config->get('debugbar.options.db.slow_threshold', false);
-            if ($threshold && !$config->get('debugbar.options.db.only_slow_queries', true)) {
-                $queryCollector->setSlowThreshold($threshold);
-            }
-
-            if ($config->get('debugbar.options.db.with_params')) {
-                $queryCollector->setRenderSqlWithParams(true);
-            }
-
-            if ($dbBacktrace = $config->get('debugbar.options.db.backtrace')) {
-                $middleware = $app['router']->getMiddleware();
-                $queryCollector->setFindSource($dbBacktrace, $middleware);
-            }
-
-            if ($excludePaths = $config->get('debugbar.options.db.exclude_paths')) {
-                $queryCollector->mergeExcludePaths($excludePaths);
-            }
-
-            if ($excludeBacktracePaths = $config->get('debugbar.options.db.backtrace_exclude_paths')) {
-                $queryCollector->mergeBacktraceExcludePaths($excludeBacktracePaths);
-            }
-
-            if ($config->get('debugbar.options.db.explain.enabled')) {
-                $types = $config->get('debugbar.options.db.explain.types');
-                $queryCollector->setExplainSource(true, $types);
-            }
-
-            $this->addCollector($queryCollector);
-
-            try {
-                $events->listen(
-                    function (\Illuminate\Database\Events\QueryExecuted $query) use ($queryCollector) {
-                        if (!app(static::class)->shouldCollect('db', true)) {
-                            return; // Issue 776 : We've turned off collecting after the listener was attached
-                        }
-
-                        $threshold = app('config')->get('debugbar.options.db.slow_threshold', false);
-                        $onlyThreshold = app('config')->get('debugbar.options.db.only_slow_queries', true);
-                        //allow collecting only queries slower than a specified amount of milliseconds
-                        if (!$onlyThreshold || !$threshold || $query->time > $threshold) {
-                            $queryCollector->addQuery($query);
-                        }
-                    },
-                );
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot listen to Queries', $e);
-            }
-
-            try {
-                $events->listen(
-                    \Illuminate\Database\Events\TransactionBeginning::class,
-                    function ($transaction) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Begin Transaction', $transaction->connection);
-                    },
-                );
-
-                $events->listen(
-                    \Illuminate\Database\Events\TransactionCommitted::class,
-                    function ($transaction) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Commit Transaction', $transaction->connection);
-                    },
-                );
-
-                $events->listen(
-                    \Illuminate\Database\Events\TransactionRolledBack::class,
-                    function ($transaction) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Rollback Transaction', $transaction->connection);
-                    },
-                );
-
-                $events->listen(
-                    'connection.*.beganTransaction',
-                    function ($event, $params) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Begin Transaction', $params[0]);
-                    },
-                );
-
-                $events->listen(
-                    'connection.*.committed',
-                    function ($event, $params) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Commit Transaction', $params[0]);
-                    },
-                );
-
-                $events->listen(
-                    'connection.*.rollingBack',
-                    function ($event, $params) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Rollback Transaction', $params[0]);
-                    },
-                );
-
-                $events->listen(
-                    function (\Illuminate\Database\Events\ConnectionEstablished $event) use ($queryCollector) {
-                        $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
-
-                        if (app('config')->get('debugbar.options.db.memory_usage')) {
-                            $event->connection->beforeExecuting(function () use ($queryCollector) {
-                                $queryCollector->startMemoryUsage();
-                            });
-                        }
-                    },
-                );
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot listen transactions to Queries', $e);
-            }
+            $providers[DatabaseProvider::class] = $config->get('debugbar.options.db', []);
         }
 
         if ($this->shouldCollect('models', true) && $events) {
-            try {
-                $modelsCollector = new ObjectCountCollector('models');
-                $this->addCollector($modelsCollector);
-                $eventList = ['retrieved', 'created', 'updated', 'deleted'];
-                $modelsCollector->setKeyMap(array_combine($eventList, array_map('ucfirst', $eventList)));
-                $modelsCollector->collectCountSummary(true);
-                foreach ($eventList as $event) {
-                    $events->listen("eloquent.{$event}: *", function ($event, $models) use ($modelsCollector) {
-                        $event = explode(': ', $event);
-                        $count = count(array_filter($models));
-                        $modelsCollector->countClass($event[1], $count, explode('.', $event[0])[1]);
-                    });
-                }
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add Models Collector', $e);
-            }
+            $providers[ModelsProvider::class] = [];
         }
 
-        if ($this->shouldCollect('livewire', true) && $app->bound('livewire')) {
-            try {
-                $this->addCollector($app->make(LivewireCollector::class));
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add Livewire Collector', $e);
-            }
+        if ($this->shouldCollect('livewire', true)) {
+            $providers[LivewireProvider::class] = [];
+        }
+
+        foreach ($providers as $provider => $providerConfig) {
+            $this->app->call($provider, ['config' => $providerConfig]);
         }
 
         if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && $events) {
