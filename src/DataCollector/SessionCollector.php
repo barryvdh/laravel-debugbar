@@ -13,13 +13,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class SessionCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
     protected SessionInterface $session;
-    /** @var array */
-    protected $hiddens;
 
-    public function __construct(SessionInterface $session, array $hiddens = [])
+    public function __construct(SessionInterface $session)
     {
         $this->session = $session;
-        $this->hiddens = $hiddens;
     }
 
     /**
@@ -27,13 +24,7 @@ class SessionCollector extends DataCollector implements DataCollectorInterface, 
      */
     public function collect(): array
     {
-        $data = $this->session->all();
-
-        foreach ($this->hiddens as $key) {
-            if (Arr::has($data, $key)) {
-                Arr::set($data, $key, '******');
-            }
-        }
+        $data = $this->hideMaskedValues($this->session->all());
 
         foreach ($data as $key => $value) {
             $data[$key] = is_string($value) ? $value : $this->getDataFormatter()->formatVar($value);

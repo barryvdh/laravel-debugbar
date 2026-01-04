@@ -14,5 +14,5 @@ It should not impact your application, unless you are using custom collectors
 
 ### Other changes
  - The Query Collector now extends the php-debugbar widget. The bindings parameter has been removed in favor of 'params'.
-
+ - Instead of 'hiddens', we now have an option 'masked' which uses the keys, not array paths.
 
