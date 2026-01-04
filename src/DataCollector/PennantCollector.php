@@ -12,13 +12,11 @@ use Laravel\Pennant\FeatureManager;
 
 class PennantCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var  FeatureManager */
     protected FeatureManager $manager;
 
     /**
      * Create a new SessionCollector
      *
-     * @param FeatureManager $manager
      */
     public function __construct(FeatureManager $manager)
     {
