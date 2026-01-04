@@ -199,11 +199,10 @@ return [
     ],
 
     /**
-     * You can add additional DataCollectors by providing a custom provider class.
+     * Add any additional DataCollectors by adding the class name of a DataCollector or invokable class.
      */
     'custom_collectors' => [
-        // Add any additional DataCollector or CollectorProvider classes here,
-        //        MyCollectorProvider::class => env('DEBUGBAR_COLLECTORS_MYCOLLECTOR', true),
+        // MyCollector::class => env('DEBUGBAR_COLLECTORS_MYCOLLECTOR', true),
     ],
 
     /*
