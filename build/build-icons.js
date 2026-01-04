@@ -15,6 +15,7 @@ const icons = [
     'lock',
     'user',
     'share-3',
+    'subtask',
 
     // UI control icons
     'brand-laravel',

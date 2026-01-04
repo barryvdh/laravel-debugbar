@@ -6,7 +6,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\SimpleFormatter;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
 
 class EventCollector extends TimeDataCollector
@@ -117,7 +117,7 @@ class EventCollector extends TimeDataCollector
     {
         return [
             "events" => [
-                "icon" => "tasks",
+                "icon" => "subtask",
                 "widget" => "PhpDebugBar.Widgets.TimelineWidget",
                 "map" => "event",
                 "default" => "{}",
