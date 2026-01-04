@@ -418,6 +418,17 @@ ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widget
     max-width: 100%;
 }
 
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-index {
+    margin-right: 10px;
+    display: inline-block;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: rgba(127,127,127,0.4);
+    color: gray;
+    min-width: 40px;
+    text-align: center;
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-copy-clipboard,
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-duration,
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id,

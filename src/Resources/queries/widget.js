@@ -234,6 +234,9 @@
                 if (statement.slow) {
                     $li.addClass(csscls('sql-slow'));
                 }
+
+                $li.prepend($('<span />').addClass(csscls('index')).text(statement.index));
+
                 const $code = $('<code />').html(PhpDebugBar.Widgets.highlight(statement.sql, 'sql')).addClass(csscls('sql')),
                     duplicated = this.duplicateQueries.has(statement);
                 $li.attr('data-connection', statement.connection)

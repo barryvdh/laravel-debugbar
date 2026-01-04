@@ -485,7 +485,7 @@ class QueryCollector extends PDOCollector
         $queries = $this->queries;
 
         $statements = [];
-        foreach ($queries as $query) {
+        foreach ($queries as $index => $query) {
             $source = reset($query['source']);
             $normalizedPath = is_object($source) ? $this->normalizeFilePath($source->file ?: '') : '';
             if ($query['type'] != 'transaction' && Str::startsWith($normalizedPath, $this->excludePaths)) {
@@ -506,6 +506,7 @@ class QueryCollector extends PDOCollector
             };
 
             $statements[] = [
+                'index' => $index,
                 'sql' => $this->getSqlQueryToDisplay($query),
                 'type' => $query['type'],
                 'params' => [],
