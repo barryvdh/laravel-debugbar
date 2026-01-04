@@ -7,6 +7,8 @@ namespace Barryvdh\Debugbar\Tests\DataCollector;
 use Barryvdh\Debugbar\Tests\TestCase;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Illuminate\Session\SessionManager;
+use Illuminate\Session\SymfonySessionDecorator;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionCollectorTest extends TestCase
 {
@@ -18,9 +20,8 @@ class SessionCollectorTest extends TestCase
 
     public function testItCollectsSessionVariables()
     {
-        /** @var \Barryvdh\Debugbar\DataCollector\SessionCollector $collector */
         $collector = new SessionCollector(
-            $this->app->make(SessionManager::class),
+            $this->app->make(SymfonySessionDecorator::class),
             $this->app['config']->get('debugbar.options.session.hiddens', []),
         );
 

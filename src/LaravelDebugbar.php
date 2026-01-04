@@ -6,6 +6,7 @@ namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\CollectorProviders\ConfigCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\DefaultRequestCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\ExceptionsCollectorProvider;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
@@ -160,6 +161,7 @@ class LaravelDebugbar extends DebugBar
 
         $this->selectStorage($this);
         $this->registerCollectorProviders([
+            'exceptions' => ExceptionsCollectorProvider::class,
             'phpinfo' => PhpInfoCollectorProvider::class,
             'messages' => MessagesCollectorProvider::class,
             'time' => TimeCollectorProvider::class,
