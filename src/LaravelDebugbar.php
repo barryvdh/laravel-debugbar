@@ -161,8 +161,24 @@ class LaravelDebugbar extends DebugBar
         }
 
         $this->selectStorage($this);
+        $this->registerCollectors();
 
-        // Register default collectors
+        $renderer = $this->getJavascriptRenderer();
+        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
+        $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
+        $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
+        $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
+        $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
+        $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
+        $this->booted = true;
+    }
+
+    protected function registerCollectors()
+    {
+        /** @var Repository $config */
+        $config = $this->app->get(Repository::class);
+
+        // Register default Collector Provider
         $this->registerCollectorProviders([
             'exceptions' => ExceptionsCollectorProvider::class,
             'phpinfo' => PhpInfoCollectorProvider::class,
@@ -187,19 +203,9 @@ class LaravelDebugbar extends DebugBar
             'config' => ConfigCollectorProvider::class,
         ]);
 
-        // Register any additional collectors
+        // Register any Custom Collectors
         $this->registerCustomCollectorProviders($config->get('debugbar.custom_collectors', []));
-
-        $renderer = $this->getJavascriptRenderer();
-        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
-        $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
-        $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
-        $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
-        $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
-        $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
-        $this->booted = true;
     }
-
     /**
      * @param array<string, string> $providers
      */
