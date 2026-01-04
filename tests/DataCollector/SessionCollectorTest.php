@@ -12,7 +12,6 @@ class SessionCollectorTest extends TestCase
 {
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('debugbar.options.session.hiddens', ['secret']);
         parent::getEnvironmentSetUp($app);
     }
 
@@ -20,7 +19,6 @@ class SessionCollectorTest extends TestCase
     {
         $collector = new SessionCollector(
             $this->app->make(SymfonySessionDecorator::class),
-            $this->app['config']->get('debugbar.options.session.hiddens', []),
         );
 
         $this->assertEmpty($collector->collect());
@@ -32,8 +30,8 @@ class SessionCollectorTest extends TestCase
         $this->assertNotEmpty($collected);
         $this->assertArrayHasKey('secret', $collected);
         $this->assertArrayHasKey('testVariable', $collected);
-        $this->assertEquals($collected['secret'], '******');
-        $this->assertEquals($collected['testVariable'], 1);
+        $this->assertEquals('te***et', $collected['secret']);
+        $this->assertEquals(1, $collected['testVariable']);
 
         $this->flushSession();
         $this->assertCount(0, $collector->collect());

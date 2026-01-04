@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\CollectorProviders\ConfigCollectorProvider;
-use Barryvdh\Debugbar\CollectorProviders\DefaultRequestCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\ExceptionsCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\RequestCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\SessionCollectorProvider;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
-use Barryvdh\Debugbar\DataCollector\SessionCollector;
-use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use Barryvdh\Debugbar\CollectorProviders\AuthCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\CacheCollectorProvider;
@@ -37,9 +36,9 @@ use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
-use DebugBar\PhpHttpDriver;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
+use DebugBar\SymfonyHttpDriver;
 use Exception;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
@@ -180,13 +179,13 @@ class LaravelDebugbar extends DebugBar
 
         // Register default Collector Provider
         $this->registerCollectorProviders([
+            'symfony_request' => RequestCollectorProvider::class,
             'exceptions' => ExceptionsCollectorProvider::class,
             'phpinfo' => PhpInfoCollectorProvider::class,
             'messages' => MessagesCollectorProvider::class,
             'time' => TimeCollectorProvider::class,
             'memory' => MemoryCollectorProvider::class,
             'laravel' => LaravelCollectorProvider::class,
-            'default_request' => DefaultRequestCollectorProvider::class,
             'events' => EventsCollectorCollectorProvider::class,
             'views' => ViewsCollectorProvider::class,
             'route' => RouteCollectorProvider::class,
@@ -201,6 +200,7 @@ class LaravelDebugbar extends DebugBar
             'jobs' => JobsCollectorProvider::class,
             'pennant' => PennantCollectorProvider::class,
             'config' => ConfigCollectorProvider::class,
+            'session' => SessionCollectorProvider::class,
         ]);
 
         // Register any Custom Collectors
@@ -383,33 +383,10 @@ class LaravelDebugbar extends DebugBar
         }
 
         // These rely on the Response, so we add them directly here
-        $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
-        $requestHiddens = array_merge(
-            $app['config']->get('debugbar.options.symfony_request.hiddens', []),
-            array_map(fn($key) => 'session_attributes.' . $key, $sessionHiddens),
-        );
-        $session = $request->hasSession() ? $request->getSession() : null;
-
-        if ($session && $this->shouldCollect('session', false) && !$this->hasCollector('session')) {
-            try {
-                $this->addCollector(new SessionCollector($session, $sessionHiddens));
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add SessionCollector', $e);
-            }
-        }
-
-        if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
-            try {
-                $reqId = $this->getCurrentRequestId();
-                $this->addCollector(new RequestCollector($request, $response, $session, $reqId, $requestHiddens));
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add SymfonyRequestCollector', $e);
-            }
-        }
-
         if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
-                $this->addCollector(new ClockworkCollector($request, $response, $session, $requestHiddens));
+                $clockworkCollector = new ClockworkCollector($request, $response);
+                $this->addCollector($clockworkCollector);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add ClockworkCollector', $e);
             }
@@ -442,7 +419,9 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->stackData();
             } catch (Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+                $app['log']->error('Debugbar exception: ' . $e->getMessage(), [
+                    'exception' => $e,
+                ]);
             }
 
             return $response;
@@ -452,7 +431,9 @@ class LaravelDebugbar extends DebugBar
             // Collect + store data, only inject the ID in theheaders
             $this->sendDataInHeaders(true);
         } catch (Exception $e) {
-            $app['log']->error('Debugbar exception: ' . $e->getMessage());
+            $app['log']->error('Debugbar exception: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
         }
 
         // Check if it's safe to inject the Debugbar
@@ -467,7 +448,9 @@ class LaravelDebugbar extends DebugBar
             try {
                 $this->injectDebugbar($response);
             } catch (Exception $e) {
-                $app['log']->error('Debugbar exception: ' . $e->getMessage());
+                $app['log']->error('Debugbar exception: ' . $e->getMessage(), [
+                    'exception' => $e,
+                ]);
             }
         }
 

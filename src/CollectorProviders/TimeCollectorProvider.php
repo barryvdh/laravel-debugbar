@@ -9,6 +9,7 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Events\PreparingResponse;
+use Illuminate\Routing\Events\ResponsePrepared;
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Routing\Events\Routing;
 
@@ -44,6 +45,6 @@ class TimeCollectorProvider extends AbstractCollectorProvider
         $events->listen(RouteMatched::class, fn() => $timeCollector->stopMeasure('Routing'));
 
         $events->listen(PreparingResponse::class, fn() => $timeCollector->startMeasure('Preparing Response'));
-        $events->listen(PreparingResponse::class, fn() => $timeCollector->stopMeasure('Preparing Response'));
+        $events->listen(ResponsePrepared::class, fn() => $timeCollector->stopMeasure('Preparing Response'));
     }
 }

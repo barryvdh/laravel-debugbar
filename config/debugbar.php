@@ -45,11 +45,10 @@ return [
         'auth'            => env('DEBUGBAR_COLLECTORS_AUTH', false),            // Display Laravel authentication status
         'gate'            => env('DEBUGBAR_COLLECTORS_GATE', true),             // Display Laravel Gate checks
         'session'         => env('DEBUGBAR_COLLECTORS_SESSION', false),         // Display session data
-        'symfony_request' => env('DEBUGBAR_COLLECTORS_SYMFONY_REQUEST', true),  // Only one can be enabled..
+        'symfony_request' => env('DEBUGBAR_COLLECTORS_SYMFONY_REQUEST', true),  // Default Request Data
         'mail'            => env('DEBUGBAR_COLLECTORS_MAIL', true),             // Catch mail messages
         'laravel'         => env('DEBUGBAR_COLLECTORS_LARAVEL', true),          // Laravel version and environment
         'events'          => env('DEBUGBAR_COLLECTORS_EVENTS', false),          // All events fired
-        'default_request' => env('DEBUGBAR_COLLECTORS_DEFAULT_REQUEST', false), // Regular or special Symfony request logger
         'config'          => env('DEBUGBAR_COLLECTORS_CONFIG', false),          // Display config settings
         'cache'           => env('DEBUGBAR_COLLECTORS_CACHE', true),            // Display cache events
         'models'          => env('DEBUGBAR_COLLECTORS_MODELS', true),           // Display models
@@ -123,11 +122,11 @@ return [
             'label' => env('DEBUGBAR_OPTIONS_ROUTE_LABEL', true),  // Show complete route on bar
         ],
         'session' => [
-            'hiddens' => [], // Hides sensitive values using array paths
+            'masked' => [], // List of keys that are masked
         ],
         'symfony_request' => [
             'label' => env('DEBUGBAR_OPTIONS_SYMFONY_REQUEST_LABEL', true),  // Show route on bar
-            'hiddens' => [], // Hides sensitive values using array paths, example: request_request.password
+            'masked' => [], // List of keys that are masked
         ],
         'events' => [
             'data' => env('DEBUGBAR_OPTIONS_EVENTS_DATA', false), // Collect events data, listeners

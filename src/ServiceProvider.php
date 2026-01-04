@@ -7,9 +7,10 @@ namespace Barryvdh\Debugbar;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
+use DebugBar\SymfonyHttpDriver;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
-use Illuminate\Session\SessionManager;
+use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Collection;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -34,7 +35,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         });
 
         $this->app->singleton(SymfonyHttpDriver::class, function ($app) {
-            return new SymfonyHttpDriver($app->make(SessionManager::class));
+            return new SymfonyHttpDriver($app->make(SymfonySessionDecorator::class));
         });
 
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
