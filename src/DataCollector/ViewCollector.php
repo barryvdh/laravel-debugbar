@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TemplateCollector;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ViewCollector extends TemplateCollector
@@ -48,6 +49,11 @@ class ViewCollector extends TemplateCollector
                     return;
                 }
             }
+        }
+
+        // Skip View files from strings
+        if (Str::startsWith($name, '__components::')) {
+            return;
         }
 
         $this->addTemplate($name, $data, $type, $path);
