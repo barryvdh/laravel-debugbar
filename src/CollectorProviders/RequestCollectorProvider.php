@@ -6,14 +6,16 @@ namespace Barryvdh\Debugbar\CollectorProviders;
 
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Illuminate\Config\Repository;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Events\ResponsePrepared;
 
 class RequestCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Repository $config, Request $request, array $options): void
+    public function __invoke(Repository $config, Dispatcher $events, Request $request, array $options): void
     {
-        $sessionHiddens = $config->get('debugbar.options.session.hiddens', []);
-        $sessionMasked = $config->get('debugbar.options.session.masked', []);
+        $sessionHiddens = (array) $config->get('debugbar.options.session.hiddens', []);
+        $sessionMasked = (array) $config->get('debugbar.options.session.masked', []);
 
         // Legacy hidden values, using array path
         $hiddens = array_map(function ($value) {
@@ -21,9 +23,9 @@ class RequestCollectorProvider extends AbstractCollectorProvider
                 return substr($value, strrpos($value, '.') + 1);
             }
             return $value;
-        }, array_merge($options['hiddens'] ?? [], $sessionHiddens));
+        }, array_merge((array) ($options['hiddens'] ?? []), $sessionHiddens));
 
-        $masked = array_merge($options['masked'] ?? [], $sessionMasked);
+        $masked = array_merge((array) ($options['masked'] ?? []), $sessionMasked);
 
         $requestCollector = new RequestCollector($request);
         $requestCollector->addMaskedKeys($hiddens);
@@ -31,5 +33,7 @@ class RequestCollectorProvider extends AbstractCollectorProvider
         $requestCollector->setCurrentRequestId($this->debugbar->getCurrentRequestId());
 
         $this->addCollector($requestCollector);
+
+        $events->listen(ResponsePrepared::class, fn(ResponsePrepared $e) => $requestCollector->setResponse($e->response));
     }
 }

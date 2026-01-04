@@ -117,7 +117,7 @@ class LaravelDebugbar extends DebugBar
     public function getHttpDriver(): HttpDriverInterface
     {
         if ($this->httpDriver === null) {
-            $this->httpDriver = new SymfonyHttpDriver($this->app['request']->getSession());
+            $this->httpDriver = $this->app->make(SymfonyHttpDriver::class);
         }
 
         return $this->httpDriver;
