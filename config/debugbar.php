@@ -17,7 +17,6 @@ return [
      */
 
     'enabled' => env('DEBUGBAR_ENABLED'),
-    'hide_empty_tabs' => env('DEBUGBAR_HIDE_EMPTY_TABS', true), // Hide tabs until they have content
     'except' => [
         'telescope*',
         'horizon*',
@@ -25,152 +24,13 @@ return [
     ],
 
     /*
-     |--------------------------------------------------------------------------
-     | Storage settings
-     |--------------------------------------------------------------------------
-     |
-     | Debugbar stores data for session/ajax requests.
-     | You can disable this, so the debugbar stores data in headers/session,
-     | but this can cause problems with large data collectors.
-     | By default, file storage (in the storage folder) is used. Redis and PDO
-     | can also be used. For PDO, run the package migrations first.
-     |
-     | Warning: Enabling storage.open will allow everyone to access previous
-     | request, do not enable open storage in publicly available environments!
-     | Specify a callback if you want to limit based on IP or authentication.
-     | Leaving it to null will allow localhost only.
-     */
-    'storage' => [
-        'enabled'    => env('DEBUGBAR_STORAGE_ENABLED', true),
-        'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
-        'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, custom
-        'path'       => env('DEBUGBAR_STORAGE_PATH', storage_path('debugbar')), // For file driver
-        'connection' => env('DEBUGBAR_STORAGE_CONNECTION'), // Leave null for default connection (Redis/PDO)
-        'provider'   => env('DEBUGBAR_STORAGE_PROVIDER', ''), // Instance of StorageInterface for custom driver
-    ],
-
-    /*
     |--------------------------------------------------------------------------
-    | Editor
+    | DataCollectors
     |--------------------------------------------------------------------------
     |
-    | Choose your preferred editor to use when clicking file name.
-    |
-    | Supported: "sublime", "textmate", "emacs", "macvim", "codelite",
-    |            "phpstorm", "phpstorm-remote", "idea", "idea-remote",
-    |            "vscode", "vscode-insiders", "vscode-remote", "vscode-insiders-remote",
-    |            "vscodium", "nova", "xdebug", "atom", "espresso",
-    |            "netbeans", "cursor", "windsurf", "zed", "antigravity"
+    | Enable/disable DataCollectors
     |
     */
-
-    'editor' => env('DEBUGBAR_EDITOR') ?: env('IGNITION_EDITOR', 'phpstorm'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Remote Path Mapping
-    |--------------------------------------------------------------------------
-    |
-    | If you are using a remote dev server, like Laravel Homestead, Docker, or
-    | even a remote VPS, it will be necessary to specify your path mapping.
-    |
-    | Leaving one, or both of these, empty or null will not trigger the remote
-    | URL changes and Debugbar will treat your editor links as local files.
-    |
-    | "remote_sites_path" is an absolute base path for your sites or projects
-    | in Homestead, Vagrant, Docker, or another remote development server.
-    |
-    | Example value: "/home/vagrant/Code"
-    |
-    | "local_sites_path" is an absolute base path for your sites or projects
-    | on your local computer where your IDE or code editor is running on.
-    |
-    | Example values: "/Users/<name>/Code", "C:\Users\<name>\Documents\Code"
-    |
-    */
-
-    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH'),
-    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
-
-    /*
-     |--------------------------------------------------------------------------
-     | Assets
-     |--------------------------------------------------------------------------
-     |
-     | Vendor files are included by default, but can be set to false.
-     | This can also be set to 'js' or 'css', to only include javascript or css vendor files.
-     | Vendor files are for css: (none)
-     | and for js: highlight.js
-     | So if you want syntax highlighting, set it to true.
-     |
-     */
-    'use_dist_files' => env('DEBUGBAR_USE_DIST_FILES', true),
-    'include_vendors' => env('DEBUGBAR_INCLUDE_VENDORS', true),
-
-    /*
-     |--------------------------------------------------------------------------
-     | Capture Ajax Requests
-     |--------------------------------------------------------------------------
-     |
-     | The Debugbar can capture Ajax requests and display them. If you don't want this (ie. because of errors),
-     | you can use this option to disable sending the data through the headers.
-     |
-     | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
-     |
-     | Note for your request to be identified as ajax requests they must either send the header
-     | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
-     |
-     | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
-     | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
-     |
-     | You can defer loading the dataset, so it will be loaded with ajax after the request is done. (Experimental)
-     */
-
-    'capture_ajax' => env('DEBUGBAR_CAPTURE_AJAX', true),
-    'add_ajax_timing' => env('DEBUGBAR_ADD_AJAX_TIMING', false),
-    'ajax_handler_auto_show' => env('DEBUGBAR_AJAX_HANDLER_AUTO_SHOW', true),
-    'ajax_handler_enable_tab' => env('DEBUGBAR_AJAX_HANDLER_ENABLE_TAB', true),
-    'defer_datasets' => env('DEBUGBAR_DEFER_DATASETS', false),
-    /*
-     |--------------------------------------------------------------------------
-     | Custom Error Handler for Deprecated warnings
-     |--------------------------------------------------------------------------
-     |
-     | When enabled, the Debugbar shows deprecated warnings for Symfony components
-     | in the Messages tab.
-     |
-     | You can set a custom error reporting level to filter which errors are
-     | handled. For example, to exclude deprecation warnings:
-     |   E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED
-     |
-     | To exclude notices, strict warnings, and deprecations:
-     |   E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED
-     |
-     | Defaults to E_ALL (all errors).
-     |
-     */
-    'error_handler' => env('DEBUGBAR_ERROR_HANDLER', false),
-    'error_level' => env('DEBUGBAR_ERROR_LEVEL', E_ALL),
-
-    /*
-     |--------------------------------------------------------------------------
-     | Clockwork integration
-     |--------------------------------------------------------------------------
-     |
-     | The Debugbar can emulate the Clockwork headers, so you can use the Chrome
-     | Extension, without the server-side code. It uses Debugbar collectors instead.
-     |
-     */
-    'clockwork' => env('DEBUGBAR_CLOCKWORK', false),
-
-    /*
-     |--------------------------------------------------------------------------
-     | DataCollectors
-     |--------------------------------------------------------------------------
-     |
-     | Enable/disable DataCollectors
-     |
-     */
 
     'collectors' => [
         'phpinfo'         => env('DEBUGBAR_COLLECTORS_PHPINFO', false),         // Php version
@@ -196,13 +56,6 @@ return [
         'livewire'        => env('DEBUGBAR_COLLECTORS_LIVEWIRE', true),         // Display Livewire (when available)
         'jobs'            => env('DEBUGBAR_COLLECTORS_JOBS', true),             // Display dispatched jobs
         'pennant'         => env('DEBUGBAR_COLLECTORS_PENNANT', true),         // Display Pennant feature flags
-    ],
-
-    /**
-     * Add any additional DataCollectors by adding the class name of a DataCollector or invokable class.
-     */
-    'custom_collectors' => [
-        // MyCollector::class => env('DEBUGBAR_COLLECTORS_MYCOLLECTOR', true),
     ],
 
     /*
@@ -247,7 +100,6 @@ return [
                 'enabled' => env('DEBUGBAR_OPTIONS_DB_EXPLAIN_ENABLED', false),
             ],
             'hints'             => env('DEBUGBAR_OPTIONS_DB_HINTS', false),          // Show hints for common mistakes
-            'show_copy'         => env('DEBUGBAR_OPTIONS_DB_SHOW_COPY', true),       // Show copy button next to the query,
             'only_slow_queries' => env('DEBUGBAR_OPTIONS_DB_ONLY_SLOW_QUERIES', true), // Only track queries that last longer than `slow_threshold`
             'slow_threshold'    => env('DEBUGBAR_OPTIONS_DB_SLOW_THRESHOLD', false), // Max query execution time (ms). Exceeding queries will be highlighted
             'memory_usage'      => env('DEBUGBAR_OPTIONS_DB_MEMORY_USAGE', false),   // Show queries memory usage
@@ -285,6 +137,153 @@ return [
             'values' => env('DEBUGBAR_OPTIONS_CACHE_VALUES', true), // Collect cache values
         ],
     ],
+
+    /**
+     * Add any additional DataCollectors by adding the class name of a DataCollector or invokable class.
+     */
+    'custom_collectors' => [
+        // MyCollector::class => env('DEBUGBAR_COLLECTORS_MYCOLLECTOR', true),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Editor
+    |--------------------------------------------------------------------------
+    |
+    | Choose your preferred editor to use when clicking file name.
+    |
+    | Supported: "sublime", "textmate", "emacs", "macvim", "codelite",
+    |            "phpstorm", "phpstorm-remote", "idea", "idea-remote",
+    |            "vscode", "vscode-insiders", "vscode-remote", "vscode-insiders-remote",
+    |            "vscodium", "nova", "xdebug", "atom", "espresso",
+    |            "netbeans", "cursor", "windsurf", "zed", "antigravity"
+    |
+    */
+
+    'editor' => env('DEBUGBAR_EDITOR') ?: env('IGNITION_EDITOR', 'phpstorm'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Capture Ajax Requests
+    |--------------------------------------------------------------------------
+    |
+    | The Debugbar can capture Ajax requests and display them. If you don't want this (ie. because of errors),
+    | you can use this option to disable sending the data through the headers.
+    |
+    | Optionally, you can also send ServerTiming headers on ajax requests for the Chrome DevTools.
+    |
+    | Note for your request to be identified as ajax requests they must either send the header
+    | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
+    |
+    | By default `ajax_handler_auto_show` is set to true allowing ajax requests to be shown automatically in the Debugbar.
+    | Changing `ajax_handler_auto_show` to false will prevent the Debugbar from reloading.
+    |
+    | You can defer loading the dataset, so it will be loaded with ajax after the request is done. (Experimental)
+    */
+
+    'capture_ajax' => env('DEBUGBAR_CAPTURE_AJAX', true),
+    'add_ajax_timing' => env('DEBUGBAR_ADD_AJAX_TIMING', false),
+    'ajax_handler_auto_show' => env('DEBUGBAR_AJAX_HANDLER_AUTO_SHOW', true),
+    'ajax_handler_enable_tab' => env('DEBUGBAR_AJAX_HANDLER_ENABLE_TAB', true),
+    'defer_datasets' => env('DEBUGBAR_DEFER_DATASETS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Remote Path Mapping
+    |--------------------------------------------------------------------------
+    |
+    | If you are using a remote dev server, like Laravel Homestead, Docker, or
+    | even a remote VPS, it will be necessary to specify your path mapping.
+    |
+    | Leaving one, or both of these, empty or null will not trigger the remote
+    | URL changes and Debugbar will treat your editor links as local files.
+    |
+    | "remote_sites_path" is an absolute base path for your sites or projects
+    | in Homestead, Vagrant, Docker, or another remote development server.
+    |
+    | Example value: "/home/vagrant/Code"
+    |
+    | "local_sites_path" is an absolute base path for your sites or projects
+    | on your local computer where your IDE or code editor is running on.
+    |
+    | Example values: "/Users/<name>/Code", "C:\Users\<name>\Documents\Code"
+    |
+    */
+
+    'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH'),
+    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', env('IGNITION_LOCAL_SITES_PATH')),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Storage settings
+    |--------------------------------------------------------------------------
+    |
+    | Debugbar stores data for session/ajax requests.
+    | You can disable this, so the debugbar stores data in headers/session,
+    | but this can cause problems with large data collectors.
+    | By default, file storage (in the storage folder) is used. Redis and PDO
+    | can also be used. For PDO, run the package migrations first.
+    |
+    | Warning: Enabling storage.open will allow everyone to access previous
+    | request, do not enable open storage in publicly available environments!
+    | Specify a callback if you want to limit based on IP or authentication.
+    | Leaving it to null will allow localhost only.
+    */
+    'storage' => [
+        'enabled'    => env('DEBUGBAR_STORAGE_ENABLED', true),
+        'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
+        'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, custom
+        'path'       => env('DEBUGBAR_STORAGE_PATH', storage_path('debugbar')), // For file driver
+        'connection' => env('DEBUGBAR_STORAGE_CONNECTION'), // Leave null for default connection (Redis/PDO)
+        'provider'   => env('DEBUGBAR_STORAGE_PROVIDER', ''), // Instance of StorageInterface for custom driver
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Assets
+     |--------------------------------------------------------------------------
+     |
+     | Vendor files are included by default, but can be set to false.
+     | This can also be set to 'js' or 'css', to only include javascript or css vendor files.
+     | Vendor files are for css: (none)
+     | and for js: highlight.js
+     | So if you want syntax highlighting, set it to true.
+     |
+     */
+    'use_dist_files' => env('DEBUGBAR_USE_DIST_FILES', true),
+    'include_vendors' => env('DEBUGBAR_INCLUDE_VENDORS', true),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Custom Error Handler for Deprecated warnings
+     |--------------------------------------------------------------------------
+     |
+     | When enabled, the Debugbar shows deprecated warnings for Symfony components
+     | in the Messages tab.
+     |
+     | You can set a custom error reporting level to filter which errors are
+     | handled. For example, to exclude deprecation warnings:
+     |   E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED
+     |
+     | To exclude notices, strict warnings, and deprecations:
+     |   E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED
+     |
+     | Defaults to E_ALL (all errors).
+     |
+     */
+    'error_handler' => env('DEBUGBAR_ERROR_HANDLER', false),
+    'error_level' => env('DEBUGBAR_ERROR_LEVEL', E_ALL),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Clockwork integration
+     |--------------------------------------------------------------------------
+     |
+     | The Debugbar can emulate the Clockwork headers, so you can use the Chrome
+     | Extension, without the server-side code. It uses Debugbar collectors instead.
+     |
+     */
+    'clockwork' => env('DEBUGBAR_CLOCKWORK', false),
 
     /*
      |--------------------------------------------------------------------------

@@ -148,7 +148,7 @@ class LaravelDebugbar extends DebugBar
         /** @var Repository $config */
         $config = $this->app->get(Repository::class);
 
-        $this->editorTemplate = $config->get('debugbar.editor') ?: null;
+        $this->editorTemplate = $config->get('debugbar.editor') ?: $config->get('app.editor');
         $this->remotePathReplacements = $this->getRemoteServerReplacements();
 
         // Set custom error handler
@@ -164,7 +164,7 @@ class LaravelDebugbar extends DebugBar
         $this->registerCollectors();
 
         $renderer = $this->getJavascriptRenderer();
-        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
+        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', true));
         $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
         $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
