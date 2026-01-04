@@ -32,6 +32,7 @@ use Barryvdh\Debugbar\CollectorProviders\ViewsCollectorProvider;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use Barryvdh\Debugbar\Support\RequestIdGenerator;
+use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DebugBar;
@@ -160,6 +161,8 @@ class LaravelDebugbar extends DebugBar
         }
 
         $this->selectStorage($this);
+
+        // Register default collectors
         $this->registerCollectorProviders([
             'exceptions' => ExceptionsCollectorProvider::class,
             'phpinfo' => PhpInfoCollectorProvider::class,
@@ -184,6 +187,9 @@ class LaravelDebugbar extends DebugBar
             'config' => ConfigCollectorProvider::class,
         ]);
 
+        // Register any additional collectors
+        $this->registerCustomCollectorProviders($config->get('debugbar.custom_collectors', []));
+
         $renderer = $this->getJavascriptRenderer();
         $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
         $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
@@ -194,6 +200,9 @@ class LaravelDebugbar extends DebugBar
         $this->booted = true;
     }
 
+    /**
+     * @param array<string, string> $providers
+     */
     protected function registerCollectorProviders(array $providers): void
     {
         /** @var Repository $config */
@@ -211,7 +220,30 @@ class LaravelDebugbar extends DebugBar
         }
     }
 
-    public function shouldCollect(string $name, bool $default = false): bool
+    /**
+     * @param array<string, bool> $providers
+     */
+    protected function registerCustomCollectorProviders(array $providers): void
+    {
+        foreach ($providers as $provider => $enabled) {
+            if (!$enabled) {
+                continue;
+            }
+            try {
+                $provider = $this->app->make($provider);
+                // Add collectors directly, otherwise invoke the class
+                if (is_a($provider, DataCollectorInterface::class)) {
+                    $this->addCollector($provider);
+                } else {
+                    $this->app->call($provider);
+                }
+            } catch (Exception $e) {
+                $this->addCollectorException('Error calling ' . class_basename($provider), $e);
+            }
+        }
+    }
+
+    public function shouldCollect(string $name, bool $default = true): bool
     {
         return $this->app['config']->get('debugbar.collectors.' . $name, $default);
     }
