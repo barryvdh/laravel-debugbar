@@ -8,21 +8,15 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var  \Symfony\Component\HttpFoundation\Session\SessionInterface|\Illuminate\Contracts\Session\Session $session */
-    protected $session;
+    protected SessionInterface $session;
     /** @var array */
     protected $hiddens;
 
-    /**
-     * Create a new SessionCollector
-     *
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface|\Illuminate\Contracts\Session\Session $session
-     * @param array                                                                                            $hiddens
-     */
-    public function __construct($session, $hiddens = [])
+    public function __construct(SessionInterface $session, array $hiddens = [])
     {
         $this->session = $session;
         $this->hiddens = $hiddens;

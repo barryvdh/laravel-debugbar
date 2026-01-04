@@ -202,7 +202,7 @@ class DebugbarBrowserTest extends BrowserTestCase
                         ->assertSee('Params')
                         ->assertSee('debuguser')
                         ->assertSee('Backtrace')
-                        ->assertSee('LaravelDebugbar.php:');
+                        ->assertSee('DatabaseCollectorProvider.php:');
                 })
                 ->screenshotElement('.phpdebugbar', 'queries-expanded');
         });
@@ -229,7 +229,7 @@ class DebugbarBrowserTest extends BrowserTestCase
                         ->assertSee('Params')
                         ->assertSee('debuguser')
                         ->assertSee('Backtrace')
-                        ->assertSee('LaravelDebugbar.php:');
+                        ->assertSee('DatabaseCollectorProvider.php:');
                 })
                 ->screenshotElement('.phpdebugbar', 'queries-expanded');
         });

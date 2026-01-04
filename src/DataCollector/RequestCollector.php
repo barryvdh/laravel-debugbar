@@ -7,7 +7,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -16,6 +15,7 @@ use Laravel\Telescope\Telescope;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  *
@@ -26,14 +26,14 @@ class RequestCollector extends DataCollector implements DataCollectorInterface, 
 {
     protected Request $request;
     protected Response $response;
-    protected ?SessionManager $session;
+    protected ?SessionInterface $session;
     protected ?string $currentRequestId = null;
     protected array $hiddens = [];
 
     public function __construct(
         Request $request,
         Response $response,
-        ?SessionManager $session = null,
+        ?SessionInterface $session = null,
         ?string $currentRequestId = null,
         array $hiddens = []
     ) {
