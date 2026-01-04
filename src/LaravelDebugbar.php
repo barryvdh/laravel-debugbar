@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar;
 
+use Barryvdh\Debugbar\CollectorProviders\ConfigCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\DefaultRequestCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\SessionCollectorProvider;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
@@ -160,21 +162,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         $this->selectStorage($this);
-        $this->registerCollectors();
-
-        $renderer = $this->getJavascriptRenderer();
-        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
-        $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
-        $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
-        $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
-        $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
-        $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
-        $this->booted = true;
-    }
-
-    protected function registerCollectors(): void
-    {
-        $providers = [
+        $this->registerCollectorProviders([
             'phpinfo' => PhpInfoCollectorProvider::class,
             'messages' => MessagesCollectorProvider::class,
             'time' => TimeCollectorProvider::class,
@@ -194,8 +182,21 @@ class LaravelDebugbar extends DebugBar
             'cache' => CacheCollectorProvider::class,
             'jobs' => JobsCollectorProvider::class,
             'pennant' => PennantCollectorProvider::class,
-        ];
+            'config' => ConfigCollectorProvider::class,
+        ]);
 
+        $renderer = $this->getJavascriptRenderer();
+        $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
+        $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
+        $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
+        $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
+        $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
+        $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
+        $this->booted = true;
+    }
+
+    protected function registerCollectorProviders(array $providers): void
+    {
         /** @var Repository $config */
         $config = $this->app->get(Repository::class);
         foreach ($providers as $name => $provider) {
@@ -344,40 +345,26 @@ class LaravelDebugbar extends DebugBar
             $this->addThrowable($response->exception);
         }
 
-        if ($this->shouldCollect('config', false)) {
-            try {
-                $configCollector = new ConfigCollector();
-                $configCollector->setData($app['config']->all());
-                $this->addCollector($configCollector);
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add ConfigCollector', $e);
-            }
-        }
-
+        // These rely on the Response, so we add them directly here
         $sessionHiddens = $app['config']->get('debugbar.options.session.hiddens', []);
-        if ($app->bound(SessionManager::class)) {
-            /** @var \Illuminate\Session\SessionManager $sessionManager */
-            $sessionManager = $app->make(SessionManager::class);
-
-            if ($this->shouldCollect('session') && ! $this->hasCollector('session')) {
-                try {
-                    $this->addCollector(new SessionCollector($sessionManager, $sessionHiddens));
-                } catch (Exception $e) {
-                    $this->addCollectorException('Cannot add SessionCollector', $e);
-                }
-            }
-        } else {
-            $sessionManager = null;
-        }
-
         $requestHiddens = array_merge(
             $app['config']->get('debugbar.options.symfony_request.hiddens', []),
             array_map(fn($key) => 'session_attributes.' . $key, $sessionHiddens),
         );
+        $session = $request->hasSession() ? $request->getSession() : null;
+
+        if ($session && $this->shouldCollect('session', false) && !$this->hasCollector('session')) {
+            try {
+                $this->addCollector(new SessionCollector($session, $sessionHiddens));
+            } catch (Exception $e) {
+                $this->addCollectorException('Cannot add SessionCollector', $e);
+            }
+        }
+
         if ($this->shouldCollect('symfony_request', true) && !$this->hasCollector('request')) {
             try {
                 $reqId = $this->getCurrentRequestId();
-                $this->addCollector(new RequestCollector($request, $response, $sessionManager, $reqId, $requestHiddens));
+                $this->addCollector(new RequestCollector($request, $response, $session, $reqId, $requestHiddens));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add SymfonyRequestCollector', $e);
             }
@@ -385,7 +372,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
-                $this->addCollector(new ClockworkCollector($request, $response, $sessionManager, $requestHiddens));
+                $this->addCollector(new ClockworkCollector($request, $response, $session, $requestHiddens));
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add ClockworkCollector', $e);
             }

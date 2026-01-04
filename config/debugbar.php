@@ -195,7 +195,7 @@ return [
         'models'          => env('DEBUGBAR_COLLECTORS_MODELS', true),           // Display models
         'livewire'        => env('DEBUGBAR_COLLECTORS_LIVEWIRE', true),         // Display Livewire (when available)
         'jobs'            => env('DEBUGBAR_COLLECTORS_JOBS', true),             // Display dispatched jobs
-        'pennant'         => env('DEBUGBAR_COLLECTORS_PENNANT', false),         // Display Pennant feature flags
+        'pennant'         => env('DEBUGBAR_COLLECTORS_PENNANT', true),         // Display Pennant feature flags
     ],
 
     /*

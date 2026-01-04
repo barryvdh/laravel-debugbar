@@ -8,18 +8,19 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Support\Facades\Config;
+use Laravel\Pennant\FeatureManager;
 
 class PennantCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    /** @var  \Laravel\Pennant\FeatureManager */
-    protected $manager;
+    /** @var  FeatureManager */
+    protected FeatureManager $manager;
 
     /**
      * Create a new SessionCollector
      *
-     * @param \Laravel\Pennant\FeatureManager $manager
+     * @param FeatureManager $manager
      */
-    public function __construct($manager)
+    public function __construct(FeatureManager $manager)
     {
         $this->manager = $manager;
     }
