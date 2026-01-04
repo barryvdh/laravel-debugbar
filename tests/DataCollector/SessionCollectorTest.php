@@ -6,9 +6,7 @@ namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
-use Illuminate\Session\SessionManager;
 use Illuminate\Session\SymfonySessionDecorator;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionCollectorTest extends TestCase
 {
