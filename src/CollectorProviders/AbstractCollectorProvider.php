@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use Barryvdh\Debugbar\LaravelDebugbar;
 use DebugBar\DataCollector\DataCollectorInterface;
 
-abstract class AbstractDataProvider
+abstract class AbstractCollectorProvider
 {
     public function __construct(
         protected readonly LaravelDebugbar $debugbar,

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use DebugBar\DataCollector\MessagesCollector;
 
-class MessagesProvider extends AbstractDataProvider
+class MessagesCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(array $config): void
+    public function __invoke(array $options): void
     {
         $messageCollector = new MessagesCollector();
         $this->addCollector($messageCollector);
 
-        if ($config['trace'] ?? true) {
+        if ($options['trace'] ?? true) {
             $messageCollector->collectFileTrace(true);
         }
 
-        if ($config['capture_dumps'] ?? false) {
+        if ($options['capture_dumps'] ?? false) {
             $originalHandler = \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) use (&$originalHandler, $messageCollector) {
                 if ($originalHandler) {
                     $originalHandler($var);

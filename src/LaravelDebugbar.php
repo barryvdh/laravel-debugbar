@@ -4,53 +4,46 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar;
 
-use Barryvdh\Debugbar\DataCollector\CacheCollector;
-use Barryvdh\Debugbar\DataCollector\GateCollector;
+use Barryvdh\Debugbar\CollectorProviders\DefaultRequestCollectorProvider;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
-use Barryvdh\Debugbar\DataCollector\LogsCollector;
-use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
-use Barryvdh\Debugbar\DataCollector\PennantCollector;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
-use Barryvdh\Debugbar\DataProviders\AuthProvider;
-use Barryvdh\Debugbar\DataProviders\DatabaseProvider;
-use Barryvdh\Debugbar\DataProviders\EventsProvider;
-use Barryvdh\Debugbar\DataProviders\LaravelProvider;
-use Barryvdh\Debugbar\DataProviders\LivewireProvider;
-use Barryvdh\Debugbar\DataProviders\LogProvider;
-use Barryvdh\Debugbar\DataProviders\MailProvider;
-use Barryvdh\Debugbar\DataProviders\MemoryProvider;
-use Barryvdh\Debugbar\DataProviders\MessagesProvider;
-use Barryvdh\Debugbar\DataProviders\ModelsProvider;
-use Barryvdh\Debugbar\DataProviders\PhpInfoProvider;
-use Barryvdh\Debugbar\DataProviders\RouteProvider;
-use Barryvdh\Debugbar\DataProviders\TimeProvider;
-use Barryvdh\Debugbar\DataProviders\ViewsProvider;
+use Barryvdh\Debugbar\CollectorProviders\AuthCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\CacheCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\DatabaseCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\EventsCollectorCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\GateCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\JobsCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\LaravelCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\LivewireCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\LogCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\MailCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\MemoryCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\MessagesCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\ModelsCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\PennantCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\PhpInfoCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\RouteCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\TimeCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\ViewsCollectorProvider;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use Barryvdh\Debugbar\Support\RequestIdGenerator;
-use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataCollector\ObjectCountCollector;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\PhpHttpDriver;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use Exception;
+use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Session\SessionManager;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Envelope;
-use Symfony\Component\Mailer\SentMessage;
-use Symfony\Component\Mailer\Transport\AbstractTransport;
-use Symfony\Component\Mime\RawMessage;
 use Throwable;
 
 /**
@@ -151,13 +144,8 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        $app = $this->app;
-
-        /** @var \Illuminate\Config\Repository $config */
-        $config = $app['config'];
-
-        /** @var \Illuminate\Events\Dispatcher|null $events */
-        $events = $app['events'] ?? null;
+        /** @var Repository $config */
+        $config = $this->app->get(Repository::class);
 
         $this->editorTemplate = $config->get('debugbar.editor') ?: null;
         $this->remotePathReplacements = $this->getRemoteServerReplacements();
@@ -172,124 +160,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         $this->selectStorage($this);
-
-        $providers = [];
-        if ($this->shouldCollect('phpinfo', true)) {
-            $providers[PhpInfoProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('messages', true)) {
-            $providers[MessagesProvider::class] = $config->get('debugbar.options.messages', []);
-        }
-
-        if ($this->shouldCollect('time', true)) {
-            $providers[TimeProvider::class] = $config->get('debugbar.options.time', []);
-        }
-
-        if ($this->shouldCollect('memory', true)) {
-            $providers[MemoryProvider::class] = $config->get('debugbar.options.memory', []);
-        }
-
-        if ($this->shouldCollect('laravel', false)) {
-            $providers[LaravelProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('default_request', false)) {
-            $providers[LaravelProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('events', false) && $events) {
-            $providers[EventsProvider::class] = $config->get('debugbar.options.events', []);
-        }
-
-        if ($this->shouldCollect('views', true) && $events) {
-            $providers[ViewsProvider::class] = $config->get('debugbar.options.events', []);
-        }
-
-        if ($this->shouldCollect('route')) {
-            $providers[RouteProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('log', true)) {
-            $providers[LogProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('db', true) && isset($app['db']) && $events) {
-            $providers[DatabaseProvider::class] = $config->get('debugbar.options.db', []);
-        }
-
-        if ($this->shouldCollect('models', true) && $events) {
-            $providers[ModelsProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('livewire', true)) {
-            $providers[LivewireProvider::class] = [];
-        }
-
-        if ($this->shouldCollect('mail', true) && class_exists('Illuminate\Mail\MailServiceProvider') && $events) {
-            $providers[MailProvider::class] = $config->get('debugbar.options.mail', []);
-        }
-
-        if ($this->shouldCollect('auth', false)) {
-            $providers[AuthProvider::class] = $config->get('debugbar.options.auth', []);
-        }
-
-        foreach ($providers as $provider => $providerConfig) {
-            try {
-                $this->app->call($provider, ['config' => $providerConfig]);
-            } catch (Exception $e) {
-                $this->addCollectorException('Error calling ' . class_basename($provider), $e);
-            }
-        }
-
-        if ($this->shouldCollect('gate', false)) {
-            try {
-                $gateCollector = $app->make(GateCollector::class);
-                $this->addCollector($gateCollector);
-
-                if ($config->get('debugbar.options.gate.trace', false)) {
-                    $gateCollector->collectFileTrace(true);
-                    $gateCollector->addBacktraceExcludePaths($config->get('debugbar.options.gate.exclude_paths', []));
-                }
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add GateCollector', $e);
-            }
-        }
-
-        if ($this->shouldCollect('cache', false) && $events) {
-            try {
-                $collectValues = $config->get('debugbar.options.cache.values', true);
-                $startTime = (float) $app['request']->server('REQUEST_TIME_FLOAT');
-                $cacheCollector = new CacheCollector($startTime, $collectValues);
-                $this->addCollector($cacheCollector);
-                $events->subscribe($this['cache']);
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add CacheCollector', $e);
-            }
-        }
-
-        if ($this->shouldCollect('jobs', false) && $events) {
-            try {
-                $jobs = new ObjectCountCollector('jobs', 'briefcase');
-                $this->addCollector($jobs);
-                $events->listen(\Illuminate\Queue\Events\JobQueued::class, function ($event) use ($jobs) {
-                    $jobs->countClass($event->job);
-                });
-            } catch (Exception $e) {
-                $this->addCollectorException('Cannot add Jobs Collector', $e);
-            }
-        }
-
-        if ($this->shouldCollect('pennant', false)) {
-            if (class_exists('Laravel\Pennant\FeatureManager') && $app->bound(\Laravel\Pennant\FeatureManager::class)) {
-                $featureManager = $app->make(\Laravel\Pennant\FeatureManager::class);
-                try {
-                    $this->addCollector(new PennantCollector($featureManager));
-                } catch (Exception $e) {
-                    $this->addCollectorException('Cannot add PennantCollector', $e);
-                }
-            }
-        }
+        $this->registerCollectors();
 
         $renderer = $this->getJavascriptRenderer();
         $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', false));
@@ -299,6 +170,45 @@ class LaravelDebugbar extends DebugBar
         $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
         $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
         $this->booted = true;
+    }
+
+    protected function registerCollectors(): void
+    {
+        $providers = [
+            'phpinfo' => PhpInfoCollectorProvider::class,
+            'messages' => MessagesCollectorProvider::class,
+            'time' => TimeCollectorProvider::class,
+            'memory' => MemoryCollectorProvider::class,
+            'laravel' => LaravelCollectorProvider::class,
+            'default_request' => DefaultRequestCollectorProvider::class,
+            'events' => EventsCollectorCollectorProvider::class,
+            'views' => ViewsCollectorProvider::class,
+            'route' => RouteCollectorProvider::class,
+            'log' => LogCollectorProvider::class,
+            'db' => DatabaseCollectorProvider::class,
+            'models' => ModelsCollectorProvider::class,
+            'livewire' => LivewireCollectorProvider::class,
+            'mail' => MailCollectorProvider::class,
+            'auth' => AuthCollectorProvider::class,
+            'gate' => GateCollectorProvider::class,
+            'cache' => CacheCollectorProvider::class,
+            'jobs' => JobsCollectorProvider::class,
+            'pennant' => PennantCollectorProvider::class,
+        ];
+
+        /** @var Repository $config */
+        $config = $this->app->get(Repository::class);
+        foreach ($providers as $name => $provider) {
+            if (!$this->shouldCollect($name)) {
+                continue;
+            }
+            try {
+                $options = $config->get('debugbar.options.' . $name, []);
+                $this->app->call($provider, ['options' => $options]);
+            } catch (Exception $e) {
+                $this->addCollectorException('Error calling ' . class_basename($provider), $e);
+            }
+        }
     }
 
     public function shouldCollect(string $name, bool $default = false): bool
@@ -546,7 +456,7 @@ class LaravelDebugbar extends DebugBar
     public function isEnabled(): bool
     {
         if ($this->enabled === null) {
-            /** @var \Illuminate\Config\Repository $config */
+            /** @var Repository $config */
             $config = $this->app['config'];
             $configEnabled = value($config->get('debugbar.enabled'));
 
@@ -670,7 +580,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function injectDebugbar(Response $response): void
     {
-        /** @var \Illuminate\Config\Repository $config */
+        /** @var Repository $config */
         $config = $this->app['config'];
         $content = $response->getContent();
 
@@ -844,7 +754,7 @@ class LaravelDebugbar extends DebugBar
 
     protected function selectStorage(DebugBar $debugbar): void
     {
-        /** @var \Illuminate\Config\Repository $config */
+        /** @var Repository $config */
         $config = $this->app['config'];
         if ($config->get('debugbar.storage.enabled')) {
             $driver = $config->get('debugbar.storage.driver', 'file');

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Events\PreparingResponse;
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Routing\Events\Routing;
 
-class TimeProvider extends AbstractDataProvider
+class TimeCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Application $app, Request $request, Dispatcher $events, array $config): void
+    public function __invoke(Application $app, Request $request, Dispatcher $events, array $options): void
     {
         $startTime = (float) $request->server('REQUEST_TIME_FLOAT');
 

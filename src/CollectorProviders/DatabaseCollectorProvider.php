@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\Events\TransactionBeginning;
@@ -14,11 +14,11 @@ use Illuminate\Database\Events\TransactionCommitted;
 use Illuminate\Database\Events\TransactionRolledBack;
 use Illuminate\Routing\Router;
 
-class DatabaseProvider extends AbstractDataProvider
+class DatabaseCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Dispatcher $events, Router $router, array $config): void
+    public function __invoke(Dispatcher $events, Router $router, array $options): void
     {
-        if ($this->hasCollector('time') && ($config['timeline'] ?? false)) {
+        if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
             /** @var TimeDataCollector $timeCollector */
             $timeCollector = $this['time'];
         } else {
@@ -26,31 +26,31 @@ class DatabaseProvider extends AbstractDataProvider
         }
 
         $queryCollector = new QueryCollector($timeCollector);
-        $queryCollector->setLimits($config['soft_limit'] ?? 100, $config['hard_limit'] ?? 500);
-        $queryCollector->setDurationBackground($config['duration_background'] ?? true);
+        $queryCollector->setLimits($options['soft_limit'] ?? 100, $options['hard_limit'] ?? 500);
+        $queryCollector->setDurationBackground($options['duration_background'] ?? true);
 
-        $threshold = $config['slow_threshold'] ?? false;
-        if ($threshold && !($config['only_slow_queries'] ?? true)) {
+        $threshold = $options['slow_threshold'] ?? false;
+        if ($threshold && !($options['only_slow_queries'] ?? true)) {
             $queryCollector->setSlowThreshold($threshold);
         }
 
-        if ($config['with_params'] ?? true) {
+        if ($options['with_params'] ?? true) {
             $queryCollector->setRenderSqlWithParams(true);
         }
 
-        if ($backtrace = ($config['backtrace'] ?? true)) {
+        if ($backtrace = ($options['backtrace'] ?? true)) {
             $queryCollector->setFindSource($backtrace, $router->getMiddleware());
         }
 
-        if ($excludePaths = ($config['exclude_paths'] ?? [])) {
+        if ($excludePaths = ($options['exclude_paths'] ?? [])) {
             $queryCollector->mergeExcludePaths($excludePaths);
         }
 
-        if ($excludeBacktracePaths = ($config['backtrace_exclude_paths'] ?? [])) {
+        if ($excludeBacktracePaths = ($options['backtrace_exclude_paths'] ?? [])) {
             $queryCollector->mergeBacktraceExcludePaths($excludeBacktracePaths);
         }
 
-        if ($config['explain.enabled'] ?? false) {
+        if ($options['explain.enabled'] ?? false) {
             $queryCollector->setExplainSource(true);
         }
 
@@ -58,14 +58,14 @@ class DatabaseProvider extends AbstractDataProvider
 
         try {
             $events->listen(
-                function (QueryExecuted $query) use ($queryCollector, $config) {
+                function (QueryExecuted $query) use ($queryCollector, $options) {
                     // In case Debugbar is disabled after the listener was attached
                     if (!$this->debugbar->shouldCollect('db', true)) {
                         return;
                     }
 
-                    $threshold = $config['slow_threshold'] ?? false;
-                    $onlyThreshold = $config['only_slow_queries'] ?? true;
+                    $threshold = $options['slow_threshold'] ?? false;
+                    $onlyThreshold = $options['only_slow_queries'] ?? true;
 
                     //allow collecting only queries slower than a specified amount of milliseconds
                     if (!$onlyThreshold || !$threshold || $query->time > $threshold) {
@@ -109,10 +109,10 @@ class DatabaseProvider extends AbstractDataProvider
             );
 
             $events->listen(
-                function (ConnectionEstablished $event) use ($queryCollector, $config) {
+                function (ConnectionEstablished $event) use ($queryCollector, $options) {
                     $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
 
-                    if ($config['memory_usage'] ?? false) {
+                    if ($options['memory_usage'] ?? false) {
                         $event->connection->beforeExecuting(function () use ($queryCollector) {
                             $queryCollector->startMemoryUsage();
                         });

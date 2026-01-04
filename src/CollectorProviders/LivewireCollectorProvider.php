@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use Barryvdh\Debugbar\DataCollector\LivewireCollector;
 use Illuminate\Contracts\Foundation\Application;
 
-class LivewireProvider extends AbstractDataProvider
+class LivewireCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(Application $app): void
     {

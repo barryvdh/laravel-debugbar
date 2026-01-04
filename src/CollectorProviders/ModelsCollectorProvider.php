@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use DebugBar\DataCollector\ObjectCountCollector;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 
-class ModelsProvider extends AbstractDataProvider
+class ModelsCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Dispatcher $events, array $config): void
+    public function __invoke(Dispatcher $events, array $options): void
     {
         $modelsCollector = new ObjectCountCollector('models');
         $this->addCollector($modelsCollector);

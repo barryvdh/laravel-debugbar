@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use DebugBar\DataCollector\MessagesCollector;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Log\Logger;
 
-class LogProvider extends AbstractDataProvider
+class LogCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Logger $logger, array $config): void
+    public function __invoke(Logger $logger, array $options): void
     {
         $logCollector = new MessagesCollector('log');
 

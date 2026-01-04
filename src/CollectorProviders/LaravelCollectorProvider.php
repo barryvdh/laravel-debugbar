@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataProviders;
+namespace Barryvdh\Debugbar\CollectorProviders;
 
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
 use Illuminate\Contracts\Foundation\Application;
 
-class LaravelProvider extends AbstractDataProvider
+class LaravelCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Application $app, array $config): void
+    public function __invoke(Application $app, array $options): void
     {
         $this->addCollector(new LaravelCollector($app));
     }
