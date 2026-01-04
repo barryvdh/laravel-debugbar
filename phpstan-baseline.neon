@@ -29,9 +29,3 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: src/DataCollector/RouteCollector.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\Mime\\RawMessage\:\:getSubject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/LaravelDebugbar.php
