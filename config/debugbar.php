@@ -198,6 +198,13 @@ return [
         'pennant'         => env('DEBUGBAR_COLLECTORS_PENNANT', true),         // Display Pennant feature flags
     ],
 
+    /**
+     * Add any additional DataCollectors by adding the class name of a DataCollector or invokable class.
+     */
+    'custom_collectors' => [
+        // MyCollector::class => env('DEBUGBAR_COLLECTORS_MYCOLLECTOR', true),
+    ],
+
     /*
      |--------------------------------------------------------------------------
      | Extra options
