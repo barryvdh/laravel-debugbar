@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\CollectorProviders;
 
 use Barryvdh\Debugbar\DataCollector\RequestCollector;
-use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Illuminate\Config\Repository;
 use Illuminate\Http\Request;
 
@@ -18,7 +17,7 @@ class RequestCollectorProvider extends AbstractCollectorProvider
 
         // Legacy hidden values, using array path
         $hiddens = array_map(function ($value) {
-            if (strpos($value, '.') !== false) {
+            if (str_contains($value, '.')) {
                 return substr($value, strrpos($value, '.') + 1);
             }
             return $value;

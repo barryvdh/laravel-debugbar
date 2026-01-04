@@ -43,7 +43,6 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
             $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
         }
 
-
         if ($this->request instanceof \Illuminate\Http\Request) {
             $result['tooltip'] += [
                 'full_url' => Str::limit($this->request->fullUrl(), 100),

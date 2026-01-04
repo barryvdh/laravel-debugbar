@@ -7,8 +7,6 @@ namespace Barryvdh\Debugbar\Support\Clockwork;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Session\SessionManager;
-use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

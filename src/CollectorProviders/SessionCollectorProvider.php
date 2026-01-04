@@ -15,7 +15,7 @@ class SessionCollectorProvider extends AbstractCollectorProvider
 
             // Legacy hidden values, using array path
             $hiddens = array_map(function ($value) {
-                if (strpos($value, '.') !== false) {
+                if (str_contains($value, '.')) {
                     return substr($value, strrpos($value, '.') + 1);
                 }
                 return $value;

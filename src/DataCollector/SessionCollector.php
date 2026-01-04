@@ -7,7 +7,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionCollector extends DataCollector implements DataCollectorInterface, Renderable
