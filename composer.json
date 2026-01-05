@@ -64,6 +64,7 @@
         "analyse": "vendor/bin/phpstan analyse --memory-limit=1G",
         "check-style": "vendor/bin/pint --test",
         "fix-style": "vendor/bin/pint",
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "docs": "vendor/bin/phpunit --filter=testItInjectsOnDocs && php build/build-docs.php && mkdocs build"
     }
 }

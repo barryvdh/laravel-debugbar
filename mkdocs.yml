@@ -1,0 +1,85 @@
+site_name: Laravel Debugbar
+site_author: Barry vd. Heuvel
+site_description: Debugbar for Laravel
+site_url: https://laraveldebugbar.com
+repo_url: https://github.com/barryvdh/laravel-debugbar
+edit_uri: ./edit/docs/docs
+copyright: Copyright &copy; Barry vd. Heuvel
+
+nav:
+  - Home: index.md
+  - Install: installation.md
+  - Usage: usage.md
+  - Features: features.md
+  - Collectors: collectors.md
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo_white.png
+  favicon: assets/favicon.png
+  palette:
+    - primary: custom
+      accent: custom
+      scheme: slate
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+#    - navigation.instant
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.sections
+    - navigation.expand
+    - content.tooltips
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+    - toc.integrate
+    - search.highlight
+    - meta
+extra_css:
+  - assets/extra.css
+  - assets/dist/debugbar.css?v=1767612338
+extra_javascript:
+  - assets/dist/debugbar.js?v=1767612338
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      extend_pygments_lang:
+        - name: php
+          lang: php
+          options:
+            startinline: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - toc:
+      permalink: true
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: barryvdh
+      repo: laravel-debugbar
+
+extra:
+  analytics:
+    provider: google
+    property: G-KVHB3EWT91
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/barryvdh/laravel-debugbar
+
+hooks:
+  - docs/overrides/shortcodes.py

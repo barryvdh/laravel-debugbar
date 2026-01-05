@@ -7,3 +7,7 @@ composer.lock
 /tests/Browser
 /node_modules
 /build/phpstan
+/build/docs
+/site
+/docs/overrides/__pycache__/
+/docs/assets/dist
