@@ -14,29 +14,36 @@ use Illuminate\Http\Client\Request;
 
 class HttpClientCollectorProvider extends AbstractCollectorProvider
 {
+    protected ?HttpClientCollector $httpClientCollector = null;
+
     public function __invoke(Dispatcher $events, array $options): void
     {
-
-        $httpClientCollector = new HttpClientCollector();
-        $masked = $options['masked'] ?? [];
-        $httpClientCollector->addMaskedKeys($masked);
-        $this->addCollector($httpClientCollector);
-
-        $events->listen(ResponseReceived::class, fn(ResponseReceived $e) => $httpClientCollector->addEvent($e));
-        $events->listen(ConnectionFailed::class, fn(ConnectionFailed $e) => $httpClientCollector->addEvent($e));
-
         if ($this->hasCollector('time') && ($options['timeline'] ?? true)) {
             /** @var TimeDataCollector $timeCollector */
             $timeCollector = $this->getCollector('time');
-
-            $events->listen(RequestSending::class, fn(RequestSending $e) => $timeCollector->startMeasure($this->label($e->request), null, 'http'));
-            $events->listen(ResponseReceived::class, fn(ResponseReceived $e) => $timeCollector->stopMeasure($this->label($e->request)));
-            $events->listen(ConnectionFailed::class, fn(ConnectionFailed $e) => $timeCollector->stopMeasure($this->label($e->request)));
+        } else {
+            $timeCollector = null;
         }
+
+        $httpClientCollector = new HttpClientCollector('http_client', $timeCollector);
+        $this->httpClientCollector = $httpClientCollector;
+
+        $masked = $options['masked'] ?? [];
+        $httpClientCollector->addMaskedKeys($masked);
+
+        $this->addCollector($httpClientCollector);
+
+
+        $events->listen(ResponseReceived::class, fn(ResponseReceived $e) => $this->addEvent($e));
+        $events->listen(ConnectionFailed::class, fn(ConnectionFailed $e) => $this->addEvent($e));
     }
 
-    protected function label(Request $request): string
+    protected function addEvent(ResponseReceived|ConnectionFailed $event): void
     {
-        return $request->method() . ' ' . $request->url();
+        try {
+            $this->httpClientCollector->addEvent($event);
+        } catch (\Throwable $e) {
+            $this->addThrowable($e);
+        }
     }
 }

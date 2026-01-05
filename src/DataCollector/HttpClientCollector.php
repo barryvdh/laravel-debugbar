@@ -7,71 +7,48 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
+use DebugBar\DataCollector\HttpCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\ResponseReceived;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Str;
 
-class HttpClientCollector extends DataCollector implements DataCollectorInterface, Renderable, AssetProvider
+class HttpClientCollector extends HttpCollector
 {
-   /** @var array<ResponseReceived|ConnectionFailed>  */
-    protected array $events = [];
-
-    public function __construct()
-    {
-        $this->addMaskedKeys(['Authorization']);
-    }
-
     public function addEvent(ResponseReceived|ConnectionFailed $event): void
     {
-        $this->events[] = $event;
-    }
+        $headers =  $this->hideMaskedValues($event->request->headers());
 
-    protected function getLabel(ResponseReceived|ConnectionFailed $event)
-    {
-        return $event->request->url() . ' #' . spl_object_hash($event);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function collect(): array
-    {
-        $data = [];
-        foreach ($this->events as $event) {
-
-            $headers =  $this->hideMaskedValues($event->request->headers());
-            if ($event->request->isMultipart()) {
-                $input = '[MULTIPART]';
-            } else{
-                $input = $this->hideMaskedValues($event->request->data());
-            }
-
-            $result = [
-                'method' => $event->request->method(),
-                'url' => $event->request->url(),
-                'status' => 'N/A',
-                'params' => [
-                    'input' => $this->getVarDumper()->renderVar($input),
-                    'headers' => $this->getVarDumper()->renderVar($headers),
-                ]
-            ];
-            if ($event instanceof ResponseReceived) {
-                $result['status'] = $event->response->status();
-                $result['duration'] = $this->getDuration($event->response);
-                $result['params']['response'] = $this->getVarDumper()->renderVar($this->parseResponse($event->response));
-                $result['params']['headers'] = $this->getVarDumper()->renderVar($this->hideMaskedValues($event->response->headers()));
-            } elseif ($event instanceof ConnectionFailed) {
-                $result['params']['exception'] = $this->getVarDumper()->renderVar($event->exception);
-            }
-
-            $data[] = $result;
+        if ($event->request->isMultipart()) {
+            $requestData = '[MULTIPART]';
+        } else{
+            $requestData = $this->hideMaskedValues($event->request->data());
         }
 
-        return [
-            'data' => $data,
-            'nb_events' => count($data),
+        $status = null;
+        $duration = null;
+        $details = [
+            'request_data' => $requestData,
+            'request_headers' => $headers,
         ];
+
+        if ($event instanceof ResponseReceived) {
+            $status = $event->response->status();
+            $duration = $this->getDuration($event->response);
+            $details['response'] = $this->parseResponse($event->response);
+            $details['response_headers'] = $this->hideMaskedValues($event->response->headers());
+        } elseif ($event instanceof ConnectionFailed) {
+            $details['exception'] = $event->exception;
+        }
+
+        $this->addRequest(
+            $event->request->method(),
+            $event->request->url(),
+            $status,
+            $duration,
+            $details
+        );
     }
 
     protected function parseResponse(Response $response): string|array
@@ -103,46 +80,10 @@ class HttpClientCollector extends DataCollector implements DataCollectorInterfac
 
     protected function getDuration(Response $response): ?float
     {
-        if (property_exists($response, 'transferStats') &&
-            $response->transferStats &&
-            $response->transferStats->getTransferTime()) {
-            return round($response->transferStats->getTransferTime() * 1000);
+        if (property_exists($response, 'transferStats') && $response->transferStats) {
+            return $response->transferStats->getTransferTime();
         }
 
         return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName(): string
-    {
-        return 'http_client';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getWidgets(): array
-    {
-        return [
-            "http_client" => [
-                "icon" => "flag",
-                "widget" => "PhpDebugBar.Widgets.LaravelHttpWidget",
-                "map" => "http_client.data",
-                "default" => "{}",
-            ],
-            'http_client:badge' => [
-                'map' => 'http_client.nb_events',
-                'default' => 0,
-            ],
-        ];
-    }
-
-    public function getAssets(): array
-    {
-        return [
-            'js' => __DIR__ . '/../../resources/http/widget.js',
-        ];
     }
 }
