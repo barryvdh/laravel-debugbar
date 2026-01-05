@@ -139,7 +139,7 @@ return [
         'http_client' => [
             'masked' => [],
             'timeline' => env('DEBUGBAR_OPTIONS_HTTP_CLIENT_TIMELINE', true),  // Add requests to the timeline
-        ]
+        ],
     ],
 
     /**

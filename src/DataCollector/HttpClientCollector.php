@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\AssetProvider;
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\HttpCollector;
-use DebugBar\DataCollector\Renderable;
 use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\ResponseReceived;
 use Illuminate\Http\Client\Response;
@@ -22,7 +18,7 @@ class HttpClientCollector extends HttpCollector
 
         if ($event->request->isMultipart()) {
             $requestData = '[MULTIPART]';
-        } else{
+        } else {
             $requestData = $this->hideMaskedValues($event->request->data());
         }
 
