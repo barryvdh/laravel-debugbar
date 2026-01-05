@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.0-beta.7 - 2026-01-05
+
+### What's Changed
+
+* Improve Livewire collection and view detection for components by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1853
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v4.0-beta.6...v4.0-beta.7
+
 ## v3.16.3 - 2025-12-26
 
 ### What's Changed
