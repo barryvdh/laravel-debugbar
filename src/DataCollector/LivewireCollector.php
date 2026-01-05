@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\DataCollectorInterface;
-use DebugBar\DataCollector\Renderable;
+use DebugBar\DataCollector\TemplateCollector;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Livewire\Livewire;
@@ -15,19 +13,18 @@ use Livewire\Component;
 /**
  * Collector for Models.
  */
-class LivewireCollector extends DataCollector implements DataCollectorInterface, Renderable
+class LivewireCollector extends TemplateCollector
 {
-    public $data = [];
-
     public function __construct(Request $request)
     {
+        parent::__construct(true, [], false);
+
         // Listen to Livewire views
         Livewire::listen('view:render', function (View $view) use ($request) {
             /** @var \Livewire\Component $component */
             $component = $view->getData()['_instance'];
 
-            // Create a unique name for each component
-            $key = $component->getName() . ' #' . $component->id;
+            $key = get_class($component) . ' ' . $component->getName() . ' #' . $component->id;
 
             $data = [
                 'data' => $component->getPublicPropertiesDefinedBySubClass(),
@@ -43,12 +40,19 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->id;
 
-            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
+            $path = (new \ReflectionClass($component))->getFileName();
+
+            $this->addTemplate($key, $data, 'livewire', $path);
         });
 
         Livewire::listen('render', function (Component $component) use ($request) {
-            // Create an unique name for each compoent
-            $key = $component->getName() . ' #' . $component->getId();
+            // Create an unique name for each component
+
+            if ((new \ReflectionClass($component))->isAnonymous()) {
+                $key = $component->getName() . ' #' . $component->getId();
+            } else {
+                $key = get_class($component) . ' ' . $component->getName() . ' #' . $component->getId();
+            }
 
             $data = [
                 'data' => $component->all(),
@@ -63,13 +67,10 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
             $data['component'] = get_class($component);
             $data['id'] = $component->getId();
 
-            $this->data[$key] = $this->getDataFormatter()->formatVar($data);
+            $path = (new \ReflectionClass($component))->getFileName();
+            ;
+            $this->addTemplate($key, $data, 'livewire', $path);
         });
-    }
-
-    public function collect(): array
-    {
-        return ['data' => $this->data, 'count' => count($this->data)];
     }
 
     /**
@@ -80,22 +81,10 @@ class LivewireCollector extends DataCollector implements DataCollectorInterface,
         return 'livewire';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getWidgets(): array
     {
-        return [
-            "livewire" => [
-                "icon" => "brand-livewire",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => "livewire.data",
-                "default" => "{}",
-            ],
-            'livewire:badge' => [
-                'map' => 'livewire.count',
-                'default' => 0,
-            ],
-        ];
+        $widgets = parent::getWidgets();
+        $widgets[$this->getName()]['icon'] = 'brand-livewire';
+        return $widgets;
     }
 }

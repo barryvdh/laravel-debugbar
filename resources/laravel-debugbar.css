@@ -588,15 +588,10 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td.phpdebugb
     text-align: left;
 }
 
-div.phpdebugbar-widgets-templates .phpdebugbar-widgets-list-item table.phpdebugbar-widgets-params {
-    width: auto!important;
-}
-
 ul.phpdebugbar-widgets-list ul.phpdebugbar-widgets-table-list {
     text-align: left;
     line-height: 150%;
 }
-
 
 ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
     float: right;
