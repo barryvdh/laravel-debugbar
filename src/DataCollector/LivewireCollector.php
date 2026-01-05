@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\DataCollector;
 
-use DebugBar\DataCollector\DataCollector;
-use DebugBar\DataCollector\DataCollectorInterface;
-use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TemplateCollector;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -70,7 +67,8 @@ class LivewireCollector extends TemplateCollector
             $data['component'] = get_class($component);
             $data['id'] = $component->getId();
 
-            $path = (new \ReflectionClass($component))->getFileName();;
+            $path = (new \ReflectionClass($component))->getFileName();
+            ;
             $this->addTemplate($key, $data, 'livewire', $path);
         });
     }

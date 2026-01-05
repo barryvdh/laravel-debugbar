@@ -29,7 +29,6 @@ class ViewCollector extends TemplateCollector
             [$name, $type, $data, $path] = $this->getInertiaView($name, $data, $path);
         }
 
-
         // Skip View files from strings
         if (Str::startsWith($name, '__components::')) {
             if ($source = $this->getRenderSource($name, $path)) {
