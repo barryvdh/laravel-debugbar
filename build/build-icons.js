@@ -30,7 +30,6 @@ const icons = [
     // Message icons
     { name: 'star', filled: true },
     'info-circle',
-    'circle-check',
 
     // Link icon
     'external-link',
