@@ -6,6 +6,7 @@ namespace Barryvdh\Debugbar;
 
 use Barryvdh\Debugbar\CollectorProviders\ConfigCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\ExceptionsCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\HttpClientCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\RequestCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\SessionCollectorProvider;
 use Barryvdh\Debugbar\DataCollector\LaravelCollector;
@@ -201,6 +202,7 @@ class LaravelDebugbar extends DebugBar
             'pennant' => PennantCollectorProvider::class,
             'config' => ConfigCollectorProvider::class,
             'session' => SessionCollectorProvider::class,
+            'http_client' => HttpClientCollectorProvider::class,
         ]);
 
         // Register any Custom Collectors
