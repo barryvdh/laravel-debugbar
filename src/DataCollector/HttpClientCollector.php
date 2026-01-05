@@ -34,7 +34,7 @@ class HttpClientCollector extends HttpCollector
             $duration = $this->getDuration($event->response);
             $details['response'] = $this->parseResponse($event->response);
             $details['response_headers'] = $this->hideMaskedValues($event->response->headers());
-        } elseif ($event instanceof ConnectionFailed) {
+        } elseif ($event instanceof ConnectionFailed && isset($event->exception)) {
             $details['exception'] = $event->exception;
         }
 
