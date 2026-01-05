@@ -30,7 +30,8 @@
         "phpunit/phpunit": "^10|^11",
         "larastan/larastan": "^3",
         "phpstan/phpstan-phpunit": "^2",
-        "laravel/pint": "^1"
+        "laravel/pint": "^1",
+        "livewire/livewire": "^3.7"
     },
     "autoload": {
         "psr-4": {
