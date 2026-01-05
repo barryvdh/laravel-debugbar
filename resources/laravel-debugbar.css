@@ -492,38 +492,9 @@ table.phpdebugbar-widgets-tablevar td {
     border: 0;
 }
 
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-info {
-    color: #1299DA;
-}
-
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-info:before {
-    background-color: #5896e2;
-    -webkit-mask-image: var(--debugbar-icon-info-circle);
-    mask-image: var(--debugbar-icon-info-circle);
-}
-
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-success:before {
-    background-color: #45ab45;
-    -webkit-mask-image: var(--debugbar-icon-circle-check);
-    mask-image: var(--debugbar-icon-circle-check);
-}
-
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error {
-    color: #e74c3c;
-}
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-error:before {
     color: var(--debugbar-red-vivid);
-}
-
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-warning:before,
-div.phpdebugbar-widgets-messages .phpdebugbar-widgets-value.phpdebugbar-widgets-warning {
-    color: #FF9800;
-}
-
-div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-value.phpdebugbar-widgets-deprecation:before {
-    content: "\f1f6";
-    color: #FF9800;
 }
 
 div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item pre.sf-dump {
