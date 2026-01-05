@@ -61,6 +61,7 @@ class DebugbarDocsTest extends TestCase
 
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
         $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        $this->assertEquals(200, $crawler->getStatusCode());
 
         @mkdir(__DIR__ . '/../build/docs/assets', 0o777, true);
 
