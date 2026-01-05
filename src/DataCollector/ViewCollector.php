@@ -75,7 +75,7 @@ class ViewCollector extends TemplateCollector
     protected function addTemplateRender(string $name, int $renderCount): void
     {
         debug($renderCount, $this->currentRenderCount);
-        $this->callGraph[] = str_repeat(' ', $renderCount-1) . (($renderCount > $this->currentRenderCount && $renderCount > 1) ? '└' : ' ') .  $name;
+        $this->callGraph[] = str_repeat(' ', $renderCount - 1) . (($renderCount > $this->currentRenderCount && $renderCount > 1) ? '└' : ' ') . $name;
         $this->currentRenderCount = $renderCount;
     }
 
