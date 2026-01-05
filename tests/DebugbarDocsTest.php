@@ -7,7 +7,6 @@ namespace Barryvdh\Debugbar\Tests;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use Barryvdh\Debugbar\Tests\Models\User;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 
 class DebugbarDocsTest extends TestCase
@@ -63,11 +62,10 @@ class DebugbarDocsTest extends TestCase
         $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
         $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
 
-        @mkdir(__DIR__ . '/../build/docs/assets', 0777, true);
+        @mkdir(__DIR__ . '/../build/docs/assets', 0o777, true);
 
         // Store output for test
         file_put_contents(__DIR__ . '/../build/docs/render.html', $crawler->getContent());
-
 
         file_put_contents(__DIR__ . '/../build/docs/assets/debugbar.css', $this->call('GET', '/_debugbar/assets/stylesheets')->getContent());
         file_put_contents(__DIR__ . '/../build/docs/assets/debugbar.js', $this->call('GET', '/_debugbar/assets/javascript')->getContent());
