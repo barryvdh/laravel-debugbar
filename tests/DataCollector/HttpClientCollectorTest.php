@@ -58,7 +58,11 @@ class HttpClientCollectorTest extends TestCase
         $this->assertEquals('https://example.com/api/fail', $requestData['url']);
         $this->assertNull($requestData['status']);
         $this->assertArrayHasKey('details', $requestData);
-        $this->assertArrayHasKey('exception', $requestData['details']);
+
+        // Exception is not available in Laravel 10
+        if (isset($event->exception)) {
+            $this->assertArrayHasKey('exception', $requestData['details']);
+        }
     }
 
     public function testItMasksAuthorizationHeader()
