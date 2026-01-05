@@ -14,7 +14,7 @@ class EventsCollectorCollectorProvider extends AbstractCollectorProvider
     {
         $startTime = $request->server('REQUEST_TIME_FLOAT');
         $collectData = $options['data'] ?? false;
-        $excludedEvents = $options['excluded'] ?? false;
+        $excludedEvents = $options['excluded'] ?? [];
         $eventCollector = new EventCollector($startTime, $collectData, $excludedEvents);
         $this->addCollector($eventCollector);
         $eventCollector->subscribe($events);
