@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\CollectorProviders;
 
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
+use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
 
 class MailCollectorProvider extends AbstractCollectorProvider
@@ -19,12 +21,16 @@ class MailCollectorProvider extends AbstractCollectorProvider
             $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
         });
 
-        if (($options['show_body'] ?? false) || ($options['full_log'] ?? false)) {
+        if (($options['show_body'] ?? true) || ($options['full_log'] ?? false)) {
             $mailCollector->showMessageBody();
         }
-        //
-        //        if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
-        //            // TODO; use MessageSending and MessageSent events
-        //        }
+
+        if ($this->hasCollector('time') && ($options['timeline'] ?? true)) {
+            /** @var TimeDataCollector $timeCollector */
+            $timeCollector = $this->getCollector('time');
+
+            $events->listen(MessageSending::class, fn(MessageSending $e) => $timeCollector->startMeasure('Mail: ' . $e->message->getSubject()));
+            $events->listen(MessageSent::class, fn(MessageSent $e) => $timeCollector->stopMeasure('Mail: ' . $e->message->getSubject()));
+        }
     }
 }
