@@ -7,6 +7,7 @@ namespace Barryvdh\Debugbar\Tests;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use Barryvdh\Debugbar\Tests\Models\User;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 
 class DebugbarDocsTest extends TestCase
@@ -49,6 +50,8 @@ class DebugbarDocsTest extends TestCase
             User::where('id', 1)->get();
             User::where('id', 1)->get();
             User::where('id', 1)->get();
+
+            view('dashboard')->render();
 
             debugbar()->addException(new \RuntimeException('Whoops! This is just a demo'));
 
