@@ -45,7 +45,7 @@ class DebugbarDocsTest extends TestCase
                     'total' => 117241469,
                     'monthly' => 2006302,
                     'daily' => 109736,
-                ]
+                ],
             ], 200, []),
         ]);
 
