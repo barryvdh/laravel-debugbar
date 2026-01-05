@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0-beta.8 - 2026-01-05
+
+### What's Changed
+
+* Builds docs from source by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1854
+* Fix default for excluded events by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1856
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v4.0-beta.7...v4.0-beta.8
+
 ## v4.0-beta.7 - 2026-01-05
 
 ### What's Changed
