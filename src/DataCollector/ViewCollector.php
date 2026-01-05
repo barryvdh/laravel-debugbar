@@ -10,6 +10,9 @@ use Illuminate\View\View;
 
 class ViewCollector extends TemplateCollector
 {
+    protected ?int $currentRenderCount = null;
+    protected array $callGraph = [];
+
     public function getName(): string
     {
         return 'views';
@@ -18,7 +21,7 @@ class ViewCollector extends TemplateCollector
     /**
      * Add a View instance to the Collector
      */
-    public function addView(View $view): void
+    public function addView(View $view, ?int $renderCount = null): void
     {
         $name = $view->getName();
         $type = null;
@@ -59,11 +62,41 @@ class ViewCollector extends TemplateCollector
         }
 
         $this->addTemplate($name, $data, $type, $path);
+        if ($renderCount !== null) {
+            $this->addTemplateRender($name, $renderCount);
+        }
 
         if ($this->timeCollector !== null) {
             $time = microtime(true);
             $this->timeCollector->addMeasure('View: ' . $name, $time, $time, [], 'views', 'View');
         }
+    }
+
+    protected function addTemplateRender(string $name, int $renderCount): void
+    {
+        debug($renderCount, $this->currentRenderCount);
+        $this->callGraph[] = str_repeat(' ', $renderCount-1) . (($renderCount > $this->currentRenderCount && $renderCount > 1) ? '└' : ' ') .  $name;
+        $this->currentRenderCount = $renderCount;
+    }
+
+    public function collect(): array
+    {
+        $data = parent::collect();
+
+        if ($callGraph = $this->getHtmlCallgraph()) {
+            $data['callgraph'] = $callGraph;
+        }
+
+        return $data;
+    }
+
+    public function getHtmlCallgraph(): ?string
+    {
+        if ($this->callGraph) {
+            return '<pre>' . implode("\n", $this->callGraph) . '</pre>';
+        }
+
+        return null;
     }
 
     private function getRenderSource(string $name, ?string $path): ?array
