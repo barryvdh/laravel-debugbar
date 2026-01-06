@@ -160,9 +160,6 @@ class LaravelDebugbar extends DebugBar
             $this->prevErrorHandler = set_error_handler([$this, 'handleError'], $errorLevel);
         }
 
-        $this->selectStorage($this);
-        $this->registerCollectors();
-
         $renderer = $this->getJavascriptRenderer();
         $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', true));
         $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
@@ -170,6 +167,21 @@ class LaravelDebugbar extends DebugBar
         $renderer->setBindAjaxHandlerToXHR($config->get('debugbar.capture_ajax', true));
         $renderer->setDeferDatasets($config->get('debugbar.defer_datasets', false));
         $renderer->setUseDistFiles($config->get('debugbar.use_dist_files', true));
+        $renderer->setAjaxHandlerAutoShow($config->get('debugbar.ajax_handler_auto_show', true));
+        $renderer->setAjaxHandlerEnableTab($config->get('debugbar.ajax_handler_enable_tab', true));
+        $renderer->setTheme($config->get('debugbar.theme', 'auto'));
+
+        $renderer->setAssetHandlerUrl(route('debugbar.assets'));
+        $renderer->addAssets(cssFiles: ['laravel-debugbar.css', 'laravel-icons.css'], basePath: __DIR__ . '/../resources');
+
+        $this->selectStorage($this);
+        if ($this->getStorage()) {
+            $openHandlerUrl = route('debugbar.openhandler');
+            $renderer->setOpenHandlerUrl($openHandlerUrl);
+        }
+
+        $this->registerCollectors();
+
         $this->booted = true;
     }
 
@@ -346,18 +358,6 @@ class LaravelDebugbar extends DebugBar
                 $exception,
             ),
         );
-    }
-
-    /**
-     * Returns a JavascriptRenderer for this instance
-     *
-     */
-    public function getJavascriptRenderer(?string $baseUrl = null, ?string $basePath = null): \DebugBar\JavascriptRenderer|JavascriptRenderer
-    {
-        if ($this->jsRenderer === null) {
-            $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);
-        }
-        return $this->jsRenderer;
     }
 
     /**
@@ -594,16 +594,6 @@ class LaravelDebugbar extends DebugBar
         $content = $response->getContent();
 
         $renderer = $this->getJavascriptRenderer();
-        $autoShow = $config->get('debugbar.ajax_handler_auto_show', true);
-        $renderer->setAjaxHandlerAutoShow($autoShow);
-
-        $enableTab = $config->get('debugbar.ajax_handler_enable_tab', true);
-        $renderer->setAjaxHandlerEnableTab($enableTab);
-
-        if ($this->getStorage()) {
-            $openHandlerUrl = route('debugbar.openhandler');
-            $renderer->setOpenHandlerUrl($openHandlerUrl);
-        }
 
         $widget = "<!-- Laravel Debugbar Widget -->\n" . $renderer->renderHead() . $renderer->render();
 

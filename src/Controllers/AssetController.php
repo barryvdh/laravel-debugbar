@@ -4,62 +4,28 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\Controllers;
 
+use DebugBar\AssetHandler;
+use DebugBar\SymfonyHttpDriver;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AssetController extends BaseController
 {
-    /**
-     * Return the javascript for the Debugbar
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function js()
+    public function getAssets(Request $request)
     {
-        $renderer = $this->debugbar->getJavascriptRenderer();
+        $assetHandler = new AssetHandler($this->debugbar);
 
-        $content = $renderer->dumpAssetsToString('js');
+        $type = (string) $request->get('type');
 
-        $response = new Response(
-            $content,
-            200,
-            [
-                'Content-Type' => 'text/javascript',
-            ],
-        );
+        $response = new Response();
+        $driver = $this->debugbar->getHttpDriver();
+        if ($driver instanceof SymfonyHttpDriver) {
+            $driver->setResponse($response);
+        }
 
-        return $this->cacheResponse($response);
-    }
-
-    /**
-     * Return the stylesheets for the Debugbar
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function css()
-    {
-        $renderer = $this->debugbar->getJavascriptRenderer();
-
-        $content = $renderer->dumpAssetsToString('css');
-
-        $response = new Response(
-            $content,
-            200,
-            [
-                'Content-Type' => 'text/css',
-            ],
-        );
-
-        return $this->cacheResponse($response);
-    }
-
-    /**
-     * Cache the response 1 year (31536000 sec)
-     */
-    protected function cacheResponse(Response $response)
-    {
-        $response->setSharedMaxAge(31536000);
-        $response->setMaxAge(31536000);
-        $response->setExpires(new \DateTime('+1 year'));
+        $assetHandler->handle([
+            'type' => $type,
+        ]);
 
         return $response;
     }
