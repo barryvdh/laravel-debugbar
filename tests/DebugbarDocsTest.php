@@ -7,6 +7,7 @@ namespace Barryvdh\Debugbar\Tests;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use Barryvdh\Debugbar\Tests\Models\User;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class DebugbarDocsTest extends TestCase
@@ -38,6 +39,16 @@ class DebugbarDocsTest extends TestCase
 
         $this->loadLaravelMigrations();
 
+        Http::fake([
+            'packagist.org/*' => Http::response([
+                'downloads' => [
+                    'total' => 117241469,
+                    'monthly' => 2006302,
+                    'daily' => 109736,
+                ],
+            ], 200, []),
+        ]);
+
         $router->get('docs', function () {
             debugbar()->addMessage('Hello Artisans!');
             debugbar()->warning('Watch out for ..');
@@ -51,6 +62,8 @@ class DebugbarDocsTest extends TestCase
             User::where('id', 1)->get();
 
             view('dashboard')->render();
+
+            Http::get('https://packagist.org/packages/barryvdh/laravel-debugbar/stats.json')->json();
 
             debugbar()->addException(new \RuntimeException('Whoops! This is just a demo'));
 

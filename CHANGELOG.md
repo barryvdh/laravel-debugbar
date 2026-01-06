@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.0-beta.9 - 2026-01-05
+
+### What's Changed
+
+* Remove icon overrides by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1857
+* Restore Mail collector timeline by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1858
+* Add HTTP client collector by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1859
+* Add http client to docs by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1860
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v4.0-beta.8...v4.0-beta.9
+
 ## v4.0-beta.8 - 2026-01-05
 
 ### What's Changed
