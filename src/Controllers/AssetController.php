@@ -24,7 +24,7 @@ class AssetController extends BaseController
         }
 
         $assetHandler->handle([
-            'type' => $type
+            'type' => $type,
         ]);
 
         return $response;
