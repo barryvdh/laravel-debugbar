@@ -31,12 +31,13 @@ class JavascriptRenderer extends BaseJavascriptRenderer
      */
     public function renderHead(): string
     {
+        $asset = $this->getAssets();
         $cssRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.css', [
-            'v' => $this->getModifiedTime('css'),
+            'v' => $this->getModifiedTimes($asset['css']),
         ]));
 
         $jsRoute = preg_replace('/\Ahttps?:\/\/[^\/]+/', '', route('debugbar.assets.js', [
-            'v' => $this->getModifiedTime('js'),
+            'v' => $this->getModifiedTimes($asset['css']),
         ]));
 
         $nonce = $this->getNonceAttribute();
@@ -57,70 +58,25 @@ class JavascriptRenderer extends BaseJavascriptRenderer
     {
         $html = '';
 
+        $assets = $this->getAssets();
         foreach (['head', 'css', 'js'] as $asset) {
-            foreach ($this->getAssets('inline_' . $asset) as $item) {
+            foreach ($assets['inline_' . $asset] as $item) {
                 $html .= $item . "\n";
             }
         }
 
         return $html;
     }
-    /**
-     * Get the last modified time of any assets.
-     *
-     * @param string $type 'js' or 'css'
-     */
-    protected function getModifiedTime(string $type): int
-    {
-        $files = $this->getAssets($type);
-
-        $latest = 0;
-        foreach ($files as $file) {
-            $mtime = filemtime($file);
-            if ($mtime > $latest) {
-                $latest = $mtime;
-            }
-        }
-        return $latest;
-    }
 
     /**
      * Return assets as a string
      *
-     * @param string $type 'js' or 'css'
+     * @param 'js'|'css' $type
      */
     public function dumpAssetsToString(string $type): string
     {
-        $files = $this->getAssets($type);
+        $files = $this->getAssets()[$type];
 
-        $content = '';
-        foreach ($files as $file) {
-            $content .= file_get_contents($file) . "\n";
-        }
-
-        return $content;
-    }
-
-    /**
-     * Makes a URI relative to another
-     */
-    protected function makeUriRelativeTo(string|array|null $uri, string $root): string|array
-    {
-        if (!$root) {
-            return $uri;
-        }
-
-        if (is_array($uri)) {
-            $uris = [];
-            foreach ($uri as $u) {
-                $uris[] = $this->makeUriRelativeTo($u, $root);
-            }
-            return $uris;
-        }
-
-        if (substr($uri ?? '', 0, 1) === '/' || preg_match('/^([a-zA-Z]+:\/\/|[a-zA-Z]:\/|[a-zA-Z]:\\\)/', $uri ?? '')) {
-            return $uri;
-        }
-        return rtrim($root, '/') . "/$uri";
+        return $this->dumpAssets($files, null, null, false);
     }
 }
