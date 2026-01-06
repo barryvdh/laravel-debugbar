@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.0-beta.11 - 2026-01-06
+
+### What's Changed
+
+* Simplify Asset Renderer by @barryvdh in https://github.com/barryvdh/laravel-debugbar/pull/1862
+
+**Full Changelog**: https://github.com/barryvdh/laravel-debugbar/compare/v4.0-beta.10...v4.0-beta.11
+
 ## v4.0-beta.9 - 2026-01-05
 
 ### What's Changed
