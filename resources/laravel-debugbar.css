@@ -1,5 +1,6 @@
 div.phpdebugbar,
-div.phpdebugbar-openhandler {
+div.phpdebugbar-openhandler,
+div.phpdebugbar-widgets-datasets-panel {
     --debugbar-red-vivid: #eb4432;
 
     /*--debugbar-background: #fff;*/
@@ -30,7 +31,8 @@ div.phpdebugbar-openhandler {
 
 /* Dark mode */
 div.phpdebugbar[data-theme='dark'],
-div.phpdebugbar-openhandler[data-theme='dark'] {
+div.phpdebugbar-openhandler[data-theme='dark'],
+div.phpdebugbar-widgets-datasets-panel[data-theme='dark'] {
     --debugbar-white: #FFFFFF;
     --debugbar-gray-100: #F7FAFC;
     --debugbar-gray-200: #EDF2F7;
