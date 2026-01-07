@@ -78,13 +78,13 @@ class GateCollector extends MessagesCollector
             }
         }
 
-        $this->addMessage([
+        $this->addMessage("{ability} {target}", $label, [
             'ability' => $ability,
             'target' => $target,
             'result' => $result,
             $userKey => $userId,
             'arguments' => $this->getDataFormatter()->formatVar($arguments),
-        ], $label, false);
+        ]);
     }
 
     protected function getStackTraceItem(array $stacktrace): array

@@ -734,12 +734,12 @@ class LaravelDebugbar extends DebugBar
      *
      * A message can be anything from an object to a string
      */
-    public function addMessage(mixed $message, string $label = 'info'): void
+    public function addMessage(mixed $message, string $label = 'info', array $context = []): void
     {
         if ($this->hasCollector('messages')) {
             /** @var \DebugBar\DataCollector\MessagesCollector $collector */
             $collector = $this->getCollector('messages');
-            $collector->addMessage($message, $label);
+            $collector->addMessage($message, $label, $context);
         }
     }
 
