@@ -49,7 +49,7 @@ div.phpdebugbar-widgets-datasets-panel[data-theme='dark'] {
     --debugbar-background-alt: var(--debugbar-gray-900);
     --debugbar-text: var(--debugbar-gray-100);
     --debugbar-text-muted: var(--debugbar-gray-600);
-    --debugbar-border: var(--debugbar-gray-800);
+    --debugbar-border: var(--debugbar-gray-600);
 
     --debugbar-header:var(--debugbar-gray-900);
     --debugbar-header-text: var(--debugbar-gray-200);
@@ -137,6 +137,11 @@ div.phpdebugbar-header .phpdebugbar-tab {
     border-left: 1px solid var(--debugbar-header-border);
 }
 
+dl.phpdebugbar-widgets-kvlist dt,
+dl.phpdebugbar-widgets-kvlist dd,
+table.phpdebugbar-widgets-tablevar td {
+    border-top: 0px;
+}
 
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter,
 div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter.phpdebugbar-widgets-excluded {
