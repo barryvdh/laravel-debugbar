@@ -35,10 +35,10 @@ class LogCollectorProvider extends AbstractCollectorProvider
                 } catch (\Throwable $e) {
                     $logMessage = "[Exception: " . $e->getMessage() . "]";
                 }
-                $logCollector->addMessage(
-                    '[' . date('H:i:s') . '] ' . "LOG.{$log->level}: " . $logMessage,
+                $logCollector->log(
                     $log->level,
-                    false,
+                    '[' . date('H:i:s') . '] ' . "LOG.{$log->level}: " . $logMessage,
+                    $log->context,
                 );
             },
         );

@@ -32,22 +32,6 @@ class GateCollector extends MessagesCollector
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function customizeMessageHtml(?string $messageHtml, mixed $message): ?string
-    {
-        $pos = strpos((string) $messageHtml, 'array:5');
-        if ($pos !== false) {
-
-            $name = $message['ability'] . ' ' . ($message['target'] ?? '');
-
-            $messageHtml = substr_replace($messageHtml, $name, $pos, 7);
-        }
-
-        return parent::customizeMessageHtml($messageHtml, $message);
-    }
-
     public function addCheck(mixed $user, string $ability, mixed $result, array $arguments = []): void
     {
         $userKey = 'user';
@@ -78,13 +62,13 @@ class GateCollector extends MessagesCollector
             }
         }
 
-        $this->addMessage([
+        $this->addMessage("{ability} {target}", $label, [
             'ability' => $ability,
             'target' => $target,
             'result' => $result,
             $userKey => $userId,
             'arguments' => $this->getDataFormatter()->formatVar($arguments),
-        ], $label, false);
+        ]);
     }
 
     protected function getStackTraceItem(array $stacktrace): array
