@@ -67,7 +67,7 @@ class GateCollector extends MessagesCollector
             'target' => $target,
             'result' => $result,
             $userKey => $userId,
-            'arguments' => $this->getDataFormatter()->formatVar($arguments),
+            'arguments' => $arguments,
         ]);
     }
 
