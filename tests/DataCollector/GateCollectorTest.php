@@ -50,7 +50,7 @@ class GateCollectorTest extends TestCase
                 'result' => null,
                 'user' => 1,
                 'arguments' => [
-                    $user
+                    $user,
                 ],
             ],
         );
@@ -69,7 +69,7 @@ class GateCollectorTest extends TestCase
                 'result' => true,
                 'user' => 1,
                 'arguments' => [
-                    $user
+                    $user,
                 ],
             ],
         );
