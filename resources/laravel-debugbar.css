@@ -6,7 +6,7 @@ div.phpdebugbar-openhandler {
     /*--debugbar-background-alt: #EFEFEF;*/
     /*--debugbar-text: #222;*/
     /*--debugbar-text-muted: #888;*/
-    /*--debugbar-border: #bbb;*/
+    --debugbar-border: #bbb;
 
     --debugbar-header: #fff;
     --debugbar-header-text: #555;
@@ -186,6 +186,8 @@ a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
 }
 
 a.phpdebugbar-tab span.phpdebugbar-badge {
+    border-radius: 10px;
+    padding: 2px 8px;
     background: var(--debugbar-red-vivid);
     color: var(--debugbar-badge-active-text);
 }
@@ -194,6 +196,9 @@ a.phpdebugbar-tab span.phpdebugbar-badge {
     border-left: 2px solid var(--debugbar-header);
 }
 
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item {
+    border: none;
+}
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-stmt-id a {
     color: #888;
 }
@@ -225,7 +230,7 @@ div.phpdebugbar-widgets-messages li.phpdebugbar-widgets-list-item span.phpdebugb
 
 div.phpdebugbar-panel div.phpdebugbar-widgets-status {
     background: var(--debugbar-background-alt) !important;
-    border-bottom: 1px solid var(--debugbar-text-muted) !important;
+    border-bottom: 1px solid var(--debugbar-border) !important;
 }
 
 div.phpdebugbar-panel div.phpdebugbar-widgets-status > * {
@@ -239,11 +244,11 @@ div.phpdebugbar-panel div.phpdebugbar-widgets-status > span:first-child:before {
 }
 
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params th {
-    background-color: var(--debugbar-background-alt);
+    /*background-color: var(--debugbar-background-alt);*/
 }
 
 div.phpdebugbar-widgets-sqlqueries ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) table.phpdebugbar-widgets-params th {
-    background-color: var(--debugbar-background);
+    /*background-color: var(--debugbar-background);*/
 }
 
 ul.phpdebugbar-widgets-cache a.phpdebugbar-widgets-forget {
