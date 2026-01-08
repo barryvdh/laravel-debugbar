@@ -92,11 +92,13 @@ div.phpdebugbar-openhandler {
 }
 
 div.phpdebugbar-resize-handle {
-    display: block!important;
     height: 3px;
     margin-top: -3px;
     border-bottom: 0;
     background-color: var(--debugbar-red-vivid);
+}
+div.phpdebugbar-resize-handle[hidden] {
+    display: block !important;
 }
 .phpdebugbar.phpdebugbar-closed div.phpdebugbar-resize-handle.phpdebugbar-resize-handle-bottom {
     display: none!important;
