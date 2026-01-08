@@ -25,13 +25,13 @@ class GateCollectorTest extends TestCase
             'password' => 'password',
         ]);
 
-        $user->can('test');
+        $user->can('view', $user);
 
         Gate::before(function ($user, $ability, $result, $arguments = []) {
             return true;
         });
 
-        $user->can('test');
+        $user->can('view', $user);
 
         $collect = $collector->collect();
         $this->assertEquals(2, $collect['count']);
@@ -39,15 +39,39 @@ class GateCollectorTest extends TestCase
         $gateError = $collect['messages'][0];
         $this->assertEquals('error', $gateError['label']);
         $this->assertEquals(
-            '[ability => test, target => null, result => null, user => 1, arguments => []]',
+            'view Barryvdh\Debugbar\Tests\Models\User(id=1)',
             $gateError['message'],
+        );
+        $this->assertEquals(
+            $gateError['context'],
+            [
+                'ability' => 'view',
+                'target' => 'Barryvdh\Debugbar\Tests\Models\User(id=1)',
+                'result' => null,
+                'user' => 1,
+                'arguments' => [
+                    $user,
+                ],
+            ],
         );
 
         $gateSuccess = $collect['messages'][1];
         $this->assertEquals('success', $gateSuccess['label']);
         $this->assertEquals(
-            '[ability => test, target => null, result => true, user => 1, arguments => []]',
+            'view Barryvdh\Debugbar\Tests\Models\User(id=1)',
             $gateSuccess['message'],
+        );
+        $this->assertEquals(
+            $gateSuccess['context'],
+            [
+                'ability' => 'view',
+                'target' => 'Barryvdh\Debugbar\Tests\Models\User(id=1)',
+                'result' => true,
+                'user' => 1,
+                'arguments' => [
+                    $user,
+                ],
+            ],
         );
     }
 }

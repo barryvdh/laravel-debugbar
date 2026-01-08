@@ -20,6 +20,7 @@ use Barryvdh\Debugbar\CollectorProviders\JobsCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\LaravelCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\LivewireCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\LogCollectorProvider;
+use Barryvdh\Debugbar\CollectorProviders\LogsCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\MailCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\MemoryCollectorProvider;
 use Barryvdh\Debugbar\CollectorProviders\MessagesCollectorProvider;
@@ -203,6 +204,7 @@ class LaravelDebugbar extends DebugBar
             'views' => ViewsCollectorProvider::class,
             'route' => RouteCollectorProvider::class,
             'log' => LogCollectorProvider::class,
+            'logs' => LogsCollectorProvider::class,
             'db' => DatabaseCollectorProvider::class,
             'models' => ModelsCollectorProvider::class,
             'livewire' => LivewireCollectorProvider::class,
@@ -734,12 +736,12 @@ class LaravelDebugbar extends DebugBar
      *
      * A message can be anything from an object to a string
      */
-    public function addMessage(mixed $message, string $label = 'info'): void
+    public function addMessage(mixed $message, string $label = 'info', array $context = []): void
     {
         if ($this->hasCollector('messages')) {
             /** @var \DebugBar\DataCollector\MessagesCollector $collector */
             $collector = $this->getCollector('messages');
-            $collector->addMessage($message, $label);
+            $collector->addMessage($message, $label, $context);
         }
     }
 

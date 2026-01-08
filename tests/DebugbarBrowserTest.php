@@ -126,8 +126,9 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->assertSee('PONG')
                 ->waitFor('.phpdebugbar')
                 ->assertSee('GET web/plain')
-                ->click('.phpdebugbar-tab-history')
-                ->waitForTextIn('.phpdebugbar-widgets-dataset-history', 'web/redirect (stacked)')
+                ->click('.phpdebugbar-widgets-datasets-switcher-widget')
+                ->waitForTextIn('.phpdebugbar-widgets-datasets-list', 'web/redirect')
+                ->assertSee('(stacked)')
                 ->assertSee('web/redirect');
         });
     }
@@ -179,6 +180,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/plain')
                 ->waitFor('.phpdebugbar')
+                ->click('.phpdebugbar-tab-settings')
                 ->assertDontSee('0 statements were executed')
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->assertSee('0 statements were executed');
@@ -190,7 +192,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/query')
                 ->waitFor('.phpdebugbar')
-                ->click('.phpdebugbar-tab-history')
+                ->click('.phpdebugbar-tab-settings')
                 ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 1)
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
@@ -217,7 +219,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/custom-prototype')
                 ->waitFor('.phpdebugbar')
-                ->click('.phpdebugbar-tab-history')
+                ->click('.phpdebugbar-tab-settings')
                 ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 1)
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
@@ -240,7 +242,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/query/200')
                 ->waitFor('.phpdebugbar')
-                ->click('.phpdebugbar-tab-history')
+                ->click('.phpdebugbar-tab-settings')
                 ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 200, 30)
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
@@ -256,7 +258,7 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/query/600')
                 ->waitFor('.phpdebugbar')
-                ->click('.phpdebugbar-tab-history')
+                ->click('.phpdebugbar-tab-settings')
                 ->waitForTextIn('.phpdebugbar-tab[data-collector="queries"] .phpdebugbar-badge', 600)
                 ->click('.phpdebugbar-tab[data-collector="queries"]')
                 ->screenshotElement('.phpdebugbar', 'queries-tab')
