@@ -43,16 +43,16 @@ class GateCollectorTest extends TestCase
             $gateError['message'],
         );
         $this->assertEquals(
-            $gateError['context'],
             [
-                'ability' => 'view',
-                'target' => 'Barryvdh\Debugbar\Tests\Models\User(id=1)',
-                'result' => null,
-                'user' => 1,
-                'arguments' => [
-                    $user,
-                ],
+                'ability' => '"view"',
+                'target' => '"Barryvdh\Debugbar\Tests\Models\User(id=1)"',
+                'result' => 'null',
+                'user' => '1',
+                'arguments' => 'array:1 [
+  0 => "Barryvdh\Debugbar\Tests\Models\User(id=1)"
+]',
             ],
+            $gateError['context']
         );
 
         $gateSuccess = $collect['messages'][1];
@@ -64,13 +64,13 @@ class GateCollectorTest extends TestCase
         $this->assertEquals(
             $gateSuccess['context'],
             [
-                'ability' => 'view',
-                'target' => 'Barryvdh\Debugbar\Tests\Models\User(id=1)',
-                'result' => true,
-                'user' => 1,
-                'arguments' => [
-                    $user,
-                ],
+                'ability' => '"view"',
+                'target' => '"Barryvdh\Debugbar\Tests\Models\User(id=1)"',
+                'result' => 'true',
+                'user' => '1',
+                'arguments' => 'array:1 [
+  0 => "Barryvdh\Debugbar\Tests\Models\User(id=1)"
+]',
             ],
         );
     }

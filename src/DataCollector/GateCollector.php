@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataFormatter\SimpleFormatter;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -26,7 +25,6 @@ class GateCollector extends MessagesCollector
     {
         parent::__construct('gate');
         $this->router = $router;
-        $this->setDataFormatter(new SimpleFormatter());
         $gate->after(function ($user, $ability, $result, $arguments = []) {
             $this->addCheck($user, $ability, $result, $arguments);
         });
@@ -57,6 +55,7 @@ class GateCollector extends MessagesCollector
                 } else {
                     $target = get_class($model);
                 }
+                $arguments[0] = $target;
             } elseif (is_string($arguments[0])) {
                 $target = $arguments[0];
             }
