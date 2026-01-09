@@ -7,6 +7,7 @@ namespace Barryvdh\Debugbar\CollectorProviders;
 use Barryvdh\Debugbar\DataCollector\ViewCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
+use Illuminate\View\View;
 
 class ViewsCollectorProvider extends AbstractCollectorProvider
 {
@@ -28,7 +29,17 @@ class ViewsCollectorProvider extends AbstractCollectorProvider
         $events->listen(
             'composing:*',
             function ($event, $params) use ($viewCollector) {
-                $viewCollector->addView($params[0]);
+                /** @var View $view */
+                $view = $params[0];
+                $factory = $view->getFactory();
+
+                $renderCount = null;
+                if (property_exists($factory, 'renderCount')) {
+                    $ref = new \ReflectionProperty($factory, 'renderCount');
+                    $renderCount = $ref->getValue($factory);
+                }
+
+                $viewCollector->addView($view, $renderCount);
             },
         );
     }
