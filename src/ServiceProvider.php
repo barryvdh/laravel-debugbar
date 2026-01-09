@@ -7,7 +7,7 @@ namespace Barryvdh\Debugbar;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
-use DebugBar\SymfonyHttpDriver;
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Session\SymfonySessionDecorator;

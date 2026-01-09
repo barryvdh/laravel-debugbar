@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\Controllers;
 
 use DebugBar\AssetHandler;
-use DebugBar\SymfonyHttpDriver;
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
