@@ -40,7 +40,7 @@ use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
-use DebugBar\SymfonyHttpDriver;
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use Exception;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
