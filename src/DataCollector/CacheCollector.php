@@ -63,11 +63,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
             $params['memoryUsage'] = strlen(serialize($params['value'])) * 8;
 
             if ($this->collectValues) {
-                if ($this->isHtmlVarDumperUsed()) {
-                    $params['value'] = $this->getVarDumper()->renderVar($params['value']);
-                } else {
-                    $params['value'] = htmlspecialchars($this->getDataFormatter()->formatVar($params['value']));
-                }
+                $params['value'] = $this->getDataFormatter()->formatVar($params['value']);
             } else {
                 unset($params['value']);
             }
