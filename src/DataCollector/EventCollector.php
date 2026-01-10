@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Barryvdh\Debugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
-use DebugBar\DataFormatter\SimpleFormatter;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
 
@@ -22,7 +21,6 @@ class EventCollector extends TimeDataCollector
         parent::__construct($requestStartTime);
         $this->collectValues = $collectValues;
         $this->excludedEvents = $excludedEvents;
-        $this->setDataFormatter(new SimpleFormatter());
     }
 
     public function onWildcardEvent(?string $name = null, array $data = []): void
@@ -42,42 +40,9 @@ class EventCollector extends TimeDataCollector
             return;
         }
 
-        $params = $this->prepareParams($data);
+        $params = $data;
+        $params['listeners'] = $this->events->getListeners($name);
 
-        // Find all listeners for the current event
-        foreach ($this->events->getListeners($name) as $i => $listener) {
-            // Check if it's an object + method name
-            if (is_array($listener) && count($listener) > 1 && is_object($listener[0])) {
-                [$class, $method] = $listener;
-
-                // Skip this class itself
-                if ($class instanceof static) {
-                    continue;
-                }
-
-                // Format the listener to readable format
-                $listener = get_class($class) . '@' . $method;
-
-                // Handle closures
-            } elseif ($listener instanceof \Closure) {
-                $reflector = new \ReflectionFunction($listener);
-
-                // Skip our own listeners
-                if ($reflector->getNamespaceName() == 'Barryvdh\Debugbar') {
-                    continue;
-                }
-
-                // Format the closure to a readable format
-                $filename = ltrim(str_replace(base_path(), '', $reflector->getFileName()), '/');
-                $lines = $reflector->getStartLine() . '-' . $reflector->getEndLine();
-                $listener = $reflector->getName() . ' (' . $filename . ':' . $lines . ')';
-            } else {
-                // Not sure if this is possible, but to prevent edge cases
-                $listener = $this->getDataFormatter()->formatVar($listener);
-            }
-
-            $params['listeners.' . $i] = $listener;
-        }
         $this->addMeasure($name, $currentTime, $currentTime, $params, null, $eventClass);
     }
 
@@ -85,19 +50,6 @@ class EventCollector extends TimeDataCollector
     {
         $this->events = $events;
         $events->listen('*', [$this, 'onWildcardEvent']);
-    }
-
-    protected function prepareParams(array $params): array
-    {
-        $data = [];
-        foreach ($params as $key => $value) {
-            if (is_object($value) && Str::is('Illuminate\*\Events\*', get_class($value))) {
-                $value =  $this->prepareParams(get_object_vars($value));
-            }
-            $data[$key] = htmlentities($this->getDataFormatter()->formatVar($value), ENT_QUOTES, 'UTF-8', false);
-        }
-
-        return $data;
     }
 
     public function collect(): array
