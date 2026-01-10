@@ -73,6 +73,15 @@ class LivewireCollector extends TemplateCollector
         });
     }
 
+    public function collect(): array
+    {
+        $data = parent::collect();
+
+        $data['sentence'] = 'Livewire component' . ($data['nb_templates'] !== 1 ? 's' : '');
+
+        return $data;
+    }
+
     /**
      * {@inheritDoc}
      */
