@@ -6,6 +6,7 @@ namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\Models\User;
 use Barryvdh\Debugbar\Tests\TestCase;
+use DebugBar\DataFormatter\DataFormatter;
 use Illuminate\Support\Facades\Gate;
 
 class GateCollectorTest extends TestCase
@@ -16,7 +17,7 @@ class GateCollectorTest extends TestCase
 
         /** @var \Barryvdh\Debugbar\DataCollector\GateCollector $collector */
         $collector = debugbar()->getCollector('gate');
-        $collector->useHtmlVarDumper(false);
+        $collector->setDataFormatter(new DataFormatter());
 
         $user = new User([
             'id' => 1,
