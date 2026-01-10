@@ -6,6 +6,7 @@ namespace Barryvdh\Debugbar\Tests\DataCollector;
 
 use Barryvdh\Debugbar\Tests\TestCase;
 use Barryvdh\Debugbar\DataCollector\SessionCollector;
+use DebugBar\DataFormatter\DataFormatter;
 use Illuminate\Session\SymfonySessionDecorator;
 
 class SessionCollectorTest extends TestCase
@@ -20,10 +21,11 @@ class SessionCollectorTest extends TestCase
         $collector = new SessionCollector(
             $this->app->make(SymfonySessionDecorator::class),
         );
+        $collector->setDataFormatter(new DataFormatter());
 
         $this->assertEmpty($collector->collect());
 
-        $this->withSession(['testVariable' => 1, 'secret' => 'testSecret'])->get('/');
+        $this->withSession(['testVariable' => "1", 'secret' => 'testSecret'])->get('/');
 
         $collected = $collector->collect();
 
@@ -31,7 +33,7 @@ class SessionCollectorTest extends TestCase
         $this->assertArrayHasKey('secret', $collected);
         $this->assertArrayHasKey('testVariable', $collected);
         $this->assertEquals('te***et', $collected['secret']);
-        $this->assertEquals(1, $collected['testVariable']);
+        $this->assertEquals("1", $collected['testVariable']);
 
         $this->flushSession();
         $this->assertCount(0, $collector->collect());
