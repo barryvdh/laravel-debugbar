@@ -789,7 +789,7 @@ class LaravelDebugbar extends DebugBar
                     break;
                 case 'sqlite':
                     $path = $config->get('debugbar.storage.path');
-                    $storage = new SqliteStorage($path .'/debugbar.sqlite');
+                    $storage = new SqliteStorage($path . '/debugbar.sqlite');
                     break;
                 default:
                     throw new \RuntimeException('Invalid storage selected: ' . $driver);
