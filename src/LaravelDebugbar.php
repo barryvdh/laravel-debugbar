@@ -41,6 +41,7 @@ use DebugBar\HttpDriverInterface;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
 use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
+use DebugBar\Storage\SqliteStorage;
 use Exception;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
@@ -758,7 +759,7 @@ class LaravelDebugbar extends DebugBar
         /** @var Repository $config */
         $config = $this->app['config'];
         if ($config->get('debugbar.storage.enabled')) {
-            $driver = $config->get('debugbar.storage.driver', 'file');
+            $driver = strtolower($config->get('debugbar.storage.driver', 'file'));
 
             switch ($driver) {
                 case 'pdo':
@@ -783,10 +784,16 @@ class LaravelDebugbar extends DebugBar
                     throw new \RuntimeException('Socket storage is not supported anymore.');
                     break;
                 case 'file':
-                default:
                     $path = $config->get('debugbar.storage.path');
                     $storage = new FilesystemStorage($this->app['files'], $path);
                     break;
+                case 'sqlite':
+                    $path = $config->get('debugbar.storage.path');
+                    $storage = new SqliteStorage($path .'/debugbar.sqlite');
+                    break;
+                default:
+                    throw new \RuntimeException('Invalid storage selected: ' . $driver);
+
             }
 
             $debugbar->setStorage($storage);
