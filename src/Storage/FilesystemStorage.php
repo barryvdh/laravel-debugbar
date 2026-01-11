@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Barryvdh\Debugbar\Storage;
 
+use DebugBar\Storage\AbstractStorage;
 use DebugBar\Storage\StorageInterface;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -11,12 +12,10 @@ use Symfony\Component\Finder\Finder;
 /**
  * Stores collected data into files
  */
-class FilesystemStorage implements StorageInterface
+class FilesystemStorage extends AbstractStorage implements StorageInterface
 {
     protected string $dirname;
     protected Filesystem $files;
-    protected int $gc_lifetime = 24;     // Hours to keep collected data;
-    protected int $gc_probability = 5;   // Probability of GC being run on a save request. (5/100)
 
     /**
      * @param \Illuminate\Filesystem\Filesystem $files   The filesystem
@@ -47,10 +46,7 @@ class FilesystemStorage implements StorageInterface
             //TODO; error handling
         }
 
-        // Randomly check if we should collect old files
-        if (rand(1, 100) <= $this->gc_probability) {
-            $this->garbageCollect();
-        }
+        $this->autoPrune();
     }
 
     /**
@@ -63,12 +59,12 @@ class FilesystemStorage implements StorageInterface
     }
 
     /**
-     * Delete files older than a certain age (gc_lifetime)
+     * Delete files older than a certain age
      */
-    protected function garbageCollect(): void
+    public function prune(int $hours = 24): void
     {
         foreach (
-            Finder::create()->files()->name('*.json')->date('< ' . $this->gc_lifetime . ' hour ago')->in(
+            Finder::create()->files()->name('*.json')->date('< ' . $hours . ' hour ago')->in(
                 $this->dirname,
             ) as $file
         ) {

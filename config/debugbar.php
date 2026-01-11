@@ -229,8 +229,9 @@ return [
     | Debugbar stores data for session/ajax requests.
     | You can disable this, so the debugbar stores data in headers/session,
     | but this can cause problems with large data collectors.
-    | By default, file storage (in the storage folder) is used. Redis and PDO
-    | can also be used. For PDO, run the package migrations first.
+    | By default, file storage (in the storage folder) is used. Sqlite will
+    | create a database file in the storage folder.
+    | Redis and PDO can also be used. For PDO, run the package migrations first.
     |
     | Warning: Enabling storage.open will allow everyone to access previous
     | request, do not enable open storage in publicly available environments!
@@ -240,7 +241,7 @@ return [
     'storage' => [
         'enabled'    => env('DEBUGBAR_STORAGE_ENABLED', true),
         'open'       => env('DEBUGBAR_OPEN_STORAGE'), // bool/callback.
-        'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, pdo, custom
+        'driver'     => env('DEBUGBAR_STORAGE_DRIVER', 'file'), // redis, file, sqlite, pdo, custom
         'path'       => env('DEBUGBAR_STORAGE_PATH', storage_path('debugbar')), // For file driver
         'connection' => env('DEBUGBAR_STORAGE_CONNECTION'), // Leave null for default connection (Redis/PDO)
         'provider'   => env('DEBUGBAR_STORAGE_PROVIDER', ''), // Instance of StorageInterface for custom driver
