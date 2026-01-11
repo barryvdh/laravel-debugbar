@@ -7,6 +7,7 @@ namespace Barryvdh\Debugbar\DataCollector;
 use Barryvdh\Debugbar\Support\Explain;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\HasTimeDataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DataFormatter\QueryFormatter;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
  */
 class QueryCollector extends DataCollector implements Renderable, AssetProvider
 {
+    use HasTimeDataCollector;
+
     protected array $queries = [];
     protected int $queryCount = 0;
     protected int $transactionEventsCount = 0;
@@ -41,15 +44,9 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     ];
 
     protected ?QueryFormatter $queryFormatter = null;
-    protected ?TimeDataCollector $timeCollector;
     protected bool $renderSqlWithParams = false;
     protected bool $durationBackground = false;
     protected ?float $slowThreshold = null;
-
-    public function __construct(?TimeDataCollector $timeCollector = null)
-    {
-        $this->timeCollector = $timeCollector;
-    }
 
     public function getQueryFormatter(): QueryFormatter
     {
@@ -176,8 +173,8 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             'driver' => $query->connection->getConfig('driver'),
         ];
 
-        if ($this->timeCollector !== null) {
-            $this->timeCollector->addMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'db', 'Database Query');
+        if ($this->hasTimeDataCollector()) {
+            $this->addTimeMeasure(Str::limit($sql, 100), $startTime, $endTime, [], 'Database Query');
         }
     }
 

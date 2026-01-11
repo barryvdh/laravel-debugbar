@@ -18,14 +18,13 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(Dispatcher $events, Router $router, array $options): void
     {
+        $queryCollector = new QueryCollector();
         if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
-            /** @var TimeDataCollector $timeCollector */
-            $timeCollector = $this['time'];
-        } else {
-            $timeCollector = null;
+            /** @var TimeDataCollector   $timeCollector */
+            $timeCollector = $this->getCollector('time');
+            $queryCollector->setTimeDataCollector($timeCollector);
         }
 
-        $queryCollector = new QueryCollector($timeCollector);
         $queryCollector->setLimits($options['soft_limit'] ?? 100, $options['hard_limit'] ?? 500);
         $queryCollector->setDurationBackground($options['duration_background'] ?? true);
 

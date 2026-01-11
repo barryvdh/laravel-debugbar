@@ -16,14 +16,14 @@ class ViewsCollectorProvider extends AbstractCollectorProvider
         $excludePaths = $options['exclude_paths'] ?? [];
         $group = $options['group'] ?? true;
 
+        $viewCollector = new ViewCollector($collectData, $excludePaths, $group);
+
         if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
             /** @var TimeDataCollector   $timeCollector */
             $timeCollector = $this->getCollector('time');
-        } else {
-            $timeCollector = null;
+            $viewCollector->setTimeDataCollector($timeCollector);
         }
 
-        $viewCollector = new ViewCollector($collectData, $excludePaths, $group, $timeCollector);
         $this->addCollector($viewCollector);
         $events->listen(
             'composing:*',
