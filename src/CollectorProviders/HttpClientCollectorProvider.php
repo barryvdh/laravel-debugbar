@@ -16,14 +16,13 @@ class HttpClientCollectorProvider extends AbstractCollectorProvider
 
     public function __invoke(Dispatcher $events, array $options): void
     {
+        $httpClientCollector = new HttpClientCollector('http_client');
         if ($this->hasCollector('time') && ($options['timeline'] ?? true)) {
-            /** @var TimeDataCollector $timeCollector */
+            /** @var TimeDataCollector   $timeCollector */
             $timeCollector = $this->getCollector('time');
-        } else {
-            $timeCollector = null;
+            $httpClientCollector->setTimeDataCollector($timeCollector);
         }
 
-        $httpClientCollector = new HttpClientCollector('http_client', $timeCollector);
         $this->httpClientCollector = $httpClientCollector;
 
         $masked = $options['masked'] ?? [];

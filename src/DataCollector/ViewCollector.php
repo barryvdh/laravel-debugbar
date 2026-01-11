@@ -59,11 +59,6 @@ class ViewCollector extends TemplateCollector
         }
 
         $this->addTemplate($name, $data, $type, $path);
-
-        if ($this->timeCollector !== null) {
-            $time = microtime(true);
-            $this->timeCollector->addMeasure('View: ' . $name, $time, $time, [], 'views', 'View');
-        }
     }
 
     private function getRenderSource(string $name, ?string $path): ?array
