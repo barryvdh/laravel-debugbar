@@ -51,27 +51,13 @@ class EventCollector extends TimeDataCollector
             return;
         }
 
-        $params = $this->prepareParams($data);
+        $params = $data;
 
         if ($this->collectListeners) {
             $params['listeners'] = $this->events->getListeners($name);
         }
 
         $this->addMeasure($name, $currentTime, $currentTime, $params, null, $eventClass);
-    }
-
-    protected function prepareParams(array $data): array
-    {
-        $params = [];
-
-        foreach ($data as $key => $value) {
-            if ($value instanceof View) {
-                $value = [get_class($value) => ['name' => $value->getName(), 'path' => $value->getPath(), 'data' => $value->getData()]];
-            }
-            $params[$key] = $value;
-        }
-
-        return $params;
     }
 
     public function subscribe(Dispatcher $events): void
