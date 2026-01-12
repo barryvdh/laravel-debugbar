@@ -20,27 +20,27 @@ Read [the documentation](http://phpdebugbar.com/docs/) for more configuration op
 >  It can also slow the application down (because it has to gather and render data). So when experiencing slowness, try disabling some of the collectors.
 
 This package includes some custom collectors:
- - QueryCollector: Show all queries, including binding + timing
- - RouteCollector: Show information about the current Route.
- - ViewCollector: Show the currently loaded views. (Optionally: display the shared data)
- - EventsCollector: Show all events
- - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
- - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
- - LogsCollector: Show the latest log entries from the storage logs. (disabled by default)
- - FilesCollector: Show the files that are included/required by PHP. (disabled by default)
- - ConfigCollector: Display the values from the config files. (disabled by default)
- - CacheCollector: Display all cache events. (disabled by default)
+- QueryCollector: Show all queries, including binding + timing
+- RouteCollector: Show information about the current Route.
+- ViewCollector: Show the currently loaded views. (Optionally: display the shared data)
+- EventsCollector: Show all events
+- LaravelCollector: Show the Laravel version and Environment. (disabled by default)
+- SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
+- LogsCollector: Show the latest log entries from the storage logs. (disabled by default)
+- FilesCollector: Show the files that are included/required by PHP. (disabled by default)
+- ConfigCollector: Display the values from the config files. (disabled by default)
+- CacheCollector: Display all cache events. (disabled by default)
 
 Bootstraps the following collectors for Laravel:
- - LogCollector: Show all Log messages
- - SymfonyMailCollector for Mail
+- LogCollector: Show all Log messages
+- SymfonyMailCollector for Mail
 
 And the default collectors:
- - PhpInfoCollector
- - MessagesCollector
- - TimeDataCollector (With Booting and Application timing)
- - MemoryCollector
- - ExceptionsCollector
+- PhpInfoCollector
+- MessagesCollector
+- TimeDataCollector (With Booting and Application timing)
+- MemoryCollector
+- ExceptionsCollector
 
 It also provides a facade interface (`Debugbar`) for easy logging Messages, Exceptions and Time
 
@@ -52,27 +52,16 @@ Require this package with composer. It is recommended to only require the packag
 composer require fruitcake/laravel-debugbar --dev
 ```
 
-> 4.x beta - Use the '@beta' flag to try the new 4.x Beta version!
+> Tip: Use the '@beta' flag to try the new 4.x Beta version!
 
 Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
 
-The Debugbar will be enabled when `APP_DEBUG` is `true`.
-
-> If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
-
-
-The profiler is enabled by default, if you have APP_DEBUG=true. You can override that in the config (`debugbar.enabled`) or by setting `DEBUGBAR_ENABLED` in your `.env`. See more options in `config/debugbar.php`
+The Debugbar will be enabled when `APP_DEBUG` is `true`. You can override that in the config (`debugbar.enabled`) or by setting `DEBUGBAR_ENABLED` in your `.env`. See more options in `config/debugbar.php`
 You can also set in your config if you want to include/exclude the vendor files also (FontAwesome, Highlight.js and jQuery). If you already use them in your site, set it to false.
 You can also only display the js or css vendors, by setting it to 'js' or 'css'. (Highlight.js requires both css + js, so set to `true` for syntax highlighting)
 
 #### Copy the package config to your local config with the publish command:
 
-4.x (beta)
-```shell
-php artisan vendor:publish --provider='Fruitcake\LaravelDebugbar\ServiceProvider'
-```
-
-3.x (current)
 ```shell
 php artisan vendor:publish --provider='Barryvdh\Debugbar\ServiceProvider'
 ```
@@ -81,15 +70,7 @@ php artisan vendor:publish --provider='Barryvdh\Debugbar\ServiceProvider'
 
 Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
 
-4.x (beta)
 ```php
-    'flush' => [
-        \Fruitcake\LaravelDebugbar\LaravelDebugbar::class,
-    ],
-```
-
-3.x (current)
-```shell
     'flush' => [
         \Barryvdh\Debugbar\LaravelDebugbar::class,
     ],
@@ -175,7 +156,7 @@ NB. Once enabled, the collectors are added (and could produce extra overhead), s
 
 ## Storage
 
-Debugbar remembers previous requests, which you can view using the Browse button on the right. This will only work if you enable `debugbar.storage.open` in the config. 
+Debugbar remembers previous requests, which you can view using the Browse button on the right. This will only work if you enable `debugbar.storage.open` in the config.
 Make sure you only do this on local development, because otherwise other people will be able to view previous requests.
 In general, Debugbar should only be used locally or at least restricted by IP.
 It's possible to pass a callback, which will receive the Request object, so you can determine access to the OpenHandler storage.
@@ -187,9 +168,9 @@ Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/T
 Add the following extensions to your TwigBridge config/extensions.php (or register the extensions manually)
 
 ```php
-'Fruitcake\LaravelDebugbar\Twig\Extension\Debug',
-'Fruitcake\LaravelDebugbar\Twig\Extension\Dump',
-'Fruitcake\LaravelDebugbar\Twig\Extension\Stopwatch',
+'Barryvdh\Debugbar\Twig\Extension\Debug',
+'Barryvdh\Debugbar\Twig\Extension\Dump',
+'Barryvdh\Debugbar\Twig\Extension\Stopwatch',
 ```
 
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,
