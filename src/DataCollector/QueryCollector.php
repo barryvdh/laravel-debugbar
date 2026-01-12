@@ -29,7 +29,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     protected ?int $lastMemoryUsage = null;
     protected bool|int $findSource = false;
     protected array $middleware = [];
-    protected bool $explainQuery = false;
     protected array $explainTypes = ['SELECT']; // ['SELECT', 'INSERT', 'UPDATE', 'DELETE']; for MySQL 5.6.3+
     protected array $reflection = [];
     protected array $excludePaths = [];
@@ -117,14 +116,6 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     public function isSqlRenderedWithParams(): bool
     {
         return $this->renderSqlWithParams;
-    }
-
-    /**
-     * Enable/disable the EXPLAIN queries
-     */
-    public function setExplainSource(bool $enabled): void
-    {
-        $this->explainQuery = $enabled;
     }
 
     public function startMemoryUsage(): void
@@ -414,7 +405,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
                 'source' => $source,
                 'xdebug_link' => is_object($source) ? $this->getXdebugLink($source->file ?: '', $source->line) : null,
                 'connection' => $connectionName,
-                'explain' => $this->explainQuery && $canExplainQuery ? [
+                'explain' => $canExplainQuery ? [
                     'url' => route('debugbar.queries.explain'),
                     'driver' => $query['driver'],
                     'connection' => $query['connection']->getName(),
