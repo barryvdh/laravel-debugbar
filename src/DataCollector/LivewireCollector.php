@@ -26,19 +26,17 @@ class LivewireCollector extends TemplateCollector
 
             $key = get_class($component) . ' ' . $component->getName() . ' #' . $component->id;
 
-            $data = [
-                'data' => $component->getPublicPropertiesDefinedBySubClass(),
-            ];
+            $data = $component->getPublicPropertiesDefinedBySubClass();
 
             if ($request->request->get('id') == $component->id) {
-                $data['oldData'] = $request->request->get('data');
-                $data['actionQueue'] = $request->request->get('actionQueue');
+                $data['#oldData'] = $request->request->get('data');
+                $data['#actionQueue'] = $request->request->get('actionQueue');
             }
 
-            $data['name'] = $component->getName();
-            $data['view'] = $view->name();
-            $data['component'] = get_class($component);
-            $data['id'] = $component->id;
+            $data['#name'] = $component->getName();
+            $data['#view'] = $view->name();
+            $data['#component'] = get_class($component);
+            $data['#id'] = $component->id;
 
             $path = (new \ReflectionClass($component))->getFileName();
 
@@ -54,18 +52,16 @@ class LivewireCollector extends TemplateCollector
                 $key = get_class($component) . ' ' . $component->getName() . ' #' . $component->getId();
             }
 
-            $data = [
-                'data' => $component->all(),
-            ];
+            $data = $component->all();
 
             if ($request->request->get('id') == $component->getId()) {
-                $data['oldData'] = $request->request->get('data');
-                $data['actionQueue'] = $request->request->get('actionQueue');
+                $data['#oldData'] = $request->request->get('data');
+                $data['#actionQueue'] = $request->request->get('actionQueue');
             }
 
-            $data['name'] = $component->getName();
-            $data['component'] = get_class($component);
-            $data['id'] = $component->getId();
+            $data['#name'] = $component->getName();
+            $data['#component'] = get_class($component);
+            $data['#id'] = $component->getId();
 
             $path = (new \ReflectionClass($component))->getFileName();
             ;
