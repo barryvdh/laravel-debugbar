@@ -13,10 +13,24 @@ class EventsCollectorCollectorProvider extends AbstractCollectorProvider
     public function __invoke(Request $request, Dispatcher $events, array $options): void
     {
         $startTime = $request->server('REQUEST_TIME_FLOAT');
+
         $collectData = $options['data'] ?? false;
+        $collectListeners = $options['listeners'] ?? false;
         $excludedEvents = $options['excluded'] ?? [];
-        $eventCollector = new EventCollector($startTime, $collectData, $excludedEvents);
+
+        $eventCollector = new EventCollector($startTime);
+        if ($collectData) {
+            $eventCollector->setCollectValues($collectData);
+        }
+        if ($collectListeners) {
+            $eventCollector->setCollectListeners($collectListeners);
+        }
+        if ($excludedEvents) {
+            $eventCollector->setExcludedEvents($excludedEvents);
+        }
+
         $this->addCollector($eventCollector);
+
         $eventCollector->subscribe($events);
     }
 }

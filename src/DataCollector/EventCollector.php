@@ -7,19 +7,30 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class EventCollector extends TimeDataCollector
 {
     protected ?Dispatcher $events;
 
-    protected array $excludedEvents;
+    protected array $excludedEvents = [];
 
-    protected bool $collectValues;
+    protected bool $collectValues = false;
 
-    public function __construct(?float $requestStartTime = null, bool $collectValues = false, array $excludedEvents = [])
+    protected bool $collectListeners = false;
+
+    public function setCollectValues(bool $collectValues = true): void
     {
-        parent::__construct($requestStartTime);
         $this->collectValues = $collectValues;
+    }
+
+    public function setCollectListeners(bool $collectListeners = true): void
+    {
+        $this->collectListeners = $collectListeners;
+    }
+
+    public function setExcludedEvents(array $excludedEvents): void
+    {
         $this->excludedEvents = $excludedEvents;
     }
 
@@ -40,10 +51,27 @@ class EventCollector extends TimeDataCollector
             return;
         }
 
-        $params = $data;
-        $params['listeners'] = $this->events->getListeners($name);
+        $params = $this->prepareParams($data);
+
+        if ($this->collectListeners) {
+            $params['listeners'] = $this->events->getListeners($name);
+        }
 
         $this->addMeasure($name, $currentTime, $currentTime, $params, null, $eventClass);
+    }
+
+    protected function prepareParams(array $data): array
+    {
+        $params = [];
+
+        foreach ($data as $key => $value) {
+            if ($value instanceof View) {
+                $value = [get_class($value) => ['name' => $value->getName(), 'path' => $value->getPath(), 'data' => $value->getData()]];
+            }
+            $params[$key] = $value;
+        }
+
+        return $params;
     }
 
     public function subscribe(Dispatcher $events): void
