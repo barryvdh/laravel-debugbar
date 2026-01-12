@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests;
+namespace Fruitcake\LaravelDebugbar\Tests;
 
-use Barryvdh\Debugbar\LaravelDebugbar;
-use Barryvdh\Debugbar\Tests\Models\User;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\Tests\Models\User;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;

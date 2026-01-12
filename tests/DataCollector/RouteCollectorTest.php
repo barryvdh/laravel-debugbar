@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use DebugBar\DataCollector\DataCollector;
 
 class RouteCollectorTest extends TestCase
 {
-    /** @var \Barryvdh\Debugbar\DataCollector\RouteCollector $collector */
+    /** @var \Fruitcake\LaravelDebugbar\DataCollector\RouteCollector $collector */
     private DataCollector $routeCollector;
     protected function setUp(): void
     {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar;
+namespace Fruitcake\LaravelDebugbar;
 
-use Barryvdh\Debugbar\Middleware\InjectDebugbar;
+use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
 use DebugBar\Bridge\Symfony\SymfonyHttpDriver;

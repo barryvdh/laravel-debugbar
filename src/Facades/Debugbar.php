@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Facades;
+namespace Fruitcake\LaravelDebugbar\Facades;
 
-use Barryvdh\Debugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use DebugBar\DataCollector\DataCollectorInterface;
 
 /**
@@ -22,7 +22,7 @@ use DebugBar\DataCollector\DataCollectorInterface;
  * @method static void            notice(mixed $message)
  * @method static void            warning(mixed $message)
  *
- * @see \Barryvdh\Debugbar\LaravelDebugbar
+ * @see \Fruitcake\LaravelDebugbar\LaravelDebugbar
  */
 class Debugbar extends \Illuminate\Support\Facades\Facade
 {
@@ -31,6 +31,6 @@ class Debugbar extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        return \Barryvdh\Debugbar\LaravelDebugbar::class;
+        return \Fruitcake\LaravelDebugbar\LaravelDebugbar::class;
     }
 }

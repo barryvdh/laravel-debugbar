@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Controllers;
+namespace Fruitcake\LaravelDebugbar\Controllers;
 
-use Barryvdh\Debugbar\Support\Explain;
+use Fruitcake\LaravelDebugbar\Support\Explain;
 use Exception;
 use Illuminate\Http\Request;
 

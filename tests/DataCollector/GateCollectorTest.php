@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\Models\User;
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\Models\User;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use DebugBar\DataFormatter\DataFormatter;
 use Illuminate\Support\Facades\Gate;
 
@@ -15,7 +15,7 @@ class GateCollectorTest extends TestCase
     {
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\GateCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\GateCollector $collector */
         $collector = debugbar()->getCollector('gate');
         $collector->setDataFormatter(new DataFormatter());
 
@@ -40,17 +40,17 @@ class GateCollectorTest extends TestCase
         $gateError = $collect['messages'][0];
         $this->assertEquals('error', $gateError['label']);
         $this->assertEquals(
-            'view Barryvdh\Debugbar\Tests\Models\User(id=1)',
+            'view Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)',
             $gateError['message'],
         );
         $this->assertEquals(
             [
                 'ability' => '"view"',
-                'target' => '"Barryvdh\Debugbar\Tests\Models\User(id=1)"',
+                'target' => '"Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)"',
                 'result' => 'null',
                 'user' => '1',
                 'arguments' => 'array:1 [
-  0 => "Barryvdh\Debugbar\Tests\Models\User(id=1)"
+  0 => "Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)"
 ]',
             ],
             $gateError['context']
@@ -59,18 +59,18 @@ class GateCollectorTest extends TestCase
         $gateSuccess = $collect['messages'][1];
         $this->assertEquals('success', $gateSuccess['label']);
         $this->assertEquals(
-            'view Barryvdh\Debugbar\Tests\Models\User(id=1)',
+            'view Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)',
             $gateSuccess['message'],
         );
         $this->assertEquals(
             $gateSuccess['context'],
             [
                 'ability' => '"view"',
-                'target' => '"Barryvdh\Debugbar\Tests\Models\User(id=1)"',
+                'target' => '"Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)"',
                 'result' => 'true',
                 'user' => '1',
                 'arguments' => 'array:1 [
-  0 => "Barryvdh\Debugbar\Tests\Models\User(id=1)"
+  0 => "Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)"
 ]',
             ],
         );

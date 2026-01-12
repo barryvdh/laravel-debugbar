@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\Jobs\OrderShipped;
-use Barryvdh\Debugbar\Tests\Jobs\SendNotification;
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\Jobs\OrderShipped;
+use Fruitcake\LaravelDebugbar\Tests\Jobs\SendNotification;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;

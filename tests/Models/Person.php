@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\Models;
+namespace Fruitcake\LaravelDebugbar\Tests\Models;
 
 class Person extends User {}

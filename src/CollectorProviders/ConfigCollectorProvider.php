@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\ConfigCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\ConfigCollector;
 use Illuminate\Config\Repository;
 
 class ConfigCollectorProvider extends AbstractCollectorProvider

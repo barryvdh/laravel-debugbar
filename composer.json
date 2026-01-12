@@ -1,5 +1,5 @@
 {
-    "name": "barryvdh/laravel-debugbar",
+    "name": "fruitcake/laravel-debugbar",
     "description": "PHP Debugbar integration for Laravel",
     "keywords": [
         "laravel",
@@ -7,10 +7,15 @@
         "profiler",
         "debug",
         "webprofiler",
+        "barryvdh",
         "dev"
     ],
     "license": "MIT",
     "authors": [
+        {
+            "name": "Fruitcake",
+            "homepage": "https://fruitcake.nl"
+        },
         {
             "name": "Barry vd. Heuvel",
             "email": "barryvdh@gmail.com"
@@ -34,9 +39,12 @@
         "laravel/pint": "^1",
         "livewire/livewire": "^3.7"
     },
+    "replace": {
+        "barryvdh/laravel-debugbar": "self.version"
+    },
     "autoload": {
         "psr-4": {
-            "Barryvdh\\Debugbar\\": "src/"
+            "Fruitcake\\LaravelDebugbar\\": "src/"
         },
         "files": [
             "src/helpers.php"
@@ -44,7 +52,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Barryvdh\\Debugbar\\Tests\\": "tests"
+            "Fruitcake\\LaravelDebugbar\\Tests\\": "tests"
         }
     },
     "minimum-stability": "dev",
@@ -55,10 +63,10 @@
         },
         "laravel": {
             "providers": [
-                "Barryvdh\\Debugbar\\ServiceProvider"
+                "Fruitcake\\LaravelDebugbar\\ServiceProvider"
             ],
             "aliases": {
-                "Debugbar": "Barryvdh\\Debugbar\\Facades\\Debugbar"
+                "Debugbar": "Fruitcake\\LaravelDebugbar\\Facades\\Debugbar"
             }
         }
     },

@@ -49,7 +49,7 @@ It also provides a facade interface (`Debugbar`) for easy logging Messages, Exce
 Require this package with composer. It is recommended to only require the package for development.
 
 ```shell
-composer require barryvdh/laravel-debugbar --dev
+composer require fruitcake/laravel-debugbar --dev
 ```
 
 Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
@@ -63,7 +63,7 @@ The Debugbar will be enabled when `APP_DEBUG` is `true`.
 If you don't use auto-discovery, add the ServiceProvider to the providers list. For Laravel 11 or newer, add the ServiceProvider in bootstrap/providers.php. For Laravel 10 or older, add the ServiceProvider in config/app.php.
 
 ```php
-Barryvdh\Debugbar\ServiceProvider::class,
+Fruitcake\LaravelDebugbar\ServiceProvider::class,
 ```
 
 If you want to use the facade to log messages, add this within the `register` method of `app/Providers/AppServiceProvider.php` class:
@@ -71,9 +71,9 @@ If you want to use the facade to log messages, add this within the `register` me
 ```php
 public function register(): void
 {
-    if (class_exists(\Barryvdh\Debugbar\Facades\Debugbar::class)) {
+    if (class_exists(\Fruitcake\LaravelDebugbar\Facades\Debugbar::class)) {
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
+        $loader->alias('Debugbar', \Fruitcake\LaravelDebugbar\Facades\Debugbar::class);
     }
 }
 ```
@@ -85,7 +85,7 @@ You can also only display the js or css vendors, by setting it to 'js' or 'css'.
 #### Copy the package config to your local config with the publish command:
 
 ```shell
-php artisan vendor:publish --provider='Barryvdh\Debugbar\ServiceProvider'
+php artisan vendor:publish --provider='Fruitcake\LaravelDebugbar\ServiceProvider'
 ```
 
 ### Laravel with Octane:
@@ -94,7 +94,7 @@ Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
 
 ```php
     'flush' => [
-        \Barryvdh\Debugbar\LaravelDebugbar::class,
+        \Fruitcake\LaravelDebugbar\LaravelDebugbar::class,
     ],
 ```
 
@@ -190,9 +190,9 @@ Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/T
 Add the following extensions to your TwigBridge config/extensions.php (or register the extensions manually)
 
 ```php
-'Barryvdh\Debugbar\Twig\Extension\Debug',
-'Barryvdh\Debugbar\Twig\Extension\Dump',
-'Barryvdh\Debugbar\Twig\Extension\Stopwatch',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Debug',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Dump',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Stopwatch',
 ```
 
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,

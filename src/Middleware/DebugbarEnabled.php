@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Middleware;
+namespace Fruitcake\LaravelDebugbar\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Barryvdh\Debugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 
 class DebugbarEnabled
 {

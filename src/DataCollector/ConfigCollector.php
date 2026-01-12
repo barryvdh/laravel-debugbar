@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataCollector;
+namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use Illuminate\Config\Repository;
 

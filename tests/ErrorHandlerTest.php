@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests;
+namespace Fruitcake\LaravelDebugbar\Tests;
 
-use Barryvdh\Debugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use ReflectionObject;
 
 class ErrorHandlerTest extends TestCase

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests;
+namespace Fruitcake\LaravelDebugbar\Tests;
 
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Barryvdh\Debugbar\ServiceProvider;
+use Fruitcake\LaravelDebugbar\Facades\Debugbar;
+use Fruitcake\LaravelDebugbar\ServiceProvider;
 
 class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
 {

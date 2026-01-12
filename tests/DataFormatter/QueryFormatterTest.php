@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataFormatter;
+namespace Fruitcake\LaravelDebugbar\Tests\DataFormatter;
 
 use DebugBar\DataFormatter\QueryFormatter;
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 
 class QueryFormatterTest extends TestCase
 {

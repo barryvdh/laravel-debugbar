@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Controllers;
+namespace Fruitcake\LaravelDebugbar\Controllers;
 
-use Barryvdh\Debugbar\Support\Clockwork\Converter;
+use Fruitcake\LaravelDebugbar\Support\Clockwork\Converter;
 use DebugBar\OpenHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

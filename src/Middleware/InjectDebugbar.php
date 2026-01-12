@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Middleware;
+namespace Fruitcake\LaravelDebugbar\Middleware;
 
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
-use Barryvdh\Debugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Throwable;

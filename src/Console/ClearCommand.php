@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Console;
+namespace Fruitcake\LaravelDebugbar\Console;
 
 use DebugBar\DebugBar;
 use Illuminate\Console\Command;

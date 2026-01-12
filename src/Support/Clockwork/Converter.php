@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Support\Clockwork;
+namespace Fruitcake\LaravelDebugbar\Support\Clockwork;
 
 class Converter
 {

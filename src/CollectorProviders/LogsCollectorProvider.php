@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\LogsCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\LogsCollector;
 use Illuminate\Log\Logger;
 
 class LogsCollectorProvider extends AbstractCollectorProvider

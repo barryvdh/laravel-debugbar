@@ -7,9 +7,9 @@ if (!function_exists('debugbar')) {
      * Get the Debugbar instance
      *
      */
-    function debugbar(): \Barryvdh\Debugbar\LaravelDebugbar
+    function debugbar(): \Fruitcake\LaravelDebugbar\LaravelDebugbar
     {
-        return app(\Barryvdh\Debugbar\LaravelDebugbar::class);
+        return app(\Fruitcake\LaravelDebugbar\LaravelDebugbar::class);
     }
 }
 

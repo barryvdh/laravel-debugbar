@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Support;
+namespace Fruitcake\LaravelDebugbar\Support;
 
 use DebugBar\RequestIdGeneratorInterface;
 use Illuminate\Support\Str;
