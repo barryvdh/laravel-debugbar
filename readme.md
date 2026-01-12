@@ -52,7 +52,7 @@ Require this package with composer. It is recommended to only require the packag
 composer require fruitcake/laravel-debugbar --dev
 ```
 
-> Tip: Use the '@beta' flag to try the new 4.x Beta version!
+> Tip: Use 'composer require fruitcake/laravel-debugbar:"^4@beta" --dev' flag to try the new 4.x Beta version!
 
 Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
 
