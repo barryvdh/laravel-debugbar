@@ -49,7 +49,7 @@ It also provides a facade interface (`Debugbar`) for easy logging Messages, Exce
 Require this package with composer. It is recommended to only require the package for development.
 
 ```shell
-composer require fruitcake/laravel-debugbar --dev
+composer require barryvdh/laravel-debugbar --dev
 ```
 
 > Tip: Use 'composer require fruitcake/laravel-debugbar:"^4@beta" --dev' flag to try the new 4.x Beta version!
