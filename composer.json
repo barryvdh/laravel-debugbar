@@ -39,9 +39,6 @@
         "laravel/pint": "^1",
         "livewire/livewire": "^3.7"
     },
-    "replace": {
-        "barryvdh/laravel-debugbar": "self.version"
-    },
     "autoload": {
         "psr-4": {
             "Fruitcake\\LaravelDebugbar\\": "src/"
