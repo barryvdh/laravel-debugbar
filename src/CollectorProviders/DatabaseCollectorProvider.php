@@ -49,7 +49,7 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
             $queryCollector->mergeBacktraceExcludePaths($excludeBacktracePaths);
         }
 
-        if ($options['explain.enabled'] ?? false) {
+        if ($options['explain']['enabled'] ?? false) {
             $queryCollector->setExplainSource(true);
         }
 
