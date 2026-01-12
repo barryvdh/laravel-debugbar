@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar;
+namespace Fruitcake\LaravelDebugbar;
 
 use Illuminate\Contracts\View\Engine;
 

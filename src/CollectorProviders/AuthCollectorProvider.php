@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\MultiAuthCollector;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository;
 

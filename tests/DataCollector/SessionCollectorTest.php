@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\TestCase;
-use Barryvdh\Debugbar\DataCollector\SessionCollector;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\DataCollector\SessionCollector;
 use DebugBar\DataFormatter\DataFormatter;
 use Illuminate\Session\SymfonySessionDecorator;
 

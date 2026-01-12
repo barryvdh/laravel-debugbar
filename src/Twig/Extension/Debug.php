@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Twig\Extension;
+namespace Fruitcake\LaravelDebugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\DebugTwigExtension;
 use Illuminate\Foundation\Application;

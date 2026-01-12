@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Controllers;
+namespace Fruitcake\LaravelDebugbar\Controllers;
 
 use Laravel\Telescope\Contracts\EntriesRepository;
 use Laravel\Telescope\Storage\EntryQueryOptions;

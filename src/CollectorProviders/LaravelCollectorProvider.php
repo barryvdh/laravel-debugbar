@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\LaravelCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\LaravelCollector;
 use Illuminate\Contracts\Foundation\Application;
 
 class LaravelCollectorProvider extends AbstractCollectorProvider

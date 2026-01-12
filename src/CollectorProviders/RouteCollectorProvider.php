@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\RouteCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\RouteCollector;
 
 class RouteCollectorProvider extends AbstractCollectorProvider
 {

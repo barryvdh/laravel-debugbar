@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataCollector;
+namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;

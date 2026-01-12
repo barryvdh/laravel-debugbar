@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\DataCollector\HttpClientCollector;
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\DataCollector\HttpClientCollector;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Events\ConnectionFailed;

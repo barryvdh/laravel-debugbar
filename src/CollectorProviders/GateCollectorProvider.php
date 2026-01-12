@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\GateCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\GateCollector;
 
 class GateCollectorProvider extends AbstractCollectorProvider
 {

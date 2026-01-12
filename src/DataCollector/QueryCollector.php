@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\DataCollector;
+namespace Fruitcake\LaravelDebugbar\DataCollector;
 
-use Barryvdh\Debugbar\Support\Explain;
+use Fruitcake\LaravelDebugbar\Support\Explain;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\HasTimeDataCollector;
@@ -40,6 +40,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         '/vendor/laravel/framework/src/Illuminate/Collections',
         '/vendor/october/rain',
         '/vendor/barryvdh/laravel-debugbar',
+        '/vendor/fruitcake/laravel-debugbar',
     ];
 
     protected ?QueryFormatter $queryFormatter = null;

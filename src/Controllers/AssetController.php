@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Controllers;
+namespace Fruitcake\LaravelDebugbar\Controllers;
 
 use DebugBar\AssetHandler;
 use DebugBar\Bridge\Symfony\SymfonyHttpDriver;

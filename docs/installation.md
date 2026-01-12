@@ -63,7 +63,7 @@ php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 If you don't use auto-discovery, add the ServiceProvider to the providers list. For Laravel 11 or newer, add the ServiceProvider in bootstrap/providers.php. For Laravel 10 or older, add the ServiceProvider in config/app.php.
 
 ```php
-Barryvdh\Debugbar\ServiceProvider::class,
+Fruitcake\LaravelDebugbar\ServiceProvider::class,
 ```
 
 If you want to use the facade to log messages, add this within the `register` method of `app/Providers/AppServiceProvider.php` class:
@@ -72,7 +72,7 @@ If you want to use the facade to log messages, add this within the `register` me
 public function register(): void
 {
     $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-    $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
+    $loader->alias('Debugbar', \Fruitcake\LaravelDebugbar\Facades\Debugbar::class);
 }
 ```
 
@@ -82,7 +82,7 @@ Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
 
 ```php
     'flush' => [
-        \Barryvdh\Debugbar\LaravelDebugbar::class,
+        \Fruitcake\LaravelDebugbar\LaravelDebugbar::class,
     ],
 ```
 
@@ -92,7 +92,7 @@ For Lumen, register a different Provider in `bootstrap/app.php`:
 
 ```php
 if (env('APP_DEBUG')) {
- $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+ $app->register(Fruitcake\LaravelDebugbar\LumenServiceProvider::class);
 }
 ```
 

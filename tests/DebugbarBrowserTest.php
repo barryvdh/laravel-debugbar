@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests;
+namespace Fruitcake\LaravelDebugbar\Tests;
 
 use Illuminate\Routing\Router;
 use Laravel\Dusk\Browser;

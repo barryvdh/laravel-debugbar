@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 
@@ -17,7 +17,7 @@ class ViewCollectorTest extends TestCase
 
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\ViewCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\ViewCollector $collector */
         $collector = debugbar()->getCollector('views');
         $collector->addView(
             view('dashboard'),

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
 use DebugBar\DataCollector\TimeDataCollector;

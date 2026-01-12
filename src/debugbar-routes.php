@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Barryvdh\Debugbar\Controllers\AssetController;
-use Barryvdh\Debugbar\Controllers\CacheController;
-use Barryvdh\Debugbar\Controllers\OpenHandlerController;
-use Barryvdh\Debugbar\Controllers\QueriesController;
-use Barryvdh\Debugbar\Controllers\TelescopeController;
-use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
+use Fruitcake\LaravelDebugbar\Controllers\AssetController;
+use Fruitcake\LaravelDebugbar\Controllers\CacheController;
+use Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController;
+use Fruitcake\LaravelDebugbar\Controllers\QueriesController;
+use Fruitcake\LaravelDebugbar\Controllers\TelescopeController;
+use Fruitcake\LaravelDebugbar\Middleware\DebugbarEnabled;
 
 $routeConfig = [
     'prefix' => app('config')->get('debugbar.route_prefix'),

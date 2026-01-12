@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Support;
+namespace Fruitcake\LaravelDebugbar\Support;
 
 use Exception;
 use Illuminate\Database\ConnectionInterface;
@@ -94,7 +94,7 @@ class Explain
     private function generateVisualExplainMysql(ConnectionInterface $connection, string $query, array $bindings): string
     {
         return Http::withHeaders([
-            'User-Agent' => 'barryvdh/laravel-debugbar',
+            'User-Agent' => 'fruitcake/laravel-debugbar',
         ])->post('https://api.mysqlexplain.com/v2/explains', [
             'query' => $query,
             'bindings' => $bindings,

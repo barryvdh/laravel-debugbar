@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests;
+namespace Fruitcake\LaravelDebugbar\Tests;
 
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Barryvdh\Debugbar\ServiceProvider;
+use Fruitcake\LaravelDebugbar\Facades\Debugbar;
+use Fruitcake\LaravelDebugbar\ServiceProvider;
 use Illuminate\Routing\Router;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Barryvdh\Debugbar\Tests\Mocks\MockController;
-use Barryvdh\Debugbar\Tests\Mocks\MockViewComponent;
-use Barryvdh\Debugbar\Tests\Mocks\MockMiddleware;
+use Fruitcake\LaravelDebugbar\Tests\Mocks\MockController;
+use Fruitcake\LaravelDebugbar\Tests\Mocks\MockViewComponent;
+use Fruitcake\LaravelDebugbar\Tests\Mocks\MockMiddleware;
 
 class TestCase extends Orchestra
 {

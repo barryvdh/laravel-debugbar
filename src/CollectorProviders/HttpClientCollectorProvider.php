@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\HttpClientCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\HttpClientCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Client\Events\ConnectionFailed;

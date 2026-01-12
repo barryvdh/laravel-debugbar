@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Storage;
+namespace Fruitcake\LaravelDebugbar\Storage;
 
 use DebugBar\Storage\AbstractStorage;
 use DebugBar\Storage\StorageInterface;

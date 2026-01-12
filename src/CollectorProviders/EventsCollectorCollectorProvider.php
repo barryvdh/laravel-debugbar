@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\EventCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\EventCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Request;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Twig\Extension;
+namespace Fruitcake\LaravelDebugbar\Twig\Extension;
 
 use DebugBar\Bridge\Twig\MeasureTwigExtension;
 use DebugBar\Bridge\Twig\MeasureTwigTokenParser;
@@ -15,7 +15,7 @@ use Illuminate\Foundation\Application;
 class Stopwatch extends MeasureTwigExtension
 {
     /**
-     * @var \Barryvdh\Debugbar\LaravelDebugbar
+     * @var \Fruitcake\LaravelDebugbar\LaravelDebugbar
      */
     protected $debugbar;
 

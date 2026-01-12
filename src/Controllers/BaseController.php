@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Controllers;
+namespace Fruitcake\LaravelDebugbar\Controllers;
 
-use Barryvdh\Debugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;

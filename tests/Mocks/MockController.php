@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\Mocks;
+namespace Fruitcake\LaravelDebugbar\Tests\Mocks;
 
 use Illuminate\Routing\Controller;
 

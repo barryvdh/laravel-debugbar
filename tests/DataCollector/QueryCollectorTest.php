@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
@@ -19,7 +19,7 @@ class QueryCollectorTest extends TestCase
 
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector  = debugbar()->getCollector('queries');
         $collector->addQuery(new QueryExecuted(
             "SELECT ('[1, 2, 3]'::jsonb ?? ?) as a, ('[4, 5, 6]'::jsonb ??| ?) as b, 'hello world ? example ??' as c",
@@ -44,7 +44,7 @@ class QueryCollectorTest extends TestCase
     {
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector = debugbar()->getCollector('queries');
         $collector->addQuery(new QueryExecuted(
             "SELECT a FROM b WHERE c = ? AND d = ? AND e = ?",
@@ -65,7 +65,7 @@ class QueryCollectorTest extends TestCase
     {
         debugbar()->boot();
 
-        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector = debugbar()->getCollector('queries');
 
         view('query')

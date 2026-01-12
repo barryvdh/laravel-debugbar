@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\Tests\DataCollector;
+namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Barryvdh\Debugbar\Tests\TestCase;
+use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use Illuminate\Database\Connection;
 
 class QueryCollectorRuntimeDatabaseTest extends TestCase
@@ -40,7 +40,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
 
         self::assertEmpty($exceptions->getExceptions());
 
-        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector  = debugbar()->getCollector('queries');
 
         tap($collector->collect(), function (array $collection) {
@@ -71,7 +71,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
 
         self::assertEmpty($exceptions->getExceptions());
 
-        /** @var \Barryvdh\Debugbar\DataCollector\QueryCollector $collector */
+        /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector  = debugbar()->getCollector('queries');
 
         tap($collector->collect(), function (array $collection) {

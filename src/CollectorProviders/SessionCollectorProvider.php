@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Barryvdh\Debugbar\CollectorProviders;
+namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
-use Barryvdh\Debugbar\DataCollector\SessionCollector;
+use Fruitcake\LaravelDebugbar\DataCollector\SessionCollector;
 use Illuminate\Http\Request;
 
 class SessionCollectorProvider extends AbstractCollectorProvider
