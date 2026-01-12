@@ -131,7 +131,8 @@ return [
             'masked' => [], // List of keys that are masked
         ],
         'events' => [
-            'data' => env('DEBUGBAR_OPTIONS_EVENTS_DATA', false), // Collect events data, listeners
+            'data' => env('DEBUGBAR_OPTIONS_EVENTS_DATA', false), // Collect events data
+            'listeners' => env('DEBUGBAR_OPTIONS_EVENTS_LISTENERS', false), // Add listeners to the events data
             'excluded' => [], // Example: ['eloquent.*', 'composing', Illuminate\Cache\Events\CacheHit::class]
         ],
         'logs' => [
