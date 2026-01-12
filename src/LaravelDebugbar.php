@@ -33,9 +33,11 @@ use Barryvdh\Debugbar\CollectorProviders\ViewsCollectorProvider;
 use Barryvdh\Debugbar\Storage\FilesystemStorage;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use Barryvdh\Debugbar\Support\RequestIdGenerator;
+use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataFormatter\HtmlDataFormatter;
 use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\Storage\PdoStorage;
@@ -45,8 +47,10 @@ use DebugBar\Storage\SqliteStorage;
 use Exception;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\Cloner\Stub;
 use Throwable;
 
 /**
@@ -182,6 +186,8 @@ class LaravelDebugbar extends DebugBar
             $renderer->setOpenHandlerUrl($openHandlerUrl);
         }
 
+        $this->registerDataFormatter();
+
         $this->registerCollectors();
 
         $this->booted = true;
@@ -264,6 +270,35 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollectorException('Error calling ' . class_basename($provider), $e);
             }
         }
+    }
+
+    /**
+     * Register some Casters to avoid large objects for events etc.
+     */
+    protected function registerDataFormatter()
+    {
+        $formatter = new HtmlDataFormatter();
+
+        $formatter->mergeClonerOptions([
+            'casters' => [
+                \Illuminate\View\View::class => static function (\Illuminate\View\View $view, array $a, Stub $stub): array {
+                    return [
+                        'name' => $view->getName(),
+                        'data' => $view->getData(),
+                        'path' => $view->getPath(),
+                        'engine' => get_class($view->getEngine()),
+                        'factory' => get_class($view->getFactory()),
+                    ];
+                },
+                \Illuminate\Database\ConnectionInterface::class => static function (\Illuminate\Database\ConnectionInterface $connection, array $a, Stub $stub): array {
+                    return [
+                        'database' => $connection->getDatabaseName(),
+                    ];
+                },
+            ]
+        ]);
+
+        DataCollector::setDefaultDataFormatter($formatter);
     }
 
     public function shouldCollect(string $name, bool $default = true): bool
