@@ -125,7 +125,7 @@ class DebugbarBrowserTest extends BrowserTestCase
             $browser->visit('web/redirect')
                 ->assertSee('PONG')
                 ->waitFor('.phpdebugbar')
-                ->assertSee('GET web/plain')
+                ->assertSee('GET /web/plain')
                 ->click('.phpdebugbar-widgets-datasets-switcher-widget')
                 ->waitForTextIn('.phpdebugbar-widgets-datasets-list', 'web/redirect')
                 ->assertSee('(stacked)')
@@ -139,7 +139,7 @@ class DebugbarBrowserTest extends BrowserTestCase
             $browser->visit('web/plain')
                 ->assertSee('PONG')
                 ->waitFor('.phpdebugbar')
-                ->assertSee('GET web/plain');
+                ->assertSee('GET /web/plain');
         });
     }
 
@@ -149,7 +149,7 @@ class DebugbarBrowserTest extends BrowserTestCase
             $browser->visit('web/html')
                 ->assertSee('HTMLPONG')
                 ->waitFor('.phpdebugbar')
-                ->assertSee('GET web/html');
+                ->assertSee('GET /web/html');
         });
     }
 
@@ -159,7 +159,7 @@ class DebugbarBrowserTest extends BrowserTestCase
             $browser->visit('api/ping')
                 ->assertSee('pong')
                 ->assertSourceMissing('debugbar')
-                ->assertDontSee('GET api/ping');
+                ->assertDontSee('GET /api/ping');
         });
     }
 
@@ -168,10 +168,10 @@ class DebugbarBrowserTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('web/ajax')
                 ->waitFor('.phpdebugbar')
-                ->assertSee('GET web/ajax')
+                ->assertSee('GET /web/ajax')
                 ->click('#ajax-link')
                 ->waitForTextIn('#result', 'pong')
-                ->assertSee('GET api/ping');
+                ->assertSee('GET /api/ping');
         });
     }
 

@@ -80,7 +80,7 @@ class RouteCollectorTest extends TestCase
         $this->assertNotEmpty($collected);
         $this->assertArrayHasKey('uses', $collected);
         $this->assertArrayHasKey('file', $collected);
-        $this->assertStringContainsString($file, $collected['uses']);
+        $this->assertStringContainsString('Closure', $collected['uses']);
         $this->assertStringContainsString($file, $collected['file']['value']);
     }
 
