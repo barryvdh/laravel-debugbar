@@ -7,7 +7,6 @@ namespace Barryvdh\Debugbar\DataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
 
 class EventCollector extends TimeDataCollector
 {

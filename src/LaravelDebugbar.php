@@ -47,7 +47,6 @@ use DebugBar\Storage\SqliteStorage;
 use Exception;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -295,7 +294,7 @@ class LaravelDebugbar extends DebugBar
                         'database' => $connection->getDatabaseName(),
                     ];
                 },
-            ]
+            ],
         ]);
 
         DataCollector::setDefaultDataFormatter($formatter);
