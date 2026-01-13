@@ -49,8 +49,9 @@ class InjectDebugbar
     /**
      * Handle an incoming request.
      *
+     * @param Request $request
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle($request, Closure $next): mixed
     {
         if (!$this->debugbar->isEnabled() || $this->inExceptArray($request)) {
             return $next($request);
@@ -76,10 +77,11 @@ class InjectDebugbar
      *
      * (Copy from Illuminate\Routing\Pipeline by Taylor Otwell)
      *
+     * @param Throwable $e
      *
      * @throws Exception
      */
-    protected function handleException($passable, Throwable $e): \Symfony\Component\HttpFoundation\Response
+    protected function handleException($passable, $e): \Symfony\Component\HttpFoundation\Response
     {
         if (! $this->container->bound(ExceptionHandler::class) || ! $passable instanceof Request) {
             throw $e;
@@ -95,9 +97,11 @@ class InjectDebugbar
     /**
      * Determine if the request has a URI that should be ignored.
      *
+     * @param \Illuminate\Http\Request $request
      *
+     * @return bool
      */
-    protected function inExceptArray(\Illuminate\Http\Request $request): bool
+    protected function inExceptArray($request): bool
     {
         foreach ($this->except as $except) {
             if ($except !== '/') {

@@ -18,6 +18,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Register the service provider.
      *
+     * @return void
      */
     public function register(): void
     {
@@ -55,6 +56,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Bootstrap the application events.
      *
+     * @return void
      */
     public function boot(): void
     {
@@ -71,6 +73,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Get the active router.
      *
+     * @return Router
      */
     protected function getRouter(): \Illuminate\Routing\Router
     {
@@ -80,6 +83,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Get the config path
      *
+     * @return string
      */
     protected function getConfigPath(): string
     {
@@ -89,6 +93,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Register the Debugbar Middleware
      *
+     * @param string $middleware
      */
     protected function registerMiddleware(string $middleware): void
     {

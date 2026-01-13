@@ -14,9 +14,11 @@ class DebugbarBrowserTest extends BrowserTestCase
     /**
      * Define environment setup.
      *
+     * @param \Illuminate\Foundation\Application $app
      *
+     * @return void
      */
-    protected function getEnvironmentSetUp(\Illuminate\Foundation\Application $app): void
+    protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);
 

@@ -29,8 +29,9 @@ class DebugbarEnabled
     /**
      * Handle an incoming request.
      *
+     * @param Request $request
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle($request, Closure $next): mixed
     {
         if (!$this->debugbar->isEnabled()) {
             abort(404);

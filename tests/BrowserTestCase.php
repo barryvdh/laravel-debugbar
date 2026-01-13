@@ -15,9 +15,11 @@ class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
     /**
      * Get package providers.
      *
+     * @param \Illuminate\Foundation\Application $app
      *
+     * @return array
      */
-    protected function getPackageProviders(\Illuminate\Foundation\Application $app): array
+    protected function getPackageProviders($app)
     {
         return [ServiceProvider::class];
     }
@@ -25,9 +27,11 @@ class BrowserTestCase extends \Orchestra\Testbench\Dusk\TestCase
     /**
      * Get package aliases.
      *
+     * @param \Illuminate\Foundation\Application $app
      *
+     * @return array
      */
-    protected function getPackageAliases(\Illuminate\Foundation\Application $app): array
+    protected function getPackageAliases($app)
     {
         return ['Debugbar' => Debugbar::class];
     }

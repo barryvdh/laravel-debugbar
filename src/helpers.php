@@ -34,7 +34,7 @@ if (!function_exists('start_measure')) {
      * @param string $name  Internal name, used to stop the measure
      * @param string $label Public name
      */
-    function start_measure(string $name, string $label = null): void
+    function start_measure($name, $label = null): void
     {
         debugbar()->startMeasure($name, $label);
     }
@@ -46,7 +46,7 @@ if (!function_exists('stop_measure')) {
      *
      * @param string $name Internal name, used to stop the measure
      */
-    function stop_measure(string $name): void
+    function stop_measure($name): void
     {
         debugbar()->stopMeasure($name);
     }
@@ -56,8 +56,11 @@ if (!function_exists('add_measure')) {
     /**
      * Adds a measure
      *
+     * @param string $label
+     * @param float  $start
+     * @param float  $end
      */
-    function add_measure(string $label, float $start, float $end): void
+    function add_measure($label, $start, $end): void
     {
         debugbar()->addMeasure($label, $start, $end);
     }

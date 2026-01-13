@@ -26,6 +26,10 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /** @var bool */
     protected $showGuardsData = true;
 
+    /**
+     * @param \Illuminate\Auth\AuthManager $auth
+     * @param array                        $guards
+     */
     public function __construct(\Illuminate\Auth\AuthManager $auth, array $guards = [])
     {
         $this->auth = $auth;

@@ -14,6 +14,7 @@ class OpenHandlerController extends BaseController
     /**
      * Check if the storage is open for inspecting.
      *
+     * @return bool
      */
     protected function isStorageOpen(Request $request): bool
     {

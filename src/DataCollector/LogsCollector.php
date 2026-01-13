@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
+use Illuminate\Support\Arr;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
