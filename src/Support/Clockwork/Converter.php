@@ -9,11 +9,9 @@ class Converter
     /**
      * Convert the phpdebugbar data to Clockwork format.
      *
-     * @param array $data
      *
-     * @return array
      */
-    public function convert($data): array
+    public function convert(array $data): array
     {
         $meta = $data['__meta'];
 

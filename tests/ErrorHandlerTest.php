@@ -12,11 +12,9 @@ class ErrorHandlerTest extends TestCase
     /**
      * Define environment setup.
      *
-     * @param \Illuminate\Foundation\Application $app
      *
-     * @return void
      */
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp(\Illuminate\Foundation\Application $app): void
     {
         parent::getEnvironmentSetUp($app);
 

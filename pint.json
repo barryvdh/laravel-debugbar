@@ -20,6 +20,8 @@
         "no_empty_phpdoc": true,
         "phpdoc_align": true,
         "phpdoc_separation": true,
+        "phpdoc_to_param_type": true,
+        "phpdoc_to_return_type": true,
         "declare_strict_types": true
     }
 }

@@ -30,12 +30,7 @@ class DebugbarViewEngine implements Engine
         $this->exclude_paths = app('config')->get('debugbar.options.views.exclude_paths', []);
     }
 
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
-    public function get($path, array $data = []): string
+    public function get(string $path, array $data = []): string
     {
         $basePath = base_path();
         $shortPath = @file_exists($path) ? realpath($path) : $path;

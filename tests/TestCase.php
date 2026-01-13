@@ -17,11 +17,9 @@ class TestCase extends Orchestra
     /**
      * Get package providers.
      *
-     * @param \Illuminate\Foundation\Application $app
      *
-     * @return array
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders(\Illuminate\Foundation\Application $app): array
     {
         return [ServiceProvider::class];
     }
@@ -29,11 +27,9 @@ class TestCase extends Orchestra
     /**
      * Get package aliases.
      *
-     * @param \Illuminate\Foundation\Application $app
      *
-     * @return array
      */
-    protected function getPackageAliases($app)
+    protected function getPackageAliases(\Illuminate\Foundation\Application $app): array
     {
         return ['Debugbar' => Debugbar::class];
     }
@@ -41,11 +37,9 @@ class TestCase extends Orchestra
     /**
      * Define environment setup.
      *
-     * @param \Illuminate\Foundation\Application $app
      *
-     * @return void
      */
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp(\Illuminate\Foundation\Application $app): void
     {
         /** @var Router $router */
         $router = $app['router'];
