@@ -11,6 +11,7 @@ use DebugBar\DataCollector\HasTimeDataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataFormatter\QueryFormatter;
 use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Support\Str;
 
 /**
@@ -521,9 +522,10 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     protected function getSqlQueryToDisplay(array $query): string
     {
         $sql = $query['query'];
-        if ($query['type'] === 'query' && $this->renderSqlWithParams && $query['connection']->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists($query['connection']->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
+        $grammar = $query['connection']->getQueryGrammar();
+        if ($query['type'] === 'query' && $grammar instanceof Grammar) {
             try {
-                $sql = $query['connection']->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
+                $sql = $grammar->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
                 return $this->getQueryFormatter()->formatSql($sql);
             } catch (\Throwable $e) {
                 // Continue using the old substitute

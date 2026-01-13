@@ -29,12 +29,10 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         $htmlData = [];
 
         if ($this->request instanceof \Illuminate\Http\Request) {
-            if ($route = $this->request->route()) {
-                $htmlData += $this->getRouteInformation($route);
-            }
+            $htmlData += $this->getRouteInformation($this->request->route());
         }
 
-        if (class_exists(Telescope::class)) {
+        if (class_exists(Telescope::class) && class_exists(IncomingEntry::class)) {
             $entry = IncomingEntry::make([
                 'requestId' => $this->currentRequestId,
             ])->type('debugbar');
@@ -46,8 +44,8 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         if ($this->request instanceof \Illuminate\Http\Request) {
             $result['tooltip'] += [
                 'full_url' => Str::limit($this->request->fullUrl(), 100),
-                'action_name' => $this->request->route()?->getName(),
-                'controller_action' => $this->request->route()?->getActionName(),
+                'action_name' => $this->request->route()->getName(),
+                'controller_action' => $this->request->route()->getActionName(),
             ];
         }
 
@@ -67,7 +65,7 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         $action = $route->getAction();
 
         $result = [
-            'uri' => $uri ?: '-',
+            'uri' => $uri,
         ];
 
         $result = array_merge($result, $action);

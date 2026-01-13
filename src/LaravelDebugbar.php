@@ -816,7 +816,6 @@ class LaravelDebugbar extends DebugBar
                     break;
                 case 'socket':
                     throw new \RuntimeException('Socket storage is not supported anymore.');
-                    break;
                 case 'file':
                     $path = $config->get('debugbar.storage.path');
                     $storage = new FilesystemStorage($this->app['files'], $path);
@@ -838,7 +837,7 @@ class LaravelDebugbar extends DebugBar
     {
         $prefix = $this->app['config']->get('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
-        $response->headers->set('X-Clockwork-Version', 9, true);
+        $response->headers->set('X-Clockwork-Version', "9", true);
         $response->headers->set('X-Clockwork-Path', $prefix . '/clockwork/', true);
     }
 
@@ -867,16 +866,5 @@ class LaravelDebugbar extends DebugBar
         $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
 
         return array_fill_keys($remotePaths, $localPath);
-    }
-
-    private function getMonologLogger(): \Monolog\Logger
-    {
-        $logger = $this->app['log']->getLogger();
-
-        if (get_class($logger) !== 'Monolog\Logger') {
-            throw new Exception('Logger is not a Monolog\Logger instance');
-        }
-
-        return $logger;
     }
 }

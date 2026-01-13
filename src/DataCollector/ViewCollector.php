@@ -69,7 +69,7 @@ class ViewCollector extends TemplateCollector
         $render = null;
         $view = null;
         foreach ($backtrace as $trace) {
-            $function = $trace['function'] ?? null;
+            $function = $trace['function'] ?? null; //@phpstan-ignore-line
             $class = $trace['class'] ?? null;
             $file = $trace['file'] ?? null;
             $object = $trace['object'] ?? null;

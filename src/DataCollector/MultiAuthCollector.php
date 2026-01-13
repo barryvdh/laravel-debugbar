@@ -8,6 +8,7 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -61,7 +62,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         foreach ($this->guards as $guardName => $config) {
             try {
                 $guard = $this->auth->guard($guardName);
-                if ($this->hasUser($guard)) {
+                if ($guard->hasUser()) {
                     $user = $guard->user();
 
                     if (!is_null($user)) {
@@ -77,9 +78,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         foreach ($data['guards'] as $key => $var) {
-            if (!is_string($data['guards'][$key])) {
-                $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
-            }
+            $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
         }
 
         $data['names'] = rtrim($names, ', ');
@@ -88,15 +87,6 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         return $data;
-    }
-
-    private function hasUser(Guard $guard): bool
-    {
-        if (method_exists($guard, 'hasUser')) {
-            return $guard->hasUser();
-        }
-
-        return false;
     }
 
     /**

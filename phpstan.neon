@@ -1,11 +1,10 @@
 includes:
-    - phpstan-baseline.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/shipmonk/phpstan-rules/rules.neon
 
 parameters:
-    level: 3
+    level: 5
     paths:
         - src
     strictRules:

@@ -18,7 +18,7 @@ class EventsCollectorCollectorProvider extends AbstractCollectorProvider
         $collectListeners = $options['listeners'] ?? false;
         $excludedEvents = $options['excluded'] ?? [];
 
-        $eventCollector = new EventCollector($startTime);
+        $eventCollector = new EventCollector($startTime ? (float) $startTime : null);
         if ($collectData) {
             $eventCollector->setCollectValues($collectData);
         }
