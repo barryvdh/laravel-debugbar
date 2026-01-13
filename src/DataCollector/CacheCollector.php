@@ -6,8 +6,7 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\TimeDataCollector;
-use DebugBar\DataFormatter\HasDataFormatter;
-use Illuminate\Cache\Events\{
+use Illuminate\Cache\Events\{CacheEvent,
     CacheFlushed,
     CacheFlushFailed,
     CacheFlushing,
@@ -19,14 +18,11 @@ use Illuminate\Cache\Events\{
     KeyWriteFailed,
     KeyWritten,
     RetrievingKey,
-    WritingKey,
-};
+    WritingKey};
 use Illuminate\Events\Dispatcher;
 
 class CacheCollector extends TimeDataCollector implements AssetProvider
 {
-    use HasDataFormatter;
-
     protected bool $collectValues = false;
 
     protected array $eventStarts = [];
@@ -51,7 +47,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
         $this->memoryMeasure = true;
     }
 
-    public function onCacheEvent(mixed $event): void
+    public function onCacheEvent(CacheEvent $event): void
     {
         $class = get_class($event);
         $params = get_object_vars($event);
@@ -60,24 +56,24 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
         if (isset($params['value'])) {
             $params['memoryUsage'] = strlen(serialize($params['value'])) * 8;
 
-            if ($this->collectValues) {
-                $params['value'] = $this->getDataFormatter()->formatVar($params['value']);
-            } else {
+            if (!$this->collectValues) {
                 unset($params['value']);
             }
-        }
-
-        if (($params['key'] ?? null) && in_array($label, ['hit', 'written'], true)) {
-            $params['delete'] = route('debugbar.cache.delete', [
-                'key' => urlencode($params['key']),
-                'tags' => $params['tags'] ? json_encode($params['tags']) : '',
-            ]);
         }
 
         $time = microtime(true);
         $startHashKey = $this->getEventHash($this->classMap[$class][1] ?? '', $params);
         $startTime = $this->eventStarts[$startHashKey] ?? $time;
+
         $this->addMeasure($label . "\t" . ($params['key'] ?? ''), $startTime, $time, $params);
+
+        if (in_array($label, ['hit', 'written'], true)) {
+            $measureIndex = array_key_last($this->measures);
+            $this->measures[$measureIndex]['delete_url'] = url()->signedRoute('debugbar.cache.delete', [
+                'key' => $event->key,
+                'tags' => $params['tags'] ?? [],
+            ]);
+        }
     }
 
     public function onStartCacheEvent(mixed $event): void

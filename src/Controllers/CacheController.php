@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar\Controllers;
 
+use Illuminate\Http\Request;
+
 class CacheController extends BaseController
 {
     /**
      * Forget a cache key
      *
      */
-    public function delete($key, ?string $tags): \Illuminate\Http\JsonResponse
+    public function delete(Request $request, $key): \Illuminate\Http\JsonResponse
     {
         $cache = app('cache');
 
-        if ($tags) {
-            $tags = json_decode($tags, true);
-            $cache = $cache->tags($tags);
-        } else {
-            unset($tags);
+        if ($request->has('tags')) {
+            $cache = $cache->tags($request->get('tags'));
         }
 
         $success = $cache->forget($key);
