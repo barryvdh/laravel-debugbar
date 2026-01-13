@@ -7,8 +7,6 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
 
