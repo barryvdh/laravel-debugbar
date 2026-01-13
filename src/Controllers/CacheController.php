@@ -14,6 +14,10 @@ class CacheController extends BaseController
      */
     public function delete(Request $request, $key): \Illuminate\Http\JsonResponse
     {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+
         $cache = app('cache');
 
         if ($request->has('tags')) {
