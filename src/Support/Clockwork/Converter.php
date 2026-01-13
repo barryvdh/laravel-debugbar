@@ -11,7 +11,6 @@ class Converter
      *
      * @param array $data
      *
-     * @return array
      */
     public function convert($data): array
     {

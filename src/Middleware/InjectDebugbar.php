@@ -99,7 +99,6 @@ class InjectDebugbar
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return bool
      */
     protected function inExceptArray($request): bool
     {

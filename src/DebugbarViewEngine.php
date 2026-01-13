@@ -33,7 +33,6 @@ class DebugbarViewEngine implements Engine
     /**
      * @param string $path
      *
-     * @return string
      */
     public function get($path, array $data = []): string
     {
