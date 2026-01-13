@@ -51,7 +51,7 @@ class InjectDebugbar
      *
      * @param Request $request
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next): mixed
     {
         if (!$this->debugbar->isEnabled() || $this->inExceptArray($request)) {
             return $next($request);
@@ -81,7 +81,7 @@ class InjectDebugbar
      *
      * @throws Exception
      */
-    protected function handleException($passable, $e)
+    protected function handleException($passable, $e): \Symfony\Component\HttpFoundation\Response
     {
         if (! $this->container->bound(ExceptionHandler::class) || ! $passable instanceof Request) {
             throw $e;
@@ -101,7 +101,7 @@ class InjectDebugbar
      *
      * @return bool
      */
-    protected function inExceptArray($request)
+    protected function inExceptArray($request): bool
     {
         foreach ($this->except as $except) {
             if ($except !== '/') {

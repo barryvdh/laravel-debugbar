@@ -27,7 +27,7 @@ class ViewsCollectorProvider extends AbstractCollectorProvider
         $this->addCollector($viewCollector);
         $events->listen(
             'composing:*',
-            function ($event, $params) use ($viewCollector) {
+            function ($event, $params) use ($viewCollector): void {
                 $viewCollector->addView($params[0]);
             },
         );

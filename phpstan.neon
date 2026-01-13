@@ -1,0 +1,27 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/shipmonk/phpstan-rules/rules.neon
+
+parameters:
+    level: 3
+    paths:
+        - src
+    strictRules:
+        dynamicCallOnStaticMethod: false
+        booleansInConditions: false
+        disallowedShortTernary: false
+        noVariableVariables: false
+        strictArrayFilter: false
+    shipmonkRules:
+        enableAllRules: false
+        enforceNativeReturnTypehint:
+            enabled: true
+
+    tmpDir: build/phpstan
+    excludePaths:
+        - 'src/Twig'
+        - 'src/Controllers/TelescopeController.php'
+        - 'src/DataCollector/LivewireCollector.php'
+        - 'src/DataCollector/PennantCollector.php'

@@ -10,11 +10,11 @@ class CacheController extends BaseController
      * Forget a cache key
      *
      */
-    public function delete($key, $tags = '')
+    public function delete($key, ?string $tags): \Illuminate\Http\JsonResponse
     {
         $cache = app('cache');
 
-        if (!empty($tags)) {
+        if ($tags) {
             $tags = json_decode($tags, true);
             $cache = $cache->tags($tags);
         } else {

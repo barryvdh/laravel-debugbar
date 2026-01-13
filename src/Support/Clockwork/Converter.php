@@ -13,7 +13,7 @@ class Converter
      *
      * @return array
      */
-    public function convert($data)
+    public function convert($data): array
     {
         $meta = $data['__meta'];
 

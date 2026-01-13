@@ -118,7 +118,7 @@ class RouteCollector extends DataCollector implements Renderable
      */
     protected function getMiddleware(mixed $route): string
     {
-        return implode(', ', array_map(function ($middleware) {
+        return implode(', ', array_map(function ($middleware): mixed {
             return $middleware instanceof Closure ? 'Closure' : $middleware;
         }, $route->gatherMiddleware()));
     }

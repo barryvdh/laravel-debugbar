@@ -8,7 +8,7 @@
 .gitignore export-ignore
 /CHANGELOG.md export-ignore
 phpunit.xml.dist export-ignore
-/phpstan.neon.dist export-ignore
+/phpstan.neon export-ignore
 /phpstan-baseline.neon export-ignore
 /.nvmrc export-ignore
 /eslint.config.js export-ignore

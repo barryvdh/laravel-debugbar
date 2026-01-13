@@ -33,7 +33,7 @@ class TimeCollectorProvider extends AbstractCollectorProvider
 
         if ($startTime) {
             $app->booted(
-                function () use ($startTime, $timeCollector) {
+                function () use ($startTime, $timeCollector): void {
                     $timeCollector->addMeasure('Booting', $startTime, microtime(true), [], 'time');
                 },
             );

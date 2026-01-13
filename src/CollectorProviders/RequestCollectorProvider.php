@@ -18,7 +18,7 @@ class RequestCollectorProvider extends AbstractCollectorProvider
         $sessionMasked = (array) $config->get('debugbar.options.session.masked', []);
 
         // Legacy hidden values, using array path
-        $hiddens = array_map(function ($value) {
+        $hiddens = array_map(function ($value): mixed {
             if (str_contains($value, '.')) {
                 return substr($value, strrpos($value, '.') + 1);
             }

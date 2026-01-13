@@ -17,7 +17,7 @@ class MailCollectorProvider extends AbstractCollectorProvider
         $mailCollector = new SymfonyMailCollector();
         $this->addCollector($mailCollector);
 
-        $events->listen(function (MessageSent $event) use ($mailCollector) {
+        $events->listen(function (MessageSent $event) use ($mailCollector): void {
             $mailCollector->addSymfonyMessage($event->sent->getSymfonySentMessage());
         });
 

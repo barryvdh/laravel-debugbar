@@ -35,10 +35,10 @@ class DebugbarViewEngine implements Engine
      *
      * @return string
      */
-    public function get($path, array $data = [])
+    public function get($path, array $data = []): string
     {
         $basePath = base_path();
-        $shortPath = @file_exists((string) $path) ? realpath($path) : $path;
+        $shortPath = @file_exists($path) ? realpath($path) : $path;
 
         if (str_starts_with($shortPath, $basePath)) {
             $shortPath = ltrim(
@@ -53,7 +53,7 @@ class DebugbarViewEngine implements Engine
             }
         }
 
-        return $this->laravelDebugbar->measure($shortPath, function () use ($path, $data) {
+        return $this->laravelDebugbar->measure($shortPath, function () use ($path, $data): string {
             return $this->engine->get($path, $data);
         }, 'views');
     }
@@ -61,7 +61,7 @@ class DebugbarViewEngine implements Engine
     /**
      * NOTE: This is done to support other Engine swap (example: Livewire).
      */
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): mixed
     {
         return $this->engine->$name(...$arguments);
     }

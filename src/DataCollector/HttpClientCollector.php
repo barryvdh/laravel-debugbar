@@ -62,7 +62,7 @@ class HttpClientCollector extends HttpCollector
         $content = $response->body();
         $stream->rewind();
 
-        if (empty($content)) {
+        if ($content === '') {
             return '[EMPTY]';
         }
 

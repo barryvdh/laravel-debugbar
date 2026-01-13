@@ -24,7 +24,7 @@ class BaseController extends Controller
             $session->reflash();
         }
 
-        $this->middleware(function ($request, $next) {
+        $this->middleware(function ($request, $next): mixed {
             if (class_exists(Telescope::class)) {
                 Telescope::stopRecording();
             }

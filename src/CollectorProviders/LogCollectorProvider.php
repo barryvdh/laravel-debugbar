@@ -23,12 +23,12 @@ class LogCollectorProvider extends AbstractCollectorProvider
         }
 
         $logger->listen(
-            function (MessageLogged $log) use ($logCollector) {
+            function (MessageLogged $log) use ($logCollector): void {
                 try {
-                    $logMessage = (string) $log->message;
+                    $logMessage = $log->message;
                     if (mb_check_encoding($logMessage, 'UTF-8')) {
                         $context = $log->context;
-                        $logMessage .= (!empty($context) ? ' ' . json_encode($context, JSON_PRETTY_PRINT) : '');
+                        $logMessage .= ($context ? ' ' . json_encode($context, JSON_PRETTY_PRINT) : '');
                     } else {
                         $logMessage = "[INVALID UTF-8 DATA]";
                     }

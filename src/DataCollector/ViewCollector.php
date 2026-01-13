@@ -43,7 +43,7 @@ class ViewCollector extends TemplateCollector
 
         if ($path && $type !== 'livewire') {
             if (!$type) {
-                if (substr($path, -10) == '.blade.php') {
+                if (substr($path, -10) === '.blade.php') {
                     $type = 'blade';
                 } else {
                     $type = pathinfo($path, PATHINFO_EXTENSION);
@@ -76,7 +76,7 @@ class ViewCollector extends TemplateCollector
             // Found an invokable class
             if (
                 $function === '__invoke'
-                && $class == 'Livewire\Component'
+                && $class === 'Livewire\Component'
                 && $object
                 && !$component
             ) {
@@ -89,8 +89,8 @@ class ViewCollector extends TemplateCollector
             }
             if (
                 (
-                    ($function === 'render' && $class == 'Illuminate\View\Compilers\BladeCompiler')
-                    || ($function === '__callStatic' && $class == 'Illuminate\Support\Facades\Facade' && ($trace['args'][0] ?? null) == 'render')
+                    ($function === 'render' && $class === 'Illuminate\View\Compilers\BladeCompiler')
+                    || ($function === '__callStatic' && $class === 'Illuminate\Support\Facades\Facade' && ($trace['args'][0] ?? null) === 'render')
                 )
                 && !str_contains($file, '/Illuminate/')
                 && !$render
@@ -98,7 +98,7 @@ class ViewCollector extends TemplateCollector
                 $render = [$name, 'render', [], $file];
             }
 
-            if (!$view && $class == 'Illuminate\View\View' && $object instanceof View && !str_starts_with($object->getName(), '__components::')
+            if (!$view && $class === 'Illuminate\View\View' && $object instanceof View && !str_starts_with($object->getName(), '__components::')
             ) {
                 $view  = [$object->getName(), null, $object->getData(), $object->getPath()];
             }
@@ -133,7 +133,7 @@ class ViewCollector extends TemplateCollector
                 $path = $files[0];
                 $type = pathinfo($path, PATHINFO_EXTENSION);
 
-                if (in_array($type, ['js', 'jsx'])) {
+                if (in_array($type, ['js', 'jsx'], true)) {
                     $type = 'react';
                 }
             }

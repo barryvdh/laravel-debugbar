@@ -28,7 +28,7 @@ abstract class AbstractCollectorProvider
         return $this->debugbar->getCollector($name);
     }
 
-    protected function addCollectorException(string $message, \Throwable $exception)
+    protected function addCollectorException(string $message, \Throwable $exception): void
     {
         $this->addThrowable(
             new \RuntimeException(

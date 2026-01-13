@@ -15,7 +15,7 @@ class JobsCollectorProvider extends AbstractCollectorProvider
         $jobs = new ObjectCountCollector('jobs', 'briefcase');
         $this->addCollector($jobs);
 
-        $events->listen(JobQueued::class, function ($event) use ($jobs) {
+        $events->listen(JobQueued::class, function ($event) use ($jobs): void {
             $jobs->countClass($event->job);
         });
     }

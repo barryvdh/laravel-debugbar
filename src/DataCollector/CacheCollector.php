@@ -27,11 +27,9 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
 {
     use HasDataFormatter;
 
-    /** @var bool */
-    protected $collectValues;
+    protected bool $collectValues = false;
 
-    /** @var array */
-    protected $eventStarts = [];
+    protected array $eventStarts = [];
 
     /** @var array */
     protected $classMap = [
@@ -69,10 +67,10 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
             }
         }
 
-        if (!empty($params['key'] ?? null) && in_array($label, ['hit', 'written'])) {
+        if (($params['key'] ?? null) && in_array($label, ['hit', 'written'], true)) {
             $params['delete'] = route('debugbar.cache.delete', [
                 'key' => urlencode($params['key']),
-                'tags' => !empty($params['tags']) ? json_encode($params['tags']) : '',
+                'tags' => $params['tags'] ? json_encode($params['tags']) : '',
             ]);
         }
 

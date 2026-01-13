@@ -21,8 +21,8 @@ if (!function_exists('debug')) {
     function debug(mixed ...$value): void
     {
         $debugbar = debugbar();
-        foreach (func_get_args() as $value) {
-            $debugbar->addMessage($value, 'debug');
+        foreach ($value as $message) {
+            $debugbar->addMessage($message, 'debug');
         }
     }
 }

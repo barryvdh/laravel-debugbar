@@ -91,7 +91,7 @@ class FilesystemStorage extends AbstractStorage implements StorageInterface
     public function find(array $filters = [], int $max = 20, int $offset = 0): array
     {
         // Sort by modified time, newest first
-        $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
+        $sort = function (\SplFileInfo $a, \SplFileInfo $b): int {
             return $b->getMTime() <=> $a->getMTime();
         };
 
@@ -99,7 +99,7 @@ class FilesystemStorage extends AbstractStorage implements StorageInterface
         $i = 0;
         $results = [];
         foreach (Finder::create()->files()->name('*.json')->in($this->dirname)->sort($sort) as $file) {
-            if ($i++ < $offset && empty($filters)) {
+            if ($i++ < $offset && !$filters) {
                 $results[] = null;
                 continue;
             }

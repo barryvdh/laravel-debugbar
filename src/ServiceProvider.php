@@ -20,7 +20,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->mergeConfigFrom($configPath, 'debugbar');
@@ -30,11 +30,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             DataFormatterInterface::class,
         );
 
-        $this->app->singleton(LaravelDebugbar::class, function ($app) {
+        $this->app->singleton(LaravelDebugbar::class, function ($app): LaravelDebugbar {
             return new LaravelDebugbar($app);
         });
 
-        $this->app->singleton(SymfonyHttpDriver::class, function ($app) {
+        $this->app->singleton(SymfonyHttpDriver::class, function ($app): \DebugBar\Bridge\Symfony\SymfonyHttpDriver {
             return new SymfonyHttpDriver($app->make(SymfonySessionDecorator::class));
         });
 
@@ -42,12 +42,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->singleton(
             'command.debugbar.clear',
-            function ($app) {
+            function ($app): \Fruitcake\LaravelDebugbar\Console\ClearCommand {
                 return new Console\ClearCommand($app['debugbar']);
             },
         );
 
-        Collection::macro('debug', function () {
+        Collection::macro('debug', function (): \Illuminate\Support\Collection {
             debug($this);
             return $this;
         });
@@ -58,7 +58,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
@@ -75,7 +75,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return Router
      */
-    protected function getRouter()
+    protected function getRouter(): \Illuminate\Routing\Router
     {
         return $this->app['router'];
     }
@@ -85,7 +85,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return string
      */
-    protected function getConfigPath()
+    protected function getConfigPath(): string
     {
         return config_path('debugbar.php');
     }
@@ -95,7 +95,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @param string $middleware
      */
-    protected function registerMiddleware($middleware)
+    protected function registerMiddleware(string $middleware): void
     {
         /** @var \Illuminate\Foundation\Http\Kernel $kernel */
         $kernel = $this->app[Kernel::class];

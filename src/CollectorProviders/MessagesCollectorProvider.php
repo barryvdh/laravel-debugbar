@@ -18,7 +18,7 @@ class MessagesCollectorProvider extends AbstractCollectorProvider
         }
 
         if ($options['capture_dumps'] ?? false) {
-            $originalHandler = \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) use (&$originalHandler, $messageCollector) {
+            $originalHandler = \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) use (&$originalHandler, $messageCollector): void {
                 if ($originalHandler) {
                     $originalHandler($var);
                 }
