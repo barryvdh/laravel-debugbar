@@ -81,8 +81,15 @@ class DebugbarDocsTest extends TestCase
         // Store output for test
         file_put_contents(__DIR__ . '/../build/docs/render.html', $crawler->getContent());
 
-        file_put_contents(__DIR__ . '/../build/docs/assets/debugbar.css', $this->call('GET', '/_debugbar/assets/stylesheets')->getContent());
-        file_put_contents(__DIR__ . '/../build/docs/assets/debugbar.js', $this->call('GET', '/_debugbar/assets/javascript')->getContent());
+        $css = $this->call('GET', '/_debugbar/assets?type=css');
+        $this->assertEquals(200, $css->getStatusCode());
+        $this->assertNotEmpty($css->getContent());
+        file_put_contents(__DIR__ . '/../build/docs/assets/debugbar.css', $css->getContent());
+
+        $js = $this->call('GET', '/_debugbar/assets?type=js');
+        $this->assertEquals(200, $js->getStatusCode());
+        $this->assertNotEmpty($js->getContent());
+        file_put_contents(__DIR__ . '/../build/docs/assets/debugbar.js', $this->call('GET', '/_debugbar/assets?type=js')->getContent());
 
     }
 }
