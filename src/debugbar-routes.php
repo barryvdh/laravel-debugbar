@@ -15,7 +15,7 @@ $routeConfig = [
     'middleware' => array_merge(app('config')->get('debugbar.route_middleware', []), [DebugbarEnabled::class]),
 ];
 
-app('router')->group($routeConfig, function ($router) {
+app('router')->group($routeConfig, function ($router): void {
     $router->get('open', [OpenHandlerController::class, 'handle'])->name('debugbar.openhandler');
     $router->delete('cache/{key}/{tags?}', [CacheController::class, 'delete'])->name('debugbar.cache.delete');
     $router->post('queries/explain', [QueriesController::class, 'explain'])->name('debugbar.queries.explain');

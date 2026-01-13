@@ -13,7 +13,7 @@ class SessionCollectorProvider extends AbstractCollectorProvider
     {
         if ($request->hasSession()) {
             // Legacy hidden values, using array path
-            $hiddens = array_map(function ($value) {
+            $hiddens = array_map(function ($value): mixed {
                 if (str_contains($value, '.')) {
                     return substr($value, strrpos($value, '.') + 1);
                 }

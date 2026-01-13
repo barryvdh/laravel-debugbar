@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 
 class AssetController extends BaseController
 {
-    public function getAssets(Request $request)
+    public function getAssets(Request $request): Response
     {
         $assetHandler = new AssetHandler($this->debugbar);
 

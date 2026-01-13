@@ -13,7 +13,7 @@ class QueriesController extends BaseController
     /**
      * Generate explain data for query.
      */
-    public function explain(Request $request)
+    public function explain(Request $request): \Illuminate\Http\JsonResponse
     {
         if (!config('debugbar.options.db.explain.enabled', false)) {
             return response()->json([

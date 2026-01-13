@@ -25,7 +25,7 @@ class GateCollector extends MessagesCollector
     {
         parent::__construct('gate');
         $this->router = $router;
-        $gate->after(function ($user, $ability, $result, $arguments = []) {
+        $gate->after(function ($user, $ability, $result, $arguments = []): void {
             $this->addCheck($user, $ability, $result, $arguments);
         });
     }
@@ -135,10 +135,10 @@ class GateCollector extends MessagesCollector
             $this->reflection['viewfinderViews'] = $property;
         }
 
-        $xxh128Exists = in_array('xxh128', hash_algos());
+        $xxh128Exists = in_array('xxh128', hash_algos(), true);
 
         foreach ($property->getValue($finder) as $name => $path) {
-            if (($xxh128Exists && hash('xxh128', 'v2' . $path) == $hash) || sha1('v2' . $path) == $hash) {
+            if (($xxh128Exists && hash('xxh128', 'v2' . $path) === $hash) || sha1('v2' . $path) === $hash) {
                 return $path;
             }
         }

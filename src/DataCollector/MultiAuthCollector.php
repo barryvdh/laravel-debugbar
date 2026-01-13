@@ -7,7 +7,6 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -16,11 +15,9 @@ use Illuminate\Contracts\Support\Arrayable;
  */
 class MultiAuthCollector extends DataCollector implements Renderable
 {
-    /** @var array $guards */
-    protected $guards;
+    protected array $guards = [];
 
-    /** @var \Illuminate\Auth\AuthManager */
-    protected $auth;
+    protected \Illuminate\Auth\AuthManager $auth;
 
     /** @var bool */
     protected $showName = false;
@@ -28,11 +25,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
     /** @var bool */
     protected $showGuardsData = true;
 
-    /**
-     * @param \Illuminate\Auth\AuthManager $auth
-     * @param array                        $guards
-     */
-    public function __construct($auth, $guards)
+    public function __construct(\Illuminate\Auth\AuthManager $auth, array $guards = [])
     {
         $this->auth = $auth;
         $this->guards = $guards;
@@ -43,7 +36,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
      */
     public function setShowName(bool $showName): void
     {
-        $this->showName = (bool) $showName;
+        $this->showName = $showName;
     }
 
     /**
@@ -51,7 +44,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
      */
     public function setShowGuardsData(bool $showGuardsData): void
     {
-        $this->showGuardsData = (bool) $showGuardsData;
+        $this->showGuardsData = $showGuardsData;
     }
 
     /**
@@ -67,7 +60,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         foreach ($this->guards as $guardName => $config) {
             try {
                 $guard = $this->auth->guard($guardName);
-                if ($this->hasUser($guard)) {
+                if ($guard->hasUser()) {
                     $user = $guard->user();
 
                     if (!is_null($user)) {
@@ -83,9 +76,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         foreach ($data['guards'] as $key => $var) {
-            if (!is_string($data['guards'][$key])) {
-                $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
-            }
+            $data['guards'][$key] = $this->getDataFormatter()->formatVar($var);
         }
 
         $data['names'] = rtrim($names, ', ');
@@ -94,15 +85,6 @@ class MultiAuthCollector extends DataCollector implements Renderable
         }
 
         return $data;
-    }
-
-    private function hasUser(Guard $guard): bool
-    {
-        if (method_exists($guard, 'hasUser')) {
-            return $guard->hasUser();
-        }
-
-        return false;
     }
 
     /**

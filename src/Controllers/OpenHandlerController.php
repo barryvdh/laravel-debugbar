@@ -14,9 +14,8 @@ class OpenHandlerController extends BaseController
     /**
      * Check if the storage is open for inspecting.
      *
-     * @return bool
      */
-    protected function isStorageOpen(Request $request)
+    protected function isStorageOpen(Request $request): bool
     {
         $open = config('debugbar.storage.open');
 
@@ -40,7 +39,7 @@ class OpenHandlerController extends BaseController
         return false;
     }
 
-    public function handle(Request $request)
+    public function handle(Request $request): Response
     {
         if ($request->input('op') === 'get' || $this->isStorageOpen($request)) {
             $openHandler = new OpenHandler($this->debugbar);
@@ -72,7 +71,7 @@ class OpenHandlerController extends BaseController
      *
      * @throws \DebugBar\DebugBarException
      */
-    public function clockwork(Request $request, $id)
+    public function clockwork(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $request = [
             'op' => 'get',

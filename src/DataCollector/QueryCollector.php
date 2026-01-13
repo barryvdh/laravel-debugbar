@@ -11,6 +11,7 @@ use DebugBar\DataCollector\HasTimeDataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataFormatter\QueryFormatter;
 use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Support\Str;
 
 /**
@@ -142,7 +143,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
 
         $limited = $this->softLimit && $this->queryCount > $this->softLimit;
 
-        $sql = (string) $query->sql;
+        $sql = $query->sql;
         $time = $query->time / 1000;
         $endTime = microtime(true);
         $startTime = $endTime - $time;
@@ -207,7 +208,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             'line' => $trace['line'] ?? '1',
         ];
 
-        if (isset($trace['function']) && $trace['function'] == 'substituteBindings') {
+        if (isset($trace['function']) && $trace['function'] === 'substituteBindings') {
             $frame->name = 'Route binding';
 
             return $frame;
@@ -302,10 +303,10 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             $this->reflection['viewfinderViews'] = $property;
         }
 
-        $xxh128Exists = in_array('xxh128', hash_algos());
+        $xxh128Exists = in_array('xxh128', hash_algos(), true);
 
         foreach ($property->getValue($finder) as $name => $path) {
-            if (($xxh128Exists && hash('xxh128', 'v2' . $path) == $hash) || sha1('v2' . $path) == $hash) {
+            if (($xxh128Exists && hash('xxh128', 'v2' . $path) === $hash) || sha1('v2' . $path) === $hash) {
                 return [$name, $path];
             }
         }
@@ -382,7 +383,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         foreach ($queries as $query) {
             $source = reset($query['source']);
             $normalizedPath = is_object($source) ? $this->normalizeFilePath($source->file ?: '') : '';
-            if ($query['type'] != 'transaction' && Str::startsWith($normalizedPath, $this->excludePaths)) {
+            if ($query['type'] !== 'transaction' && Str::startsWith($normalizedPath, $this->excludePaths)) {
                 continue;
             }
 
@@ -395,7 +396,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
             }
 
             $canExplainQuery = match (true) {
-                in_array($query['driver'], ['mariadb', 'mysql', 'pgsql']) => $query['bindings'] !== null && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query['query']),
+                in_array($query['driver'], ['mariadb', 'mysql', 'pgsql'], true) => $query['bindings'] !== null && preg_match('/^\s*(' . implode('|', $this->explainTypes) . ') /i', $query['query']),
                 default => false,
             };
 
@@ -406,7 +407,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
                 'backtrace' => array_values($query['source']),
                 'start' => $query['start'] ?? null,
                 'duration' => $query['time'],
-                'duration_str' => ($query['type'] == 'transaction') ? '' : $this->getDataFormatter()->formatDuration($query['time']),
+                'duration_str' => ($query['type'] === 'transaction') ? '' : $this->getDataFormatter()->formatDuration($query['time']),
                 'slow' => $this->slowThreshold && $this->slowThreshold <= $query['time'],
                 'memory' => $query['memory'],
                 'memory_str' => $query['memory'] ? $this->getDataFormatter()->formatBytes($query['memory']) : null,
@@ -521,9 +522,10 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
     protected function getSqlQueryToDisplay(array $query): string
     {
         $sql = $query['query'];
-        if ($query['type'] === 'query' && $this->renderSqlWithParams && $query['connection']->getQueryGrammar() instanceof \Illuminate\Database\Query\Grammars\Grammar && method_exists($query['connection']->getQueryGrammar(), 'substituteBindingsIntoRawSql')) {
+        $grammar = $query['connection']->getQueryGrammar();
+        if ($query['type'] === 'query' && $grammar instanceof Grammar) {
             try {
-                $sql = $query['connection']->getQueryGrammar()->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
+                $sql = $grammar->substituteBindingsIntoRawSql($sql, $query['bindings'] ?? []);
                 return $this->getQueryFormatter()->formatSql($sql);
             } catch (\Throwable $e) {
                 // Continue using the old substitute

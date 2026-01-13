@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
-use Illuminate\Support\Arr;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -17,13 +16,19 @@ class LogsCollector extends MessagesCollector
     {
         parent::__construct($name);
 
-        $paths = Arr::wrap($path ?: [
-            storage_path('logs/laravel.log'),
-            storage_path('logs/laravel-' . date('Y-m-d') . '.log'), // for daily driver
-        ]);
+        if (is_array($path) && count($path) > 0) {
+            $paths = $path;
+        } elseif (is_string($path)) {
+            $paths = [$path];
+        } else {
+            $paths = [
+                storage_path('logs/laravel.log'),
+                storage_path('logs/laravel-' . date('Y-m-d') . '.log'), // for daily driver
+            ];
+        }
 
-        foreach ($paths as $path) {
-            $this->getStorageLogs($path);
+        foreach ($paths as $logPath) {
+            $this->getStorageLogs($logPath);
         }
     }
 
@@ -65,8 +70,8 @@ class LogsCollector extends MessagesCollector
         $text = [];
         while ($linecounter > 0) {
             $t = " ";
-            while ($t != "\n") {
-                if (fseek($handle, $pos, SEEK_END) == -1) {
+            while ($t !== "\n") {
+                if (fseek($handle, $pos, SEEK_END) === -1) {
                     $beginning = true;
                     break;
                 }

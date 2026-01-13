@@ -192,7 +192,7 @@ class LaravelDebugbar extends DebugBar
         $this->booted = true;
     }
 
-    protected function registerCollectors()
+    protected function registerCollectors(): void
     {
         /** @var Repository $config */
         $config = $this->app->get(Repository::class);
@@ -274,7 +274,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Register some Casters to avoid large objects for events etc.
      */
-    protected function registerDataFormatter()
+    protected function registerDataFormatter(): void
     {
         $formatter = new HtmlDataFormatter();
 
@@ -386,7 +386,7 @@ class LaravelDebugbar extends DebugBar
      * Register collector exceptions
      *
      */
-    protected function addCollectorException(string $message, Exception $exception)
+    protected function addCollectorException(string $message, Exception $exception): void
     {
         $this->addThrowable(
             new Exception(
@@ -400,7 +400,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Modify the response and inject the debugbar (or data in headers)
      */
-    public function modifyResponse(Request $request, Response $response): Response
+    public function modifyResponse(Request $request, Response|\Illuminate\Http\Response $response): Response
     {
         $app = $this->app;
         if (!$this->isEnabled() || !$this->booted || $this->isDebugbarRequest() || $this->responseIsModified) {
@@ -417,7 +417,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         // Show the Http Response Exception in the Debugbar, when available
-        if (isset($response->exception)) {
+        if ($response instanceof \Illuminate\Http\Response && isset($response->exception)) {
             $this->addThrowable($response->exception);
         }
 
@@ -552,7 +552,7 @@ class LaravelDebugbar extends DebugBar
 
     protected function isJsonResponse(Response $response): bool
     {
-        if ($response->headers->get('Content-Type') == 'application/json') {
+        if ($response->headers->get('Content-Type') === 'application/json') {
             return true;
         }
 
@@ -605,7 +605,7 @@ class LaravelDebugbar extends DebugBar
         // Remove all invalid (non UTF-8) characters
         array_walk_recursive(
             $this->data,
-            function (&$item) {
+            function (&$item): void {
                 if (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
                     $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
                 }
@@ -739,7 +739,7 @@ class LaravelDebugbar extends DebugBar
         // Remove all invalid (non UTF-8) characters
         array_walk_recursive(
             $this->data,
-            function (&$item) {
+            function (&$item): void {
                 if (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
                     $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
                 }
@@ -759,7 +759,7 @@ class LaravelDebugbar extends DebugBar
     public function __call(string $method, array $args): void
     {
         $messageLevels = ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'];
-        if (in_array($method, $messageLevels)) {
+        if (in_array($method, $messageLevels, true)) {
             foreach ($args as $arg) {
                 $this->addMessage($arg, $method);
             }
@@ -816,7 +816,6 @@ class LaravelDebugbar extends DebugBar
                     break;
                 case 'socket':
                     throw new \RuntimeException('Socket storage is not supported anymore.');
-                    break;
                 case 'file':
                     $path = $config->get('debugbar.storage.path');
                     $storage = new FilesystemStorage($this->app['files'], $path);
@@ -838,7 +837,7 @@ class LaravelDebugbar extends DebugBar
     {
         $prefix = $this->app['config']->get('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
-        $response->headers->set('X-Clockwork-Version', 9, true);
+        $response->headers->set('X-Clockwork-Version', "9", true);
         $response->headers->set('X-Clockwork-Path', $prefix . '/clockwork/', true);
     }
 
@@ -867,16 +866,5 @@ class LaravelDebugbar extends DebugBar
         $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
 
         return array_fill_keys($remotePaths, $localPath);
-    }
-
-    private function getMonologLogger(): \Monolog\Logger
-    {
-        $logger = $this->app['log']->getLogger();
-
-        if (get_class($logger) !== 'Monolog\Logger') {
-            throw new Exception('Logger is not a Monolog\Logger instance');
-        }
-
-        return $logger;
     }
 }

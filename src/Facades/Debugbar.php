@@ -29,7 +29,7 @@ class Debugbar extends \Illuminate\Support\Facades\Facade
     /**
      * {@inheritDoc}
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return \Fruitcake\LaravelDebugbar\LaravelDebugbar::class;
     }

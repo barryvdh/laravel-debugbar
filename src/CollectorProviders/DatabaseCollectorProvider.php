@@ -57,7 +57,7 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
 
         try {
             $events->listen(
-                function (QueryExecuted $query) use ($queryCollector, $options) {
+                function (QueryExecuted $query) use ($queryCollector, $options): void {
                     // In case Debugbar is disabled after the listener was attached
                     if (!$this->debugbar->shouldCollect('db', true)) {
                         return;
@@ -108,11 +108,11 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
             );
 
             $events->listen(
-                function (ConnectionEstablished $event) use ($queryCollector, $options) {
+                function (ConnectionEstablished $event) use ($queryCollector, $options): void {
                     $queryCollector->collectTransactionEvent('Connection Established', $event->connection);
 
                     if ($options['memory_usage'] ?? false) {
-                        $event->connection->beforeExecuting(function () use ($queryCollector) {
+                        $event->connection->beforeExecuting(function () use ($queryCollector): void {
                             $queryCollector->startMemoryUsage();
                         });
                     }

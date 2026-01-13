@@ -31,10 +31,13 @@ class HttpClientCollector extends HttpCollector
 
         if ($event instanceof ResponseReceived) {
             $status = $event->response->status();
-            $duration = $this->getDuration($event->response);
+            $duration = $event->response->transferStats?->getTransferTime();
             $details['response'] = $this->parseResponse($event->response);
             $details['response_headers'] = $this->hideMaskedValues($event->response->headers());
-        } elseif ($event instanceof ConnectionFailed && isset($event->exception)) {
+        }
+
+        // @phpstan-ignore-next-line because exception might not be set in Laravel 10
+        if ($event instanceof ConnectionFailed && isset($event->exception)) {
             $details['exception'] = $event->exception;
         }
 
@@ -62,7 +65,7 @@ class HttpClientCollector extends HttpCollector
         $content = $response->body();
         $stream->rewind();
 
-        if (empty($content)) {
+        if ($content === '') {
             return '[EMPTY]';
         }
 
@@ -72,14 +75,5 @@ class HttpClientCollector extends HttpCollector
         }
 
         return Str::limit($content, 1024);
-    }
-
-    protected function getDuration(Response $response): ?float
-    {
-        if (property_exists($response, 'transferStats') && $response->transferStats) {
-            return $response->transferStats->getTransferTime();
-        }
-
-        return null;
     }
 }
