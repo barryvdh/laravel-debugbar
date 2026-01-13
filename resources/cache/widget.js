@@ -54,11 +54,11 @@
                                     }
                                 }
                             }
-                            if (measure.params.delete && measure.params.key) {
+                            if (measure.delete_url && measure.params.key) {
                                 const forgetLink = document.createElement('a');
                                 forgetLink.className = csscls('forget');
                                 forgetLink.textContent = 'forget';
-                                forgetLink.setAttribute('data-url', measure.params.delete);
+                                forgetLink.setAttribute('data-url', measure.delete_url);
                                 forgetLink.addEventListener('click', (e) => {
                                     this.onForgetClick(e, forgetLink);
                                 }, { once: true });
