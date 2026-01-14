@@ -7,10 +7,10 @@ namespace Fruitcake\LaravelDebugbar;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
+use Fruitcake\LaravelDebugbar\CollectorProviders\InertiaCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RequestCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\SessionCollectorProvider;
 use Fruitcake\LaravelDebugbar\DataCollector\LaravelCollector;
-use Fruitcake\LaravelDebugbar\DataCollector\ViewCollector;
 use Fruitcake\LaravelDebugbar\CollectorProviders\AuthCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\CacheCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\DatabaseCollectorProvider;
@@ -214,6 +214,7 @@ class LaravelDebugbar extends DebugBar
             'db' => DatabaseCollectorProvider::class,
             'models' => ModelsCollectorProvider::class,
             'livewire' => LivewireCollectorProvider::class,
+            'inertia' => InertiaCollectorProvider::class,
             'mail' => MailCollectorProvider::class,
             'auth' => AuthCollectorProvider::class,
             'gate' => GateCollectorProvider::class,
@@ -431,23 +432,6 @@ class LaravelDebugbar extends DebugBar
             }
 
             $this->addClockworkHeaders($response);
-        }
-
-        try {
-            if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
-                $content = $response->getContent();
-
-                if (is_string($content)) {
-                    $content = json_decode($content, true);
-                }
-
-                if (is_array($content)) {
-                    /** @var ViewCollector $viewCollector */
-                    $viewCollector = $this['views'];
-                    $viewCollector->addInertiaAjaxView($content);
-                }
-            }
-        } catch (Exception $e) {
         }
 
         if ($app['config']->get('debugbar.add_ajax_timing', false)) {
