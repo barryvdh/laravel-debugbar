@@ -7,8 +7,6 @@ on:
   pull_request:
     branches:
       - "*"
-  schedule:
-  - cron: '0 0 * * *'
 
 jobs:
   unit-tests:
@@ -20,11 +18,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.5, 8.4, 8.3, 8.2]
-        laravel: [^12, ^11, ^10]
-        dependency-version: [prefer-stable]
+        php: [8.2]
+        livewire: [^2, ^3, ^4]
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+    name: Livewire${{ matrix.livewire }}
 
     steps:
     - name: Checkout code
@@ -41,8 +38,8 @@ jobs:
     - name: Install dependencies
       run: |
         composer remove --dev --no-update larastan/larastan phpstan/phpstan-phpunit laravel/pint phpstan/phpstan-strict-rules shipmonk/phpstan-rules
-        composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-        composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
+        composer require "livewire/livewire:${{ matrix.livewire }}" --no-interaction --no-update
+        composer update --prefer-stable --prefer-dist --no-progress
 
     - name: Update Dusk Chromedriver
       run: vendor/bin/dusk-updater detect --auto-update
