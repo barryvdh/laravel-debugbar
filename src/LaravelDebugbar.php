@@ -435,23 +435,6 @@ class LaravelDebugbar extends DebugBar
             $this->addClockworkHeaders($response);
         }
 
-        try {
-            if ($this->hasCollector('views') && $response->headers->has('X-Inertia')) {
-                $content = $response->getContent();
-
-                if (is_string($content)) {
-                    $content = json_decode($content, true);
-                }
-
-                if (is_array($content)) {
-                    /** @var ViewCollector $viewCollector */
-                    $viewCollector = $this['views'];
-                    $viewCollector->addInertiaAjaxView($content);
-                }
-            }
-        } catch (Exception $e) {
-        }
-
         if ($app['config']->get('debugbar.add_ajax_timing', false)) {
             $this->addServerTimingHeaders($response);
         }
