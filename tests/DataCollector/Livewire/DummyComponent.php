@@ -13,9 +13,9 @@ class DummyComponent extends Component
     public function render()
     {
         return <<<'blade'
-            <div>
-                Hello!
-            </div>
-        blade;
+                <div>
+                    Hello!
+                </div>
+            blade;
     }
 }
