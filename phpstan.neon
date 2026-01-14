@@ -22,5 +22,4 @@ parameters:
     excludePaths:
         - 'src/Twig'
         - 'src/Controllers/TelescopeController.php'
-        - 'src/DataCollector/LivewireCollector.php'
         - 'src/DataCollector/PennantCollector.php'
