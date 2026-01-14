@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar;
 
+use DebugBar\Storage\FileStorage;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
@@ -30,9 +31,7 @@ use Fruitcake\LaravelDebugbar\CollectorProviders\PhpInfoCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RouteCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\TimeCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ViewsCollectorProvider;
-use Fruitcake\LaravelDebugbar\Storage\FilesystemStorage;
 use Fruitcake\LaravelDebugbar\Support\Clockwork\ClockworkCollector;
-use Fruitcake\LaravelDebugbar\Support\RequestIdGenerator;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\ExceptionsCollector;
@@ -111,7 +110,6 @@ class LaravelDebugbar extends DebugBar
         }
         $this->app = $app;
         $this->version = $app->version();
-        $this->setRequestIdGenerator(new RequestIdGenerator());
     }
 
     /**
@@ -802,7 +800,7 @@ class LaravelDebugbar extends DebugBar
                     throw new \RuntimeException('Socket storage is not supported anymore.');
                 case 'file':
                     $path = $config->get('debugbar.storage.path');
-                    $storage = new FilesystemStorage($this->app['files'], $path);
+                    $storage = new FileStorage($path);
                     break;
                 case 'sqlite':
                     $path = $config->get('debugbar.storage.path');
