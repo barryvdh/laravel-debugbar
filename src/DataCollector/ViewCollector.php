@@ -25,10 +25,6 @@ class ViewCollector extends TemplateCollector
         $data = $view->getData();
         $path = $view->getPath();
 
-        if (class_exists('\Inertia\Inertia')) {
-            [$name, $type, $data, $path] = $this->getInertiaView($name, $data, $path);
-        }
-
         // Skip View files from strings
         if (Str::startsWith($name, '__components::')) {
             if ($source = $this->getRenderSource($name, $path)) {
@@ -117,39 +113,5 @@ class ViewCollector extends TemplateCollector
         }
 
         return null;
-    }
-
-    private function getInertiaView(string $name, array $data, ?string $path): array
-    {
-        if (isset($data['page']) && is_array($data['page'])) {
-            $data = $data['page'];
-        }
-
-        if (isset($data['props'], $data['component'])) {
-            $name = $data['component'];
-            $data = $data['props'];
-
-            if ($files = glob(resource_path(config('debugbar.options.views.inertia_pages') . '/' . $name . '.*'))) {
-                $path = $files[0];
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-
-                if (in_array($type, ['js', 'jsx'], true)) {
-                    $type = 'react';
-                }
-            }
-        }
-
-        return [$name, $type ?? '', $data, $path];
-    }
-
-    public function addInertiaAjaxView(array $data): void
-    {
-        [$name, $type, $data, $path] = $this->getInertiaView('', $data, '');
-
-        if (! $name) {
-            return;
-        }
-
-        $this->addTemplate($name, $data, $type, $path);
     }
 }

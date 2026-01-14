@@ -7,6 +7,7 @@ namespace Fruitcake\LaravelDebugbar;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
+use Fruitcake\LaravelDebugbar\CollectorProviders\InertiaCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RequestCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\SessionCollectorProvider;
 use Fruitcake\LaravelDebugbar\DataCollector\LaravelCollector;
@@ -214,6 +215,7 @@ class LaravelDebugbar extends DebugBar
             'db' => DatabaseCollectorProvider::class,
             'models' => ModelsCollectorProvider::class,
             'livewire' => LivewireCollectorProvider::class,
+            'inertia' => InertiaCollectorProvider::class,
             'mail' => MailCollectorProvider::class,
             'auth' => AuthCollectorProvider::class,
             'gate' => GateCollectorProvider::class,

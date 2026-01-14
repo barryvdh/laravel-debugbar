@@ -20,6 +20,7 @@ const icons = [
     // UI control icons
     'brand-laravel',
     'brand-livewire',
+    'brand-inertia',
 
     // Query widget icons
     'pin',
