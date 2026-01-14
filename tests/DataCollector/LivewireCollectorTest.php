@@ -67,7 +67,6 @@ class LivewireCollectorTest extends TestCase
 
         if (version_compare(InstalledVersions::getVersion('livewire/livewire'), '3.0', '<')) {
             $component->id = '123';
-            $component->name = 'fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component';
             $view = view('dashboard', ['_instance' => $component]);
             $collector->addLivewire2View($view, request());
         } else {
@@ -78,7 +77,11 @@ class LivewireCollectorTest extends TestCase
 
         $data = $collector->collect();
 
-        $this->assertEquals('fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
+        if (version_compare(InstalledVersions::getVersion('livewire/livewire'), '3.0', '<')) {
+            $this->assertStringContainsString('livewire.component@anonymous.users.barry.sites.laravel-debugbar.tests.data-collector.livewire-collector-test.php:', $data['templates'][0]['name']);
+        } else {
+            $this->assertEquals('fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
+        }
         $this->assertStringContainsString('MyComponent', $data['templates'][0]['params']['title']);
     }
 }

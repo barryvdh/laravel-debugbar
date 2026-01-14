@@ -9,4 +9,13 @@ use Livewire\Component;
 class DummyComponent extends Component
 {
     public string $title = 'MyComponent';
+
+    public function render()
+    {
+        return <<<'blade'
+            <div>
+                Hello!
+            </div>
+        blade;
+    }
 }
