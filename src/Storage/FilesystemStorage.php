@@ -101,6 +101,10 @@ class FilesystemStorage extends AbstractStorage implements StorageInterface
                 continue;
             }
             $data = json_decode($file->getContents(), true);
+            if (!isset($data['__meta'])) {
+                continue;
+            }
+
             $meta = $data['__meta'];
             unset($data);
             if ($this->filter($meta, $filters)) {
