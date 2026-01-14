@@ -783,7 +783,7 @@ class LaravelDebugbar extends DebugBar
     /**
      * Check the version of Laravel
      */
-    protected function checkVersion(string $version, string $operator = ">="): bool
+    public function checkVersion(string $version, string $operator = ">="): bool
     {
         return version_compare($this->version, $version, $operator);
     }
