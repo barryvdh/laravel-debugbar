@@ -29,7 +29,6 @@ class LivewireBrowserTest extends BrowserTestCase
         $app['config']->set('debugbar.hide_empty_tabs', false);
         config(['view.paths' => array_merge(config('view.paths'), [__DIR__ . '/resources/views'])]);
 
-
         /** @var Router $router */
         $router = $app['router'];
 

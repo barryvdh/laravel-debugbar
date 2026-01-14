@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar\Tests;
 
-use Fruitcake\LaravelDebugbar\ServiceProvider;
-use Fruitcake\LaravelDebugbar\Tests\DataCollector\Livewire\DummyComponent;
 use Illuminate\Routing\Router;
 use Laravel\Dusk\Browser;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\Connection;
-use Livewire\LivewireServiceProvider;
 
 class DebugbarBrowserTest extends BrowserTestCase
 {
