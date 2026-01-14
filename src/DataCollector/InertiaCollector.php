@@ -46,7 +46,8 @@ class InertiaCollector extends TemplateCollector
         $component = $page['component'];
         $props = $page['props'] ?? [];
 
-        if ($files = glob(resource_path(config('debugbar.options.inertia.pages') . '/' . $name . '.*'))) {
+        $pagePath = config('debugbar.options.inertia.pages', 'js/Pages');
+        if ($files = glob(resource_path($pagePath . '/' . $name . '.*'))) {
             $path = $files[0];
             $type = pathinfo($path, PATHINFO_EXTENSION);
 
