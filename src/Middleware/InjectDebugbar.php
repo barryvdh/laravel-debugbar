@@ -57,7 +57,7 @@ class InjectDebugbar
             return $next($request);
         }
 
-        logger('handle debugbar inject middleware on '  . $request->method());
+        logger('handle debugbar inject middleware on ' . $request->method());
 
         $this->debugbar->boot();
 

@@ -11,7 +11,6 @@ use Fruitcake\LaravelDebugbar\CollectorProviders\InertiaCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RequestCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\SessionCollectorProvider;
 use Fruitcake\LaravelDebugbar\DataCollector\LaravelCollector;
-use Fruitcake\LaravelDebugbar\DataCollector\ViewCollector;
 use Fruitcake\LaravelDebugbar\CollectorProviders\AuthCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\CacheCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\DatabaseCollectorProvider;
