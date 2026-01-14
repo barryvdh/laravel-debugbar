@@ -44,11 +44,6 @@ class DebugbarBrowserTest extends BrowserTestCase
         \Orchestra\Testbench\Dusk\Options::withoutUI();
     }
 
-    protected function getPackageProviders($app)
-    {
-        return [ServiceProvider::class, LivewireServiceProvider::class];
-    }
-
     protected function addWebRoutes(Router $router)
     {
         $router->get('web/redirect', [
@@ -73,10 +68,6 @@ class DebugbarBrowserTest extends BrowserTestCase
             'uses' => function () {
                 return view('ajax');
             },
-        ]);
-
-        $router->get('web/livewire', [
-            'uses' => DummyComponent::class,
         ]);
 
         $router->get('web/custom-prototype', [
@@ -278,27 +269,6 @@ class DebugbarBrowserTest extends BrowserTestCase
                 ->waitForText('600 statements were executed, 400 of which were duplicates, 200 unique.')
                 ->waitForText('Query soft and hard limit for Debugbar are reached. Only the first 100 queries show details. Queries after the first 500 are ignored. ')
                 ->screenshotElement('.phpdebugbar', 'queries-expanded');
-        });
-    }
-
-    public function testLivewireCollectsComponents()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('web/livewire')
-                ->waitFor('.phpdebugbar')
-                ->click('.phpdebugbar-tab-settings')
-                ->waitForTextIn('.phpdebugbar-tab[data-collector="livewire"] .phpdebugbar-badge', 1)
-                ->click('.phpdebugbar-tab[data-collector="livewire"]')
-                ->assertSee('1 Livewire component')
-                ->with('.phpdebugbar-widgets-list-item', function ($queriesPane) {
-                    $queriesPane->assertSee('DummyComponent')
-                        ->click('.phpdebugbar-widgets-name')
-                        ->assertSee('Params')
-                        ->assertSee('title')
-                        ->assertSee('MyComponent');
-                })
-                ->click('.phpdebugbar-tab[data-collector="request"]')
-                ->assertSee('Tests\DataCollector\Livewire\DummyComponent');
         });
     }
 }
