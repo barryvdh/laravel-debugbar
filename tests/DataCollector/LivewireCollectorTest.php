@@ -67,6 +67,7 @@ class LivewireCollectorTest extends TestCase
 
         if (version_compare(InstalledVersions::getVersion('livewire/livewire'), '3.0', '<')) {
             $component->id = '123';
+            $component->name = 'fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component';
             $view = view('dashboard', ['_instance' => $component]);
             $collector->addLivewire2View($view, request());
         } else {
