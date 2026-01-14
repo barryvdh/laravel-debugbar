@@ -28,7 +28,12 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         $result = parent::collect();
         $htmlData = [];
 
+        $route = null;
         if ($this->request instanceof \Illuminate\Http\Request) {
+            $route = $this->request->route();
+        }
+
+        if ($route) {
             $htmlData += $this->getRouteInformation($this->request->route());
         }
 
@@ -44,8 +49,13 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         if ($this->request instanceof \Illuminate\Http\Request) {
             $result['tooltip'] += [
                 'full_url' => Str::limit($this->request->fullUrl(), 100),
-                'action_name' => $this->request->route()->getName(),
-                'controller_action' => $this->request->route()->getActionName(),
+            ];
+        }
+
+        if ($route) {
+            $result['tooltip'] += [
+                'action_name' => $route->getName(),
+                'controller_action' => $route->getActionName(),
             ];
         }
 
