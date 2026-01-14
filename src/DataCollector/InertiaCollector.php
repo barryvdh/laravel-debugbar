@@ -20,7 +20,7 @@ class InertiaCollector extends TemplateCollector
         }
     }
 
-    public function addFromResponse(Response $response)
+    public function addFromResponse(Response $response): void
     {
         if (!$response->headers->has('X-Inertia') || $response->headers->get('Content-Type') !== 'application/json') {
             return;
