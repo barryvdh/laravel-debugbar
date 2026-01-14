@@ -31,7 +31,7 @@ class LivewireCollector extends TemplateCollector
         $this->addLivewireTemplate($component, $id, $data, $request);
     }
 
-    protected function addLivewireTemplate(Component $component, string $id, array $data, ?Request $request = null): void
+    protected function addLivewireTemplate(Component $component, ?string $id, array $data, ?Request $request = null): void
     {
         if ((new \ReflectionClass($component))->isAnonymous()) {
             $key = $component->getName() . ' #' . $id;
