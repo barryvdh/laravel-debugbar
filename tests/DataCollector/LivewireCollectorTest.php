@@ -78,7 +78,9 @@ class LivewireCollectorTest extends TestCase
         $data = $collector->collect();
 
         if (version_compare(InstalledVersions::getVersion('livewire/livewire'), '3.0', '<')) {
-            $this->assertStringContainsString('livewire.component@anonymous.users.barry.sites.laravel-debugbar.tests.data-collector.livewire-collector-test.php:', $data['templates'][0]['name']);
+            $this->assertStringContainsString('livewire.component@anonymous.', $data['templates'][0]['name']);
+            $this->assertStringContainsString('tests.data-collector.livewire-collector-test.php:', $data['templates'][0]['name']);
+            $this->assertStringContainsString(' #123', $data['templates'][0]['name']);
         } else {
             $this->assertEquals('fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
         }
