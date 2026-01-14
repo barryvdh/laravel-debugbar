@@ -57,8 +57,6 @@ class InjectDebugbar
             return $next($request);
         }
 
-        logger('handle debugbar inject middleware on ' . $request->method());
-
         $this->debugbar->boot();
 
         try {
@@ -67,8 +65,6 @@ class InjectDebugbar
         } catch (Throwable $e) {
             $response = $this->handleException($request, $e);
         }
-
-        logger('modify response on ' . $request->method());
 
         // Modify the response to add the Debugbar
         $this->debugbar->modifyResponse($request, $response);

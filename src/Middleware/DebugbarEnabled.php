@@ -37,8 +37,6 @@ class DebugbarEnabled
             abort(404);
         }
 
-        //        logger('handle debugbar enabled middleware');
-
         return $next($request);
     }
 }

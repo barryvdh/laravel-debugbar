@@ -20,7 +20,7 @@ class InertiaCollectorProvider extends AbstractCollectorProvider
             $this->addCollector($inertiaCollector);
 
             $events->listen(ResponsePrepared::class, fn(ResponsePrepared $e) => $inertiaCollector->addFromResponse($e->response));
-            $events->listen('composing:*', fn($event, $params) => $inertiaCollector->addView($params[0]));
+            $events->listen('composing:*', fn($event, $params) => $inertiaCollector->addFromView($params[0]));
         }
     }
 

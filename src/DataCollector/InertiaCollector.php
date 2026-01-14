@@ -12,55 +12,50 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InertiaCollector extends TemplateCollector
 {
-    public function addView(\Illuminate\View\View $view): void
+    public function addFromView(\Illuminate\View\View $view): void
     {
-        $name = $view->getName();
         $data = $view->getData();
-        $path = $view->getPath();
-
-        [$name, $type, $data, $path] = $this->getInertiaView($name, $data, $path);
-
-        $this->addTemplate($name, $data, $type, $path);
+        if (isset($data['page']['component'])) {
+            $this->addInertiaTemplate($data['page'], $view->getName(), $view->getPath());
+        }
     }
 
     public function addFromResponse(Response $response)
     {
-        $content = $response->getContent();
+        if (!$response->headers->has('X-Inertia') || $response->headers->get('Content-Type') !== 'application/json') {
+            return;
+        }
 
+        $content = $response->getContent();
         if (is_string($content)) {
             $content = json_decode($content, true);
         }
 
         if (is_array($content)) {
-            [$name, $type, $data, $path] = $this->getInertiaView('', $content, '');
-
-            if ($name) {
-                $this->addTemplate($name, $data, $type, $path);
-            }
+            $this->addInertiaTemplate($content);
         }
     }
 
-    private function getInertiaView(string $name, array $data, ?string $path): array
+    private function addInertiaTemplate(array $page, ?string $name = null, ?string $path = null): void
     {
-        if (isset($data['page']) && is_array($data['page'])) {
-            $data = $data['page'];
+        if (!isset($page['component'])) {
+            return;
         }
 
-        if (isset($data['props'], $data['component'])) {
-            $name = $data['component'];
-            $data = $data['props'];
+        $type = '';
+        $component = $page['component'];
+        $props = $page['props'] ?? [];
 
-            if ($files = glob(resource_path(config('debugbar.options.inertia.pages') . '/' . $name . '.*'))) {
-                $path = $files[0];
-                $type = pathinfo($path, PATHINFO_EXTENSION);
+        if ($files = glob(resource_path(config('debugbar.options.inertia.pages') . '/' . $name . '.*'))) {
+            $path = $files[0];
+            $type = pathinfo($path, PATHINFO_EXTENSION);
 
-                if (in_array($type, ['js', 'jsx'], true)) {
-                    $type = 'react';
-                }
+            if (in_array($type, ['js', 'jsx'], true)) {
+                $type = 'react';
             }
         }
 
-        return [$name, $type ?? '', $data, $path];
+        $this->addTemplate($component, $props, $type, $path);
     }
 
     public function collect(): array
