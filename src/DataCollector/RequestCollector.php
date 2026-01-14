@@ -10,6 +10,7 @@ use DebugBar\DataCollector\Renderable;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
+use Livewire\Mechanisms\HandleComponents\HandleComponents;
 
 class RequestCollector extends SymfonyRequestCollector implements DataCollectorInterface, Renderable
 {
@@ -82,16 +83,19 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         $uses = $action['uses'] ?? null;
         $controller = is_string($action['controller'] ?? null) ? $action['controller'] : '';
 
-        if (request()->hasHeader('X-Livewire')) {
+        if (request()->hasHeader('X-Livewire') && class_exists(HandleComponents::class)) {
             try {
-                $component = request('components')[0];
-                $name = json_decode($component['snapshot'], true)['memo']['name'];
-                $method = $component['calls'][0]['method'];
-                $class = app(\Livewire\Mechanisms\ComponentRegistry::class)->getClass($name);
-                if (class_exists($class) && method_exists($class, $method)) {
-                    $controller = $class . '@' . $method;
-                    $result['controller'] = ltrim($controller, '\\');
+                $componentData =  $this->request->get('components')[0];
+                $snapshot = json_decode($componentData['snapshot'], true);
+                if (isset($componentData['updates'])) {
+                    $method = $componentData['updates'][array_key_first($componentData['updates'])] ?? null;
+                } else {
+                    $method = null;
                 }
+                [$component] = app(HandleComponents::class)->fromSnapshot($snapshot);
+                $result['controller'] = ltrim($component::class, '\\');
+                $reflector = new \ReflectionClass($component);
+                $controller = $component::class . '@' . $method;
             } catch (\Throwable $e) {
                 //
             }

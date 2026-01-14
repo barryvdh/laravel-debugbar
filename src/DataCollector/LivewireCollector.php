@@ -7,7 +7,6 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 use DebugBar\DataCollector\TemplateCollector;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Livewire\Livewire;
 use Livewire\Component;
 
 /**
@@ -15,60 +14,48 @@ use Livewire\Component;
  */
 class LivewireCollector extends TemplateCollector
 {
-    public function __construct(Request $request)
+    public function addLivewire2View(View $view, ?Request $request = null): void
     {
-        parent::__construct(true, [], false);
+        $component = $view->getData()['_instance'];
+        $id = $component->id;
+        $data = $component->getPublicPropertiesDefinedBySubClass();
 
-        // Listen to Livewire views
-        Livewire::listen('view:render', function (View $view) use ($request) {
-            /** @var \Livewire\Component $component */
-            $component = $view->getData()['_instance'];
-
-            $key = get_class($component) . ' ' . $component->getName() . ' #' . $component->id;
-
-            $data = $component->getPublicPropertiesDefinedBySubClass();
-
-            if ($request->request->get('id') == $component->id) {
-                $data['#oldData'] = $request->request->get('data');
-                $data['#actionQueue'] = $request->request->get('actionQueue');
-            }
-
-            $data['#name'] = $component->getName();
-            $data['#view'] = $view->name();
-            $data['#component'] = get_class($component);
-            $data['#id'] = $component->id;
-
-            $path = (new \ReflectionClass($component))->getFileName();
-
-            $this->addTemplate($key, $data, 'livewire', $path);
-        });
-
-        Livewire::listen('render', function (Component $component) use ($request) {
-            // Create an unique name for each component
-
-            if ((new \ReflectionClass($component))->isAnonymous()) {
-                $key = $component->getName() . ' #' . $component->getId();
-            } else {
-                $key = get_class($component) . ' ' . $component->getName() . ' #' . $component->getId();
-            }
-
-            $data = $component->all();
-
-            if ($request->request->get('id') == $component->getId()) {
-                $data['#oldData'] = $request->request->get('data');
-                $data['#actionQueue'] = $request->request->get('actionQueue');
-            }
-
-            $data['#name'] = $component->getName();
-            $data['#component'] = get_class($component);
-            $data['#id'] = $component->getId();
-
-            $path = (new \ReflectionClass($component))->getFileName();
-            ;
-            $this->addTemplate($key, $data, 'livewire', $path);
-        });
+        $this->addLivewireTemplate($component, $id, $data, $request);
     }
 
+    public function addLivewireComponent(Component $component, ?Request $request = null): void
+    {
+        $id = $component->getId();
+        $data = $component->all();
+
+        $this->addLivewireTemplate($component, $id, $data, $request);
+    }
+
+    protected function addLivewireTemplate(Component $component, string $id, array $data, ?Request $request = null): void
+    {
+        if ((new \ReflectionClass($component))->isAnonymous()) {
+            $key = $component->getName() . ' #' . $id;
+        } else {
+            $key = get_class($component) . ' ' . $component->getName() . ' #' . $id;
+        }
+
+        if ($request && $request->request->get('id') === $id) {
+            $data['#oldData'] = $request->request->get('data');
+            $data['#actionQueue'] = $request->request->get('actionQueue');
+        }
+
+        $data['#name'] = $component->getName();
+        $data['#component'] = get_class($component);
+        $data['#id'] = $id;
+
+        $path = (new \ReflectionClass($component))->getFileName();
+
+        $this->addTemplate($key, $data, 'livewire', $path);
+    }
+
+    /**
+     * @return array{nb_templates: int, templates: array<string, array{name: string, param_count: int, params: array<string, mixed>, type: string, xdebug_link?: string}>, sentence: string}
+     */
     public function collect(): array
     {
         $data = parent::collect();
@@ -86,6 +73,9 @@ class LivewireCollector extends TemplateCollector
         return 'livewire';
     }
 
+    /**
+     * @return array<string, array{icon: string, widget: string, map: string, default: string}>
+     */
     public function getWidgets(): array
     {
         $widgets = parent::getWidgets();
