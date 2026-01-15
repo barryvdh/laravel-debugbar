@@ -3,6 +3,7 @@
 namespace Fruitcake\LaravelDebugbar\Support\Octane;
 
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
+use Laravel\Octane\Events\RequestReceived;
 
 class ResetDebugbar
 {
@@ -11,13 +12,15 @@ class ResetDebugbar
      *
      * @param  mixed  $event
      */
-    public function handle($event): void
+    public function handle(RequestReceived $event): void
     {
-        if ($event->sandbox->bound(LaravelDebugbar::class)) {
-            /** @var LaravelDebugbar $debugbar */
-            $debugbar = $event->sandbox[LaravelDebugbar::class];
-            $debugbar->reset();
-            $debugbar->setApplication($event->sandbox);
+        if (! $event->sandbox->resolved(LaravelDebugbar::class)) {
+            return;
         }
+
+        with($event->sandbox->make(LaravelDebugbar::class), function (LaravelDebugbar $debugbar) use ($event) {
+            $debugbar->setApplication($event->sandbox);
+            $debugbar->reset();
+        });
     }
 }
