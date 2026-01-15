@@ -146,7 +146,6 @@ class LaravelDebugbar extends DebugBar
     public function boot(): void
     {
         if ($this->booted) {
-            logger('already booter');
             return;
         }
 
