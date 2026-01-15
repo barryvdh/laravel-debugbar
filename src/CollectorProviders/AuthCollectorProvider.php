@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use Fruitcake\LaravelDebugbar\DataCollector\MultiAuthCollector;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Config\Repository;
 
 class AuthCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Repository $config, AuthManager $auth, array $options): void
+    public function __invoke(array $options): void
     {
-        $guards = $config->get('auth.guards', []);
-        $authCollector = new MultiAuthCollector($auth, $guards);
+        $guards = config('auth.guards', []);
+        $authCollector = new MultiAuthCollector($guards);
         $this->addCollector($authCollector);
 
         $authCollector->setShowName($options['show_name'] ?? false);

@@ -102,14 +102,15 @@ class LaravelDebugbar extends DebugBar
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
-    public function __construct(?\Illuminate\Foundation\Application $app = null)
+    public function __construct(\Illuminate\Foundation\Application $app)
     {
-        if (!$app) {
-            /** @var \Illuminate\Foundation\Application $app */
-            $app = app();   //Fallback when $app is not given
-        }
         $this->app = $app;
         $this->version = $app->version();
+    }
+
+    public function setApplication(\Illuminate\Foundation\Application $app): void
+    {
+        $this->app = $app;
     }
 
     /**
@@ -145,13 +146,13 @@ class LaravelDebugbar extends DebugBar
     public function boot(): void
     {
         if ($this->booted) {
+            logger('already booter');
             return;
         }
 
-        /** @var Repository $config */
-        $config = $this->app->get(Repository::class);
         $timeStart = microtime(true);
         $memoryStart = memory_get_usage(false);
+        $config = config();
 
         $this->editorTemplate = $config->get('debugbar.editor') ?: $config->get('app.editor');
         $this->remotePathReplacements = $this->getRemoteServerReplacements();
@@ -310,7 +311,7 @@ class LaravelDebugbar extends DebugBar
 
     public function shouldCollect(string $name, bool $default = true): bool
     {
-        return $this->app['config']->get('debugbar.collectors.' . $name, $default);
+        return config('debugbar.collectors.' . $name, $default);
     }
 
     /**
@@ -430,7 +431,7 @@ class LaravelDebugbar extends DebugBar
         }
 
         // These rely on the Response, so we add them directly here
-        if ($app['config']->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
+        if (config('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
                 $clockworkCollector = new ClockworkCollector($request, $response);
                 $this->addCollector($clockworkCollector);
@@ -441,7 +442,7 @@ class LaravelDebugbar extends DebugBar
             $this->addClockworkHeaders($response);
         }
 
-        if ($app['config']->get('debugbar.add_ajax_timing', false)) {
+        if (config('debugbar.add_ajax_timing', false)) {
             $this->addServerTimingHeaders($response);
         }
 
@@ -468,7 +469,7 @@ class LaravelDebugbar extends DebugBar
 
         // Check if it's safe to inject the Debugbar
         if (
-            $app['config']->get('debugbar.inject', true)
+            config('debugbar.inject', true)
             && str_contains($response->headers->get('Content-Type', 'text/html'), 'html')
             && !$this->isJsonRequest($request, $response)
             && $response->getContent() !== false
@@ -493,12 +494,10 @@ class LaravelDebugbar extends DebugBar
     public function isEnabled(): bool
     {
         if ($this->enabled === null) {
-            /** @var Repository $config */
-            $config = $this->app['config'];
-            $configEnabled = value($config->get('debugbar.enabled'));
+            $configEnabled = value(config('debugbar.enabled'));
 
             if ($configEnabled === null) {
-                $configEnabled = $config->get('app.debug');
+                $configEnabled = config('app.debug');
             }
 
             $this->enabled = $configEnabled && !$this->app->runningInConsole() && !$this->app->environment('testing');
@@ -512,7 +511,7 @@ class LaravelDebugbar extends DebugBar
      */
     protected function isDebugbarRequest(): bool
     {
-        return $this->app['request']->is($this->app['config']->get('debugbar.route_prefix') . '*');
+        return request()->is(config('debugbar.route_prefix') . '*');
     }
 
     protected function isJsonRequest(Request $request, Response $response): bool
@@ -617,8 +616,6 @@ class LaravelDebugbar extends DebugBar
      */
     public function injectDebugbar(Response $response): void
     {
-        /** @var Repository $config */
-        $config = $this->app['config'];
         $content = $response->getContent();
 
         $renderer = $this->getJavascriptRenderer();
@@ -782,7 +779,7 @@ class LaravelDebugbar extends DebugBar
     protected function selectStorage(DebugBar $debugbar): void
     {
         /** @var Repository $config */
-        $config = $this->app['config'];
+        $config = config();
         if ($config->get('debugbar.storage.enabled')) {
             $driver = strtolower($config->get('debugbar.storage.driver', 'file'));
 
@@ -826,7 +823,7 @@ class LaravelDebugbar extends DebugBar
 
     protected function addClockworkHeaders(Response $response): void
     {
-        $prefix = $this->app['config']->get('debugbar.route_prefix');
+        $prefix = config('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
         $response->headers->set('X-Clockwork-Version', "9", true);
         $response->headers->set('X-Clockwork-Path', $prefix . '/clockwork/', true);
@@ -853,8 +850,8 @@ class LaravelDebugbar extends DebugBar
 
     private function getRemoteServerReplacements(): array
     {
-        $localPath = $this->app['config']->get('debugbar.local_sites_path') ?: base_path();
-        $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
+        $localPath = config('debugbar.local_sites_path') ?: base_path();
+        $remotePaths = array_filter(explode(',', config('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
 
         return array_fill_keys($remotePaths, $localPath);
     }

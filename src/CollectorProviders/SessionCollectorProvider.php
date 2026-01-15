@@ -20,7 +20,7 @@ class SessionCollectorProvider extends AbstractCollectorProvider
                 return $value;
             }, (array) ($options['hiddens'] ?? []));
 
-            $sessionCollector = new SessionCollector($request->getSession());
+            $sessionCollector = new SessionCollector();
             $sessionCollector->addMaskedKeys($hiddens);
             $sessionCollector->addMaskedKeys((array) ($options['masked'] ?? []));
             $this->addCollector($sessionCollector);
