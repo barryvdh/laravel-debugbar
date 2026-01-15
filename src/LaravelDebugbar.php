@@ -191,7 +191,7 @@ class LaravelDebugbar extends DebugBar
         $this->registerCollectors();
 
         $this->booted = true;
-        
+
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector $timeCollector */
             $timeCollector = $this['time'];
