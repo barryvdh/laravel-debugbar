@@ -108,7 +108,7 @@ class LaravelDebugbar extends DebugBar
         $this->version = $app->version();
     }
 
-    public function setApplication(\Illuminate\Foundation\Application $app)
+    public function setApplication(\Illuminate\Foundation\Application $app): void
     {
         $this->app = $app;
     }
@@ -146,6 +146,7 @@ class LaravelDebugbar extends DebugBar
     public function boot(): void
     {
         if ($this->booted) {
+            logger('already booter');
             return;
         }
 

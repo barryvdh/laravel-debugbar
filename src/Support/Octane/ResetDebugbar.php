@@ -19,7 +19,7 @@ class ResetDebugbar
             return;
         }
 
-        with($event->sandbox->make(LaravelDebugbar::class), function (LaravelDebugbar $debugbar) use ($event) {
+        with($event->sandbox->make(LaravelDebugbar::class), function (LaravelDebugbar $debugbar) use ($event): void {
             $debugbar->setApplication($event->sandbox);
             $debugbar->reset();
         });
