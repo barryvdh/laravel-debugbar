@@ -17,17 +17,14 @@ class MultiAuthCollector extends DataCollector implements Renderable
 {
     protected array $guards = [];
 
-    protected \Illuminate\Auth\AuthManager $auth;
-
     /** @var bool */
     protected $showName = false;
 
     /** @var bool */
     protected $showGuardsData = true;
 
-    public function __construct(\Illuminate\Auth\AuthManager $auth, array $guards = [])
+    public function __construct(array $guards = [])
     {
-        $this->auth = $auth;
         $this->guards = $guards;
     }
 
@@ -59,7 +56,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
 
         foreach ($this->guards as $guardName => $config) {
             try {
-                $guard = $this->auth->guard($guardName);
+                $guard = auth()->guard($guardName);
                 if ($guard->hasUser()) {
                     $user = $guard->user();
 

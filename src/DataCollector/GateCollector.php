@@ -19,17 +19,6 @@ class GateCollector extends MessagesCollector
 {
     protected array $reflection = [];
 
-    protected Router $router;
-
-    public function __construct(Gate $gate, Router $router)
-    {
-        parent::__construct('gate');
-        $this->router = $router;
-        $gate->after(function ($user, $ability, $result, $arguments = []): void {
-            $this->addCheck($user, $ability, $result, $arguments);
-        });
-    }
-
     public function addCheck(mixed $user, string $ability, mixed $result, array $arguments = []): void
     {
         $userKey = 'user';
@@ -103,7 +92,7 @@ class GateCollector extends MessagesCollector
     protected function findControllerFromDispatcher(array $trace): array
     {
         /** @var \Closure|string|array $action */
-        $action = $this->router->current()->getAction('uses');
+        $action = app(Router::class)->current()->getAction('uses');
 
         if (is_string($action)) {
             [$controller, $method] = explode('@', $action);

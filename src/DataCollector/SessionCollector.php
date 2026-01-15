@@ -11,19 +11,12 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionCollector extends DataCollector implements DataCollectorInterface, Renderable
 {
-    protected SessionInterface $session;
-
-    public function __construct(SessionInterface $session)
-    {
-        $this->session = $session;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function collect(): array
     {
-        $data = $this->hideMaskedValues($this->session->all());
+        $data = $this->hideMaskedValues(session()->all());
 
         foreach ($data as $key => $value) {
             $data[$key] = is_string($value) ? $value : $this->getDataFormatter()->formatVar($value);
