@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
+use DebugBar\DataCollector\Resettable;
 use Fruitcake\LaravelDebugbar\Support\Explain;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
@@ -17,7 +18,7 @@ use Illuminate\Support\Str;
 /**
  * Collects data about SQL statements executed with PDO
  */
-class QueryCollector extends DataCollector implements Renderable, AssetProvider
+class QueryCollector extends DataCollector implements Renderable, AssetProvider, Resettable
 {
     use HasTimeDataCollector;
 
@@ -368,6 +369,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider
         $this->queries = [];
         $this->queryCount = 0;
         $this->infoStatements = 0 ;
+        $this->transactionEventsCount = 0;
     }
 
     /**

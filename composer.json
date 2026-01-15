@@ -38,7 +38,8 @@
         "laravel/pint": "^1",
         "livewire/livewire": "^3.7|^4",
         "phpstan/phpstan-strict-rules": "^2.0",
-        "shipmonk/phpstan-rules": "^4.3"
+        "shipmonk/phpstan-rules": "^4.3",
+        "laravel/octane": "^2"
     },
     "replace": {
         "barryvdh/laravel-debugbar": "self.version"

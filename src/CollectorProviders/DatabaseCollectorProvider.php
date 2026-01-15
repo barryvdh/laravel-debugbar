@@ -6,6 +6,7 @@ namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use Fruitcake\LaravelDebugbar\DataCollector\QueryCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Database\Events\QueryExecuted;

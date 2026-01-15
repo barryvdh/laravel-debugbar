@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar;
 
-use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
-use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
+use Fruitcake\LaravelDebugbar\Listeners\RebootDebugbar;
+use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
+use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Routing\Router;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Collection;
+use Laravel\Octane\Events\RequestReceived;
+use Laravel\Octane\Events\RequestTerminated;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -56,7 +60,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      * Bootstrap the application events.
      *
      */
-    public function boot(): void
+    public function boot(Dispatcher $events): void
     {
         $configPath = __DIR__ . '/../config/debugbar.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
@@ -66,6 +70,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->registerMiddleware(InjectDebugbar::class);
 
         $this->commands(['command.debugbar.clear']);
+
+        // Reset the debugbar instance on each new Octane request
+        $events->listen(RequestReceived::class, ResetDebugbar::class);
     }
 
     /**
