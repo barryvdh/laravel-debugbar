@@ -19,6 +19,6 @@ class GateCollectorProvider extends AbstractCollectorProvider
             $gateCollector->addBacktraceExcludePaths($options['exclude_paths'] ?? []);
         }
 
-        Gate::after(fn ($user, $ability, $result, $arguments = []) => $gateCollector->addCheck($user, $ability, $result, $arguments)) ;
+        Gate::after(fn($user, $ability, $result, $arguments = []) => $gateCollector->addCheck($user, $ability, $result, $arguments)) ;
     }
 }
