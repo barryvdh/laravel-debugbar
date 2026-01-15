@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fruitcake\LaravelDebugbar\Support\Octane;
 
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
@@ -9,7 +11,6 @@ class ResetDebugbar
     /**
      * Handle the event.
      *
-     * @param  mixed  $event
      */
     public function handle($event): void
     {

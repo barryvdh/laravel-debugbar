@@ -7,7 +7,6 @@ namespace Fruitcake\LaravelDebugbar;
 use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
-use Fruitcake\LaravelDebugbar\Listeners\RebootDebugbar;
 use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Contracts\Http\Kernel;
@@ -15,7 +14,6 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Collection;
 use Laravel\Octane\Events\RequestReceived;
-use Laravel\Octane\Events\RequestTerminated;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
