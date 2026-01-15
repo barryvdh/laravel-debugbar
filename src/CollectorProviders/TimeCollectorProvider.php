@@ -39,8 +39,6 @@ class TimeCollectorProvider extends AbstractCollectorProvider
             );
         }
 
-        $timeCollector->startMeasure('application', 'Application', 'time');
-
         $events->listen(Routing::class, fn() => $timeCollector->startMeasure('Routing'));
         $events->listen(RouteMatched::class, fn() => $timeCollector->stopMeasure('Routing'));
 

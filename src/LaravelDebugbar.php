@@ -150,7 +150,8 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        /** @var Repository $config */
+        $timeStart = microtime(true);
+        $memoryStart = memory_get_usage(false);
         $config = config();
 
         $this->editorTemplate = $config->get('debugbar.editor') ?: $config->get('app.editor');
@@ -190,6 +191,13 @@ class LaravelDebugbar extends DebugBar
         $this->registerCollectors();
 
         $this->booted = true;
+        
+        if ($this->hasCollector('time')) {
+            /** @var \DebugBar\DataCollector\TimeDataCollector $timeCollector */
+            $timeCollector = $this['time'];
+            $timeCollector->addMeasure('Debugbar Load', $timeStart, microtime(true), ['memoryUsage' => memory_get_usage(false) - $memoryStart], 'time');
+            $timeCollector->startMeasure('application', 'Application', 'time');
+        }
     }
 
     protected function registerCollectors(): void
