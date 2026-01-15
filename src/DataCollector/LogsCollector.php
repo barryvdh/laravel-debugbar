@@ -12,24 +12,31 @@ class LogsCollector extends MessagesCollector
 {
     protected $lines = 124;
 
+    protected array $paths = [];
+
     public function __construct(string|array|null $path = null, string $name = 'logs')
     {
         parent::__construct($name);
 
         if (is_array($path) && count($path) > 0) {
-            $paths = $path;
+            $this->paths = $path;
         } elseif (is_string($path)) {
-            $paths = [$path];
+            $this->paths = [$path];
         } else {
-            $paths = [
+            $this->paths = [
                 storage_path('logs/laravel.log'),
                 storage_path('logs/laravel-' . date('Y-m-d') . '.log'), // for daily driver
             ];
         }
+    }
 
-        foreach ($paths as $logPath) {
+    public function collect(): array
+    {
+        foreach ($this->paths as $logPath) {
             $this->getStorageLogs($logPath);
         }
+
+        return parent::collect();
     }
 
     /**

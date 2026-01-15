@@ -8,8 +8,8 @@ use Fruitcake\LaravelDebugbar\DataCollector\RouteCollector;
 
 class RouteCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(RouteCollector $routeCollector, array $options): void
+    public function __invoke(array $options): void
     {
-        $this->addCollector($routeCollector);
+        $this->addCollector(new RouteCollector());
     }
 }

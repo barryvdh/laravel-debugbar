@@ -18,23 +18,11 @@ use Livewire\Mechanisms\HandleComponents\HandleComponents;
 class RouteCollector extends DataCollector implements Renderable
 {
     /**
-     * The router instance.
-     *
-     * @var \Illuminate\Routing\Router
-     */
-    protected $router;
-
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function collect(): array
     {
-        $route = $this->router->current();
+        $route = app(Router::class)->current();
         return $this->getRouteInformation($route);
     }
 
