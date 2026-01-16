@@ -8,7 +8,6 @@ use Closure;
 use Exception;
 use Illuminate\Http\Request;
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Throwable;
 
