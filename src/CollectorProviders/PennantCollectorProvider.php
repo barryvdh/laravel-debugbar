@@ -12,11 +12,9 @@ class PennantCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(Application $app, array $options): void
     {
-        if (class_exists(FeatureManager::class)
-            && $app->bound(FeatureManager::class)
+        if (class_exists(FeatureManager::class) && $app->bound(FeatureManager::class)
         ) {
-            $featureManager = $app->make(FeatureManager::class);
-            $this->addCollector(new PennantCollector($featureManager));
+            $this->addCollector(new PennantCollector());
         }
     }
 }
