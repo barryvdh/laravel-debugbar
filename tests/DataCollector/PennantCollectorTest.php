@@ -59,6 +59,6 @@ class PennantCollectorTest extends TestCase
         $this->assertCount(3, $data);
         $this->assertTrue($data['new-api']);
         $this->assertFalse($data['old-api']);
-        $this->assertEquals('3.x', $data['old-api']);
+        $this->assertEquals('3.x', $data['api-version']);
     }
 }
