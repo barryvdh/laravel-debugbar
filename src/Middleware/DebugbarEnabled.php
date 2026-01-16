@@ -11,17 +11,10 @@ use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 class DebugbarEnabled
 {
     /**
-     * The DebugBar instance
-     *
-     * @var LaravelDebugbar
-     */
-    protected $debugbar;
-
-    /**
      * Create a new middleware instance.
      *
      */
-    public function __construct(LaravelDebugbar $debugbar)
+    public function __construct(protected LaravelDebugbar $debugbar)
     {
         $this->debugbar = $debugbar;
     }
