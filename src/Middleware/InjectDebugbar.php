@@ -8,19 +8,11 @@ use Closure;
 use Exception;
 use Illuminate\Http\Request;
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Throwable;
 
 class InjectDebugbar
 {
-    /**
-     * The App container
-     *
-     * @var Container
-     */
-    protected $container;
-
     /**
      * The DebugBar instance
      *
@@ -39,9 +31,8 @@ class InjectDebugbar
      * Create a new middleware instance.
      *
      */
-    public function __construct(Container $container, LaravelDebugbar $debugbar)
+    public function __construct(LaravelDebugbar $debugbar)
     {
-        $this->container = $container;
         $this->debugbar = $debugbar;
         $this->except = config('debugbar.except') ?: [];
     }
@@ -83,11 +74,11 @@ class InjectDebugbar
      */
     protected function handleException($passable, $e): \Symfony\Component\HttpFoundation\Response
     {
-        if (! $this->container->bound(ExceptionHandler::class) || ! $passable instanceof Request) {
+        if (! app()->bound(ExceptionHandler::class) || ! $passable instanceof Request) {
             throw $e;
         }
 
-        $handler = $this->container->make(ExceptionHandler::class);
+        $handler = app(ExceptionHandler::class);
 
         $handler->report($e);
 

@@ -11,6 +11,6 @@ class LaravelCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(Application $app, array $options): void
     {
-        $this->addCollector(new LaravelCollector($app));
+        $this->addCollector(new LaravelCollector());
     }
 }

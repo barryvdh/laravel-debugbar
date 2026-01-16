@@ -11,7 +11,6 @@ use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\InertiaCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RequestCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\SessionCollectorProvider;
-use Fruitcake\LaravelDebugbar\DataCollector\LaravelCollector;
 use Fruitcake\LaravelDebugbar\CollectorProviders\AuthCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\CacheCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\DatabaseCollectorProvider;
@@ -102,10 +101,9 @@ class LaravelDebugbar extends DebugBar
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
-    public function __construct(\Illuminate\Foundation\Application $app)
+    public function __construct(?\Illuminate\Foundation\Application $app)
     {
-        $this->app = $app;
-        $this->version = $app->version();
+        $this->setApplication($app);
     }
 
     public function setApplication(\Illuminate\Foundation\Application $app): void
@@ -444,7 +442,6 @@ class LaravelDebugbar extends DebugBar
         if (config('debugbar.add_ajax_timing', false)) {
             $this->addServerTimingHeaders($response);
         }
-
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
@@ -672,6 +669,14 @@ class LaravelDebugbar extends DebugBar
         $this->enabled = false;
     }
 
+    public function reset(): void
+    {
+        parent::reset();
+
+        $this->stackedData = [];
+        $this->responseIsModified = false;
+    }
+
     /**
      * Adds a measure
      */
@@ -772,7 +777,7 @@ class LaravelDebugbar extends DebugBar
      */
     public function checkVersion(string $version, string $operator = ">="): bool
     {
-        return version_compare($this->version, $version, $operator);
+        return version_compare($this->app->version(), $version, $operator);
     }
 
     protected function selectStorage(DebugBar $debugbar): void

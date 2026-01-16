@@ -31,7 +31,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             DataFormatterInterface::class,
         );
 
-        $this->app->singleton(LaravelDebugbar::class);
+        $this->app->singleton(LaravelDebugbar::class, function ($app): LaravelDebugbar {
+            return new LaravelDebugbar($app);
+        });
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
 
         $this->app->singleton(SymfonyHttpDriver::class, function ($app): \DebugBar\Bridge\Symfony\SymfonyHttpDriver {
@@ -72,6 +74,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Reset the debugbar instance on each new Octane request
         $events->listen(RequestReceived::class, ResetDebugbar::class);
+
+        // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
+        $this->app->make(LaravelDebugbar::class);
     }
 
     /**

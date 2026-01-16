@@ -9,6 +9,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Events\ResponsePrepared;
+use Laravel\Octane\Events\RequestReceived;
 
 class RequestCollectorProvider extends AbstractCollectorProvider
 {
@@ -35,5 +36,7 @@ class RequestCollectorProvider extends AbstractCollectorProvider
         $this->addCollector($requestCollector);
 
         $events->listen(ResponsePrepared::class, fn(ResponsePrepared $e) => $requestCollector->setResponse($e->response));
+
+        $events->listen(RequestReceived::class, fn(RequestReceived $e) => $requestCollector->setRequest($e->request));
     }
 }
