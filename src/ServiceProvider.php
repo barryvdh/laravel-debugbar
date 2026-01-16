@@ -48,7 +48,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 },
             );
         } else {
-            $this->booted(function(): void {
+            $this->booted(function (): void {
                 $startTime = defined('LARAVEL_START') ? LARAVEL_START : $this->app['request']->server('REQUEST_TIME_FLOAT');
                 if ($startTime) {
                     $this->app->make(LaravelDebugbar::class)->addMeasure('Booting', (float) $startTime);
