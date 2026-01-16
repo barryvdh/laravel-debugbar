@@ -13,29 +13,7 @@ use Throwable;
 
 class InjectDebugbar
 {
-    /**
-     * The DebugBar instance
-     *
-     * @var LaravelDebugbar
-     */
-    protected $debugbar;
-
-    /**
-     * The URIs that should be excluded.
-     *
-     * @var array
-     */
-    protected $except = [];
-
-    /**
-     * Create a new middleware instance.
-     *
-     */
-    public function __construct(LaravelDebugbar $debugbar)
-    {
-        $this->debugbar = $debugbar;
-        $this->except = config('debugbar.except') ?: [];
-    }
+    public function __construct(protected LaravelDebugbar $debugbar) {}
 
     /**
      * Handle an incoming request.
@@ -88,12 +66,12 @@ class InjectDebugbar
     /**
      * Determine if the request has a URI that should be ignored.
      *
-     * @param \Illuminate\Http\Request $request
      *
      */
-    protected function inExceptArray($request): bool
+    protected function inExceptArray(Request $request): bool
     {
-        foreach ($this->except as $except) {
+        $exceptArray = config('debugbar.except') ?: [];
+        foreach ($exceptArray as $except) {
             if ($except !== '/') {
                 $except = trim($except, '/');
             }
