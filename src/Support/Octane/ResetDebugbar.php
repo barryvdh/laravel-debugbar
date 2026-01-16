@@ -15,10 +15,6 @@ class ResetDebugbar
      */
     public function handle(RequestReceived $event): void
     {
-        if (! $event->sandbox->resolved(LaravelDebugbar::class)) {
-            return;
-        }
-
         with($event->sandbox->make(LaravelDebugbar::class), function (LaravelDebugbar $debugbar) use ($event): void {
             $debugbar->setApplication($event->sandbox);
             $debugbar->reset();

@@ -11,19 +11,18 @@ use Illuminate\Support\Str;
 
 class LaravelCollector extends DataCollector implements Renderable
 {
-    public function __construct(protected ApplicationContract $laravel) {}
-
     /**
      * {@inheritDoc}
      */
     public function collect(): array
     {
+        $app = app();
         return [
-            "version" => Str::of($this->laravel->version())->explode('.')->first() . '.x',
+            "version" => Str::of($app->version())->explode('.')->first() . '.x',
             'tooltip' => [
-                'Laravel Version' => $this->laravel->version(),
+                'Laravel Version' => $app->version(),
                 'PHP Version' => phpversion(),
-                'Environment' => $this->laravel->environment(),
+                'Environment' => $app->environment(),
                 'Debug Mode' => config('app.debug') ? 'Enabled' : 'Disabled',
                 'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
                 'Timezone' => config('app.timezone'),

@@ -67,6 +67,9 @@ use Throwable;
  */
 class LaravelDebugbar extends DebugBar
 {
+    /** @var static|null Singleton instance */
+    protected static $instance = null;
+
     /**
      * The Laravel application instance.
      *
@@ -102,15 +105,27 @@ class LaravelDebugbar extends DebugBar
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
-    public function __construct(\Illuminate\Foundation\Application $app)
+    protected function __construct(?\Illuminate\Foundation\Application $app = null)
     {
-        $this->app = $app;
-        $this->version = $app->version();
+        $this->app = $app ?? app();
     }
 
     public function setApplication(\Illuminate\Foundation\Application $app): void
     {
         $this->app = $app;
+    }
+
+    public static function getInstance(?\Illuminate\Foundation\Application $app = null): static
+    {
+        if (!isset(static::$instance)) {
+            static::$instance = new static;
+        }
+
+        if ($app) {
+            static::$instance->setApplication($app);
+        }
+
+        return static::$instance;
     }
 
     /**
@@ -444,7 +459,6 @@ class LaravelDebugbar extends DebugBar
         if (config('debugbar.add_ajax_timing', false)) {
             $this->addServerTimingHeaders($response);
         }
-
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
@@ -672,6 +686,15 @@ class LaravelDebugbar extends DebugBar
         $this->enabled = false;
     }
 
+    public function reset(): void
+    {
+        parent::reset();
+
+        $this->stackedData = [];
+        $this->responseIsModified = false;
+
+    }
+
     /**
      * Adds a measure
      */
@@ -765,14 +788,6 @@ class LaravelDebugbar extends DebugBar
             $collector = $this->getCollector('messages');
             $collector->addMessage($message, $label, $context);
         }
-    }
-
-    /**
-     * Check the version of Laravel
-     */
-    public function checkVersion(string $version, string $operator = ">="): bool
-    {
-        return version_compare($this->version, $version, $operator);
     }
 
     protected function selectStorage(DebugBar $debugbar): void

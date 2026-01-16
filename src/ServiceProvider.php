@@ -31,7 +31,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             DataFormatterInterface::class,
         );
 
-        $this->app->singleton(LaravelDebugbar::class);
+        $this->app->bind(LaravelDebugbar::class, function($app): LaravelDebugbar {
+            return LaravelDebugbar::getInstance($app);
+        });
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
 
         $this->app->singleton(SymfonyHttpDriver::class, function ($app): \DebugBar\Bridge\Symfony\SymfonyHttpDriver {
