@@ -14,9 +14,11 @@ class Debug extends DebugTwigExtension
 {
     public function debug(Environment $env, $context)
     {
-        $app = app();
-        if ($app->bound('debugbar') && $app['debugbar']->hasCollector('messages')) {
-            $this->messagesCollector = $app['debugbar']['messages'];
+        if (!$this->messagesCollector) {
+            $app = app();
+            if ($app->bound('debugbar') && $app['debugbar']->hasCollector('messages')) {
+                $this->messagesCollector = $app['debugbar']['messages'];
+            }
         }
 
         parent::debug($env, $context);
