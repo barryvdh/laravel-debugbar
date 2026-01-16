@@ -691,7 +691,6 @@ class LaravelDebugbar extends DebugBar
 
         $this->stackedData = [];
         $this->responseIsModified = false;
-
     }
 
     /**
@@ -787,6 +786,14 @@ class LaravelDebugbar extends DebugBar
             $collector = $this->getCollector('messages');
             $collector->addMessage($message, $label, $context);
         }
+    }
+
+    /**
+     * Check the version of Laravel
+     */
+    public function checkVersion(string $version, string $operator = ">="): bool
+    {
+        return version_compare($this->app->version(), $version, $operator);
     }
 
     protected function selectStorage(DebugBar $debugbar): void
