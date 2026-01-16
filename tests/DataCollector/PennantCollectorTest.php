@@ -62,10 +62,9 @@ class PennantCollectorTest extends TestCase
         $this->assertInstanceOf(PennantCollector::class, $collector);
         $data = $collector->collect();
 
-        dd($data);
-        $this->assertCount(3, $data['pennant']);
-        $this->assertTrue($data['pennant']['new-api']);
-        $this->assertFalse($data['pennant']['old-api']);
-        $this->assertEquals('3.x', $data['pennant']['old-api']);
+        $this->assertCount(3, $data);
+        $this->assertTrue($data['new-api']);
+        $this->assertFalse($data['old-api']);
+        $this->assertEquals('3.x', $data['old-api']);
     }
 }
