@@ -320,7 +320,7 @@ class LaravelDebugbar extends DebugBar
     public function startMeasure(string $name, ?string $label = null, ?string $collector = null, ?string $group = null): void
     {
         if ($this->hasCollector('time')) {
-            /** @var $time \DebugBar\DataCollector\TimeDataCollector */
+            /** @var \DebugBar\DataCollector\TimeDataCollector $time */
             $time = $this->getCollector('time');
             $time->startMeasure($name, $label, $collector, $group);
         } else {
@@ -670,7 +670,7 @@ class LaravelDebugbar extends DebugBar
     public function addMeasure(string $label, float $start, ?float $end = null, array $params = [], ?string $collector = null, ?string $group = null): void
     {
         if ($this->hasCollector('time')) {
-            /** @var $time \DebugBar\DataCollector\TimeDataCollector */
+            /** @var \DebugBar\DataCollector\TimeDataCollector $time */
             $time = $this->getCollector('time');
             $time->addMeasure($label, $start, $end, $params, $collector, $group);
         } else {
@@ -691,7 +691,7 @@ class LaravelDebugbar extends DebugBar
     public function measure(string $label, \Closure $closure, ?string $collector = null, ?string $group = null): mixed
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector  */
+            /** @var \DebugBar\DataCollector\TimeDataCollector $time */
             $time = $this->getCollector('time');
             $result = $time->measure($label, $closure, $collector, $group);
         } else {
