@@ -69,6 +69,8 @@ class LaravelDebugbar extends DebugBar
 
     protected ?bool $enabled = null;
 
+    protected array $pendingMeasures = [];
+
     /**
      * Laravel default error handler
      *
@@ -117,8 +119,6 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        $timeStart = microtime(true);
-        $memoryStart = memory_get_usage(false);
         $config = $this->app['config'];
 
         $this->editorTemplate = $config->get('debugbar.editor') ?: $config->get('app.editor');
@@ -162,8 +162,15 @@ class LaravelDebugbar extends DebugBar
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector $timeCollector */
             $timeCollector = $this['time'];
-            $timeCollector->addMeasure('Debugbar Load', $timeStart, microtime(true), ['memoryUsage' => memory_get_usage(false) - $memoryStart], 'time');
-            $timeCollector->startMeasure('application', 'Application', 'time');
+
+            foreach ($this->pendingMeasures as $name => $measure) {
+                if (isset($measure['end'])) {
+                    $timeCollector->addMeasure($measure['label'], $measure['start'], $measure['end'], $measure['params'] ?? [], $measure['collector'], $measure['group']);
+                } else {
+                    $timeCollector->startMeasure($name, $measure['label'], $measure['collector'], $measure['group']);
+                }
+            }
+            $this->pendingMeasures = [];
         }
     }
 
@@ -313,9 +320,17 @@ class LaravelDebugbar extends DebugBar
     public function startMeasure(string $name, ?string $label = null, ?string $collector = null, ?string $group = null): void
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector */
+            /** @var \DebugBar\DataCollector\TimeDataCollector $time */
             $time = $this->getCollector('time');
             $time->startMeasure($name, $label, $collector, $group);
+        } else {
+            $this->pendingMeasures[$name] = [
+                'name' => $name,
+                'label' => $label,
+                'collector' => $collector,
+                'group' => $group,
+                'start' => microtime(true),
+            ];
         }
     }
 
@@ -332,6 +347,8 @@ class LaravelDebugbar extends DebugBar
             } catch (Exception $e) {
                 //  $this->addThrowable($e);
             }
+        } elseif (isset($this->pendingMeasures[$name])) {
+            $this->pendingMeasures[$name]['end'] = microtime(true);
         }
     }
 
@@ -644,17 +661,27 @@ class LaravelDebugbar extends DebugBar
 
         $this->stackedData = [];
         $this->responseIsModified = false;
+        $this->pendingMeasures = [];
     }
 
     /**
      * Adds a measure
      */
-    public function addMeasure(string $label, float $start, float $end, array $params = [], ?string $collector = null, ?string $group = null): void
+    public function addMeasure(string $label, float $start, ?float $end = null, array $params = [], ?string $collector = null, ?string $group = null): void
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector */
+            /** @var \DebugBar\DataCollector\TimeDataCollector $time */
             $time = $this->getCollector('time');
             $time->addMeasure($label, $start, $end, $params, $collector, $group);
+        } else {
+            $this->pendingMeasures[] = [
+                'label' => $label,
+                'start' => $start,
+                'end' => $end ?? microtime(true),
+                'params' => $params,
+                'collector' => $collector,
+                'group' => $group,
+            ];
         }
     }
 
@@ -664,7 +691,7 @@ class LaravelDebugbar extends DebugBar
     public function measure(string $label, \Closure $closure, ?string $collector = null, ?string $group = null): mixed
     {
         if ($this->hasCollector('time')) {
-            /** @var \DebugBar\DataCollector\TimeDataCollector  */
+            /** @var \DebugBar\DataCollector\TimeDataCollector $time */
             $time = $this->getCollector('time');
             $result = $time->measure($label, $closure, $collector, $group);
         } else {

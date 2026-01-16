@@ -17,7 +17,7 @@ class TimeCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(Application $app, Request $request, Dispatcher $events, array $options): void
     {
-        $startTime = (float) $request->server('REQUEST_TIME_FLOAT');
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START : (float) $request->server('REQUEST_TIME_FLOAT');
 
         if ($this->hasCollector('time')) {
             /** @var TimeDataCollector $timeCollector */
@@ -29,14 +29,6 @@ class TimeCollectorProvider extends AbstractCollectorProvider
 
         if ($options['memory_usage'] ?? false) {
             $timeCollector->showMemoryUsage();
-        }
-
-        if ($startTime) {
-            $app->booted(
-                function () use ($startTime, $timeCollector): void {
-                    $timeCollector->addMeasure('Booting', $startTime, microtime(true), [], 'time');
-                },
-            );
         }
 
         $events->listen(Routing::class, fn() => $timeCollector->startMeasure('Routing'));
