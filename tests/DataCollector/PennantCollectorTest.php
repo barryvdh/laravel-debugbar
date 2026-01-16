@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 
-use Composer\InstalledVersions;
-use Fruitcake\LaravelDebugbar\DataCollector\LivewireCollector;
 use Fruitcake\LaravelDebugbar\DataCollector\PennantCollector;
 use Fruitcake\LaravelDebugbar\ServiceProvider;
-use Fruitcake\LaravelDebugbar\Tests\DataCollector\Livewire\DummyComponent;
 use Fruitcake\LaravelDebugbar\Tests\TestCase;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Pennant\Feature;
 use Laravel\Pennant\PennantServiceProvider;
-
-use function Orchestra\Testbench\artisan;
-
 
 class PennantCollectorTest extends TestCase
 {
@@ -53,8 +47,8 @@ class PennantCollectorTest extends TestCase
         debugbar()->boot();
 
         Feature::define('new-api', true);
-        Feature::define('old-api', fn () => false);
-        Feature::define('api-version', fn () => '3.x');
+        Feature::define('old-api', fn() => false);
+        Feature::define('api-version', fn() => '3.x');
 
         /** @var \Fruitcake\LaravelDebugbar\DataCollector\GateCollector $collector */
         $collector = debugbar()->getCollector('pennant');
