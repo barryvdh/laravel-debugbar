@@ -11,7 +11,6 @@ use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\InertiaCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RequestCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\SessionCollectorProvider;
-use Fruitcake\LaravelDebugbar\DataCollector\LaravelCollector;
 use Fruitcake\LaravelDebugbar\CollectorProviders\AuthCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\CacheCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\DatabaseCollectorProvider;
@@ -105,7 +104,7 @@ class LaravelDebugbar extends DebugBar
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
-    protected function __construct(?\Illuminate\Foundation\Application $app = null)
+    public function __construct(?\Illuminate\Foundation\Application $app = null)
     {
         $this->app = $app ?? app();
     }
@@ -118,7 +117,7 @@ class LaravelDebugbar extends DebugBar
     public static function getInstance(?\Illuminate\Foundation\Application $app = null): static
     {
         if (!isset(static::$instance)) {
-            static::$instance = new static;
+            static::$instance = new static();
         }
 
         if ($app) {

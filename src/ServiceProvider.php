@@ -31,7 +31,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             DataFormatterInterface::class,
         );
 
-        $this->app->bind(LaravelDebugbar::class, function($app): LaravelDebugbar {
+        $this->app->bind(LaravelDebugbar::class, function ($app): LaravelDebugbar {
             return LaravelDebugbar::getInstance($app);
         });
         $this->app->alias(LaravelDebugbar::class, 'debugbar');

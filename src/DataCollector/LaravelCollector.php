@@ -6,7 +6,6 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Support\Str;
 
 class LaravelCollector extends DataCollector implements Renderable
