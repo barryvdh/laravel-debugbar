@@ -66,9 +66,6 @@ use Throwable;
  */
 class LaravelDebugbar extends DebugBar
 {
-    /** @var static|null Singleton instance */
-    protected static $instance = null;
-
     /**
      * The Laravel application instance.
      *
@@ -104,27 +101,14 @@ class LaravelDebugbar extends DebugBar
     protected bool $responseIsModified = false;
     protected array $stackedData = [];
 
-    public function __construct(?\Illuminate\Foundation\Application $app = null)
+    public function __construct(?\Illuminate\Foundation\Application $app)
     {
-        $this->app = $app ?? app();
+        $this->setApplication($app);
     }
 
     public function setApplication(\Illuminate\Foundation\Application $app): void
     {
         $this->app = $app;
-    }
-
-    public static function getInstance(?\Illuminate\Foundation\Application $app = null): static
-    {
-        if (!isset(static::$instance)) {
-            static::$instance = new static();
-        }
-
-        if ($app) {
-            static::$instance->setApplication($app);
-        }
-
-        return static::$instance;
     }
 
     /**

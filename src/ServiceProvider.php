@@ -74,6 +74,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Reset the debugbar instance on each new Octane request
         $events->listen(RequestReceived::class, ResetDebugbar::class);
+
+        // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
+        $this->app->make(LaravelDebugbar::class);
     }
 
     /**
