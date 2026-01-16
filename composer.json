@@ -40,7 +40,8 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "shipmonk/phpstan-rules": "^4.3",
         "laravel/octane": "^2",
-        "laravel/pennant": "^1"
+        "laravel/pennant": "^1",
+        "php-debugbar/twig-bridge": "^2.0"
     },
     "replace": {
         "barryvdh/laravel-debugbar": "self.version"
