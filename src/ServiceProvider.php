@@ -11,7 +11,6 @@ use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Events\Dispatcher;
-use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Collection;
 use Laravel\Octane\Events\RequestReceived;
@@ -79,13 +78,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Register boot time
         $this->booted(fn() => $debugbar->booted());
-
-        // Fallback for when Middleware is never run, but this cannot write anything to the session
-        $events->listen(RequestHandled::class, function (RequestHandled $event) use ($debugbar): void {
-            if ($debugbar->isEnabled() && !$debugbar->requestIsExcluded()) {
-                $debugbar->modifyResponse($event->request, $event->response);
-            }
-        });
     }
 
     /**
