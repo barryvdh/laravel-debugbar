@@ -19,7 +19,6 @@ use Illuminate\Cache\Events\{CacheEvent,
     KeyWritten,
     RetrievingKey,
     WritingKey};
-use Illuminate\Events\Dispatcher;
 
 class CacheCollector extends TimeDataCollector implements AssetProvider
 {
@@ -45,6 +44,11 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
 
         $this->collectValues = $collectValues;
         $this->memoryMeasure = true;
+    }
+
+    public function getCacheEvents(): array
+    {
+        return $this->classMap;
     }
 
     public function onCacheEvent(CacheEvent $event): void
@@ -87,22 +91,6 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
         unset($params['value']);
 
         return $class . ':' . substr(hash('sha256', json_encode($params)), 0, 12);
-    }
-
-    public function subscribe(Dispatcher $dispatcher): void
-    {
-        foreach (array_keys($this->classMap) as $eventClass) {
-            $dispatcher->listen($eventClass, [$this, 'onCacheEvent']);
-        }
-
-        $startEvents = array_unique(array_filter(array_map(
-            fn($values) => $values[1] ?? null,
-            array_values($this->classMap),
-        )));
-
-        foreach ($startEvents as $eventClass) {
-            $dispatcher->listen($eventClass, [$this, 'onStartCacheEvent']);
-        }
     }
 
     public function collect(): array

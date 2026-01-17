@@ -59,7 +59,7 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
             $events->listen(
                 function (QueryExecuted $query) use ($queryCollector, $options): void {
                     // In case Debugbar is disabled after the listener was attached
-                    if (!$this->debugbar->shouldCollect('db', true)) {
+                    if (!$this->debugbar->shouldCollect('db', true) || !$this->debugbar->isEnabled()) {
                         return;
                     }
 

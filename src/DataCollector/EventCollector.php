@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\TimeDataCollector;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 
 class EventCollector extends TimeDataCollector
 {
-    protected ?Dispatcher $events;
-
     protected array $excludedEvents = [];
 
     protected bool $collectValues = false;
@@ -53,16 +51,10 @@ class EventCollector extends TimeDataCollector
         $params = $data;
 
         if ($this->collectListeners) {
-            $params['listeners'] = $this->events->getListeners($name);
+            $params['listeners'] = Event::getListeners($name);
         }
 
         $this->addMeasure($name, $currentTime, $currentTime, $params, null, $eventClass);
-    }
-
-    public function subscribe(Dispatcher $events): void
-    {
-        $this->events = $events;
-        $events->listen('*', [$this, 'onWildcardEvent']);
     }
 
     public function collect(): array
