@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
-use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use Fruitcake\LaravelDebugbar\DataCollector\ViewCollector;
-use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 
 class ViewsCollectorProvider extends AbstractCollectorProvider
