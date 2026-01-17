@@ -370,6 +370,7 @@ class QueryCollector extends DataCollector implements Renderable, AssetProvider,
         $this->queryCount = 0;
         $this->infoStatements = 0 ;
         $this->transactionEventsCount = 0;
+        $this->reflection = [];
     }
 
     /**
