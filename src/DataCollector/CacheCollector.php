@@ -26,8 +26,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
 
     protected array $eventStarts = [];
 
-    /** @var array */
-    protected $classMap = [
+    protected array $classMap = [
         CacheHit::class => ['hit', RetrievingKey::class],
         CacheMissed::class => ['missed', RetrievingKey::class],
         CacheFlushed::class => ['flushed', CacheFlushing::class],
