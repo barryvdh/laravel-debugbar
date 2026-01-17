@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar\Support\Octane;
 
-use DebugBar\DataCollector\TimeDataCollector;
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use Laravel\Octane\Events\RequestReceived;
 

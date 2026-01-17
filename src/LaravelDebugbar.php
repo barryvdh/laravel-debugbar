@@ -7,7 +7,6 @@ namespace Fruitcake\LaravelDebugbar;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\JavascriptRenderer;
 use DebugBar\Storage\FileStorage;
-use DebugBar\Storage\StorageInterface;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\HttpClientCollectorProvider;
@@ -368,7 +367,7 @@ class LaravelDebugbar extends DebugBar
         try {
             $this->timeCollector->stopMeasure($name);
         } catch (Exception $e) {
-              $this->addThrowable($e);
+            $this->addThrowable($e);
         }
     }
 
@@ -517,7 +516,6 @@ class LaravelDebugbar extends DebugBar
             return false;
         }
 
-        /** @var \Illuminate\Http\Request $request */
         $request ??= $this->app['request'];
 
         $except = array_map(function ($item): string {
