@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\Resettable;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -15,7 +16,7 @@ use Illuminate\Support\Str;
 /**
  * Collector for Laravel's gate checks
  */
-class GateCollector extends MessagesCollector
+class GateCollector extends MessagesCollector implements Resettable
 {
     protected array $reflection = [];
 
@@ -133,5 +134,10 @@ class GateCollector extends MessagesCollector
         }
 
         return null;
+    }
+
+    public function reset(): void
+    {
+        $this->reflection = [];
     }
 }

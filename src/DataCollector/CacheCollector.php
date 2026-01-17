@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\Resettable;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Cache\Events\{CacheEvent,
     CacheFlushed,
@@ -20,7 +21,7 @@ use Illuminate\Cache\Events\{CacheEvent,
     RetrievingKey,
     WritingKey};
 
-class CacheCollector extends TimeDataCollector implements AssetProvider
+class CacheCollector extends TimeDataCollector implements AssetProvider, Resettable
 {
     protected bool $collectValues = false;
 
@@ -98,6 +99,12 @@ class CacheCollector extends TimeDataCollector implements AssetProvider
         $data['nb_measures'] = $data['count'] = count($data['measures']);
 
         return $data;
+    }
+
+    public function reset(): void
+    {
+        parent::reset();
+        $this->eventStarts = [];
     }
 
     public function getName(): string
