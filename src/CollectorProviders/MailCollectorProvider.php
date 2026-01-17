@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use DebugBar\Bridge\Symfony\SymfonyMailCollector;
-use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
@@ -25,9 +24,8 @@ class MailCollectorProvider extends AbstractCollectorProvider
             $mailCollector->showMessageBody();
         }
 
-        if ($this->hasCollector('time') && ($options['timeline'] ?? true)) {
-            /** @var TimeDataCollector $timeCollector */
-            $timeCollector = $this->getCollector('time');
+        if ($options['timeline'] ?? true) {
+            $timeCollector = $this->debugbar->getTimeCollector();
 
             $events->listen(MessageSending::class, fn(MessageSending $e) => $timeCollector->startMeasure('Mail: ' . $e->message->getSubject()));
             $events->listen(MessageSent::class, fn(MessageSent $e) => $timeCollector->stopMeasure('Mail: ' . $e->message->getSubject()));

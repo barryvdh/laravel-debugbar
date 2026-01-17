@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use Fruitcake\LaravelDebugbar\DataCollector\QueryCollector;
-use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Database\Events\QueryExecuted;
@@ -19,9 +18,8 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
     public function __invoke(Dispatcher $events, Router $router, array $options): void
     {
         $queryCollector = new QueryCollector();
-        if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
-            /** @var TimeDataCollector   $timeCollector */
-            $timeCollector = $this->getCollector('time');
+        if ($options['timeline'] ?? false) {
+            $timeCollector = $this->debugbar->getTimeCollector();
             $queryCollector->setTimeDataCollector($timeCollector);
         }
 

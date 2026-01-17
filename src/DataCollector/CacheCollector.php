@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\HasTimeDataCollector;
 use DebugBar\DataCollector\Resettable;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Cache\Events\{CacheEvent,
@@ -23,6 +24,8 @@ use Illuminate\Cache\Events\{CacheEvent,
 
 class CacheCollector extends TimeDataCollector implements AssetProvider, Resettable
 {
+    use HasTimeDataCollector;
+
     protected bool $collectValues = false;
 
     protected array $eventStarts = [];
@@ -70,6 +73,10 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
         $startTime = $this->eventStarts[$startHashKey] ?? $time;
 
         $this->addMeasure($label . "\t" . ($params['key'] ?? ''), $startTime, $time, $params);
+
+        if ($this->hasTimeDataCollector()) {
+            $this->addTimeMeasure('Cache ' . $label . "\t" . ($params['key'] ?? ''), $startTime, $time);
+        }
 
         if (in_array($label, ['hit', 'written'], true)) {
             $measureIndex = array_key_last($this->measures);

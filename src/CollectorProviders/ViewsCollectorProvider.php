@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use Fruitcake\LaravelDebugbar\DataCollector\ViewCollector;
-use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Events\Dispatcher;
 
 class ViewsCollectorProvider extends AbstractCollectorProvider
@@ -18,9 +17,8 @@ class ViewsCollectorProvider extends AbstractCollectorProvider
 
         $viewCollector = new ViewCollector($collectData, $excludePaths, $group);
 
-        if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
-            /** @var TimeDataCollector   $timeCollector */
-            $timeCollector = $this->getCollector('time');
+        if ($options['timeline'] ?? true) {
+            $timeCollector = $this->debugbar->getTimeCollector();
             $viewCollector->setTimeDataCollector($timeCollector);
         }
 

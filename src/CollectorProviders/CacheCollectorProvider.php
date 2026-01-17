@@ -17,6 +17,10 @@ class CacheCollectorProvider extends AbstractCollectorProvider
         $cacheCollector = new CacheCollector($startTime, $collectValues);
         $this->addCollector($cacheCollector);
 
+        if ($options['timeline'] ?? false) {
+            $cacheCollector->setTimeDataCollector($this->debugbar->getTimeCollector());
+        }
+
         $classMap = $cacheCollector->getCacheEvents();
         foreach (array_keys($classMap) as $eventClass) {
             $events->listen($eventClass, function ($event) use ($cacheCollector): void {
