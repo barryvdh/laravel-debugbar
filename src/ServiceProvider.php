@@ -11,7 +11,6 @@ use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Events\Dispatcher;
-use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Collection;
 use Laravel\Octane\Events\RequestReceived;
