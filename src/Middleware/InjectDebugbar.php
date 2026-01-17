@@ -22,7 +22,7 @@ class InjectDebugbar
      */
     public function handle($request, Closure $next): mixed
     {
-        if (!$this->debugbar->isEnabled() || $this->inExceptArray($request)) {
+        if (!$this->debugbar->isEnabled() || $this->debugbar->requestIsExcluded($request)) {
             return $next($request);
         }
 
@@ -61,26 +61,5 @@ class InjectDebugbar
         $handler->report($e);
 
         return $handler->render($passable, $e);
-    }
-
-    /**
-     * Determine if the request has a URI that should be ignored.
-     *
-     *
-     */
-    protected function inExceptArray(Request $request): bool
-    {
-        $exceptArray = config('debugbar.except') ?: [];
-        foreach ($exceptArray as $except) {
-            if ($except !== '/') {
-                $except = trim($except, '/');
-            }
-
-            if ($request->is($except)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
