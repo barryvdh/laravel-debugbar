@@ -22,7 +22,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
             $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
         }
 
-        debugbar()->boot();
+        debugbar()->enable();
 
         /** @var Connection $connection */
         $connection = $this->app['db']->connectUsing(
@@ -52,7 +52,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
 
     public function testCollectsQueriesFromRuntimeConnectionsWithoutConnectUsing()
     {
-        debugbar()->boot();
+        debugbar()->enable();
 
         $this->app['config']->set('database.connections.dynamic-connection', [
             'driver' => 'sqlite',

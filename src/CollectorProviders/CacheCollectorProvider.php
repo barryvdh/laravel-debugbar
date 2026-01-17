@@ -16,6 +16,23 @@ class CacheCollectorProvider extends AbstractCollectorProvider
         $startTime = (float) $request->server('REQUEST_TIME_FLOAT');
         $cacheCollector = new CacheCollector($startTime, $collectValues);
         $this->addCollector($cacheCollector);
-        $cacheCollector->subscribe($events);
+
+        $classMap = $cacheCollector->getCacheEvents();
+        foreach (array_keys($classMap) as $eventClass) {
+            $events->listen($eventClass, [$this, 'onCacheEvent']);
+        }
+
+        $startEvents = array_unique(array_filter(array_map(
+            fn($values) => $values[1] ?? null,
+            array_values($classMap),
+        )));
+
+        foreach ($startEvents as $eventClass) {
+            $events->listen($eventClass, function ($event) use ($cacheCollector): void {
+                if ($this->debugbar->isEnabled()) {
+                    $cacheCollector->onCacheEvent($event);
+                }
+            });
+        }
     }
 }
