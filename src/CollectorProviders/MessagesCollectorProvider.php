@@ -15,6 +15,10 @@ class MessagesCollectorProvider extends AbstractCollectorProvider
             $messageCollector->collectFileTrace(true);
         }
 
+        if ($options['timeline'] ?? true) {
+            $messageCollector->setTimeDataCollector($this->debugbar->getTimeCollector());
+        }
+
         if ($options['capture_dumps'] ?? false) {
             $originalHandler = \Symfony\Component\VarDumper\VarDumper::setHandler(function ($var) use (&$originalHandler, $messageCollector): void {
                 if ($originalHandler) {

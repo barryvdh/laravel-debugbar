@@ -76,6 +76,7 @@ return [
         'messages' => [
             'trace' => env('DEBUGBAR_OPTIONS_MESSAGES_TRACE', true),                  // Trace the origin of the debug message
             'capture_dumps' => env('DEBUGBAR_OPTIONS_MESSAGES_CAPTURE_DUMPS', false), // Capture laravel `dump();` as message
+            'timeline' => env('DEBUGBAR_OPTIONS_MESSAGES_TIMELINE', true),            // Add messages to the timeline
         ],
         'memory' => [
             'reset_peak' => env('DEBUGBAR_OPTIONS_MEMORY_RESET_PEAK', false),       // run memory_reset_peak_usage before collecting
@@ -88,6 +89,7 @@ return [
         ],
         'gate' => [
             'trace' => false,      // Trace the origin of the Gate checks
+            'timeline' => env('DEBUGBAR_OPTIONS_GATE_TIMELINE', false),      // Add mails to the timeline
         ],
         'db' => [
             'with_params'       => env('DEBUGBAR_OPTIONS_WITH_PARAMS', true),   // Render SQL with the parameters substituted
@@ -142,6 +144,7 @@ return [
         ],
         'cache' => [
             'values' => env('DEBUGBAR_OPTIONS_CACHE_VALUES', true), // Collect cache values
+            'timeline' => env('DEBUGBAR_OPTIONS_CACHE_TIMELINE', false),  // Add mails to the timeline
         ],
         'http_client' => [
             'masked' => [],

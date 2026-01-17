@@ -19,6 +19,10 @@ class GateCollectorProvider extends AbstractCollectorProvider
             $gateCollector->addBacktraceExcludePaths($options['exclude_paths'] ?? []);
         }
 
+        if ($options['timeline'] ?? false) {
+            $gateCollector->setTimeDataCollector($this->debugbar->getTimeCollector());
+        }
+
         Gate::after(fn($user, $ability, $result, $arguments = []) => $gateCollector->addCheck($user, $ability, $result, $arguments)) ;
     }
 }

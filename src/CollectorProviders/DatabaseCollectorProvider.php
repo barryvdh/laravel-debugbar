@@ -19,9 +19,8 @@ class DatabaseCollectorProvider extends AbstractCollectorProvider
     public function __invoke(Dispatcher $events, Router $router, array $options): void
     {
         $queryCollector = new QueryCollector();
-        if ($this->hasCollector('time') && ($options['timeline'] ?? false)) {
-            /** @var TimeDataCollector   $timeCollector */
-            $timeCollector = $this->getCollector('time');
+        if ($options['timeline'] ?? false) {
+            $timeCollector = $this->debugbar->getTimeCollector();
             $queryCollector->setTimeDataCollector($timeCollector);
         }
 
