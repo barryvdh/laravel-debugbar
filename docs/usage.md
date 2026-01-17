@@ -76,11 +76,25 @@ $debugbar->addCollector(new DebugBar\DataCollector\MessagesCollector('my_message
 You can enable or disable the debugbar during run time.
 
 ```php
-\Debugbar::enable();
-\Debugbar::disable();
+debugbar()->enable();
+debugbar()->disable();
 ```
 
 NB. Once enabled, the collectors are added (and could produce extra overhead), so if you want to use the debugbar in production, disable in the config and only enable when needed.
+
+## Console
+
+When using Console Commands, you can log data to the Debugbar by manually enabling and collecting the data.
+
+```php
+debugber()->enable();
+
+// Do you work here
+
+debugbar()->collect();
+```
+
+
 
 ## Storage
 

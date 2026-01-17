@@ -598,34 +598,26 @@ class LaravelDebugbar extends DebugBar
                 'utime' => microtime(true),
                 'method' => 'GET',
                 'uri' => '/',
-                'ip' => '0.0.0.0',
+                'ip' => null,
             ],
         ];
 
-        if ($this->app->bound('request')) {
+        if ($this->app->runningInConsole()) {
+            $this->data['__meta']['method'] = 'CLI';
+            $this->data['__meta']['uri'] = isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : '-';
+            $this->data['__meta']['ip'] = $_SERVER['SSH_CLIENT'] ?? null;
+        } elseif ($this->app->bound('request')) {
             /** @var Request $request */
             $request = $this->app['request'];
 
             $this->data['__meta']['method'] = $request->getMethod();
             $this->data['__meta']['uri'] = $request->getRequestUri();
             $this->data['__meta']['ip'] = $request->getClientIp();
-        } elseif ($this->app->runningInConsole()) {
-            $this->data['__meta']['method'] = 'CLI';
         }
 
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
         }
-
-        // Remove all invalid (non UTF-8) characters
-        array_walk_recursive(
-            $this->data,
-            function (&$item): void {
-                if (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
-                    $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
-                }
-            },
-        );
 
         if ($this->storage !== null) {
             $this->storage->save($this->getCurrentRequestId(), $this->data);
@@ -722,47 +714,6 @@ class LaravelDebugbar extends DebugBar
     public function measure(string $label, \Closure $closure, ?string $collector = null, ?string $group = null): mixed
     {
         return $this->timeCollector->measure($label, $closure, $collector, $group);
-    }
-
-    /**
-     * Collect data in a CLI request
-     */
-    public function collectConsole(): ?array
-    {
-        if (!$this->isEnabled()) {
-            return null;
-        }
-
-        $this->data = [
-            '__meta' => [
-                'id' => $this->getCurrentRequestId(),
-                'datetime' => date('Y-m-d H:i:s'),
-                'utime' => microtime(true),
-                'method' => 'CLI',
-                'uri' => isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : null,
-                'ip' => $_SERVER['SSH_CLIENT'] ?? null,
-            ],
-        ];
-
-        foreach ($this->collectors as $name => $collector) {
-            $this->data[$name] = $collector->collect();
-        }
-
-        // Remove all invalid (non UTF-8) characters
-        array_walk_recursive(
-            $this->data,
-            function (&$item): void {
-                if (is_string($item) && !mb_check_encoding($item, 'UTF-8')) {
-                    $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
-                }
-            },
-        );
-
-        if ($this->storage !== null) {
-            $this->storage->save($this->getCurrentRequestId(), $this->data);
-        }
-
-        return $this->data;
     }
 
     /**
