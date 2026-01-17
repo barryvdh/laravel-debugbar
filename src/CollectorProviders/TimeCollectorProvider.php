@@ -17,13 +17,11 @@ class TimeCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(Application $app, Request $request, Dispatcher $events, array $options): void
     {
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : (float) $request->server('REQUEST_TIME_FLOAT');
-
         if ($this->hasCollector('time')) {
             /** @var TimeDataCollector $timeCollector */
             $timeCollector = $this['time'];
         } else {
-            $timeCollector = new TimeDataCollector($startTime);
+            $timeCollector = $this->debugbar->getTimeCollector();
             $this->addCollector($timeCollector);
         }
 

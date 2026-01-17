@@ -10,7 +10,7 @@ class ExceptionsCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(array $options): void
     {
-        $exceptionCollector = new ExceptionsCollector();
+        $exceptionCollector = $this->debugbar->getExceptionsCollector();
         $this->addCollector($exceptionCollector);
         $exceptionCollector->setChainExceptions($options['chain'] ?? true);
     }

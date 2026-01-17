@@ -10,7 +10,7 @@ class MessagesCollectorProvider extends AbstractCollectorProvider
 {
     public function __invoke(array $options): void
     {
-        $messageCollector = new MessagesCollector();
+        $messageCollector = $this->debugbar->getMessagesCollector();
         $this->addCollector($messageCollector);
 
         if ($options['trace'] ?? true) {
