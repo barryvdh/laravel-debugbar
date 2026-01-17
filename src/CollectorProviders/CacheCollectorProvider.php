@@ -19,7 +19,11 @@ class CacheCollectorProvider extends AbstractCollectorProvider
 
         $classMap = $cacheCollector->getCacheEvents();
         foreach (array_keys($classMap) as $eventClass) {
-            $events->listen($eventClass, [$this, 'onCacheEvent']);
+            $events->listen($eventClass, function ($event) use ($cacheCollector): void {
+                if ($this->debugbar->isEnabled()) {
+                    $cacheCollector->onCacheEvent($event);
+                }
+            });
         }
 
         $startEvents = array_unique(array_filter(array_map(
@@ -30,7 +34,7 @@ class CacheCollectorProvider extends AbstractCollectorProvider
         foreach ($startEvents as $eventClass) {
             $events->listen($eventClass, function ($event) use ($cacheCollector): void {
                 if ($this->debugbar->isEnabled()) {
-                    $cacheCollector->onCacheEvent($event);
+                    $cacheCollector->onStartCacheEvent($event);
                 }
             });
         }
