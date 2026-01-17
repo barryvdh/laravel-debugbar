@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\CollectorProviders;
 
 use Fruitcake\LaravelDebugbar\DataCollector\RequestCollector;
-use Illuminate\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Events\ResponsePrepared;
@@ -13,10 +12,10 @@ use Laravel\Octane\Events\RequestReceived;
 
 class RequestCollectorProvider extends AbstractCollectorProvider
 {
-    public function __invoke(Repository $config, Dispatcher $events, Request $request, array $options): void
+    public function __invoke(Dispatcher $events, Request $request, array $options): void
     {
-        $sessionHiddens = (array) $config->get('debugbar.options.session.hiddens', []);
-        $sessionMasked = (array) $config->get('debugbar.options.session.masked', []);
+        $sessionHiddens = (array) config('debugbar.options.session.hiddens', []);
+        $sessionMasked = (array) config('debugbar.options.session.masked', []);
 
         // Legacy hidden values, using array path
         $hiddens = array_map(function ($value): mixed {
