@@ -698,7 +698,9 @@ class LaravelDebugbar extends DebugBar
     public function reset(): void
     {
         parent::reset();
-
+        $this->timeCollector->reset();
+        $this->exceptionsCollector->reset();
+        $this->messagesCollector->reset();
         $this->stackedData = [];
         $this->responseIsModified = false;
     }
