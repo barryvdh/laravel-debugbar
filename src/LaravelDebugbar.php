@@ -148,7 +148,7 @@ class LaravelDebugbar extends DebugBar
             return;
         }
 
-        $config = $this->app['config'];
+        $config = config();
 
         $this->editorTemplate = $config->get('debugbar.editor') ?: $config->get('app.editor');
         $this->remotePathReplacements = $this->getRemoteServerReplacements();
@@ -212,7 +212,7 @@ class LaravelDebugbar extends DebugBar
         ]);
 
         // Register any Custom Collectors
-        $this->registerCustomCollectorProviders($this->app['config']->get('debugbar.custom_collectors', []));
+        $this->registerCustomCollectorProviders(config('debugbar.custom_collectors', []));
     }
 
     /**
@@ -295,7 +295,7 @@ class LaravelDebugbar extends DebugBar
 
         $renderer = new JavascriptRenderer($this, $baseUrl, $basePath);
 
-        $config = $this->app['config'];
+        $config = config();
         $renderer->setHideEmptyTabs($config->get('debugbar.hide_empty_tabs', true));
         $renderer->setIncludeVendors($config->get('debugbar.include_vendors', true));
         $renderer->setBindAjaxHandlerToFetch($config->get('debugbar.capture_ajax', true));
@@ -320,7 +320,7 @@ class LaravelDebugbar extends DebugBar
 
     public function shouldCollect(string $name, bool $default = true): bool
     {
-        return $this->app['config']->get('debugbar.collectors.' . $name, $default);
+        return config('debugbar.collectors.' . $name, $default);
     }
 
     /**
@@ -497,10 +497,10 @@ class LaravelDebugbar extends DebugBar
     public function isEnabled(): bool
     {
         if ($this->enabled === null) {
-            $configEnabled = value($this->app['config']->get('debugbar.enabled'));
+            $configEnabled = value(config('debugbar.enabled'));
 
             if ($configEnabled === null) {
-                $configEnabled = $this->app['config']->get('app.debug');
+                $configEnabled = config('app.debug');
             }
 
             $this->enabled = $configEnabled && !$this->app->runningInConsole() && !$this->app->environment('testing');
@@ -511,7 +511,7 @@ class LaravelDebugbar extends DebugBar
 
     public function requestIsExcluded(?Request $request = null): bool
     {
-        $except = $this->app['config']->get('debugbar.except') ?: [];
+        $except = config('debugbar.except') ?: [];
         if (!$except) {
             return false;
         }
@@ -531,7 +531,7 @@ class LaravelDebugbar extends DebugBar
     protected function isDebugbarRequest(?Request $request = null): bool
     {
         $request ??= $this->app['request'];
-        return $request->is($this->app['config']->get('debugbar.route_prefix') . '*');
+        return $request->is(config('debugbar.route_prefix') . '*');
     }
 
     protected function isJsonRequest(Request $request, SymfonyResponse $response): bool
@@ -794,7 +794,7 @@ class LaravelDebugbar extends DebugBar
     protected function selectStorage(DebugBar $debugbar): void
     {
         /** @var Repository $config */
-        $config = $this->app['config'];
+        $config = config();
         if ($config->get('debugbar.storage.enabled')) {
             $driver = strtolower($config->get('debugbar.storage.driver', 'file'));
 
@@ -838,7 +838,7 @@ class LaravelDebugbar extends DebugBar
 
     protected function addClockworkHeaders(SymfonyResponse $response): void
     {
-        $prefix = $this->app['config']->get('debugbar.route_prefix');
+        $prefix = config('debugbar.route_prefix');
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
         $response->headers->set('X-Clockwork-Version', "9", true);
         $response->headers->set('X-Clockwork-Path', $prefix . '/clockwork/', true);
@@ -865,8 +865,8 @@ class LaravelDebugbar extends DebugBar
 
     private function getRemoteServerReplacements(): array
     {
-        $localPath = $this->app['config']->get('debugbar.local_sites_path') ?: base_path();
-        $remotePaths = array_filter(explode(',', $this->app['config']->get('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
+        $localPath = config('debugbar.local_sites_path') ?: base_path();
+        $remotePaths = array_filter(explode(',', config('debugbar.remote_sites_path') ?: '')) ?: [base_path()];
 
         return array_fill_keys($remotePaths, $localPath);
     }
