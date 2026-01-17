@@ -79,13 +79,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Register boot time
         $this->booted(fn() => $debugbar->booted());
-
-        // Fallback for when Middleware is never run, but this cannot write anything to the session
-        $events->listen(RequestHandled::class, function (RequestHandled $event) use ($debugbar): void {
-            if ($debugbar->isEnabled() && !$debugbar->requestIsExcluded()) {
-                $debugbar->modifyResponse($event->request, $event->response);
-            }
-        });
     }
 
     /**

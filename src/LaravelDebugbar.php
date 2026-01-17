@@ -91,7 +91,7 @@ class LaravelDebugbar extends DebugBar
     public function __construct(
         protected \Illuminate\Foundation\Application $app
     ) {
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : (float) $app['request']->server('REQUEST_TIME_FLOAT');
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
 
         $this->timeCollector = new TimeDataCollector($startTime);
         $this->messagesCollector = new MessagesCollector();
@@ -173,9 +173,9 @@ class LaravelDebugbar extends DebugBar
 
     public function booted(): void
     {
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : $this->app['request']->server('REQUEST_TIME_FLOAT');
+        $startTime = defined('LARAVEL_START') ? LARAVEL_START : null;
         if ($startTime) {
-            $this->addMeasure('Booting', (float) $startTime, microtime(true));
+            $this->addMeasure('Booting', $startTime, microtime(true));
         }
         $this->startMeasure('application', 'Application', 'time');
     }
@@ -509,14 +509,12 @@ class LaravelDebugbar extends DebugBar
         return $this->enabled;
     }
 
-    public function requestIsExcluded(?Request $request = null): bool
+    public function requestIsExcluded(Request $request): bool
     {
         $except = config('debugbar.except') ?: [];
         if (!$except) {
             return false;
         }
-
-        $request ??= $this->app['request'];
 
         $except = array_map(function ($item): string {
             return $item !== '/' ? trim($item, '/') : $item;
@@ -528,9 +526,8 @@ class LaravelDebugbar extends DebugBar
     /**
      * Check if this is a request to the Debugbar OpenHandler
      */
-    protected function isDebugbarRequest(?Request $request = null): bool
+    protected function isDebugbarRequest(Request $request): bool
     {
-        $request ??= $this->app['request'];
         return $request->is(config('debugbar.route_prefix') . '*');
     }
 
@@ -594,19 +591,27 @@ class LaravelDebugbar extends DebugBar
      */
     public function collect(): array
     {
-        /** @var Request $request */
-        $request = $this->app['request'];
-
         $this->data = [
             '__meta' => [
                 'id' => $this->getCurrentRequestId(),
                 'datetime' => date('Y-m-d H:i:s'),
                 'utime' => microtime(true),
-                'method' => $request->getMethod(),
-                'uri' => $request->getRequestUri(),
-                'ip' => $request->getClientIp(),
+                'method' => 'GET',
+                'uri' => '/',
+                'ip' => '0.0.0.0',
             ],
         ];
+
+        if ($this->app->bound('request')) {
+            /** @var Request $request */
+            $request = $this->app['request'];
+
+            $this->data['__meta']['method'] = $request->getMethod();
+            $this->data['__meta']['uri'] = $request->getRequestUri();
+            $this->data['__meta']['ip'] = $request->getClientIp();
+        } elseif ($this->app->runningInConsole()) {
+            $this->data['__meta']['method'] = 'CLI';
+        }
 
         foreach ($this->collectors as $name => $collector) {
             $this->data[$name] = $collector->collect();
