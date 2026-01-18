@@ -438,14 +438,17 @@ class LaravelDebugbar extends DebugBar
     /**
      * Modify the response and inject the debugbar (or data in headers)
      */
-    public function modifyResponse(SymfonyResponse $response): SymfonyResponse
+    public function modifyResponse(Request $request, SymfonyResponse $response): SymfonyResponse
     {
+        $this->setRequest($request);
+        $this->setResponse($response);
+
         if (
             $this->responseIsModified
             || !$this->booted
             || !$this->isEnabled()
-            || $this->isDebugbarRequest()
-            || $this->requestIsExcluded()
+            || $this->isDebugbarRequest($request)
+            || $this->requestIsExcluded($request)
         ) {
             return $response;
         }
@@ -463,7 +466,7 @@ class LaravelDebugbar extends DebugBar
         // These rely on the Response, so we add them directly here
         if ($config->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
-                $clockworkCollector = new ClockworkCollector($this->request, $response);
+                $clockworkCollector = new ClockworkCollector($request, $response);
                 $this->addCollector($clockworkCollector);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add ClockworkCollector', $e);
@@ -500,7 +503,7 @@ class LaravelDebugbar extends DebugBar
         if (
             $config->get('debugbar.inject', true)
             && str_contains($response->headers->get('Content-Type', 'text/html'), 'html')
-            && !$this->isJsonRequest()
+            && !$this->isJsonRequest($request)
             && !$this->isJsonResponse($response)
             && $response->getContent() !== false
             && in_array($this->request->getRequestFormat(), [null, 'html'], true)
@@ -535,7 +538,7 @@ class LaravelDebugbar extends DebugBar
         return $this->enabled;
     }
 
-    public function requestIsExcluded(): bool
+    public function requestIsExcluded(Request $request): bool
     {
         $except = config('debugbar.except') ?: [];
         if (!$except) {
@@ -546,30 +549,30 @@ class LaravelDebugbar extends DebugBar
             return $item !== '/' ? trim($item, '/') : $item;
         }, $except);
 
-        return $this->request->is($except);
+        return $request->is($except);
     }
 
     /**
      * Check if this is a request to the Debugbar OpenHandler
      */
-    protected function isDebugbarRequest(): bool
+    protected function isDebugbarRequest(Request $request): bool
     {
-        return $this->request->is(config('debugbar.route_prefix') . '*');
+        return $request->is(config('debugbar.route_prefix') . '*');
     }
 
-    protected function isJsonRequest(): bool
+    protected function isJsonRequest(Request $request): bool
     {
         // If XmlHttpRequest, Live or HTMX, return true
         if (
-            $this->request->isXmlHttpRequest()
-            || $this->request->headers->has('X-Livewire')
-            || ($this->request->headers->has('Hx-Request') && $this->request->headers->has('Hx-Target'))
+            $request->isXmlHttpRequest()
+            || $request->headers->has('X-Livewire')
+            || ($request->headers->has('Hx-Request') && $request->headers->has('Hx-Target'))
         ) {
             return true;
         }
 
         // Check if the request wants Json
-        $acceptable = $this->request->getAcceptableContentTypes();
+        $acceptable = $request->getAcceptableContentTypes();
         if (isset($acceptable[0]) && in_array($acceptable[0], ['application/json', 'application/javascript'], true)) {
             return true;
         }
@@ -690,6 +693,7 @@ class LaravelDebugbar extends DebugBar
         $this->exceptionsCollector->reset();
         $this->messagesCollector->reset();
         $this->responseIsModified = false;
+        $this->setResponse(null);
     }
 
     /**

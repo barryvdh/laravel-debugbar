@@ -70,16 +70,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $debugbar = $this->app->make(LaravelDebugbar::class);
 
         $events->listen(RequestHandled::class, function ($event) use ($debugbar): void {
-            $debugbar->setRequest($event->request);
-            $debugbar->setResponse($event->response);
-            $debugbar->modifyResponse($event->response);
+            $debugbar->modifyResponse($event->request, $event->response);
         });
 
         // Exclude debugbar cookies from encryption
         EncryptCookies::except($debugbar->getStackDataSessionNamespace());
 
         // Attach listeners when debugbar should be enabled
-        if ($debugbar->isEnabled() && !$debugbar->requestIsExcluded()) {
+        if ($debugbar->isEnabled() && !$debugbar->requestIsExcluded($this->app['request'])) {
             $debugbar->boot();
         }
 
