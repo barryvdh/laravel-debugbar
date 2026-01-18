@@ -11,10 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LaravelHttpDriver implements HttpDriverInterface
 {
-
-    public function __construct(protected Request $request, protected ?Response $response = null)
-    {
-    }
+    public function __construct(protected Request $request, protected ?Response $response = null) {}
 
     public function setRequest(Request $request): void
     {
@@ -64,7 +61,7 @@ class LaravelHttpDriver implements HttpDriverInterface
      */
     public function hasSessionValue(string $name): bool
     {
-        $value = $this->request->hasCookie($name);
+        $value = $this->getSessionValue($name);
 
         return !is_null($value);
     }

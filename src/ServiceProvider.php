@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar;
 
-use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
-use Fruitcake\LaravelDebugbar\Middleware\InjectDebugbar;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\Http\Events\RequestHandled;
-use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Collection;
 use Laravel\Octane\Events\RequestReceived;
 
@@ -73,7 +69,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
         $debugbar = $this->app->make(LaravelDebugbar::class);
 
-        $events->listen(RequestHandled::class, function($event) use ($debugbar) {
+        $events->listen(RequestHandled::class, function ($event) use ($debugbar): void {
             $debugbar->setResponse($event->response);
             $debugbar->modifyResponse($event->response);
         });

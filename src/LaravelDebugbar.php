@@ -91,7 +91,8 @@ class LaravelDebugbar extends DebugBar
     protected MessagesCollector $messagesCollector;
     protected ExceptionsCollector $exceptionsCollector;
 
-    public function __construct(Application $app, Request $request) {
+    public function __construct(Application $app, Request $request)
+    {
         $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
 
         $this->app = $app;

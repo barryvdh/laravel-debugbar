@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\Support\Octane;
 
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
-use Fruitcake\LaravelDebugbar\LaravelHttpDriver;
 use Laravel\Octane\Events\RequestReceived;
 
 class ResetDebugbar
