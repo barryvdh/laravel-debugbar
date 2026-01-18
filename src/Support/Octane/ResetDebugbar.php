@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\Support\Octane;
 
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
+use Fruitcake\LaravelDebugbar\LaravelHttpDriver;
 use Laravel\Octane\Events\RequestReceived;
 
 class ResetDebugbar
@@ -21,11 +22,10 @@ class ResetDebugbar
 
         with($event->sandbox->make(LaravelDebugbar::class), function (LaravelDebugbar $debugbar) use ($event): void {
             $debugbar->setApplication($event->sandbox);
+            $debugbar->setRequest($event->request);
+            $debugbar->setResponse(null);
             $debugbar->reset();
 
-            if ($requestStartTime = $event->request->server->get('REQUEST_TIME_FLOAT')) {
-                $debugbar->getTimeCollector()->setRequestStartTime((float) $requestStartTime);
-            }
             $debugbar->startMeasure('application', 'Application', 'time');
         });
     }
