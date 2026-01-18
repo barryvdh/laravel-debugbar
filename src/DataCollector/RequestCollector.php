@@ -24,15 +24,19 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         $this->request = request();
 
         $result = parent::collect();
+        $result['tooltip'] += [
+            'full_url' => Str::limit($this->request->fullUrl(), 100),
+        ];
+
         $htmlData = [];
 
-        $route = null;
-        if ($this->request instanceof \Illuminate\Http\Request) {
-            $route = $this->request->route();
-        }
-
-        if ($route) {
+        $route = $this->request->route();
+        if ($route) {   // @phpstan-ignore-line despite what phpdocs say, this can return null
             $htmlData += $this->getRouteInformation($this->request->route());
+            $result['tooltip'] += [
+                'action_name' => $route->getName(),
+                'controller_action' => $route->getActionName(),
+            ];
         }
 
         if (class_exists(Telescope::class) && class_exists(IncomingEntry::class)) {
@@ -42,19 +46,6 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
             Telescope::$entriesQueue[] = $entry;
             $url = route('debugbar.telescope', [$entry->uuid]);
             $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
-        }
-
-        if ($this->request instanceof \Illuminate\Http\Request) {
-            $result['tooltip'] += [
-                'full_url' => Str::limit($this->request->fullUrl(), 100),
-            ];
-        }
-
-        if ($route) {
-            $result['tooltip'] += [
-                'action_name' => $route->getName(),
-                'controller_action' => $route->getActionName(),
-            ];
         }
 
         unset($htmlData['as'], $htmlData['uses']);
