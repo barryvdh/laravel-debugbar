@@ -7,6 +7,7 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 use DebugBar\Bridge\Symfony\SymfonyRequestCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -14,18 +15,14 @@ use Livewire\Mechanisms\HandleComponents\HandleComponents;
 
 class RequestCollector extends SymfonyRequestCollector implements DataCollectorInterface, Renderable
 {
-    protected ?string $currentRequestId = null;
-
-    public function setCurrentRequestId(?string $requestId): void
-    {
-        $this->currentRequestId = $requestId;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function collect(): array
     {
+        // Ensure latest request is available
+        $this->request = request();
+
         $result = parent::collect();
         $htmlData = [];
 
@@ -40,7 +37,7 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
 
         if (class_exists(Telescope::class) && class_exists(IncomingEntry::class)) {
             $entry = IncomingEntry::make([
-                'requestId' => $this->currentRequestId,
+                'requestId' => app(LaravelDebugbar::class)->getCurrentRequestId(),
             ])->type('debugbar');
             Telescope::$entriesQueue[] = $entry;
             $url = route('debugbar.telescope', [$entry->uuid]);
