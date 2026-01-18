@@ -698,6 +698,7 @@ class LaravelDebugbar extends DebugBar
         $this->messagesCollector->reset();
         $this->stackedData = [];
         $this->responseIsModified = false;
+        $this->enabled = null;
     }
 
     /**
