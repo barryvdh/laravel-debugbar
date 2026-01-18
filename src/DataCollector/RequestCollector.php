@@ -7,6 +7,7 @@ namespace Fruitcake\LaravelDebugbar\DataCollector;
 use DebugBar\Bridge\Symfony\SymfonyRequestCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
+use Fruitcake\LaravelDebugbar\LaravelDebugbar;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -14,50 +15,37 @@ use Livewire\Mechanisms\HandleComponents\HandleComponents;
 
 class RequestCollector extends SymfonyRequestCollector implements DataCollectorInterface, Renderable
 {
-    protected ?string $currentRequestId = null;
-
-    public function setCurrentRequestId(?string $requestId): void
-    {
-        $this->currentRequestId = $requestId;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function collect(): array
     {
+        // Ensure latest request is available
+        $this->request = request();
+
         $result = parent::collect();
+        $result['tooltip'] += [
+            'full_url' => Str::limit($this->request->fullUrl(), 100),
+        ];
+
         $htmlData = [];
 
-        $route = null;
-        if ($this->request instanceof \Illuminate\Http\Request) {
-            $route = $this->request->route();
-        }
-
-        if ($route) {
+        $route = $this->request->route();
+        if ($route) {   // @phpstan-ignore-line despite what phpdocs say, this can return null
             $htmlData += $this->getRouteInformation($this->request->route());
-        }
-
-        if (class_exists(Telescope::class) && class_exists(IncomingEntry::class)) {
-            $entry = IncomingEntry::make([
-                'requestId' => $this->currentRequestId,
-            ])->type('debugbar');
-            Telescope::$entriesQueue[] = $entry;
-            $url = route('debugbar.telescope', [$entry->uuid]);
-            $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
-        }
-
-        if ($this->request instanceof \Illuminate\Http\Request) {
-            $result['tooltip'] += [
-                'full_url' => Str::limit($this->request->fullUrl(), 100),
-            ];
-        }
-
-        if ($route) {
             $result['tooltip'] += [
                 'action_name' => $route->getName(),
                 'controller_action' => $route->getActionName(),
             ];
+        }
+
+        if (class_exists(Telescope::class) && class_exists(IncomingEntry::class)) {
+            $entry = IncomingEntry::make([
+                'requestId' => app(LaravelDebugbar::class)->getCurrentRequestId(),
+            ])->type('debugbar');
+            Telescope::$entriesQueue[] = $entry;
+            $url = route('debugbar.telescope', [$entry->uuid]);
+            $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
         }
 
         unset($htmlData['as'], $htmlData['uses']);
