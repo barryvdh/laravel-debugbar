@@ -23,6 +23,10 @@ class ResetDebugbar
             $debugbar->setApplication($event->sandbox);
             $debugbar->reset();
 
+            if ($debugbar->isEnabled() && !$debugbar->requestIsExcluded($event->request)) {
+                $debugbar->boot();
+            }
+
             if ($requestStartTime = $event->request->server->get('REQUEST_TIME_FLOAT')) {
                 $debugbar->getTimeCollector()->setRequestStartTime((float) $requestStartTime);
             }
