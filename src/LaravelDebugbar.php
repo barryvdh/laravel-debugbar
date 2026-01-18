@@ -116,13 +116,6 @@ class LaravelDebugbar extends DebugBar
         if ($httpDriver instanceof LaravelHttpDriver) {
             $httpDriver->setRequest($request);
         }
-
-        if ($this->hasCollector('request')) {
-            $collector = $this->getCollector('request');
-            if ($collector instanceof RequestCollector) {
-                $collector->setRequest($request);
-            }
-        }
     }
 
     public function setResponse(?SymfonyResponse $response): void
