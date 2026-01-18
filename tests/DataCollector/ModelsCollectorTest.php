@@ -26,7 +26,7 @@ class ModelsCollectorTest extends TestCase
         $collector->setKeyMap([]);
         $data = [];
 
-        $this->assertEquals(
+        static::assertEquals(
             ['data' => $data, 'key_map' => [], 'count' => 0, 'is_counter' => true],
             $collector->collect(),
         );
@@ -44,7 +44,7 @@ class ModelsCollectorTest extends TestCase
         ]);
 
         $data[User::class] = ['created' => 2];
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'data' => $data,
                 'count' => 2,
@@ -58,7 +58,7 @@ class ModelsCollectorTest extends TestCase
         $user = User::first();
 
         $data[User::class]['retrieved'] = 1;
-        $this->assertEquals(
+        static::assertEquals(
             ['data' => $data, 'key_map' => [], 'count' => 3, 'is_counter' => true],
             $collector->collect(),
         );
@@ -66,7 +66,7 @@ class ModelsCollectorTest extends TestCase
         $user->update(['name' => 'Jane Doe']);
 
         $data[User::class]['updated'] = 1;
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'data' => $data,
                 'count' => 4,
@@ -79,7 +79,7 @@ class ModelsCollectorTest extends TestCase
         Person::all();
 
         $data[Person::class] = ['retrieved' => 2];
-        $this->assertEquals(
+        static::assertEquals(
             ['data' => $data, 'key_map' => [], 'count' => 6, 'is_counter' => true],
             $collector->collect(),
         );
@@ -87,7 +87,7 @@ class ModelsCollectorTest extends TestCase
         $user->delete();
 
         $data[User::class]['deleted'] = 1;
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'data' => $data,
                 'count' => 7,

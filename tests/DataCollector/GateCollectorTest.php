@@ -35,15 +35,15 @@ class GateCollectorTest extends TestCase
         $user->can('view', $user);
 
         $collect = $collector->collect();
-        $this->assertEquals(2, $collect['count']);
+        static::assertEquals(2, $collect['count']);
 
         $gateError = $collect['messages'][0];
-        $this->assertEquals('error', $gateError['label']);
-        $this->assertEquals(
+        static::assertEquals('error', $gateError['label']);
+        static::assertEquals(
             'view Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)',
             $gateError['message'],
         );
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'ability' => '"view"',
                 'target' => '"Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)"',
@@ -57,12 +57,12 @@ class GateCollectorTest extends TestCase
         );
 
         $gateSuccess = $collect['messages'][1];
-        $this->assertEquals('success', $gateSuccess['label']);
-        $this->assertEquals(
+        static::assertEquals('success', $gateSuccess['label']);
+        static::assertEquals(
             'view Fruitcake\LaravelDebugbar\Tests\Models\User(id=1)',
             $gateSuccess['message'],
         );
-        $this->assertEquals(
+        static::assertEquals(
             $gateSuccess['context'],
             [
                 'ability' => '"view"',

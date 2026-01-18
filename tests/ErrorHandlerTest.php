@@ -56,7 +56,7 @@ class ErrorHandlerTest extends TestCase
         if ($debugbar->hasCollector('messages')) {
             $messages = $debugbar->getCollector('messages')->collect();
             $newCount = count($messages['messages']);
-            $this->assertEquals($initialCount, $newCount, 'Deprecation warning should not be captured when excluded from error_level');
+            static::assertEquals($initialCount, $newCount, 'Deprecation warning should not be captured when excluded from error_level');
         }
 
         // Trigger a warning (not a deprecation) - should be captured
@@ -66,7 +66,7 @@ class ErrorHandlerTest extends TestCase
         if ($debugbar->hasCollector('messages')) {
             $messages = $debugbar->getCollector('messages')->collect();
             $finalCount = count($messages['messages']);
-            $this->assertGreaterThan($initialCount, $finalCount, 'Non-deprecation errors should still be captured');
+            static::assertGreaterThan($initialCount, $finalCount, 'Non-deprecation errors should still be captured');
         }
     }
 }
