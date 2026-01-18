@@ -692,6 +692,7 @@ class LaravelDebugbar extends DebugBar
         $this->timeCollector->reset();
         $this->exceptionsCollector->reset();
         $this->messagesCollector->reset();
+        $this->enabled = null;
         $this->responseIsModified = false;
         $this->setResponse(null);
     }
