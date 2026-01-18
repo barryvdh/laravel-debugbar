@@ -8,7 +8,6 @@ use Fruitcake\LaravelDebugbar\DataCollector\RequestCollector;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Events\ResponsePrepared;
-use Laravel\Octane\Events\RequestReceived;
 
 class RequestCollectorProvider extends AbstractCollectorProvider
 {
@@ -30,12 +29,9 @@ class RequestCollectorProvider extends AbstractCollectorProvider
         $requestCollector = new RequestCollector($request);
         $requestCollector->addMaskedKeys($hiddens);
         $requestCollector->addMaskedKeys($masked);
-        $requestCollector->setCurrentRequestId($this->debugbar->getCurrentRequestId());
 
         $this->addCollector($requestCollector);
 
         $events->listen(ResponsePrepared::class, fn(ResponsePrepared $e) => $requestCollector->setResponse($e->response));
-
-        $events->listen(RequestReceived::class, fn(RequestReceived $e) => $requestCollector->setRequest($e->request));
     }
 }
