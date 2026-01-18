@@ -32,6 +32,7 @@ use Fruitcake\LaravelDebugbar\CollectorProviders\PhpInfoCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RouteCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\TimeCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ViewsCollectorProvider;
+use Fruitcake\LaravelDebugbar\DataCollector\RequestCollector;
 use Fruitcake\LaravelDebugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
@@ -115,6 +116,13 @@ class LaravelDebugbar extends DebugBar
         if ($httpDriver instanceof LaravelHttpDriver) {
             $httpDriver->setRequest($request);
         }
+
+        if ($this->hasCollector('request')) {
+            $collector = $this->getCollector('request');
+            if ($collector instanceof RequestCollector) {
+                $collector->setRequest($request);
+            }
+        }
     }
 
     public function setResponse(?SymfonyResponse $response): void
@@ -124,6 +132,13 @@ class LaravelDebugbar extends DebugBar
         $httpDriver = $this->getHttpDriver();
         if ($httpDriver instanceof LaravelHttpDriver || $httpDriver instanceof SymfonyHttpDriver) {
             $httpDriver->setResponse($response);
+        }
+
+        if ($this->hasCollector('request')) {
+            $collector = $this->getCollector('request');
+            if ($collector instanceof RequestCollector) {
+                $collector->setResponse($response);
+            }
         }
     }
 

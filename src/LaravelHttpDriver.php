@@ -11,10 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LaravelHttpDriver implements HttpDriverInterface
 {
+    protected $cookieValues = [];
+
     public function __construct(protected Request $request, protected ?Response $response = null) {}
 
     public function setRequest(Request $request): void
     {
+        $this->cookieValues = [];
         $this->request = $request;
     }
 
@@ -71,12 +74,18 @@ class LaravelHttpDriver implements HttpDriverInterface
      */
     public function getSessionValue(string $name): mixed
     {
-        $value = $this->request->cookie($name);
-        if (is_null($value)) {
-            return null;
+        if (array_key_exists($name, $this->cookieValues)) {
+            return $this->cookieValues[$name];
         }
 
-        return json_decode($value, true);
+        $value = $this->request->cookie($name);
+        if ($value !== null) {
+            $value = json_decode($value, true);
+        }
+
+        $this->cookieValues[$name] = $value;
+
+        return $value;
     }
 
     /**

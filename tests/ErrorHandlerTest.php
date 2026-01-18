@@ -30,14 +30,15 @@ class ErrorHandlerTest extends TestCase
         // Enable collectors needed for error handling
         $app['config']->set('debugbar.collectors.messages', true);
         $app['config']->set('debugbar.collectors.exceptions', true);
+
+        $app['config']->set('debugbar.error_handler', true);
+        // Exclude deprecation warnings
+        $app['config']->set('debugbar.error_level', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
     }
 
     public function testErrorHandlerRespectsCustomErrorLevel()
     {
         $app = $this->app;
-        $app['config']->set('debugbar.error_handler', true);
-        // Exclude deprecation warnings
-        $app['config']->set('debugbar.error_level', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
         $debugbar = $app->make(LaravelDebugbar::class);
         $debugbar->boot();

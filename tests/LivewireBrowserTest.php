@@ -7,6 +7,7 @@ namespace Fruitcake\LaravelDebugbar\Tests;
 use Fruitcake\LaravelDebugbar\ServiceProvider;
 use Fruitcake\LaravelDebugbar\Tests\DataCollector\Livewire\DummyComponent;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\View;
 use Laravel\Dusk\Browser;
 use Livewire\LivewireServiceProvider;
 
@@ -28,6 +29,8 @@ class LivewireBrowserTest extends BrowserTestCase
         //$app['config']->set('app.debug', true);
         $app['config']->set('debugbar.hide_empty_tabs', false);
         config(['view.paths' => array_merge(config('view.paths'), [__DIR__ . '/resources/views'])]);
+
+        View::addNamespace('layouts', __DIR__ . '/resources/views/layouts');
 
         /** @var Router $router */
         $router = $app['router'];
@@ -56,7 +59,7 @@ class LivewireBrowserTest extends BrowserTestCase
                 ->waitForTextIn('.phpdebugbar-tab[data-collector="livewire"] .phpdebugbar-badge', 1)
                 ->click('.phpdebugbar-tab[data-collector="livewire"]')
                 ->assertSee('1 Livewire component')
-//                ->assertSee('You are #1') // TODO; fix renders
+                ->assertSee('You are #1') // TODO; fix renders
                 ->with('.phpdebugbar-widgets-list-item', function ($queriesPane) {
                     $queriesPane->assertSee('DummyComponent')
                         ->click('.phpdebugbar-widgets-name')
@@ -65,7 +68,7 @@ class LivewireBrowserTest extends BrowserTestCase
                         ->assertSee('MyComponent');
                 })
                 ->click('.phpdebugbar-tab[data-collector="request"]')
-                ->assertSee('Tests\DataCollector\Livewire\DummyComponent');
+                ->waitForText('Tests\DataCollector\Livewire\DummyComponent', 30);
         });
     }
 }
