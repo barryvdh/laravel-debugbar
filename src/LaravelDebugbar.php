@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar;
 
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\JavascriptRenderer;
 use DebugBar\Storage\FileStorage;
@@ -427,24 +428,26 @@ class LaravelDebugbar extends DebugBar
             return $response;
         }
 
-        /** @var Repository $config */
-        $config = config();
+        $config = $this->app->get(Repository::class);
 
         // Prevent duplicate modification
         $this->responseIsModified = true;
-
-        // Show the Http Response Exception in the Debugbar, when available
-        if ($response instanceof Response && isset($response->exception)) {
-            $this->addThrowable($response->exception);
-        }
 
         // These rely on the Response, so we add them directly here
         $httpDriver = $this->getHttpDriver();
         if ($httpDriver instanceof LaravelHttpDriver) {
             $httpDriver->setRequest($request);
             $httpDriver->setResponse($response);
+        } elseif ($httpDriver instanceof SymfonyHttpDriver) {
+            $httpDriver->setResponse($response);
         }
 
+        // Show the Http Response Exception in the Debugbar, when available
+        if ($response instanceof Response && isset($response->exception)) {
+            $this->addThrowable($response->exception);
+        }
+
+        // Update collectors that use the request/response
         if ($this->hasCollector('request')) {
             $collector = $this->getCollector('request');
             if ($collector instanceof RequestCollector) {
@@ -466,6 +469,7 @@ class LaravelDebugbar extends DebugBar
         if ($config->get('debugbar.add_ajax_timing', false)) {
             $this->addServerTimingHeaders($response);
         }
+
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
