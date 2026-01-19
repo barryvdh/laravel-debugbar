@@ -111,34 +111,12 @@ class LaravelDebugbar extends DebugBar
     public function setRequest(Request $request): void
     {
         $this->request = $request;
-
-        $httpDriver = $this->getHttpDriver();
-        if ($httpDriver instanceof LaravelHttpDriver) {
-            $httpDriver->setRequest($request);
-        }
-    }
-
-    public function setResponse(?SymfonyResponse $response): void
-    {
-        $this->response = $response;
-
-        $httpDriver = $this->getHttpDriver();
-        if ($httpDriver instanceof LaravelHttpDriver || $httpDriver instanceof SymfonyHttpDriver) {
-            $httpDriver->setResponse($response);
-        }
-
-        if ($this->hasCollector('request')) {
-            $collector = $this->getCollector('request');
-            if ($collector instanceof RequestCollector) {
-                $collector->setResponse($response);
-            }
-        }
     }
 
     public function getHttpDriver(): HttpDriverInterface
     {
         if ($this->httpDriver === null) {
-            $this->httpDriver = new LaravelHttpDriver($this->request, $this->response);
+            $this->httpDriver = new LaravelHttpDriver($this->request);
         }
 
         return $this->httpDriver;
@@ -438,10 +416,9 @@ class LaravelDebugbar extends DebugBar
     /**
      * Modify the response and inject the debugbar (or data in headers)
      */
-    public function modifyResponse(Request $request, SymfonyResponse $response): SymfonyResponse
+    public function handleResponse(Request $request, SymfonyResponse $response): SymfonyResponse
     {
         $this->setRequest($request);
-        $this->setResponse($response);
 
         if (
             $this->responseIsModified
@@ -453,7 +430,8 @@ class LaravelDebugbar extends DebugBar
             return $response;
         }
 
-        $config = $this->app->get(Repository::class);
+        /** @var Repository $config */
+        $config = config();
 
         // Prevent duplicate modification
         $this->responseIsModified = true;
@@ -464,6 +442,19 @@ class LaravelDebugbar extends DebugBar
         }
 
         // These rely on the Response, so we add them directly here
+        $httpDriver = $this->getHttpDriver();
+        if ($httpDriver instanceof LaravelHttpDriver) {
+            $httpDriver->setRequest($request);
+            $httpDriver->setResponse($response);
+        }
+
+        if ($this->hasCollector('request')) {
+            $collector = $this->getCollector('request');
+            if ($collector instanceof RequestCollector) {
+                $collector->setResponse($response);
+            }
+        }
+
         if ($config->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
                 $clockworkCollector = new ClockworkCollector($request, $response);
@@ -506,7 +497,7 @@ class LaravelDebugbar extends DebugBar
             && !$this->isJsonRequest($request)
             && !$this->isJsonResponse($response)
             && $response->getContent() !== false
-            && in_array($this->request->getRequestFormat(), [null, 'html'], true)
+            && in_array($request->getRequestFormat(), [null, 'html'], true)
         ) {
             try {
                 $this->injectDebugbar($response);
@@ -694,7 +685,7 @@ class LaravelDebugbar extends DebugBar
         $this->messagesCollector->reset();
         $this->enabled = null;
         $this->responseIsModified = false;
-        $this->setResponse(null);
+        $this->httpDriver = null;
     }
 
     /**

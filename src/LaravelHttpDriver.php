@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LaravelHttpDriver implements HttpDriverInterface
 {
-    protected $cookieValues = [];
+    protected array $cookieValues = [];
 
     public function __construct(protected Request $request, protected ?Response $response = null) {}
 

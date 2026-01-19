@@ -31,7 +31,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->singleton(LaravelDebugbar::class);
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
-        $this->app->singleton(LaravelHttpDriver::class);
 
         if ($this->app->runningInConsole()) {
             $this->app->bind(
@@ -70,7 +69,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $debugbar = $this->app->make(LaravelDebugbar::class);
 
         $events->listen(RequestHandled::class, function ($event) use ($debugbar): void {
-            $debugbar->modifyResponse($event->request, $event->response);
+            $debugbar->handleResponse($event->request, $event->response);
         });
 
         // Exclude debugbar cookies from encryption
