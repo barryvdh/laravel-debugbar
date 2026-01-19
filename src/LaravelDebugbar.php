@@ -43,7 +43,6 @@ use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
-use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\Storage\SqliteStorage;
 use Exception;
 use Illuminate\Config\Repository;

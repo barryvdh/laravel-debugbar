@@ -11,13 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LaravelHttpDriver implements HttpDriverInterface
 {
-    protected array $cookieValues = [];
-
     public function __construct(protected Request $request, protected ?Response $response = null) {}
 
     public function setRequest(Request $request): void
     {
-        $this->cookieValues = [];
         $this->request = $request;
     }
 
@@ -49,9 +46,11 @@ class LaravelHttpDriver implements HttpDriverInterface
 
     public function setSessionValue(string $name, mixed $value): void
     {
-        $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($value !== null) {
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
 
-        $cookie = Cookie::make($name, $json, 0);
+        $cookie = Cookie::make($name, $value, 0);
         if ($this->response) {
             $this->response->headers->setCookie($cookie);
         } else {
@@ -64,9 +63,7 @@ class LaravelHttpDriver implements HttpDriverInterface
      */
     public function hasSessionValue(string $name): bool
     {
-        $value = $this->getSessionValue($name);
-
-        return !is_null($value);
+        return $this->request->hasCookie($name);
     }
 
     /**
@@ -74,16 +71,10 @@ class LaravelHttpDriver implements HttpDriverInterface
      */
     public function getSessionValue(string $name): mixed
     {
-        if (array_key_exists($name, $this->cookieValues)) {
-            return $this->cookieValues[$name];
-        }
-
         $value = $this->request->cookie($name);
         if ($value !== null) {
             $value = json_decode($value, true);
         }
-
-        $this->cookieValues[$name] = $value;
 
         return $value;
     }
