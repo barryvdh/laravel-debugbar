@@ -72,8 +72,6 @@ class LaravelDebugbar extends DebugBar
 {
     protected Application $app;
     protected Request $request;
-    protected ?SymfonyResponse $response = null;
-
     protected bool $booted = false;
 
     protected ?bool $enabled = null;
