@@ -21,6 +21,7 @@ class ResetDebugbar
 
         with($event->sandbox->make(LaravelDebugbar::class), function (LaravelDebugbar $debugbar) use ($event): void {
             $debugbar->setApplication($event->sandbox);
+            $debugbar->setRequest($event->request);
             $debugbar->reset();
 
             if ($debugbar->isEnabled() && !$debugbar->requestIsExcluded($event->request)) {

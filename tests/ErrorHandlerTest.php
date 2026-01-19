@@ -30,14 +30,15 @@ class ErrorHandlerTest extends TestCase
         // Enable collectors needed for error handling
         $app['config']->set('debugbar.collectors.messages', true);
         $app['config']->set('debugbar.collectors.exceptions', true);
+
+        $app['config']->set('debugbar.error_handler', true);
+        // Exclude deprecation warnings
+        $app['config']->set('debugbar.error_level', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
     }
 
     public function testErrorHandlerRespectsCustomErrorLevel()
     {
         $app = $this->app;
-        $app['config']->set('debugbar.error_handler', true);
-        // Exclude deprecation warnings
-        $app['config']->set('debugbar.error_level', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
         $debugbar = $app->make(LaravelDebugbar::class);
         $debugbar->boot();
@@ -55,7 +56,7 @@ class ErrorHandlerTest extends TestCase
         if ($debugbar->hasCollector('messages')) {
             $messages = $debugbar->getCollector('messages')->collect();
             $newCount = count($messages['messages']);
-            $this->assertEquals($initialCount, $newCount, 'Deprecation warning should not be captured when excluded from error_level');
+            static::assertEquals($initialCount, $newCount, 'Deprecation warning should not be captured when excluded from error_level');
         }
 
         // Trigger a warning (not a deprecation) - should be captured
@@ -65,7 +66,7 @@ class ErrorHandlerTest extends TestCase
         if ($debugbar->hasCollector('messages')) {
             $messages = $debugbar->getCollector('messages')->collect();
             $finalCount = count($messages['messages']);
-            $this->assertGreaterThan($initialCount, $finalCount, 'Non-deprecation errors should still be captured');
+            static::assertGreaterThan($initialCount, $finalCount, 'Non-deprecation errors should still be captured');
         }
     }
 }

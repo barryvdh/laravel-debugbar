@@ -39,7 +39,7 @@ class JobsCollectorTest extends TestCase
         $collector->setKeyMap([]);
         $data = [];
 
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'data' => $data,
                 'count' => 0,
@@ -52,7 +52,7 @@ class JobsCollectorTest extends TestCase
         OrderShipped::dispatch(1);
 
         $data[OrderShipped::class] = ['value' => 1];
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'data' => $data,
                 'count' => 1,
@@ -67,7 +67,7 @@ class JobsCollectorTest extends TestCase
         dispatch(new SendNotification());
 
         $data[SendNotification::class] = ['value' => 3];
-        $this->assertEquals(
+        static::assertEquals(
             [
                 'data' => $data,
                 'count' => 4,

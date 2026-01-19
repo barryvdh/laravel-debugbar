@@ -29,10 +29,10 @@ class RouteCollectorTest extends TestCase
     public function testItCollectsRouteUri()
     {
         $this->get('web/html');
-        $this->assertSame('GET web/html', $this->routeCollector->collect()['uri']);
+        static::assertSame('GET web/html', $this->routeCollector->collect()['uri']);
 
         $this->call('POST', 'web/mw');
-        $this->assertSame('POST web/mw', $this->routeCollector->collect()['uri']);
+        static::assertSame('POST web/mw', $this->routeCollector->collect()['uri']);
     }
 
     /**
@@ -44,13 +44,13 @@ class RouteCollectorTest extends TestCase
 
         $collected = $this->routeCollector->collect();
 
-        $this->assertNotEmpty($collected);
-        $this->assertArrayHasKey('file', $collected);
-        $this->assertArrayHasKey('controller', $collected);
-        $this->assertStringContainsString($file, $collected['file']['value']);
-        $this->assertStringContainsString($url, $collected['file']['xdebug_link']['url']);
-        $this->assertStringContainsString($controller, $collected['controller']['value']);
-        $this->assertStringContainsString($url, $collected['controller']['xdebug_link']['url']);
+        static::assertNotEmpty($collected);
+        static::assertArrayHasKey('file', $collected);
+        static::assertArrayHasKey('controller', $collected);
+        static::assertStringContainsString($file, $collected['file']['value']);
+        static::assertStringContainsString($url, $collected['file']['xdebug_link']['url']);
+        static::assertStringContainsString($controller, $collected['controller']['value']);
+        static::assertStringContainsString($url, $collected['controller']['xdebug_link']['url']);
     }
 
     /**
@@ -62,10 +62,10 @@ class RouteCollectorTest extends TestCase
 
         $collected = $this->routeCollector->collect();
 
-        $this->assertStringContainsString($file, $collected['file']['value']);
-        $this->assertStringContainsString($url, $collected['file']['xdebug_link']['url']);
-        $this->assertStringContainsString($controller, $collected['controller']['value']);
-        $this->assertStringContainsString($url, $collected['controller']['xdebug_link']['url']);
+        static::assertStringContainsString($file, $collected['file']['value']);
+        static::assertStringContainsString($url, $collected['file']['xdebug_link']['url']);
+        static::assertStringContainsString($controller, $collected['controller']['value']);
+        static::assertStringContainsString($url, $collected['controller']['xdebug_link']['url']);
     }
 
     /**
@@ -77,11 +77,11 @@ class RouteCollectorTest extends TestCase
 
         $collected = $this->routeCollector->collect();
 
-        $this->assertNotEmpty($collected);
-        $this->assertArrayHasKey('uses', $collected);
-        $this->assertArrayHasKey('file', $collected);
-        $this->assertStringContainsString('Closure', $collected['uses']);
-        $this->assertStringContainsString($file, $collected['file']['value']);
+        static::assertNotEmpty($collected);
+        static::assertArrayHasKey('uses', $collected);
+        static::assertArrayHasKey('file', $collected);
+        static::assertStringContainsString('Closure', $collected['uses']);
+        static::assertStringContainsString($file, $collected['file']['value']);
     }
 
     public function testItCollectsMiddleware()
@@ -90,9 +90,9 @@ class RouteCollectorTest extends TestCase
 
         $collected = $this->routeCollector->collect();
 
-        $this->assertNotEmpty($collected);
-        $this->assertArrayHasKey('middleware', $collected);
-        $this->assertStringContainsString('MockMiddleware', $collected['middleware']);
+        static::assertNotEmpty($collected);
+        static::assertArrayHasKey('middleware', $collected);
+        static::assertStringContainsString('MockMiddleware', $collected['middleware']);
     }
 
     public static function controllerData()

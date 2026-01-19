@@ -32,54 +32,54 @@ class DebugbarTest extends TestCase
     {
         $crawler = $this->call('GET', 'web/plain');
 
-        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItInjectsOnEmptyResponse()
     {
         $crawler = $this->call('GET', 'web/empty');
 
-        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItInjectsOnNullyResponse()
     {
         $crawler = $this->call('GET', 'web/null');
 
-        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItInjectsOnHtml()
     {
         $crawler = $this->call('GET', 'web/html');
 
-        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItDoesntInjectOnJson()
     {
         $crawler = $this->call('GET', 'api/ping');
 
-        $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertFalse(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItDoesntInjectOnJsonLookingString()
     {
         $crawler = $this->call('GET', 'web/fakejson');
 
-        $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertFalse(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItDoesntInjectsOnHxRequestWithHxTarget()
@@ -89,9 +89,9 @@ class DebugbarTest extends TestCase
             'Hx-Target' => 'main',
         ]);
 
-        $this->assertFalse(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertFalse(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 
     public function testItInjectsOnHxRequestWithoutHxTarget()
@@ -100,8 +100,8 @@ class DebugbarTest extends TestCase
             'Hx-Request' => 'true',
         ]);
 
-        $this->assertTrue(Str::contains($crawler->content(), 'debugbar'));
-        $this->assertEquals(200, $crawler->getStatusCode());
-        $this->assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
+        static::assertTrue(Str::contains($crawler->content(), 'debugbar'));
+        static::assertEquals(200, $crawler->getStatusCode());
+        static::assertNotEmpty($crawler->headers->get('phpdebugbar-id'));
     }
 }
