@@ -84,14 +84,11 @@ NB. Once enabled, the collectors are added (and could produce extra overhead), s
 
 ## Console
 
-When using Console Commands, you can log data to the Debugbar by manually enabling and collecting the data.
+When using Console Commands, you can log data to the Debugbar by manually enabling the debugbar. You can then view the data by browsing the Debugbar requests in the UI.
 
 ```php
 debugber()->enable();
 
-// Do you work here
-
-debugbar()->collect();
 ```
 
 
