@@ -7,7 +7,6 @@ namespace Fruitcake\LaravelDebugbar\Tests;
 use Fruitcake\LaravelDebugbar\ServiceProvider;
 use Fruitcake\LaravelDebugbar\Tests\DataCollector\Livewire\DummyComponent;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\View;
 use Laravel\Dusk\Browser;
 use Livewire\Livewire;
 use Livewire\LivewireServiceProvider;
@@ -34,7 +33,7 @@ class LivewireBrowserTest extends BrowserTestCase
         // Set app layout
         config([
             'livewire.layout' => 'layouts.app',    // Livewire 3
-            'livewire.component_layout' => 'layouts.app'   // Livewire 4
+            'livewire.component_layout' => 'layouts.app',   // Livewire 4
         ]);
 
         /** @var Router $router */
@@ -46,7 +45,7 @@ class LivewireBrowserTest extends BrowserTestCase
             'uses' => DummyComponent::class,
         ]);
 
-        $router->get('web/livewire-view', function(){
+        $router->get('web/livewire-view', function () {
             return view('livewire-component');
         });
 
