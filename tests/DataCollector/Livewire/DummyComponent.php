@@ -23,7 +23,7 @@ class DummyComponent extends Component
                 <div>
                     Hello. You are #{{ $counter }}!
                     <br/>
-                    <a wire:click="increment">Increase</a>
+                    <a wire:click="increment" id="increaseLink">Increase</a>
                 </div>
             blade;
     }
