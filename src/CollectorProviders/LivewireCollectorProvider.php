@@ -19,11 +19,7 @@ class LivewireCollectorProvider extends AbstractCollectorProvider
 
             $livewireCollector = new LivewireCollector(true, [], false);
             $this->addCollector($livewireCollector);
-
-            // Livewire 2.x
-            Livewire::listen('view:render', fn(View $view) => $livewireCollector->addLivewire2View($view, $request));
-
-            // Livewire 3.x/4.x
+            
             Livewire::listen('render', fn(Component $component) => $livewireCollector->addLivewireComponent($component, $request));
         }
     }
