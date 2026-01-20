@@ -634,6 +634,13 @@ class LaravelDebugbar extends DebugBar
         return $this->data;
     }
 
+    public function terminate(): void
+    {
+        if ($this->enabled && $this->booted && $this->data === null && !$this->isDebugbarRequest($this->request)) {
+            $this->collect();
+        }
+    }
+
     /**
      * Injects the web debug toolbar into the given Response.
      *

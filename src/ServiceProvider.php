@@ -9,6 +9,7 @@ use DebugBar\DataFormatter\DataFormatterInterface;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Foundation\Events\Terminating;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Support\Collection;
 use Laravel\Octane\Events\RequestReceived;
@@ -68,8 +69,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
         $debugbar = $this->app->make(LaravelDebugbar::class);
 
+        // Handle response
         $events->listen(RequestHandled::class, function ($event) use ($debugbar): void {
             $debugbar->handleResponse($event->request, $event->response);
+        });
+
+        // Store any data collected during termination but not already stored
+        $events->listen(Terminating::class, function ($event) use ($debugbar): void {
+            $debugbar->terminate();
         });
 
         // Exclude debugbar cookies from encryption
