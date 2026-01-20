@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Fruitcake\LaravelDebugbar\DataCollector;
 
 use DebugBar\DataCollector\TemplateCollector;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -15,25 +14,11 @@ use Livewire\Component;
  */
 class LivewireCollector extends TemplateCollector
 {
-    public function addLivewire2View(View $view, ?Request $request = null): void
-    {
-        $component = $view->getData()['_instance'];
-        $id = $component->id;
-        $data = $component->getPublicPropertiesDefinedBySubClass();
-
-        $this->addLivewireTemplate($component, $id, $data, $request);
-    }
-
     public function addLivewireComponent(Component $component, ?Request $request = null): void
     {
         $id = $component->getId();
         $data = $component->all();
 
-        $this->addLivewireTemplate($component, $id, $data, $request);
-    }
-
-    protected function addLivewireTemplate(Component $component, ?string $id, array $data, ?Request $request = null): void
-    {
         if ((new \ReflectionClass($component))->isAnonymous()) {
             $key = Str::ascii($component->getName()) . ' #' . $id;
         } else {
