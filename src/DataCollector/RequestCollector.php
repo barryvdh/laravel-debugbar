@@ -93,7 +93,6 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
             }
         }
 
-
         return ['data' => $data];
     }
 
