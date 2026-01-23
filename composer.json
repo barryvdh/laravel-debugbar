@@ -41,7 +41,8 @@
         "shipmonk/phpstan-rules": "^4.3",
         "laravel/octane": "^2",
         "laravel/pennant": "^1",
-        "php-debugbar/twig-bridge": "^2.0"
+        "php-debugbar/twig-bridge": "^2.0",
+        "laravel/telescope": "^5.16"
     },
     "replace": {
         "barryvdh/laravel-debugbar": "self.version"
