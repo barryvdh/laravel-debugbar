@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.16.4 - 2026-01-23
+
+- Add new fruitcake namespace to exclude from query backtrace.
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v3.16.3...v3.16.4
+
 ## v4.0-beta.11 - 2026-01-06
 
 ### What's Changed
