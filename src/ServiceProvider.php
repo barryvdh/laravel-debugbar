@@ -6,6 +6,7 @@ namespace Fruitcake\LaravelDebugbar;
 
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
+use Fruitcake\LaravelDebugbar\Console\ClearCommand;
 use Fruitcake\LaravelDebugbar\Support\Octane\ResetDebugbar;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Events\Dispatcher;
@@ -33,15 +34,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->singleton(LaravelDebugbar::class);
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
 
-        if ($this->app->runningInConsole()) {
-            $this->app->bind(
-                'command.debugbar.clear',
-                function ($app): \Fruitcake\LaravelDebugbar\Console\ClearCommand {
-                    return new Console\ClearCommand($app['debugbar']);
-                },
-            );
-        }
-
         Collection::macro('debug', function (): \Illuminate\Support\Collection {
             debug($this);
             return $this;
@@ -58,7 +50,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $configPath = __DIR__ . '/../config/debugbar.php';
             $this->publishes([$configPath => $this->getConfigPath()], 'config');
 
-            $this->commands(['command.debugbar.clear']);
+            $this->commands([ClearCommand::class]);
         }
 
         $this->loadRoutesFrom(__DIR__ . '/debugbar-routes.php');
