@@ -291,8 +291,25 @@ div.phpdebugbar-widgets-sqlqueries button.phpdebugbar-widgets-explain-btn {
     color: #fff;
 }
 
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain {
+    width: 100%;
+}
+
 div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain th {
-    border: 1px solid var(--debugbar-border);
+    border-botton: 1px solid var(--debugbar-border);
+    padding: 0 5px
+}
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain td {
+    color: var(--debugbar-text-muted);
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) table.phpdebugbar-widgets-explain th {
+    background-color: var(--debugbar-background);
+}
+
+ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(odd) table.phpdebugbar-widgets-explain th {
+    background-color: var(--debugbar-background-alt);
 }
 
 div.phpdebugbar-widgets-sqlqueries a.phpdebugbar-widgets-visual-explain:after {
