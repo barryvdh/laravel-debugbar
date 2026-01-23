@@ -117,9 +117,9 @@
             if (stmt.explain) {
                 let table = li.querySelector(`.${csscls('params')}`);
 
-                if (['mariadb', 'mysql'].includes(stmt.explain.driver)) {
+                if (table && ['mariadb', 'mysql'].includes(stmt.explain.driver)) {
                     this.renderDetailExplain(table, 'Performance', stmt, this.explainMysql.bind(this));
-                } else if (stmt.explain.driver === 'pgsql') {
+                } else if (table && stmt.explain.driver === 'pgsql') {
                     this.renderDetailExplain(table, 'Performance', stmt, this.explainPgsql.bind(this));
                 }
 
