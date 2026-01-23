@@ -7,6 +7,7 @@ namespace Fruitcake\LaravelDebugbar;
 use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\JavascriptRenderer;
+use DebugBar\RequestIdGeneratorInterface;
 use DebugBar\Storage\FileStorage;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
@@ -50,6 +51,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -118,6 +120,20 @@ class LaravelDebugbar extends DebugBar
         }
 
         return $this->httpDriver;
+    }
+
+    public function getRequestIdGenerator(): RequestIdGeneratorInterface
+    {
+        if ($this->requestIdGenerator === null) {
+            $this->requestIdGenerator = new class implements RequestIdGeneratorInterface {
+                public function generate(): string
+                {
+                    return (string) Str::ulid();
+                }
+            };
+        }
+
+        return $this->requestIdGenerator;
     }
 
     public function getTimeCollector(): TimeDataCollector
