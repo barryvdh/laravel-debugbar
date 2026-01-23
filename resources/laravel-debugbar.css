@@ -190,6 +190,13 @@ a.phpdebugbar-tab span.phpdebugbar-badge {
     color: var(--debugbar-badge-active-text);
 }
 
+.phpdebugbar-widgets-datasets-switcher-widget .phpdebugbar-widgets-datasets-badge-count  {
+    background: var(--debugbar-red-vivid);
+    color: var(--debugbar-badge-active-text);
+    border-radius: 10px;
+    padding: 0 4px;
+}
+
 .phpdebugbar-widgets-mails ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item .phpdebugbar-widgets-headers {
     border-left: 2px solid var(--debugbar-header);
 }
