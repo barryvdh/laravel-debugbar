@@ -26,4 +26,4 @@ unless you are manually registering the service provider / facade. The packge in
 ### For packages extending Laravel Debugbar
  - modifyResponse has changed to handleResponse, and is now done with a listener instead of middleware
  - the HttpDriver is now session-less, and uses cookies.
- - Octane keeps the LaravelDebugbar state, so has to reset collectors.
+ - Octane keeps the LaravelDebugbar state, so has to reset collectors. You can remove Laravel Debugbar from the flush config.
