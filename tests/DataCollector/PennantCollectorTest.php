@@ -53,12 +53,12 @@ class PennantCollectorTest extends TestCase
         /** @var \Fruitcake\LaravelDebugbar\DataCollector\GateCollector $collector */
         $collector = debugbar()->getCollector('pennant');
 
-        $this->assertInstanceOf(PennantCollector::class, $collector);
+        static::assertInstanceOf(PennantCollector::class, $collector);
         $data = $collector->collect();
 
-        $this->assertCount(3, $data);
-        $this->assertTrue($data['new-api']);
-        $this->assertFalse($data['old-api']);
-        $this->assertEquals('3.x', $data['api-version']);
+        static::assertCount(3, $data);
+        static::assertTrue($data['new-api']);
+        static::assertFalse($data['old-api']);
+        static::assertEquals('3.x', $data['api-version']);
     }
 }

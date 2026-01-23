@@ -19,7 +19,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
     public function testCollectsQueriesFromRuntimeConnections()
     {
         if (version_compare($this->app->version(), '10', '<')) {
-            $this->markTestSkipped('This test is not compatible with Laravel 9.x and below');
+            static::markTestSkipped('This test is not compatible with Laravel 9.x and below');
         }
 
         debugbar()->enable();
@@ -38,7 +38,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
         /** @var \Debugbar\DataCollector\ExceptionsCollector $collector */
         $exceptions = debugbar()->getCollector('exceptions');
 
-        self::assertEmpty($exceptions->getExceptions());
+        static::assertEmpty($exceptions->getExceptions());
 
         /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector  = debugbar()->getCollector('queries');
@@ -69,7 +69,7 @@ class QueryCollectorRuntimeDatabaseTest extends TestCase
         /** @var \Debugbar\DataCollector\ExceptionsCollector $collector */
         $exceptions = debugbar()->getCollector('exceptions');
 
-        self::assertEmpty($exceptions->getExceptions());
+        static::assertEmpty($exceptions->getExceptions());
 
         /** @var \Fruitcake\LaravelDebugbar\DataCollector\QueryCollector $collector */
         $collector  = debugbar()->getCollector('queries');

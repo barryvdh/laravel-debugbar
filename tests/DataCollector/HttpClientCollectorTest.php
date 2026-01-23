@@ -28,14 +28,14 @@ class HttpClientCollectorTest extends TestCase
 
         $data = $collector->collect();
 
-        $this->assertEquals(1, $data['nb_requests']);
-        $this->assertCount(1, $data['requests']);
+        static::assertEquals(1, $data['nb_requests']);
+        static::assertCount(1, $data['requests']);
 
         $requestData = $data['requests'][0];
-        $this->assertEquals('GET', $requestData['method']);
-        $this->assertEquals('https://example.com/api/test', $requestData['url']);
-        $this->assertEquals(200, $requestData['status']);
-        $this->assertArrayHasKey('details', $requestData);
+        static::assertEquals('GET', $requestData['method']);
+        static::assertEquals('https://example.com/api/test', $requestData['url']);
+        static::assertEquals(200, $requestData['status']);
+        static::assertArrayHasKey('details', $requestData);
     }
 
     public function testItCollectsConnectionFailedEvents()
@@ -50,18 +50,18 @@ class HttpClientCollectorTest extends TestCase
 
         $data = $collector->collect();
 
-        $this->assertEquals(1, $data['nb_requests']);
-        $this->assertCount(1, $data['requests']);
+        static::assertEquals(1, $data['nb_requests']);
+        static::assertCount(1, $data['requests']);
 
         $requestData = $data['requests'][0];
-        $this->assertEquals('POST', $requestData['method']);
-        $this->assertEquals('https://example.com/api/fail', $requestData['url']);
-        $this->assertNull($requestData['status']);
-        $this->assertArrayHasKey('details', $requestData);
+        static::assertEquals('POST', $requestData['method']);
+        static::assertEquals('https://example.com/api/fail', $requestData['url']);
+        static::assertNull($requestData['status']);
+        static::assertArrayHasKey('details', $requestData);
 
         // Exception is not available in Laravel 10
         if (isset($event->exception)) {
-            $this->assertArrayHasKey('exception', $requestData['details']);
+            static::assertArrayHasKey('exception', $requestData['details']);
         }
     }
 
@@ -85,8 +85,8 @@ class HttpClientCollectorTest extends TestCase
         $data = $collector->collect();
 
         $requestData = $data['requests'][0];
-        $this->assertArrayHasKey('request_headers', $requestData['details']);
-        $this->assertStringNotContainsString('secret-token', $requestData['details']['request_headers']);
+        static::assertArrayHasKey('request_headers', $requestData['details']);
+        static::assertStringNotContainsString('secret-token', $requestData['details']['request_headers']);
     }
 
     public function testItCollectsMultipleEvents()
@@ -108,9 +108,9 @@ class HttpClientCollectorTest extends TestCase
 
         $data = $collector->collect();
 
-        $this->assertEquals(2, $data['nb_requests']);
-        $this->assertCount(2, $data['requests']);
-        $this->assertEquals('GET', $data['requests'][0]['method']);
-        $this->assertEquals('POST', $data['requests'][1]['method']);
+        static::assertEquals(2, $data['nb_requests']);
+        static::assertCount(2, $data['requests']);
+        static::assertEquals('GET', $data['requests'][0]['method']);
+        static::assertEquals('POST', $data['requests'][1]['method']);
     }
 }

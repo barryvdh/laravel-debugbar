@@ -22,3 +22,8 @@ unless you are manually registering the service provider / facade. The packge in
  - The Query Collector now extends the php-debugbar widget. The bindings parameter has been removed in favor of 'params'.
  - Instead of 'hiddens', we now have an option 'masked' which uses the keys, not array paths.
  - Ineratia has its own collector / config. Update your config accordingly.
+
+### For packages extending Laravel Debugbar
+ - modifyResponse has changed to handleResponse, and is now done with a listener instead of middleware
+ - the HttpDriver is now session-less, and uses cookies.
+ - Octane keeps the LaravelDebugbar state, so has to reset collectors.

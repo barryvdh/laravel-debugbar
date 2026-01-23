@@ -23,19 +23,19 @@ class SessionCollectorTest extends TestCase
         );
         $collector->setDataFormatter(new DataFormatter());
 
-        $this->assertEmpty($collector->collect());
+        static::assertEmpty($collector->collect());
 
         $this->withSession(['testVariable' => "1", 'secret' => 'testSecret'])->get('/');
 
         $collected = $collector->collect();
 
-        $this->assertNotEmpty($collected);
-        $this->assertArrayHasKey('secret', $collected);
-        $this->assertArrayHasKey('testVariable', $collected);
-        $this->assertEquals('te***et', $collected['secret']);
-        $this->assertEquals("1", $collected['testVariable']);
+        static::assertNotEmpty($collected);
+        static::assertArrayHasKey('secret', $collected);
+        static::assertArrayHasKey('testVariable', $collected);
+        static::assertEquals('te***et', $collected['secret']);
+        static::assertEquals("1", $collected['testVariable']);
 
         $this->flushSession();
-        $this->assertCount(0, $collector->collect());
+        static::assertCount(0, $collector->collect());
     }
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar;
 
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\JavascriptRenderer;
+use DebugBar\RequestIdGeneratorInterface;
 use DebugBar\Storage\FileStorage;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ConfigCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ExceptionsCollectorProvider;
@@ -32,6 +34,7 @@ use Fruitcake\LaravelDebugbar\CollectorProviders\PhpInfoCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\RouteCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\TimeCollectorProvider;
 use Fruitcake\LaravelDebugbar\CollectorProviders\ViewsCollectorProvider;
+use Fruitcake\LaravelDebugbar\DataCollector\RequestCollector;
 use Fruitcake\LaravelDebugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
@@ -42,12 +45,13 @@ use DebugBar\DebugBar;
 use DebugBar\HttpDriverInterface;
 use DebugBar\Storage\PdoStorage;
 use DebugBar\Storage\RedisStorage;
-use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
 use DebugBar\Storage\SqliteStorage;
 use Exception;
 use Illuminate\Config\Repository;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -69,6 +73,8 @@ use Throwable;
  */
 class LaravelDebugbar extends DebugBar
 {
+    protected Application $app;
+    protected Request $request;
     protected bool $booted = false;
 
     protected ?bool $enabled = null;
@@ -82,34 +88,52 @@ class LaravelDebugbar extends DebugBar
 
     protected ?string $editorTemplate = null;
     protected bool $responseIsModified = false;
-    protected array $stackedData = [];
-
     protected TimeDataCollector $timeCollector;
     protected MessagesCollector $messagesCollector;
     protected ExceptionsCollector $exceptionsCollector;
 
-    public function __construct(
-        protected \Illuminate\Foundation\Application $app
-    ) {
+    public function __construct(Application $app, Request $request)
+    {
         $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
 
+        $this->app = $app;
+        $this->request = $request;
         $this->timeCollector = new TimeDataCollector($startTime);
         $this->messagesCollector = new MessagesCollector();
         $this->exceptionsCollector = new ExceptionsCollector();
     }
 
-    public function setApplication(\Illuminate\Foundation\Application $app): void
+    public function setApplication(Application $app): void
     {
         $this->app = $app;
+    }
+
+    public function setRequest(Request $request): void
+    {
+        $this->request = $request;
     }
 
     public function getHttpDriver(): HttpDriverInterface
     {
         if ($this->httpDriver === null) {
-            $this->httpDriver = $this->app->make(SymfonyHttpDriver::class);
+            $this->httpDriver = new LaravelHttpDriver($this->request);
         }
 
         return $this->httpDriver;
+    }
+
+    public function getRequestIdGenerator(): RequestIdGeneratorInterface
+    {
+        if ($this->requestIdGenerator === null) {
+            $this->requestIdGenerator = new class implements RequestIdGeneratorInterface {
+                public function generate(): string
+                {
+                    return (string) Str::ulid();
+                }
+            };
+        }
+
+        return $this->requestIdGenerator;
     }
 
     public function getTimeCollector(): TimeDataCollector
@@ -406,8 +430,10 @@ class LaravelDebugbar extends DebugBar
     /**
      * Modify the response and inject the debugbar (or data in headers)
      */
-    public function modifyResponse(Request $request, SymfonyResponse $response): SymfonyResponse
+    public function handleResponse(Request $request, SymfonyResponse $response): SymfonyResponse
     {
+        $this->setRequest($request);
+
         if (
             $this->responseIsModified
             || !$this->booted
@@ -423,9 +449,12 @@ class LaravelDebugbar extends DebugBar
         // Prevent duplicate modification
         $this->responseIsModified = true;
 
-        // Set the Response if required
+        // These rely on the Response, so we add them directly here
         $httpDriver = $this->getHttpDriver();
-        if ($httpDriver instanceof SymfonyHttpDriver) {
+        if ($httpDriver instanceof LaravelHttpDriver) {
+            $httpDriver->setRequest($request);
+            $httpDriver->setResponse($response);
+        } elseif ($httpDriver instanceof SymfonyHttpDriver) {
             $httpDriver->setResponse($response);
         }
 
@@ -434,7 +463,14 @@ class LaravelDebugbar extends DebugBar
             $this->addThrowable($response->exception);
         }
 
-        // These rely on the Response, so we add them directly here
+        // Update collectors that use the request/response
+        if ($this->hasCollector('request')) {
+            $collector = $this->getCollector('request');
+            if ($collector instanceof RequestCollector) {
+                $collector->setResponse($response);
+            }
+        }
+
         if ($config->get('debugbar.clockwork') && ! $this->hasCollector('clockwork')) {
             try {
                 $clockworkCollector = new ClockworkCollector($request, $response);
@@ -449,6 +485,7 @@ class LaravelDebugbar extends DebugBar
         if ($config->get('debugbar.add_ajax_timing', false)) {
             $this->addServerTimingHeaders($response);
         }
+
         if ($response->isRedirection()) {
             try {
                 $this->stackData();
@@ -474,10 +511,10 @@ class LaravelDebugbar extends DebugBar
         if (
             $config->get('debugbar.inject', true)
             && str_contains($response->headers->get('Content-Type', 'text/html'), 'html')
-            && !$this->isJsonRequest($request, $response)
+            && !$this->isJsonRequest($request)
+            && !$this->isJsonResponse($response)
             && $response->getContent() !== false
             && in_array($request->getRequestFormat(), [null, 'html'], true)
-            && !$this->isJsonResponse($response)
         ) {
             try {
                 $this->injectDebugbar($response);
@@ -531,7 +568,7 @@ class LaravelDebugbar extends DebugBar
         return $request->is(config('debugbar.route_prefix') . '*');
     }
 
-    protected function isJsonRequest(Request $request, SymfonyResponse $response): bool
+    protected function isJsonRequest(Request $request): bool
     {
         // If XmlHttpRequest, Live or HTMX, return true
         if (
@@ -545,12 +582,6 @@ class LaravelDebugbar extends DebugBar
         // Check if the request wants Json
         $acceptable = $request->getAcceptableContentTypes();
         if (isset($acceptable[0]) && in_array($acceptable[0], ['application/json', 'application/javascript'], true)) {
-            return true;
-        }
-
-        // Check if content looks like JSON without actually validating
-        $content = $response->getContent();
-        if (is_string($content) && strlen($content) > 0 && in_array($content[0], ['{', '['], true)) {
             return true;
         }
 
@@ -596,9 +627,9 @@ class LaravelDebugbar extends DebugBar
                 'id' => $this->getCurrentRequestId(),
                 'datetime' => date('Y-m-d H:i:s'),
                 'utime' => microtime(true),
-                'method' => 'GET',
-                'uri' => '/',
-                'ip' => null,
+                'method' => $this->request->getMethod(),
+                'uri' => $this->request->getRequestUri(),
+                'ip' => $this->request->getClientIp(),
             ],
         ];
 
@@ -606,13 +637,6 @@ class LaravelDebugbar extends DebugBar
             $this->data['__meta']['method'] = 'CLI';
             $this->data['__meta']['uri'] = isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : '-';
             $this->data['__meta']['ip'] = $_SERVER['SSH_CLIENT'] ?? null;
-        } elseif ($this->app->bound('request')) {
-            /** @var Request $request */
-            $request = $this->app['request'];
-
-            $this->data['__meta']['method'] = $request->getMethod();
-            $this->data['__meta']['uri'] = $request->getRequestUri();
-            $this->data['__meta']['ip'] = $request->getClientIp();
         }
 
         foreach ($this->collectors as $name => $collector) {
@@ -624,6 +648,13 @@ class LaravelDebugbar extends DebugBar
         }
 
         return $this->data;
+    }
+
+    public function terminate(): void
+    {
+        if ($this->enabled && $this->booted && $this->data === null && !$this->isDebugbarRequest($this->request)) {
+            $this->collect();
+        }
     }
 
     /**
@@ -663,26 +694,6 @@ class LaravelDebugbar extends DebugBar
     }
 
     /**
-     * Checks if there is stacked data in the session
-     */
-    public function hasStackedData(): bool
-    {
-        return count($this->getStackedData(false)) > 0;
-    }
-
-    /**
-     * Returns the data stacked in the session
-     *
-     * @param bool $delete Whether to delete the data in the session
-     */
-    public function getStackedData(bool $delete = true): array
-    {
-        $this->stackedData = array_merge($this->stackedData, parent::getStackedData($delete));
-
-        return $this->stackedData;
-    }
-
-    /**
      * Disable the Debugbar
      */
     public function disable(): void
@@ -696,8 +707,9 @@ class LaravelDebugbar extends DebugBar
         $this->timeCollector->reset();
         $this->exceptionsCollector->reset();
         $this->messagesCollector->reset();
-        $this->stackedData = [];
+        $this->enabled = null;
         $this->responseIsModified = false;
+        $this->httpDriver = null;
     }
 
     /**

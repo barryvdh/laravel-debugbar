@@ -33,7 +33,7 @@ class LivewireCollectorTest extends TestCase
         /** @var \Fruitcake\LaravelDebugbar\DataCollector\GateCollector $collector */
         $collector = debugbar()->getCollector('livewire');
 
-        $this->assertInstanceOf(LivewireCollector::class, $collector);
+        static::assertInstanceOf(LivewireCollector::class, $collector);
 
         if (version_compare(InstalledVersions::getVersion('livewire/livewire'), '3.0', '<')) {
             $component = new DummyComponent('123');
@@ -48,8 +48,8 @@ class LivewireCollectorTest extends TestCase
 
         $data = $collector->collect();
 
-        $this->assertEquals('Fruitcake\LaravelDebugbar\Tests\DataCollector\Livewire\DummyComponent fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
-        $this->assertStringContainsString('MyComponent', $data['templates'][0]['params']['title']);
+        static::assertEquals('Fruitcake\LaravelDebugbar\Tests\DataCollector\Livewire\DummyComponent fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
+        static::assertStringContainsString('MyComponent', $data['templates'][0]['params']['title']);
     }
 
     public function testItCollectsAnonymousLivewireComponents()
@@ -59,7 +59,7 @@ class LivewireCollectorTest extends TestCase
         /** @var \Fruitcake\LaravelDebugbar\DataCollector\GateCollector $collector */
         $collector = debugbar()->getCollector('livewire');
 
-        $this->assertInstanceOf(LivewireCollector::class, $collector);
+        static::assertInstanceOf(LivewireCollector::class, $collector);
 
         $component = new class extends Component {
             public $title = 'MyComponent';
@@ -78,12 +78,12 @@ class LivewireCollectorTest extends TestCase
         $data = $collector->collect();
 
         if (version_compare(InstalledVersions::getVersion('livewire/livewire'), '3.0', '<')) {
-            $this->assertStringContainsString('livewire.component@anonymous.', $data['templates'][0]['name']);
-            $this->assertStringContainsString('tests.data-collector.livewire-collector-test.php:', $data['templates'][0]['name']);
-            $this->assertStringContainsString(' #123', $data['templates'][0]['name']);
+            static::assertStringContainsString('livewire.component@anonymous.', $data['templates'][0]['name']);
+            static::assertStringContainsString('tests.data-collector.livewire-collector-test.php:', $data['templates'][0]['name']);
+            static::assertStringContainsString(' #123', $data['templates'][0]['name']);
         } else {
-            $this->assertEquals('fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
+            static::assertEquals('fruitcake.laravel-debugbar.tests.data-collector.livewire.dummy-component #123', $data['templates'][0]['name']);
         }
-        $this->assertStringContainsString('MyComponent', $data['templates'][0]['params']['title']);
+        static::assertStringContainsString('MyComponent', $data['templates'][0]['params']['title']);
     }
 }
