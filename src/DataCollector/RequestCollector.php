@@ -8,10 +8,12 @@ use DebugBar\Bridge\Symfony\SymfonyRequestCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Livewire\Mechanisms\HandleComponents\HandleComponents;
+use Symfony\Component\Console\Input\ArgvInput;
 
 class RequestCollector extends SymfonyRequestCollector implements DataCollectorInterface, Renderable
 {
@@ -20,9 +22,11 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
      */
     public function collect(): array
     {
-        // Ensure latest request is available
-        $this->request = request();
+        if (app()->runningInConsole()) {
+            return $this->collectCli();
+        }
 
+        $this->request = request();
         $result = parent::collect();
         $result['tooltip'] += [
             'full_url' => Str::limit($this->request->fullUrl(), 100),
@@ -53,6 +57,43 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
         $result['data'] = $htmlData + $result['data'];
 
         return $result;
+    }
+
+    protected function collectCli(): array
+    {
+        $argv = new ArgvInput();
+        $command = $argv->getFirstArgument();
+        $commands = Artisan::all();
+        $commandClass = $commands[$command] ?? null;
+
+        $data = [
+            'method' => 'CLI',
+            'command' => $command,
+            'command_class' => $commandClass,
+            'args' => (new ArgvInput())->getRawTokens(),
+            'request_server' => $this->request->server->all(),
+        ];
+
+        $data = $this->hideMaskedValues($data);
+        foreach ($data as $key => $var) {
+            if (!is_string($var)) {
+                $data[$key] = $this->getDataFormatter()->formatVar($var);
+            }
+        }
+
+        if ($commandClass) {
+            $reflector = new \ReflectionClass($commandClass);
+            $filename = $this->normalizeFilePath($reflector->getFileName());
+
+            if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
+                $data['command_class'] = [
+                    'value' => sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine()),
+                    'xdebug_link' => $link,
+                ];
+            }
+        }
+
+        return ['data' => $data];
     }
 
     protected function getRouteInformation(mixed $route): array
