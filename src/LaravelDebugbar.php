@@ -52,6 +52,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -635,8 +636,7 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->app->runningInConsole()) {
             $this->data['__meta']['method'] = 'CLI';
-            $this->data['__meta']['uri'] = isset($_SERVER['argv']) ? implode(' ', $_SERVER['argv']) : '-';
-            $this->data['__meta']['ip'] = $_SERVER['SSH_CLIENT'] ?? null;
+            $this->data['__meta']['uri'] = implode(' ', (new ArgvInput())->getRawTokens());
         }
 
         foreach ($this->collectors as $name => $collector) {
