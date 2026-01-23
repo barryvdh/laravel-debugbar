@@ -43,7 +43,7 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
             ];
         }
 
-        if (class_exists(Telescope::class) && class_exists(IncomingEntry::class)) {
+        if (class_exists(Telescope::class) && class_exists(IncomingEntry::class) && Telescope::isRecording()) {
             $entry = IncomingEntry::make([
                 'requestId' => app(LaravelDebugbar::class)->getCurrentRequestId(),
             ])->type('debugbar');
