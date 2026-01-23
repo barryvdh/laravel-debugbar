@@ -300,6 +300,10 @@ div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain th {
     padding: 0 5px
 }
 
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-explain td {
+    color: var(--debugbar-text-muted);
+}
+
 ul.phpdebugbar-widgets-list li.phpdebugbar-widgets-list-item:nth-child(even) table.phpdebugbar-widgets-explain th {
     background-color: var(--debugbar-background);
 }
