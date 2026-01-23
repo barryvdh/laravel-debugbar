@@ -55,11 +55,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/debugbar-routes.php');
 
+        // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
+        try {
+            $debugbar = $this->app->make(LaravelDebugbar::class);
+        } catch (\Throwable $e) {
+            // Errors can occur when removing LaravelDebugbar with composer scripts, when php-debugbar is not installed
+            report($e);
+            return;
+        }
+
         // Reset the debugbar instance on each new Octane request
         $events->listen(RequestReceived::class, ResetDebugbar::class);
-
-        // Resolve the LaravelDebugbar instance during boot to force it to be loaded in the Octane sandbox
-        $debugbar = $this->app->make(LaravelDebugbar::class);
 
         // Handle response
         $events->listen(RequestHandled::class, function ($event) use ($debugbar): void {
