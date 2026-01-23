@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.16.5 - 2026-01-23
+
+### What's Changed
+
+* Tweak ClearCommand for uninstall by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1926
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v3.16.4...v3.16.5
+
 ## v3.16.3 - 2025-12-26
 
 ### What's Changed
