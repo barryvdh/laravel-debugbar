@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Fruitcake\LaravelDebugbar\Controllers;
 
+use DebugBar\Bridge\Symfony\SymfonyHttpDriver;
+use Fruitcake\LaravelDebugbar\LaravelHttpDriver;
 use Fruitcake\LaravelDebugbar\Support\Clockwork\Converter;
 use DebugBar\OpenHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -39,13 +42,10 @@ class OpenHandlerController extends BaseController
         return false;
     }
 
-    public function handle(Request $request): Response
+    public function handle(Request $request): Response|JsonResponse
     {
-        if ($request->input('op') === 'get' || $this->isStorageOpen($request)) {
-            $openHandler = new OpenHandler($this->debugbar);
-            $data = $openHandler->handle($request->input(), false, false);
-        } else {
-            $data = [
+        if ($request->input('op') !== 'get' && !$this->isStorageOpen($request)) {
+            return new JsonResponse([
                 [
                     'datetime' => date("Y-m-d H:i:s"),
                     'id' => null,
@@ -54,16 +54,25 @@ class OpenHandlerController extends BaseController
                     'uri' => '!! To enable public access to previous requests, set debugbar.storage.open to true in your config, or enable DEBUGBAR_OPEN_STORAGE if you did not publish the config. !!',
                     'utime' => microtime(true),
                 ],
-            ];
+            ]);
         }
 
-        return new Response(
-            $data,
-            200,
-            [
-                'Content-Type' => 'application/json',
-            ],
-        );
+        $response = new Response();
+
+        $openHandler = new OpenHandler($this->debugbar);
+        $driver = $this->debugbar->getHttpDriver();
+        if ($driver instanceof LaravelHttpDriver || $driver instanceof SymfonyHttpDriver) {
+            $driver->setResponse($response);
+        }
+
+        $openHandler->handle($request->input());
+
+        // Set ETag and cache headers
+        $response->setEtag(hash('sha256', $response->getContent()));
+        $response->setPrivate();
+        $response->isNotModified($request);
+
+        return $response;
     }
 
     /**
