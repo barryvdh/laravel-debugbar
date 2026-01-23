@@ -1,5 +1,131 @@
 # Changelog
 
+## v4.0.0 - 2026-01-23
+
+### Laravel Debugbar 4.0
+
+### Release notes
+
+See https://fruitcake.nl/blog/laravel-debugbar-v4-release for the biggest changes.
+
+This brings the updates from php-debugbar 3.x to Laravel Debugbar. See https://github.com/php-debugbar/php-debugbar/releases/tag/v3.0.0 for the upstream changes to php-debugbar.
+
+### Updating
+
+The name has changed, so remove the old package first:
+
+`composer remove barryvdh/laravel-debugbar --dev --no-scripts`
+
+Then install the new package
+
+`composer require fruitcake/laravel-debugbar --with-dependencies`
+
+Check the https://github.com/fruitcake/laravel-debugbar/blob/master/UPGRADE.md for any changes.
+
+### All Changes
+
+* Prepare for Debugbar 3.x by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1828
+* Fix 4.x queries by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1832
+* Remove deprecations, tweak default config by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1833
+* Always render widget in footer by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1834
+* Fix null handling quoting in emulateQuote[QueryCollector] by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1835
+* Update workflows / tools, add static analyses, fix some errors by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1836
+* Revert event config by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1837
+* Remove socket storage by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1839
+* Remove Lumen support by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1838
+* Remove icon by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1840
+* Fix phpstan by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1841
+* Remove PDO extension by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1842
+* Extend base sql widget by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1843
+* Fix shell quotes in README by @szepeviktor in https://github.com/fruitcake/laravel-debugbar/pull/1264
+* refactor: improve routes formats by @jbidad in https://github.com/fruitcake/laravel-debugbar/pull/1392
+* remove copy and hints by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1844
+* Check response for avoid inject debugbar on json ajax by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1558
+* Show estimate of cache byte usage by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1764
+* Check string by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1845
+* Use original background by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1847
+* Add DataProviders for easier maintenance by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1846
+* Feat custom collectors by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1848
+* Tweak config by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1849
+* Feat phpdebugbar symfony by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1850
+* Improve Livewire collection and view detection for components by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1853
+* Builds docs from source by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1854
+* Fix default for excluded events by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1856
+* Remove icon overrides by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1857
+* Restore Mail collector timeline by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1858
+* Add HTTP client collector by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1859
+* Add http client to docs by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1860
+* Update JavascriptRenderer for upstream changes by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1861
+* Simplify Asset Renderer by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1862
+* Bring back logs collector by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1863
+* Use message context for gate and logs by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1866
+* Updates tests for new beta by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1867
+* Reduce styling overrides by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1864
+* Use symfony-bridge by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1868
+* Set livewire sentence by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1869
+* Fix timeline by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1871
+* Fix storage by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1872
+* Seperate listeners from data in events by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1873
+* Add casters for heavy objects by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1874
+* Fix tests by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1876
+* TWeak livewire properties by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1877
+* Move namespace to Fruitcake\LaravelDebugbar by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1875
+* Replace old package name by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1878
+* Fix explain option access in DatabaseCollectorProvider by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1879
+* Update .gitattributes by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1881
+* Stricter types by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1884
+* Add docs directory to export-ignore in .gitattributes by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1883
+* Cleanup by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1885
+* Fix docs tests by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1886
+* Fix cache widget by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1887
+* Fix checkVersion accessibility by @angeljqv in https://github.com/fruitcake/laravel-debugbar/pull/1889
+* Check signature by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1888
+* Add Inertia collector by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1890
+* Improve storage scan by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1891
+* Use upstream file storage and request generator by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1892
+* Optimize livewire by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1893
+* Test Livewire 2/3/4 by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1894
+* Reset interfaces on Octane request, use current config by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1895
+* Separate the debugbar from the application load(TimeCollector) by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1896
+* Optimize serviceprovider by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1897
+* Octane singleton by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1898
+* Tweak constructors and config by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1899
+* Tweak pennant by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1900
+* Time octane reset by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1901
+* Tweak booting time by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1902
+* Tweak twig by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1903
+* Always ensure time/exceptions/messages are available, to log before b… by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1904
+* Tweak config values by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1906
+* Tweak subscribers by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1905
+* Remove request instances by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1907
+* Update console collecting by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1908
+* Fix cache events by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1909
+* Tweak handle by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1910
+* Add octane request start by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1911
+* Small reset tweaks by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1912
+* Add some timeline options by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1913
+* Ensure latest request is used by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1915
+* Check if octane needs to enable/disbale by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1917
+* Use cookies instead of session, events instead of middleware by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1914
+* Update tests for Livewire 3 and 4 by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1918
+* collect on terminate by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1919
+* Bump lodash from 4.17.21 to 4.17.23 by @dependabot[bot] in https://github.com/fruitcake/laravel-debugbar/pull/1920
+* Restore ulid requestids by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1921
+* Use openhandler http driver, set etag by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1922
+* Check if params table is set by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1923
+* Fix event data by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1924
+* Update RequestCollector for CLI usage by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1925
+* Tweak ClearCommand for uninstall by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1927
+* Catch resolve errors by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1928
+
+### New Contributors
+
+* @szepeviktor made their first contribution in https://github.com/fruitcake/laravel-debugbar/pull/1264
+* @jbidad made their first contribution in https://github.com/fruitcake/laravel-debugbar/pull/1392
+* @dependabot[bot] made their first contribution in https://github.com/fruitcake/laravel-debugbar/pull/1920
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v3.16.3...v4.0.0
+
 ## v3.16.4 - 2026-01-23
 
 - Add new fruitcake namespace to exclude from query backtrace.
