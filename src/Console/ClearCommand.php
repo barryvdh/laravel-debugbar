@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar\Console;
 
+use Barryvdh\Debugbar\LaravelDebugbar;
 use DebugBar\DebugBar;
 use Illuminate\Console\Command;
 
@@ -9,20 +10,13 @@ class ClearCommand extends Command
 {
     protected $name = 'debugbar:clear';
     protected $description = 'Clear the Debugbar Storage';
-    protected $debugbar;
 
-    public function __construct(DebugBar $debugbar)
+
+    public function handle(LaravelDebugbar $debugbar)
     {
-        $this->debugbar = $debugbar;
+        $debugbar->boot();
 
-        parent::__construct();
-    }
-
-    public function handle()
-    {
-        $this->debugbar->boot();
-
-        if ($storage = $this->debugbar->getStorage()) {
+        if ($storage = $debugbar->getStorage()) {
             try {
                 $storage->clear();
             } catch (\InvalidArgumentException $e) {

@@ -2,6 +2,7 @@
 
 namespace Barryvdh\Debugbar;
 
+use Barryvdh\Debugbar\Console\ClearCommand;
 use Barryvdh\Debugbar\Middleware\InjectDebugbar;
 use DebugBar\DataFormatter\DataFormatter;
 use DebugBar\DataFormatter\DataFormatterInterface;
@@ -41,13 +42,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->alias(LaravelDebugbar::class, 'debugbar');
 
-        $this->app->singleton(
-            'command.debugbar.clear',
-            function ($app) {
-                return new Console\ClearCommand($app['debugbar']);
-            }
-        );
-
         Collection::macro('debug', function () {
             debug($this);
             return $this;
@@ -68,7 +62,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->registerMiddleware(InjectDebugbar::class);
 
-        $this->commands(['command.debugbar.clear']);
+        $this->commands([ClearCommand::class]);
     }
 
     /**
