@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.0.2 - 2026-01-24
+
+### What's Changed
+
+* Fix Auth Collector by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1937
+* Fix session collector by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1938
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v4.0.1...v4.0.2
+
 ## v4.0.1 - 2026-01-24
 
 ### What's Changed
