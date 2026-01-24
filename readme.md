@@ -1,8 +1,8 @@
 ## Debugbar for Laravel
-![Unit Tests](https://github.com/barryvdh/laravel-debugbar/workflows/Unit%20Tests/badge.svg)
+![Unit Tests](https://github.com/fruitcake/laravel-debugbar/workflows/Unit%20Tests/badge.svg)
 [![Packagist License](https://img.shields.io/badge/Licence-MIT-blue)](http://choosealicense.com/licenses/mit/)
-[![Latest Stable Version](https://img.shields.io/packagist/v/barryvdh/laravel-debugbar?label=Stable)](https://packagist.org/packages/barryvdh/laravel-debugbar)
-[![Total Downloads](https://img.shields.io/packagist/dt/barryvdh/laravel-debugbar?label=Downloads)](https://packagist.org/packages/barryvdh/laravel-debugbar)
+[![Latest Stable Version](https://img.shields.io/packagist/v/fruitcake/laravel-debugbar?label=Stable)](https://packagist.org/packages/fruitcake/laravel-debugbar)
+[![Total Downloads](https://img.shields.io/packagist/dt/barryvdh/laravel-debugbar?label=Downloads)](https://packagist.org/packages/fruitcake/laravel-debugbar)
 [![Fruitcake](https://img.shields.io/badge/Powered%20By-Fruitcake-b2bc35.svg)](https://fruitcake.nl/)
 
 This is a package to integrate [PHP Debug Bar](https://github.com/php-debugbar/php-debugbar) with Laravel.
@@ -11,7 +11,7 @@ It bootstraps some Collectors to work with Laravel and implements a couple custo
 It is configured to display Redirects and Ajax/Livewire Requests. (Shown in a dropdown)
 Read [the documentation](http://phpdebugbar.com/docs/) for more configuration options.
 
-![Debugbar Dark Mode screenshot](https://github.com/barryvdh/laravel-debugbar/assets/973269/6600837a-8b2d-4acb-ab0c-158c9ca5439c)
+![Debugbar Dark Mode screenshot](https://github.com/fruitcake/laravel-debugbar/assets/973269/6600837a-8b2d-4acb-ab0c-158c9ca5439c)
 
 > [!CAUTION]
 > Use the DebugBar only in development. Do not use Debugbar on publicly accessible websites, as it will leak information from stored requests (by design).

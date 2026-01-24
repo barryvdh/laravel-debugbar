@@ -133,7 +133,7 @@ def _badge_for_sponsors(page: Page, files: Files):
 # Create badge for version
 def _badge_for_version(text: str, page: Page, files: Files):
     spec = text
-    path = f"https://github.com/barryvdh/laravel-debugbar/releases/tag/{spec}"
+    path = f"https://github.com/fruitcake/laravel-debugbar/releases/tag/{spec}"
 
     # Return badge
     icon = "material-tag-outline"
