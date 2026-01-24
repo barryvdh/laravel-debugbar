@@ -53,7 +53,7 @@ The profiler is enabled by default, if you have APP_DEBUG=true. You can override
 ### Publish config
 
 ```shell
-php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+php artisan vendor:publish --provider="Fruitcake\LaravelDebugbar\ServiceProvider"
 ```
 
 ## Non-default installs

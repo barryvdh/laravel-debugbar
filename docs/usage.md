@@ -107,9 +107,9 @@ Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/T
 Add the following extensions to your TwigBridge config/extensions.php (or register the extensions manually)
 
 ```php
-'Barryvdh\Debugbar\Twig\Extension\Debug',
-'Barryvdh\Debugbar\Twig\Extension\Dump',
-'Barryvdh\Debugbar\Twig\Extension\Stopwatch',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Debug',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Dump',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Stopwatch',
 ```
 
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,
