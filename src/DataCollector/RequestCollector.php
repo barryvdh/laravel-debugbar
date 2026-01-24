@@ -8,6 +8,7 @@ use DebugBar\Bridge\Symfony\SymfonyRequestCollector;
 use DebugBar\DataCollector\DataCollectorInterface;
 use DebugBar\DataCollector\Renderable;
 use Fruitcake\LaravelDebugbar\LaravelDebugbar;
+use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
@@ -22,6 +23,9 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
      */
     public function collect(): array
     {
+        if ($job = debugbar()->getProcessingJob()) {
+            return $this->collectJob($job);
+        }
         if (app()->runningInConsole()) {
             return $this->collectCli();
         }
@@ -87,6 +91,42 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
 
             if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
                 $data['command_class'] = [
+                    'value' => sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine()),
+                    'xdebug_link' => $link,
+                ];
+            }
+        }
+
+        return ['data' => $data];
+    }
+
+    protected function collectJob(Job $job): array
+    {
+        $jobClass = $job->resolveQueuedJobClass();
+
+        $data = [
+            'method' => 'CLI',
+            'job' => $job->resolveName(),
+            'job_class' => $jobClass,
+            'job_id' => $job->getJobId(),
+            'connection' => $job->getConnectionName(),
+            'queue' => $job->getQueue(),
+            'payload' => $job->payload(),
+        ];
+
+        $data = $this->hideMaskedValues($data);
+        foreach ($data as $key => $var) {
+            if (!is_string($var)) {
+                $data[$key] = $this->getDataFormatter()->formatVar($var);
+            }
+        }
+
+        if ($jobClass) {
+            $reflector = new \ReflectionClass($jobClass);
+            $filename = $this->normalizeFilePath($reflector->getFileName());
+
+            if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
+                $data['job_class'] = [
                     'value' => sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine()),
                     'xdebug_link' => $link,
                 ];

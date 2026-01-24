@@ -12,6 +12,8 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\Events\Terminating;
 use Illuminate\Foundation\Http\Events\RequestHandled;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Collection;
 use Laravel\Octane\Events\RequestReceived;
 
@@ -76,6 +78,26 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $events->listen(Terminating::class, function ($event) use ($debugbar): void {
             $debugbar->terminate();
         });
+
+        if (config('debugbar.collect_jobs')) {
+            $events->listen(JobProcessing::class, function (JobProcessing $event) use ($debugbar): void {
+                // Sync jobs in non-console jobs are just requests
+                if ($event->connectionName === 'sync' && !$this->app->runningInConsole()) {
+                    return;
+                }
+
+                $debugbar->enable();
+                $debugbar->setProcessingJob($event->job);
+            });
+
+            $events->listen(JobProcessed::class, function (JobProcessed $event) use ($debugbar): void {
+                if ($debugbar->getProcessingJob()) {
+                    $debugbar->collect();
+                    $debugbar->setProcessingJob(null);
+                    $debugbar->reset();
+                }
+            });
+        }
 
         // Exclude debugbar cookies from encryption
         EncryptCookies::except($debugbar->getStackDataSessionNamespace());

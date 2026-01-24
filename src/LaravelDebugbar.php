@@ -48,6 +48,7 @@ use DebugBar\Storage\RedisStorage;
 use DebugBar\Storage\SqliteStorage;
 use Exception;
 use Illuminate\Config\Repository;
+use Illuminate\Contracts\Queue\Job;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -76,6 +77,7 @@ class LaravelDebugbar extends DebugBar
 {
     protected Application $app;
     protected Request $request;
+    protected ?Job $processingJob = null;
     protected bool $booted = false;
 
     protected ?bool $enabled = null;
@@ -114,6 +116,16 @@ class LaravelDebugbar extends DebugBar
         $this->request = $request;
     }
 
+    public function setProcessingJob(?Job $job): void
+    {
+        $this->processingJob = $job;
+    }
+
+    public function getProcessingJob(): ?Job
+    {
+        return $this->processingJob;
+    }
+
     public function getHttpDriver(): HttpDriverInterface
     {
         if ($this->httpDriver === null) {
@@ -150,6 +162,11 @@ class LaravelDebugbar extends DebugBar
     public function getExceptionsCollector(): ExceptionsCollector
     {
         return $this->exceptionsCollector;
+    }
+
+    public function isCollecting(): bool
+    {
+        return $this->enabled && $this->booted;
     }
 
     /**
@@ -634,7 +651,10 @@ class LaravelDebugbar extends DebugBar
             ],
         ];
 
-        if ($this->app->runningInConsole()) {
+        if ($this->processingJob) {
+            $this->data['__meta']['method'] = 'JOB';
+            $this->data['__meta']['uri'] =  $this->processingJob->resolveName() . '@' . $this->processingJob->getConnectionName();
+        } elseif ($this->app->runningInConsole()) {
             $this->data['__meta']['method'] = 'CLI';
             $this->data['__meta']['uri'] = implode(' ', (new ArgvInput())->getRawTokens());
         }
@@ -652,7 +672,7 @@ class LaravelDebugbar extends DebugBar
 
     public function terminate(): void
     {
-        if ($this->enabled && $this->booted && $this->data === null && !$this->isDebugbarRequest($this->request)) {
+        if ($this->isCollecting() && $this->data === null && !$this->isDebugbarRequest($this->request)) {
             $this->collect();
         }
     }
