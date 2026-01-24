@@ -52,7 +52,7 @@ Require this package with composer. It is recommended to only require the packag
 composer require fruitcake/laravel-debugbar --dev
 ```
 
-> Note: The package name has changed to `fruitcake/laravel-debugbar`. If you're using barryvdh/laravel-debugbar, 
+> Note: The package name has changed to `fruitcake/laravel-debugbar`. If you're using `barryvdh/laravel-debugbar`, 
 > you can safely replace this with the new package name: `composer remove barryvdh/laravel-debugbar --dev --no-scripts`
 
 > Tip: Use 'composer require fruitcake/laravel-debugbar:"^4@beta" --dev' flag to try the new 4.x Beta version!
@@ -66,7 +66,7 @@ You can also only display the js or css vendors, by setting it to 'js' or 'css'.
 #### Copy the package config to your local config with the publish command:
 
 ```shell
-php artisan vendor:publish --provider='Barryvdh\Debugbar\ServiceProvider'
+php artisan vendor:publish --provider='Fruitcake\LaravelDebugbar\ServiceProvider'
 ```
 
 ### Laravel with Octane:
@@ -75,7 +75,7 @@ Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
 
 ```php
     'flush' => [
-        \Barryvdh\Debugbar\LaravelDebugbar::class,
+        \Fruitcake\Debugbar\LaravelDebugbar::class,
     ],
 ```
 
@@ -171,9 +171,9 @@ Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/T
 Add the following extensions to your TwigBridge config/extensions.php (or register the extensions manually)
 
 ```php
-'Barryvdh\Debugbar\Twig\Extension\Debug',
-'Barryvdh\Debugbar\Twig\Extension\Dump',
-'Barryvdh\Debugbar\Twig\Extension\Stopwatch',
+'Fruitcake\Debugbar\Twig\Extension\Debug',
+'Fruitcake\Debugbar\Twig\Extension\Dump',
+'Fruitcake\Debugbar\Twig\Extension\Stopwatch',
 ```
 
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,
@@ -194,4 +194,4 @@ The Stopwatch extension adds a [stopwatch tag](http://symfony.com/blog/new-in-sy
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=barryvdh/laravel-debugbar&type=Date)](https://www.star-history.com/#barryvdh/laravel-debugbar&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=fruitcake/laravel-debugbar&type=Date)](https://www.star-history.com/#fruitcake/laravel-debugbar&Date)
