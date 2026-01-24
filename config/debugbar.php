@@ -17,6 +17,7 @@ return [
      */
 
     'enabled' => env('DEBUGBAR_ENABLED'),
+    'collect_jobs' => env('DEBUGBAR_COLLECT_JOBS', false),
     'except' => [
         'telescope*',
         'horizon*',
