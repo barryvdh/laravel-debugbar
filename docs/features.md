@@ -167,7 +167,7 @@ This is usually because the target audience of a feature is not large enough.
 ### Configurable options { #config }
 
 Configurable features are not enabled by default, but can be enabled. This is usually because the target audience of a feature is not large enough.
-You can enable the feature by changing the mentioned value in [config/debugbar.php](https://github.com/barryvdh/laravel-debugbar/blob/master/config/debugbar.php) after [publishing the config](installation.md#publish-config).
+You can enable the feature by changing the mentioned value in [config/debugbar.php](https://github.com/fruitcake/laravel-debugbar/blob/master/config/debugbar.php) after [publishing the config](installation.md#publish-config).
 
 ### Experimental Features  { #experimental }
 

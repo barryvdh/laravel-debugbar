@@ -1,5 +1,5 @@
 ---
-description: Installing Laravel Debugbar in a project is simple. Use 'composer require barryvdh/laravel-debugbar --dev' to get started now
+description: Installing Laravel Debugbar in a project is simple. Use 'composer require fruitcake/laravel-debugbar --dev' to get started now
 preview_image: img/preview-install.jpg
 ---
 
@@ -14,7 +14,7 @@ preview_image: img/preview-install.jpg
 Require this package with composer. It is recommended to only require the package for development.
 
 ```shell
-composer require barryvdh/laravel-debugbar --dev
+composer require fruitcake/laravel-debugbar --dev
 ```
 
 Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.

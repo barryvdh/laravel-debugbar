@@ -1,6 +1,6 @@
 # Upgrade Guide
 
-## 2.x to 3.x
+## 3.x to 4.x
 
 ### php-debugbar 3.x
 The php-debugbar dependency has been updated to 3.x. This removes jQuery and font-awesome.
