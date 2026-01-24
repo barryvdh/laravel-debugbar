@@ -654,7 +654,7 @@ class LaravelDebugbar extends DebugBar
         if ($this->processingJob) {
             $this->data['__meta']['method'] = 'JOB';
             $this->data['__meta']['uri'] =  $this->processingJob->resolveName() . '@' . $this->processingJob->getConnectionName();
-        } else if ($this->app->runningInConsole()) {
+        } elseif ($this->app->runningInConsole()) {
             $this->data['__meta']['method'] = 'CLI';
             $this->data['__meta']['uri'] = implode(' ', (new ArgvInput())->getRawTokens());
         }
