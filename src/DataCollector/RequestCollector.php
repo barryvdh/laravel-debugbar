@@ -49,7 +49,7 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
             ])->type('debugbar');
             Telescope::$entriesQueue[] = $entry;
             $url = route('debugbar.telescope', [$entry->uuid]);
-            $htmlData['telescope'] = '<a href="' . $url . '" target="_blank">View in Telescope</a>';
+            $htmlData['telescope'] = '<a href="' . $url . '" target="_blank" class="phpdebugbar-widgets-external-link">View in Telescope</a>';
         }
 
         unset($htmlData['as'], $htmlData['uses']);
