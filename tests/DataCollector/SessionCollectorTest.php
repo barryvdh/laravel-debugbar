@@ -7,7 +7,6 @@ namespace Fruitcake\LaravelDebugbar\Tests\DataCollector;
 use Fruitcake\LaravelDebugbar\Tests\TestCase;
 use Fruitcake\LaravelDebugbar\DataCollector\SessionCollector;
 use DebugBar\DataFormatter\DataFormatter;
-use Illuminate\Session\SymfonySessionDecorator;
 
 class SessionCollectorTest extends TestCase
 {
