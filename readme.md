@@ -75,7 +75,7 @@ Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
 
 ```php
     'flush' => [
-        \Fruitcake\Debugbar\LaravelDebugbar::class,
+        \Fruitcake\LaravelDebugbar\LaravelDebugbar::class,
     ],
 ```
 
@@ -171,9 +171,9 @@ Laravel Debugbar comes with two Twig Extensions. These are tested with [rcrowe/T
 Add the following extensions to your TwigBridge config/extensions.php (or register the extensions manually)
 
 ```php
-'Fruitcake\Debugbar\Twig\Extension\Debug',
-'Fruitcake\Debugbar\Twig\Extension\Dump',
-'Fruitcake\Debugbar\Twig\Extension\Stopwatch',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Debug',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Dump',
+'Fruitcake\LaravelDebugbar\Twig\Extension\Stopwatch',
 ```
 
 The Dump extension will replace the [dump function](http://twig.sensiolabs.org/doc/functions/dump.html) to output variables using the DataFormatter. The Debug extension adds a `debug()` function which passes variables to the Message Collector,
