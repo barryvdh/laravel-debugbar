@@ -116,7 +116,7 @@ class LaravelDebugbar extends DebugBar
         $this->request = $request;
     }
 
-    public function setProcessingJob(?Job $job)
+    public function setProcessingJob(?Job $job): void
     {
         $this->processingJob = $job;
     }
