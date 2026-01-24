@@ -13,6 +13,11 @@ class MessagesCollectorProvider extends AbstractCollectorProvider
 
         if ($options['trace'] ?? true) {
             $messageCollector->collectFileTrace(true);
+
+            $excludePaths = $options['backtrace_exclude_paths'] ?? [];
+            if ($excludePaths) {
+                $messageCollector->addBacktraceExcludePaths($excludePaths);
+            }
         }
 
         if ($options['timeline'] ?? true) {

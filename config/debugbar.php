@@ -75,6 +75,7 @@ return [
         ],
         'messages' => [
             'trace' => env('DEBUGBAR_OPTIONS_MESSAGES_TRACE', true),                  // Trace the origin of the debug message
+            'backtrace_exclude_paths' => [],                                                      // Paths to exclude from backtrace. (in addition to defaults)
             'capture_dumps' => env('DEBUGBAR_OPTIONS_MESSAGES_CAPTURE_DUMPS', false), // Capture laravel `dump();` as message
             'timeline' => env('DEBUGBAR_OPTIONS_MESSAGES_TIMELINE', true),            // Add messages to the timeline
         ],
