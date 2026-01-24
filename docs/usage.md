@@ -72,6 +72,12 @@ $debugbar = App::make('debugbar');
 $debugbar->addCollector(new DebugBar\DataCollector\MessagesCollector('my_messages'));
 ```
 
+## Collecting Queued Jobs
+
+If you want to collect jobs, set `debugbar.collect_jobs` to `true` in the config (or `DEBUGBAR_COLLECT_JOBS` in your `.env`).
+
+Use the browse button to view the processed jobs.
+
 ## Enabling/Disabling on run time
 You can enable or disable the debugbar during run time.
 
