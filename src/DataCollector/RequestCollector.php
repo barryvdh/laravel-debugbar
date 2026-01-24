@@ -102,13 +102,15 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
 
     protected function collectJob(Job $job): array
     {
-
-        $jobName = $job->resolveName();
         $jobClass = $job->resolveQueuedJobClass();
 
         $data = [
             'method' => 'CLI',
-            'job' => $jobName,
+            'job' => $job->resolveName(),
+            'job_class' => $jobClass,
+            'job_id' => $job->getJobId(),
+            'connection' => $job->getConnectionName(),
+            'queue' => $job->getQueue(),
             'payload' => $job->payload(),
         ];
 
@@ -124,7 +126,7 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
             $filename = $this->normalizeFilePath($reflector->getFileName());
 
             if ($link = $this->getXdebugLink($reflector->getFileName(), $reflector->getStartLine())) {
-                $data['job'] = [
+                $data['job_class'] = [
                     'value' => sprintf('%s:%s-%s', $filename, $reflector->getStartLine(), $reflector->getEndLine()),
                     'xdebug_link' => $link,
                 ];
