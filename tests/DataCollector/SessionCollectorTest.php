@@ -18,9 +18,7 @@ class SessionCollectorTest extends TestCase
 
     public function testItCollectsSessionVariables()
     {
-        $collector = new SessionCollector(
-            $this->app->make(SymfonySessionDecorator::class),
-        );
+        $collector = new SessionCollector();
         $collector->setDataFormatter(new DataFormatter());
 
         static::assertEmpty($collector->collect());

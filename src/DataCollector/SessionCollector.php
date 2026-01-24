@@ -15,11 +15,7 @@ class SessionCollector extends DataCollector implements DataCollectorInterface, 
      */
     public function collect(): array
     {
-        if (!request()->hasSession()) {
-            return [];
-        }
-
-        $data = $this->hideMaskedValues(request()->session()->all());
+        $data = $this->hideMaskedValues(session()->all());
 
         foreach ($data as $key => $value) {
             $data[$key] = is_string($value) ? $value : $this->getDataFormatter()->formatVar($value);
