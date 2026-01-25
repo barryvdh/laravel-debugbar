@@ -67,11 +67,6 @@ class OpenHandlerController extends BaseController
 
         $openHandler->handle($request->input());
 
-        // Set ETag and cache headers
-        $response->setEtag(hash('sha256', $response->getContent()));
-        $response->setPrivate();
-        $response->isNotModified($request);
-
         return $response;
     }
 
