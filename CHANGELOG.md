@@ -1,5 +1,19 @@
 # Changelog
 
+## v4.0.3 - 2026-01-26
+
+### What's Changed
+
+* Remove find cache in favor of upstream optimization by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1939
+* Update onCacheEvent to accept multiple event types by @Yahav in https://github.com/fruitcake/laravel-debugbar/pull/1943
+* Fix cache collector route by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1944
+
+### New Contributors
+
+* @Yahav made their first contribution in https://github.com/fruitcake/laravel-debugbar/pull/1943
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v4.0.2...v4.0.3
+
 ## v4.0.2 - 2026-01-24
 
 ### What's Changed
