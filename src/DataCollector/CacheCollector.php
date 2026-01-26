@@ -9,6 +9,7 @@ use DebugBar\DataCollector\HasTimeDataCollector;
 use DebugBar\DataCollector\Resettable;
 use DebugBar\DataCollector\TimeDataCollector;
 use Illuminate\Cache\Events\{CacheEvent,
+    CacheFailedOver,
     CacheFlushed,
     CacheFlushFailed,
     CacheFlushing,
@@ -21,6 +22,7 @@ use Illuminate\Cache\Events\{CacheEvent,
     KeyWritten,
     RetrievingKey,
     WritingKey};
+use Illuminate\Support\Facades\Route;
 
 class CacheCollector extends TimeDataCollector implements AssetProvider, Resettable
 {
@@ -78,7 +80,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
             $this->addTimeMeasure('Cache ' . $label . "\t" . ($params['key'] ?? ''), $startTime, $time);
         }
 
-        if (in_array($label, ['hit', 'written'], true)) {
+        if (isset($event->key) && in_array($label, ['hit', 'written'], true) && Route::has('debugbar.cache.delete')) {
             $measureIndex = array_key_last($this->measures);
             $this->measures[$measureIndex]['delete_url'] = url()->signedRoute('debugbar.cache.delete', [
                 'key' => $event->key,
