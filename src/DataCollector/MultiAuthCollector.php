@@ -137,7 +137,7 @@ class MultiAuthCollector extends DataCollector implements Renderable
         if ($this->showGuardsData) {
             $widgets["auth"] = [
                 "icon" => "lock",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => "auth.guards",
                 "default" => "{}",
             ];

@@ -1,5 +1,32 @@
 # Changelog
 
+## v4.0.2 - 2026-01-24
+
+### What's Changed
+
+* Fix Auth Collector by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1937
+* Fix session collector by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1938
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v4.0.1...v4.0.2
+
+## v4.0.1 - 2026-01-24
+
+### What's Changed
+
+* Fix explain table css on queries widget by @erikn69 in https://github.com/fruitcake/laravel-debugbar/pull/1929
+* Check if Telescope is recording by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1931
+* Update namespaces in readme by @sajjadhossainshohag in https://github.com/fruitcake/laravel-debugbar/pull/1932
+* Add backtrace path by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1933
+* Update vendor name, fix release notes by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1934
+* Add link class by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1935
+* Collected jobs from queue by @barryvdh in https://github.com/fruitcake/laravel-debugbar/pull/1936
+
+### New Contributors
+
+* @sajjadhossainshohag made their first contribution in https://github.com/fruitcake/laravel-debugbar/pull/1932
+
+**Full Changelog**: https://github.com/fruitcake/laravel-debugbar/compare/v4.0.0...v4.0.1
+
 ## v4.0.0 - 2026-01-23
 
 ### Laravel Debugbar 4.0

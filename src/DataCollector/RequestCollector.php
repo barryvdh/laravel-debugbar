@@ -32,6 +32,11 @@ class RequestCollector extends SymfonyRequestCollector implements DataCollectorI
 
         $this->request = request();
         $result = parent::collect();
+        if ($this->request->hasSession()) {
+            $sessionAttributes = $this->hideMaskedValues($this->request->session()->all());
+            $sessionAttributes = $this->getDataFormatter()->formatVar($sessionAttributes);
+            $result['data']['session_attributes'] = $sessionAttributes;
+        }
         $result['tooltip'] += [
             'full_url' => Str::limit($this->request->fullUrl(), 100),
         ];
