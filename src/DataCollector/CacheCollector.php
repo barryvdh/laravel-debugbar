@@ -54,7 +54,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
         return $this->classMap;
     }
 
-    public function onCacheEvent(CacheEvent $event): void
+    public function onCacheEvent(CacheEvent|CacheFailedOver|CacheFlushed|CacheFlushFailed|CacheFlushing $event): void
     {
         $class = get_class($event);
         $params = get_object_vars($event);
