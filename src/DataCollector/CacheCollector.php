@@ -21,6 +21,7 @@ use Illuminate\Cache\Events\{CacheEvent,
     KeyWritten,
     RetrievingKey,
     WritingKey};
+use Illuminate\Support\Facades\Route;
 
 class CacheCollector extends TimeDataCollector implements AssetProvider, Resettable
 {
@@ -54,7 +55,10 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
         return $this->classMap;
     }
 
-    public function onCacheEvent(CacheEvent $event): void
+    /**
+     * @param CacheEvent|CacheFlushed|CacheFlushFailed|CacheFlushing $event
+     */
+    public function onCacheEvent(mixed $event): void
     {
         $class = get_class($event);
         $params = get_object_vars($event);
@@ -78,7 +82,7 @@ class CacheCollector extends TimeDataCollector implements AssetProvider, Resetta
             $this->addTimeMeasure('Cache ' . $label . "\t" . ($params['key'] ?? ''), $startTime, $time);
         }
 
-        if (in_array($label, ['hit', 'written'], true)) {
+        if (isset($event->key) && in_array($label, ['hit', 'written'], true) && Route::has('debugbar.cache.delete')) {
             $measureIndex = array_key_last($this->measures);
             $this->measures[$measureIndex]['delete_url'] = url()->signedRoute('debugbar.cache.delete', [
                 'key' => $event->key,
