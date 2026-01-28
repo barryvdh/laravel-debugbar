@@ -20,7 +20,7 @@ class GateCollector extends MessagesCollector implements Resettable
 {
     protected array $reflection = [];
 
-    public function addCheck(mixed $user, string $ability, mixed $result, array $arguments = []): void
+    public function addCheck(mixed $user, string|int $ability, mixed $result, array $arguments = []): void
     {
         $userKey = 'user';
         $userId = null;
